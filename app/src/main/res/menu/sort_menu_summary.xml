@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menuDateBought"
+        android:title="Date Bought" />
+    <item
+        android:id="@+id/menuCardName"
+        android:title="Card Name" />
+    <item
+        android:id="@+id/menuQuantity"
+        android:title="Quantity" />
+    <item
+        android:id="@+id/menuPrice"
+        android:title="Price" />
+
+</menu>

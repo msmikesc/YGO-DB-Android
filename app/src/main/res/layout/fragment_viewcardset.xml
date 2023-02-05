@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.viewCardSet.ViewCardSetFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#232020"
+        >
+
+        <EditText
+            android:id="@+id/cardSearch"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="#FFFFFF"
+            android:hint="Card Name"
+            android:textColorHint="#8E8E8E"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <AutoCompleteTextView
+            android:id="@+id/setSearch"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="#FFFFFF"
+            android:dropDownHeight="wrap_content"
+            android:hint="Set Name"
+            android:textColorHint="#8E8E8E"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardSearch" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/view_list"
+            android:layout_width="0sp"
+            android:layout_height="0sp"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/setSearch"
+            app:layout_constraintVertical_bias="1.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="16dp"
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.ygodb.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_importDS"
+        android:name="com.example.ygodb.ui.importFromDS.ImportDSFragment"
+        android:label="@string/menu_importDS"
+        tools:layout="@layout/fragment_importds" />
+
+    <fragment
+        android:id="@+id/nav_viewCards"
+        android:name="com.example.ygodb.ui.viewCards.ViewCardsFragment"
+        android:label="@string/menu_viewCards"
+        tools:layout="@layout/fragment_viewcards" />
+
+    <fragment
+        android:id="@+id/nav_viewCardsSummary"
+        android:name="com.example.ygodb.ui.viewCardsSummary.ViewCardsSummaryFragment"
+        android:label="@string/menu_viewCardsSummary"
+        tools:layout="@layout/fragment_viewcards_summary" />
+
+    <fragment
+        android:id="@+id/nav_viewCardSet"
+        android:name="com.example.ygodb.ui.viewCardSet.ViewCardSetFragment"
+        android:label="@string/menu_viewCardSet"
+        tools:layout="@layout/fragment_viewcardset" />
+
+</navigation>
