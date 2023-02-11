@@ -35,7 +35,8 @@ public enum Rarity {
 	UltraRarePharohsRare("URPR"),
 	StarlightRare("Starlight Rare"),
 	GhostRare("Ghost Rare"),
-	UltimateRare("Ultimate Rare");
+	UltimateRare("Ultimate Rare"),
+	nullRarity("nullRarity");
 
 	private String name;
 
@@ -53,7 +54,7 @@ public enum Rarity {
                 return b;
             }
         }
-        return null;
+        return nullRarity;
     }
 
 }

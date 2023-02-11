@@ -1,6 +1,5 @@
 package com.example.ygodb.ui.singleCard;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,23 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
-
+import com.example.ygodb.abs.Util;
 import com.example.ygodb.backend.bean.OwnedCard;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToListAdapter.ItemViewHolder> {
-    Context context;
+    private ArrayList<OwnedCard> ownedCards;
 
-    ArrayList<OwnedCard> ownedCards;
-
-    LayoutInflater inflater;
-
-    public SingleCardToListAdapter(Context applicationContext, ArrayList<OwnedCard> ownedCards) {
-        this.context = applicationContext;
+    public SingleCardToListAdapter(ArrayList<OwnedCard> ownedCards) {
         this.ownedCards = ownedCards;
-        inflater = (LayoutInflater.from(applicationContext));
     }
 
     @NonNull
@@ -57,7 +50,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
         try {
             // get input stream
-            InputStream ims = context.getAssets().open("pics/"+current.id+ ".jpg");
+            InputStream ims = Util.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView
@@ -66,8 +59,6 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         }
         catch(Exception ex) {
             viewHolder.cardImage.setImageDrawable(null);
-
-            return;
         }
 
     }
@@ -86,7 +77,6 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         TextView cardPrice;
         TextView cardDate;
         TextView cardQuantity;
-
         ImageView cardImage;
 
         public ItemViewHolder(@NonNull View view) {

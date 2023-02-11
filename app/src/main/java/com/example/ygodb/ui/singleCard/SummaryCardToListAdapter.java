@@ -12,22 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
+import com.example.ygodb.abs.Util;
 import com.example.ygodb.backend.bean.OwnedCard;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardToListAdapter.ItemViewHolder> {
-    Context context;
-
     ArrayList<OwnedCard> ownedCards;
 
-    LayoutInflater inflater;
-
-    public SummaryCardToListAdapter(Context applicationContext, ArrayList<OwnedCard> ownedCards) {
-        this.context = applicationContext;
+    public SummaryCardToListAdapter(ArrayList<OwnedCard> ownedCards) {
         this.ownedCards = ownedCards;
-        inflater = (LayoutInflater.from(applicationContext));
     }
 
     @NonNull
@@ -51,25 +46,19 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
             viewHolder.cardPrice.setText("$" + String.format("%.2f", price));
         }
         viewHolder.cardDate.setText(current.dateBought);
-
         viewHolder.rarity.setText(current.setRarity);
 
         try {
             // get input stream
-            InputStream ims = context.getAssets().open("pics/"+current.id+ ".jpg");
+            InputStream ims = Util.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView
-
             viewHolder.cardImage.setImageDrawable(d);
         }
         catch(Exception ex) {
             viewHolder.cardImage.setImageDrawable(null);
-
-            return;
         }
-
-
     }
 
     @Override

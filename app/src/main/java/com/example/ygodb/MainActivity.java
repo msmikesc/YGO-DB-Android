@@ -1,60 +1,51 @@
 package com.example.ygodb;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.OpenableColumns;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
-import android.widget.PopupMenu;
+import android.view.MenuItem;
 
-import com.example.ygodb.backend.bean.OwnedCard;
-import com.example.ygodb.backend.connection.SQLiteConnection;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.ygodb.abs.CopyDBInCallback;
+import com.example.ygodb.abs.CopyDBOutCallback;
+import com.example.ygodb.abs.Util;
+import com.example.ygodb.backend.connection.SQLiteConnection;
 import com.example.ygodb.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationView;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static ActivityResultLauncher<Intent> startActivityIntent = null;
+    private static ActivityResultLauncher<Intent> copyDBInIntent = null;
+
+    private static ActivityResultLauncher<Intent> copyDBOutIntent = null;
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+
+    public ActivityMainBinding getBinding() {
+        return binding;
+    }
 
     private static final int STORAGE_PERMISSION_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Util.setAppContext(getApplicationContext());
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -76,109 +67,19 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
 
-        startActivityIntent = registerForActivityResult(
+        copyDBInIntent = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
+                new CopyDBInCallback(this));
 
-                        if(result == null){
-                            return;
-                        }
-
-                        Intent contentChosen = result.getData();
-
-                        if(contentChosen == null){
-                            return;
-                        }
-
-                        Uri chosenURI = contentChosen.getData();
-
-                        if(chosenURI == null){
-                            return;
-                        }
-
-                        String fileName = getFileName(chosenURI);
-
-                        if(fileName == null){
-                            return;
-                        }
-
-                        if(!fileName.equals("YGO-DB.db")){
-                            return;
-                        }
-
-                        InputStream file = null;
-
-                        try {
-                            file = getContentResolver().openInputStream(chosenURI);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                            return;
-                        }
-
-                        if(file == null){
-                            return;
-                        }
-
-                        try {
-                            SQLiteConnection.getObj().copyDataBaseFromURI(file);
-
-                            SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-
-                            SharedPreferences.Editor editor = prefs.edit();
-
-                            editor.putString("pref_db_location", chosenURI.toString());
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            return;
-                        }
-                    }
-                });
+        copyDBOutIntent = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new CopyDBOutCallback(this));
 
         try {
             SQLiteConnection.initializeInstance(getApplicationContext());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-
-        String externalDBURI = prefs.getString("pref_db_location", null);
-
-        if(externalDBURI != null){
-            //copy in the file
-            try {
-                SQLiteConnection.getObj().copyDataBaseFromURI(getContentResolver()
-                        .openInputStream(Uri.parse((externalDBURI))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @SuppressLint("Range")
-    public String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
     }
 
     // Function to check and request permission
@@ -202,12 +103,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_import) {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
 
+            copyDBInIntent.launch(intent);
 
-            startActivityIntent.launch(intent);
+            return true;
+        }
+        else if (id == R.id.action_export) {
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.setType("*/*");
+
+            copyDBOutIntent.launch(intent);
 
             return true;
         }
@@ -221,4 +129,5 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 }

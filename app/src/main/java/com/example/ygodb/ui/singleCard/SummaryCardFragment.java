@@ -18,14 +18,10 @@ public class SummaryCardFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SingleCardViewModel singleCardViewModel =
-                new ViewModelProvider(this).get(SingleCardViewModel.class);
 
         binding = FragmentSinglecardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.cardTitle;
-        singleCardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

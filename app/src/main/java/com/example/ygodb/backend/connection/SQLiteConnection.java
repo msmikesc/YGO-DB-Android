@@ -154,6 +154,34 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 		getWritableDatabase().close();
 	}
 
+	public void copyDataBaseToURI(OutputStream output) throws IOException {
+
+		if(output == null){
+			return;
+		}
+
+		close();
+
+		/*
+		 * Open the database in the internal folder as the input stream.
+		 */
+		File input = new File(cont.getFilesDir(),DB_NAME);
+		InputStream myInput = new FileInputStream(input);
+
+
+		/*
+		 * Copy over the empty db in internal storage with the database in the
+		 * assets folder.
+		 */
+		FileHelper.copyFile(myInput, output);
+
+		/*
+		 * Access the copied database so SQLiteHelper will cache it and mark it
+		 * as created.
+		 */
+		getWritableDatabase().close();
+	}
+
 	public void closeInstance() {
 
 		if (connection == null) {

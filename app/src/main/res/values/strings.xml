@@ -7,6 +7,9 @@
     <string name="nav_header_desc">Navigation</string>
     <string name="action_settings">Settings</string>
 
+    <string name="action_import">Import DB</string>
+    <string name="action_export">Export DB</string>
+
     <string name="menu_home">Home</string>
     <string name="menu_importDS">Import from Dragon Shield</string>
     <string name="menu_viewCards">View Cards</string>
