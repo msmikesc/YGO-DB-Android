@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,6 +25,7 @@ import com.example.ygodb.abs.Util;
 import com.example.ygodb.backend.connection.SQLiteConnection;
 import com.example.ygodb.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.SQLException;
 
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_importDS, R.id.nav_viewCards,
-                R.id.nav_viewCardsSummary, R.id.nav_viewCardSet)
+                R.id.nav_viewCardsSummary, R.id.nav_viewCardSet, R.id.nav_addCards)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);

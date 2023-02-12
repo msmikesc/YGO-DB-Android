@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
 import com.example.ygodb.databinding.FragmentViewcardsetBinding;
+import com.example.ygodb.ui.addCards.AddCardsViewModel;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 
 public class ViewCardSetFragment extends Fragment {
@@ -28,6 +29,9 @@ public class ViewCardSetFragment extends Fragment {
         ViewCardSetViewModel viewCardSetViewModel =
                 new ViewModelProvider(this).get(ViewCardSetViewModel.class);
 
+        AddCardsViewModel addCardsViewModel =
+                new ViewModelProvider(getActivity()).get(AddCardsViewModel.class);
+
         binding = FragmentViewcardsetBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -40,7 +44,7 @@ public class ViewCardSetFragment extends Fragment {
         textView.setThreshold(3);
         textView.setAdapter(autoCompleteAdapter);
 
-        SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewCardSetViewModel.getFilteredCardsList());
+        SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewCardSetViewModel.getFilteredCardsList(), addCardsViewModel);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
         layout = linearLayoutManager;

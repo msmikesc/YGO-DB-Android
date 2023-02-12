@@ -35,4 +35,10 @@
         android:label="@string/menu_viewCardSet"
         tools:layout="@layout/fragment_viewcardset" />
 
+    <fragment
+        android:id="@+id/nav_addCards"
+        android:name="com.example.ygodb.ui.addCards.AddCardsFragment"
+        android:label="@string/menu_addCards"
+        tools:layout="@layout/fragment_addcards" />
+
 </navigation>

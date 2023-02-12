@@ -64,7 +64,8 @@ public class ViewCardSetViewModel extends ViewModel {
             currentCard.cardName = current.cardName;
             currentCard.setRarity = current.getStringOfMainRarities();
             currentCard.id = current.id;
-            currentCard.setName = current.getStringOfSetNames();
+            currentCard.setName = current.mainSetName;
+            currentCard.multiListSetNames = current.getStringOfSetNames();
             currentCard.quantity = current.quantity;
             currentCard.setNumber = current.getStringOfMainSetNumbers();
             currentCard.priceBought = current.getAveragePrice();

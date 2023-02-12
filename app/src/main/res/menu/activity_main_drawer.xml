@@ -26,5 +26,9 @@
             android:id="@+id/nav_viewCardSet"
             android:icon="@android:drawable/ic_menu_view"
             android:title="@string/menu_viewCardSet" />
+        <item
+            android:id="@+id/nav_addCards"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="@string/menu_addCards" />
     </group>
 </menu>

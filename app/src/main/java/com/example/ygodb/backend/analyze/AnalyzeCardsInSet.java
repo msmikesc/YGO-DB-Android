@@ -167,6 +167,7 @@ public class AnalyzeCardsInSet {
 				currentData.setNumber.add(rarityList.get(0).setNumber);
 				currentData.cardType = rarityList.get(0).cardType;
 				currentData.setName.add(setName);
+				currentData.mainSetName = setName;
 				addToHashMap(h, currentData);
 			}
 
@@ -188,6 +189,7 @@ public class AnalyzeCardsInSet {
 				currentData.id = i;
 				currentData.setNumber.add(rarityList.get(0).setNumber);
 				currentData.cardType = rarityList.get(0).cardType;
+				currentData.mainSetName = setName;
 
 				for(String s: current.setName.split(",")){
 					currentData.setName.add(s);

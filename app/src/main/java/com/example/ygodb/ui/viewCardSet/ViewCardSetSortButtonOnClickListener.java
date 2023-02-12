@@ -1,6 +1,7 @@
 package com.example.ygodb.ui.viewCardSet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,8 +15,8 @@ import com.example.ygodb.abs.OwnedCardPriceComparator;
 import com.example.ygodb.abs.OwnedCardQuantityComparator;
 import com.example.ygodb.abs.OwnedCardSetNumberComparator;
 import com.example.ygodb.backend.bean.OwnedCard;
+import com.example.ygodb.ui.addCards.AddCardsFragment;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
-import com.example.ygodb.ui.viewCards.ViewCardsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -50,6 +51,13 @@ class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+
+                if ("Add Mode".equals(menuItem.getTitle())) {
+
+                    Intent intent = new Intent(context, AddCardsFragment.class);
+                    context.startActivity(intent);
+                    return true;
+                }
 
                 String sortOption = viewCardsViewModel.getSortOption();
 

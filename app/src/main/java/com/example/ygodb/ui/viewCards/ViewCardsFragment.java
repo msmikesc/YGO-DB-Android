@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
 import com.example.ygodb.abs.EndlessScrollListener;
+import com.example.ygodb.ui.addCards.AddCardsViewModel;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 
 import java.util.ArrayList;
@@ -28,12 +29,15 @@ public class ViewCardsFragment extends Fragment {
         ViewCardsViewModel viewCardsViewModel =
                 new ViewModelProvider(this).get(ViewCardsViewModel.class);
 
+        AddCardsViewModel addCardsViewModel =
+                new ViewModelProvider(getActivity()).get(AddCardsViewModel.class);
+
         binding = FragmentViewcardsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         RecyclerView cardsListView = binding.viewList;
 
-        SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewCardsViewModel.getCardsList());
+        SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewCardsViewModel.getCardsList(), addCardsViewModel);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         layout = linearLayoutManager;

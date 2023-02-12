@@ -19,6 +19,8 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	public Set<String> mainSetRarities;
 	public BigDecimal cardPriceAverage;
 
+	public String mainSetName;
+
 	public int id;
 
 

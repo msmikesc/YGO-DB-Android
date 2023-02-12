@@ -24,4 +24,9 @@ public class OwnedCard {
 	public String priceMarket;
 	public String UUID;
 
+	public String multiListSetNames;
+
+	public String dropdownSelectedSetNumber;
+	public String dropdownSelectedRarity;
+
 }

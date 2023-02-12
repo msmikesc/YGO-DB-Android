@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.Util;
 import com.example.ygodb.backend.bean.OwnedCard;
+import com.example.ygodb.ui.addCards.AddCardsViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,8 +23,11 @@ import java.util.ArrayList;
 public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToListAdapter.ItemViewHolder> {
     private ArrayList<OwnedCard> ownedCards;
 
-    public SingleCardToListAdapter(ArrayList<OwnedCard> ownedCards) {
+    private AddCardsViewModel addCardsViewModel;
+
+    public SingleCardToListAdapter(ArrayList<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel) {
         this.ownedCards = ownedCards;
+        this.addCardsViewModel = addCardsViewModel;
     }
 
     @NonNull
@@ -29,7 +35,12 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.fragment_singlecard, parent, false);
+
         return new ItemViewHolder(view);
+    }
+
+    public void onPlusButtonClick(View view, OwnedCard current) {
+        addCardsViewModel.addNewFromOwnedCard(current);
     }
 
     @Override
@@ -37,9 +48,26 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
         OwnedCard current = ownedCards.get(position);
 
+        ImageButton button = viewHolder.itemView.findViewById(R.id.plusButton);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onPlusButtonClick(view, current);
+            }
+        });
+
         viewHolder.title.setText(current.cardName);
         viewHolder.setCode.setText(current.setNumber);
-        viewHolder.setName.setText(current.setName);
+
+        if(current.multiListSetNames == null || current.multiListSetNames.equals("")){
+            viewHolder.setName.setText(current.setName);
+        }
+        else{
+            viewHolder.setName.setText(current.multiListSetNames);
+        }
+
+
         viewHolder.cardRarity.setText(current.setRarity);
         if(current.priceBought != null) {
             double price = Double.parseDouble(current.priceBought);
@@ -47,6 +75,24 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         }
         viewHolder.cardDate.setText(current.dateBought);
         viewHolder.cardQuantity.setText(current.quantity + "");
+
+        try {
+            if(current.editionPrinting.contains("1st")){
+                // get input stream
+                InputStream ims = Util.getAppContext().getAssets().open("images/1st.png");
+                // load image as Drawable
+                Drawable d = Drawable.createFromStream(ims, null);
+                // set image to ImageView
+
+                viewHolder.firstEdition.setImageDrawable(d);
+            }
+            else{
+                viewHolder.firstEdition.setImageDrawable(null);
+            }
+        }
+        catch(Exception ex) {
+            viewHolder.firstEdition.setImageDrawable(null);
+        }
 
         try {
             // get input stream
@@ -78,6 +124,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         TextView cardDate;
         TextView cardQuantity;
         ImageView cardImage;
+        ImageView firstEdition;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
@@ -90,6 +137,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             cardDate = view.findViewById(R.id.cardDateBought);
             cardQuantity = view.findViewById(R.id.cardQuantity);
             cardImage = view.findViewById(R.id.cardImage);
+            firstEdition = view.findViewById(R.id.firststEditionIcon);
 
         }
 
