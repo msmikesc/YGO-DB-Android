@@ -23,6 +23,23 @@ public class ViewCardsSummaryViewModel extends ViewModel {
         cardsList = new ArrayList<>();
     }
 
+    private MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
+
+    public MutableLiveData<Boolean> getDbRefreshIndicator() {
+        return dbRefreshIndicator;
+    }
+
+    public void setDbRefreshIndicatorFalse() {
+        this.dbRefreshIndicator.setValue(false);
+    }
+
+    public void refreshViewDBUpdate() {
+        cardsList.clear();
+        cardsList.addAll(loadMoreData(sortOrder, LOADING_LIMIT, 0, cardNameSearch));
+
+        this.dbRefreshIndicator.postValue(true);
+    }
+
     public ArrayList<OwnedCard> getCardsList(){
         return cardsList;
     }

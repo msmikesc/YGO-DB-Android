@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         Util.setAppContext(getApplicationContext());
 
+        Util.setViewModelOwner(this);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

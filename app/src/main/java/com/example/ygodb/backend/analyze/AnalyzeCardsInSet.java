@@ -135,6 +135,8 @@ public class AnalyzeCardsInSet {
 			list = SQLiteConnection.getObj().getDistinctCardIDsInSetByName(setName);
 		}
 
+		ArrayList<SetMetaData> setMetaData = SQLiteConnection.getObj().getSetMetaDataFromSetName(setName);
+
 		for (int i : list) {
 			ArrayList<OwnedCard> cardsList = SQLiteConnection.getObj().getNumberOfOwnedCardsById(i);
 
@@ -159,7 +161,7 @@ public class AnalyzeCardsInSet {
 
 					if(rarity.setName.equalsIgnoreCase(setName)){
 						currentData.mainSetRarities.add(rarity.setRarity);
-						currentData.mainSetCode.add(rarity.setNumber);
+						currentData.mainSetNumber.add(rarity.setNumber);
 					}
 
 				}
@@ -168,6 +170,7 @@ public class AnalyzeCardsInSet {
 				currentData.cardType = rarityList.get(0).cardType;
 				currentData.setName.add(setName);
 				currentData.mainSetName = setName;
+				currentData.mainSetCode = setMetaData.get(0).set_code;
 				addToHashMap(h, currentData);
 			}
 
@@ -182,7 +185,7 @@ public class AnalyzeCardsInSet {
 
 					if(rarity.setName.equalsIgnoreCase(setName)){
 						currentData.mainSetRarities.add(rarity.setRarity);
-						currentData.mainSetCode.add(rarity.setNumber);
+						currentData.mainSetNumber.add(rarity.setNumber);
 					}
 				}
 
@@ -190,6 +193,7 @@ public class AnalyzeCardsInSet {
 				currentData.setNumber.add(rarityList.get(0).setNumber);
 				currentData.cardType = rarityList.get(0).cardType;
 				currentData.mainSetName = setName;
+				currentData.mainSetCode = setMetaData.get(0).set_code;
 
 				for(String s: current.setName.split(",")){
 					currentData.setName.add(s);

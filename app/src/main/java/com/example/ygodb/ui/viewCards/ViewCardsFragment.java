@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ygodb.abs.Util;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
 import com.example.ygodb.abs.EndlessScrollListener;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
@@ -27,10 +30,10 @@ public class ViewCardsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ViewCardsViewModel viewCardsViewModel =
-                new ViewModelProvider(this).get(ViewCardsViewModel.class);
+                new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsViewModel.class);
 
         AddCardsViewModel addCardsViewModel =
-                new ViewModelProvider(getActivity()).get(AddCardsViewModel.class);
+                new ViewModelProvider(Util.getViewModelOwner()).get(AddCardsViewModel.class);
 
         binding = FragmentViewcardsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -71,6 +74,17 @@ public class ViewCardsFragment extends Fragment {
                 }
             });
         }
+
+        viewCardsViewModel.getDbRefreshIndicator().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    viewCardsViewModel.setDbRefreshIndicatorFalse();
+                    layout.scrollToPositionWithOffset(0, 0);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
 
         return root;
     }

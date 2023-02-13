@@ -2,6 +2,7 @@ package com.example.ygodb.ui.viewCards;
 
 import static java.lang.Thread.sleep;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ygodb.backend.bean.OwnedCard;
@@ -23,6 +24,23 @@ public class ViewCardsViewModel extends ViewModel {
         sortOrder = "dateBought desc, cardName asc";
         sortOption = "Date Bought";
         cardsList = new ArrayList<>();
+    }
+
+    private MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
+
+    public MutableLiveData<Boolean> getDbRefreshIndicator() {
+        return dbRefreshIndicator;
+    }
+
+    public void setDbRefreshIndicatorFalse() {
+        this.dbRefreshIndicator.setValue(false);
+    }
+
+    public void refreshViewDBUpdate() {
+        cardsList.clear();
+        cardsList.addAll(loadMoreData(sortOrder, LOADING_LIMIT, 0, cardNameSearch));
+
+        this.dbRefreshIndicator.postValue(true);
     }
 
     public ArrayList<OwnedCard> getCardsList(){

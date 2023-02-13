@@ -9,11 +9,14 @@ import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
+import com.example.ygodb.abs.Util;
 import com.example.ygodb.databinding.FragmentViewcardsetBinding;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
@@ -27,10 +30,10 @@ public class ViewCardSetFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ViewCardSetViewModel viewCardSetViewModel =
-                new ViewModelProvider(this).get(ViewCardSetViewModel.class);
+                new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
         AddCardsViewModel addCardsViewModel =
-                new ViewModelProvider(getActivity()).get(AddCardsViewModel.class);
+                new ViewModelProvider(Util.getViewModelOwner()).get(AddCardsViewModel.class);
 
         binding = FragmentViewcardsetBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -56,6 +59,17 @@ public class ViewCardSetFragment extends Fragment {
         binding.cardSearch.addTextChangedListener(new ViewCardSet_CardSearchBarChangedListener(binding.cardSearch, viewCardSetViewModel, adapter, layout));
 
         binding.setSearch.addTextChangedListener(new ViewCardSet_SetSearchBarChangedListener(binding.setSearch, viewCardSetViewModel, adapter, layout));
+
+        viewCardSetViewModel.getDbRefreshIndicator().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    viewCardSetViewModel.setDbRefreshIndicatorFalse();
+                    layout.scrollToPositionWithOffset(0, 0);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
 
         return root;
     }

@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.example.ygodb.backend.bean.AnalyzePrintedOnceData;
 import com.example.ygodb.backend.bean.CardSet;
@@ -276,7 +277,8 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 
 		SQLiteDatabase connection = SQLiteConnection.getInstance();
 
-		String setQuery = "Select * from cardSets a left join gamePlayCard b on a.wikiID = b.wikiID and b.title = a.cardName where a.wikiID=? and a.setName = ?";
+		String setQuery = "Select * from cardSets a left join gamePlayCard b on a.wikiID = b.wikiID " +
+				"and b.title = a.cardName where a.wikiID=? and a.setName = ?";
 
 		String[] params = new String[]{id+"", setName};
 
@@ -480,11 +482,72 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 		return cardsInSetList;
 	}
 
+	public OwnedCard getExistingOwnedCardByObject(OwnedCard query) {
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		String[] Columns = new String[]{"wikiID","rarityUnsure","quantity","cardName","setCode",
+				"setNumber","setName","setRarity","setRarityColorVariant","folderName","condition",
+				"editionPrinting","dateBought","priceBought","creationDate","modificationDate",
+				"priceLow","priceMid","priceMarket","UUID"};
+
+		//PRIMARY KEY("wikiID","folderName","setNumber","setRarity","setRarityColorVariant",
+		// "condition","editionPrinting","dateBought","priceBought")
+
+		String[] selectionArgs = null;
+		String selection = "wikiID = ? AND folderName = ? AND setNumber = ? AND setRarity = ? AND " +
+				"setRarityColorVariant = ? AND condition = ? AND editionPrinting = ? AND " +
+				"dateBought = ? AND priceBought = ?";
+		selectionArgs = new String[]{query.id+"", query.folderName, query.setNumber, query.setRarity,
+		query.colorVariant, query.condition, query.editionPrinting, query.dateBought, query.priceBought};
+
+		Cursor rs = connection.query("ownedCards", Columns, selection,selectionArgs,
+				null,null,null, null);
+
+		String[] col = rs.getColumnNames();
+
+		rs.moveToNext();
+
+		if(rs.isAfterLast()){
+			rs.close();
+			return null;
+		}
+
+		OwnedCard current = new OwnedCard();
+
+		current.id = rs.getInt(getColumn(col,"wikiID"));
+		current.rarityUnsure = rs.getInt(getColumn(col,"rarityUnsure"));
+		current.quantity = rs.getInt(getColumn(col,"quantity"));
+		current.cardName = rs.getString(getColumn(col,"cardName"));
+		current.setCode = rs.getString(getColumn(col,"setCode"));
+		current.setNumber = rs.getString(getColumn(col,"setNumber"));
+		current.setName = rs.getString(getColumn(col,"setName"));
+		current.setRarity = rs.getString(getColumn(col,"setRarity"));
+		current.colorVariant = rs.getString(getColumn(col,"setRarityColorVariant"));
+		current.folderName = rs.getString(getColumn(col,"folderName"));
+		current.condition = rs.getString(getColumn(col,"condition"));
+		current.editionPrinting = rs.getString(getColumn(col,"editionPrinting"));
+		current.dateBought = rs.getString(getColumn(col,"dateBought"));
+		current.priceBought = rs.getString(getColumn(col,"priceBought"));
+		current.creationDate = rs.getString(getColumn(col,"creationDate"));
+		current.modificationDate = rs.getString(getColumn(col,"modificationDate"));
+
+		current.priceLow = rs.getString(getColumn(col,"priceLow"));
+		current.priceMid = rs.getString(getColumn(col,"priceMid"));
+		current.priceMarket = rs.getString(getColumn(col,"priceMarket"));
+
+		current.UUID = rs.getString(getColumn(col,"UUID"));
+
+		rs.close();
+
+		return current;
+	}
+
 	public ArrayList<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = SQLiteConnection.getInstance();
 
 		String[] Columns = new String[]{"wikiID", "quantity", "cardName", "setNumber", "setName",
-				"setRarity", "setRarityColorVariant", "editionPrinting", "dateBought", "priceBought", "UUID"};
+				"setRarity", "setRarityColorVariant", "editionPrinting", "dateBought", "priceBought",
+				"UUID", "setCode"};
 
 		String selection = null;
 		String[] selectionArgs = null;
@@ -516,6 +579,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			current.dateBought = rs.getString(getColumn(col,"dateBought"));
 			current.priceBought = rs.getString(getColumn(col,"priceBought"));
 			current.UUID = rs.getString(getColumn(col,"UUID"));
+			current.setCode = rs.getString(getColumn(col,"setCode"));
 
 			cardsInSetList.add(current);
 
@@ -787,7 +851,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 
 		SQLiteDatabase connection = SQLiteConnection.getInstance();
 
-		String query = "select distinct setName from cardSets";
+		String query = "select distinct cardSets.setName from cardSets inner join setData on cardSets.setName = setData.setName order by setData.releaseDate desc";
 
 		Cursor rs = connection.rawQuery(query, null);
 		String[] col = rs.getColumnNames();
@@ -1217,6 +1281,10 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 		
 		String UUID = card.UUID;
 
+		if(UUID == null || UUID.equals("")) {
+			UUID = java.util.UUID.randomUUID().toString();
+		}
+
 		SQLiteDatabase connection = SQLiteConnection.getInstance();
 
 		if (rarityUnsure != 1) {
@@ -1241,39 +1309,39 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 
 		SQLiteStatement batchUpsertOwnedCard = connection.compileStatement(ownedInsert);
 
-		batchUpsertOwnedCard.bindLong(1, id);
-		batchUpsertOwnedCard.bindString(2, folder);
-		batchUpsertOwnedCard.bindString(3, name);
-		batchUpsertOwnedCard.bindLong(4, quantity);
-		batchUpsertOwnedCard.bindString(5, setCode);
-		batchUpsertOwnedCard.bindString(6, setNumber);
-		batchUpsertOwnedCard.bindString(7, setName);
-		batchUpsertOwnedCard.bindString(8, setRarity);
-		batchUpsertOwnedCard.bindString(9, colorVariant);
-		batchUpsertOwnedCard.bindString(10, condition);
-		batchUpsertOwnedCard.bindString(11, printing);
-		batchUpsertOwnedCard.bindString(12, dateBought);
-		batchUpsertOwnedCard.bindString(13, normalizedPrice);
-		batchUpsertOwnedCard.bindLong(14, rarityUnsure);
+		setIntegerOrNull(batchUpsertOwnedCard,1, id);
+		setStringOrNull(batchUpsertOwnedCard, 2, folder);
+		setStringOrNull(batchUpsertOwnedCard,3, name);
+		setIntegerOrNull(batchUpsertOwnedCard,4, quantity);
+		setStringOrNull(batchUpsertOwnedCard,5, setCode);
+		setStringOrNull(batchUpsertOwnedCard,6, setNumber);
+		setStringOrNull(batchUpsertOwnedCard,7, setName);
+		setStringOrNull(batchUpsertOwnedCard,8, setRarity);
+		setStringOrNull(batchUpsertOwnedCard,9, colorVariant);
+		setStringOrNull(batchUpsertOwnedCard,10, condition);
+		setStringOrNull(batchUpsertOwnedCard,11, printing);
+		setStringOrNull(batchUpsertOwnedCard,12, dateBought);
+		setStringOrNull(batchUpsertOwnedCard,13, normalizedPrice);
+		setIntegerOrNull(batchUpsertOwnedCard,14, rarityUnsure);
 		
-		batchUpsertOwnedCard.bindString(15, low);
-		batchUpsertOwnedCard.bindString(16, mid);
-		batchUpsertOwnedCard.bindString(17, market);
+		setStringOrNull(batchUpsertOwnedCard,15, low);
+		setStringOrNull(batchUpsertOwnedCard,16, mid);
+		setStringOrNull(batchUpsertOwnedCard,17, market);
 		
-		batchUpsertOwnedCard.bindString(18, UUID);
+		setStringOrNull(batchUpsertOwnedCard,18, UUID);
 		
 		//conflict fields
 		
-		batchUpsertOwnedCard.bindLong(19, quantity);
-		batchUpsertOwnedCard.bindLong(20, rarityUnsure);
-		batchUpsertOwnedCard.bindString(21, setRarity);
-		batchUpsertOwnedCard.bindString(22, colorVariant);
+		setIntegerOrNull(batchUpsertOwnedCard,19, quantity);
+		setIntegerOrNull(batchUpsertOwnedCard,20, rarityUnsure);
+		setStringOrNull(batchUpsertOwnedCard,21, setRarity);
+		setStringOrNull(batchUpsertOwnedCard,22, colorVariant);
 		
-		batchUpsertOwnedCard.bindString(23, low);
-		batchUpsertOwnedCard.bindString(24, mid);
-		batchUpsertOwnedCard.bindString(25, market);
+		setStringOrNull(batchUpsertOwnedCard,23, low);
+		setStringOrNull(batchUpsertOwnedCard,24, mid);
+		setStringOrNull(batchUpsertOwnedCard,25, market);
 		
-		batchUpsertOwnedCard.bindString(26, UUID);
+		setStringOrNull(batchUpsertOwnedCard,26, UUID);
 
 		batchUpsertOwnedCard.execute();
 	}

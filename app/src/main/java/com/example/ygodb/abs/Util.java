@@ -6,9 +6,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStore;
+
+import com.example.ygodb.MainActivity;
+
 public class Util {
 
     private static Context appContext = null;
+
+    private static AppCompatActivity owner = null;
 
     public static void setAppContext(Context in){
         appContext = in;
@@ -16,6 +24,14 @@ public class Util {
 
     public static Context getAppContext(){
         return appContext;
+    }
+
+    public static void setViewModelOwner(AppCompatActivity in) {
+        owner = in;
+    }
+
+    public static AppCompatActivity getViewModelOwner(){
+        return owner;
     }
 
     @SuppressLint("Range")
@@ -41,5 +57,6 @@ public class Util {
         }
         return result;
     }
+
 
 }

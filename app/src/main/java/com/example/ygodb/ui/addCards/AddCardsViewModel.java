@@ -25,6 +25,31 @@ public class AddCardsViewModel extends ViewModel {
         keyToPosition = new HashMap<>();
     }
 
+
+    public void saveToDB(){
+        for(OwnedCard current: cardsList){
+            if(current.dropdownSelectedSetNumber != null && !current.dropdownSelectedSetNumber.equals("")){
+                current.setNumber = current.dropdownSelectedSetNumber;
+            }
+            if(current.dropdownSelectedRarity != null && !current.dropdownSelectedRarity.equals("")){
+                current.setRarity = current.dropdownSelectedRarity;
+            }
+
+            OwnedCard existingRecord = SQLiteConnection.getObj().getExistingOwnedCardByObject(current);
+
+            if(existingRecord != null){
+                existingRecord.quantity += current.quantity;
+                current = existingRecord;
+            }
+
+            SQLiteConnection.getObj().upsertOwnedCardBatch(current);
+
+        }
+        keyToPosition.clear();
+        cardsList.clear();
+    }
+
+
     public ArrayList<OwnedCard> getCardsList(){
         return cardsList;
     }

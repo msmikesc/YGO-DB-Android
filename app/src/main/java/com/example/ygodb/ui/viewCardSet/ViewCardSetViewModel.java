@@ -40,6 +40,22 @@ public class ViewCardSetViewModel extends ViewModel {
         setNamesArrayList.toArray(setNamesDropdownList);
     }
 
+    private MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
+
+    public MutableLiveData<Boolean> getDbRefreshIndicator() {
+        return dbRefreshIndicator;
+    }
+
+    public void setDbRefreshIndicatorFalse() {
+        this.dbRefreshIndicator.setValue(false);
+    }
+
+    public void refreshViewDBUpdate() {
+        loadInitialData(setNameSearch);
+
+        this.dbRefreshIndicator.postValue(true);
+    }
+
     public void loadInitialData(String setName) {
 
         AnalyzeCardsInSet runner = new AnalyzeCardsInSet();
@@ -69,6 +85,7 @@ public class ViewCardSetViewModel extends ViewModel {
             currentCard.quantity = current.quantity;
             currentCard.setNumber = current.getStringOfMainSetNumbers();
             currentCard.priceBought = current.getAveragePrice();
+            currentCard.setCode = current.mainSetCode;
             newList.add(currentCard);
         }
 

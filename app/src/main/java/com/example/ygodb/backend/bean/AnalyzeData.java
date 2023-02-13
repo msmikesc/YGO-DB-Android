@@ -15,11 +15,12 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	public Set<String> setName;
 	public Set<String> setRarities;
 	public String cardType;
-	public Set<String> mainSetCode;
+	public Set<String> mainSetNumber;
 	public Set<String> mainSetRarities;
 	public BigDecimal cardPriceAverage;
 
 	public String mainSetName;
+	public String mainSetCode;
 
 	public int id;
 
@@ -30,7 +31,7 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 		setRarities = new HashSet<String>();
 
 		mainSetRarities = new HashSet<String>();
-		mainSetCode = new HashSet<String>();
+		mainSetNumber = new HashSet<String>();
 		cardPriceAverage = new BigDecimal(0);
 		cardPriceAverage = cardPriceAverage.setScale(2, RoundingMode.HALF_UP);
 
@@ -118,11 +119,11 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	public String getStringOfMainSetNumbers() {
 
-		if(mainSetCode.size() == 0) {
+		if(mainSetNumber.size() == 0) {
 			return "";
 		}
 
-		ArrayList<String> results = new ArrayList<String>(mainSetCode);
+		ArrayList<String> results = new ArrayList<String>(mainSetNumber);
 
 		if(results.size() == 1){
 			return results.get(0);
