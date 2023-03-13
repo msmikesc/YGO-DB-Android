@@ -31,7 +31,9 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
     private AddCardsViewModel addCardsViewModel;
 
     private  InputStream firstInputStream;
+    private  InputStream firstInputStreamSmall;
     private Drawable firstDrawable;
+    private Drawable firstDrawableSmall;
 
     public AddCardToListAdapter(ArrayList<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel) {
         this.addingOwnedCards = ownedCards;
@@ -42,6 +44,9 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
             firstInputStream = Util.getAppContext().getAssets().open("images/1st.png");
             // load image as Drawable
             firstDrawable = Drawable.createFromStream(firstInputStream, null);
+
+            firstInputStreamSmall = Util.getAppContext().getAssets().open("images/1st.png");
+            firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -80,7 +85,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         }
         else{
             current.editionPrinting = "1st Edition";
-            viewHolder.firstEdition.setImageDrawable(firstDrawable);
+            viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }
 
         viewHolder.cardQuantity.setText(current.quantity + "");
@@ -280,7 +285,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
         if(current.editionPrinting.contains("1st")){
             // set image to ImageView
-            viewHolder.firstEdition.setImageDrawable(firstDrawable);
+            viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }
         else{
             viewHolder.firstEdition.setImageDrawable(null);

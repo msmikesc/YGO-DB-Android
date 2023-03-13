@@ -1,6 +1,7 @@
 package com.example.ygodb.ui.singleCard;
 
 import android.graphics.drawable.Drawable;
+import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,21 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         });
 
         viewHolder.title.setText(current.cardName);
-        viewHolder.setCode.setText(current.setNumber);
+
+        if(current.setNumber == null || current.setNumber.trim().equals("")) {
+            viewHolder.setCode.setVisibility(View.GONE);
+            viewHolder.plusButton.setVisibility(View.GONE);
+            viewHolder.cardRarity.setVisibility(View.GONE);
+            viewHolder.setName.setMaxLines(3);
+        }
+        else{
+            viewHolder.setCode.setText(current.setNumber);
+            viewHolder.cardRarity.setText(current.setRarity);
+            viewHolder.setCode.setVisibility(View.VISIBLE);
+            viewHolder.cardRarity.setVisibility(View.VISIBLE);
+            viewHolder.plusButton.setVisibility(View.VISIBLE);
+            viewHolder.setName.setMaxLines(2);
+        }
 
         if(current.multiListSetNames == null || current.multiListSetNames.equals("")){
             viewHolder.setName.setText(current.setName);
@@ -67,13 +82,12 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             viewHolder.setName.setText(current.multiListSetNames);
         }
 
-
-        viewHolder.cardRarity.setText(current.setRarity);
         if(current.priceBought != null) {
             double price = Double.parseDouble(current.priceBought);
             viewHolder.cardPrice.setText("$" + String.format("%.2f", price));
         }
         viewHolder.cardDate.setText(current.dateBought);
+
         viewHolder.cardQuantity.setText(current.quantity + "");
 
         try {
@@ -125,6 +139,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         TextView cardQuantity;
         ImageView cardImage;
         ImageView firstEdition;
+        ImageButton plusButton;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
@@ -138,6 +153,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             cardQuantity = view.findViewById(R.id.cardQuantity);
             cardImage = view.findViewById(R.id.cardImage);
             firstEdition = view.findViewById(R.id.firststEditionIcon);
+            plusButton = view.findViewById(R.id.plusButton);
 
         }
 

@@ -53,7 +53,7 @@ class ViewCardsSortButtonOnClickListener implements View.OnClickListener {
                     sortOption = (String) menuItem.getTitle();
 
                     if (sortOption.equals("Date Bought")) {
-                        sortOrder = "dateBought desc, cardName asc";
+                        sortOrder = "dateBought desc, modificationDate desc";
                     } else if (sortOption.equals("Card Name")) {
                         sortOrder = "cardName asc, dateBought desc";
                     } else if (sortOption.equals("Set Number")) {

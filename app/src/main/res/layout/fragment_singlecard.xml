@@ -58,6 +58,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardPrice" />
 
+
+
     <TextView
         android:id="@+id/cardRarity"
         android:layout_width="0sp"
@@ -74,7 +76,7 @@
     <TextView
         android:id="@+id/cardSetName"
         android:layout_width="0sp"
-        android:layout_height="0sp"
+        android:layout_height="wrap_content"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="2"
@@ -94,6 +96,7 @@
         android:maxLines="1"
         android:textColor="#DCDCDC"
         android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardImage"
         app:layout_constraintStart_toEndOf="@+id/cardImage"
         app:layout_constraintTop_toBottomOf="@+id/cardSetCode" />
 
@@ -107,13 +110,16 @@
 
     <ImageButton
         android:id="@+id/plusButton"
-        android:layout_width="40sp"
-        android:layout_height="38sp"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/cardQuantity"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardRarity"
+        app:layout_constraintTop_toBottomOf="@+id/cardDateBought"
         app:srcCompat="@drawable/plus_circle"
-        app:tint="#2FDF45"
-        android:background="?attr/selectableItemBackgroundBorderless"/>
+        app:tint="#2FDF45" />
 
     <ImageView
         android:id="@+id/firststEditionIcon"

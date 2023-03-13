@@ -222,7 +222,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			set.setNumber = rs.getString(getColumn(col,"setNumber"));
 			set.setName = rs.getString(getColumn(col,"setName"));
 			set.setRarity = rs.getString(getColumn(col,"setRarity"));
-			set.setPrice = rs.getString(getColumn(col,"setPrice"));
+			set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
 
 			ArrayList<CardSet> currentList = setrs.get(set.setNumber);
 
@@ -261,7 +261,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			set.setNumber = rs.getString(getColumn(col,"setNumber"));
 			set.setName = rs.getString(getColumn(col,"setName"));
 			set.setRarity = rs.getString(getColumn(col,"setRarity"));
-			set.setPrice = rs.getString(getColumn(col,"setPrice"));
+			set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
 
 			setrs.add(set);
 			
@@ -296,7 +296,42 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			set.setNumber = rs.getString(getColumn(col,"setNumber"));
 			set.setName = rs.getString(getColumn(col,"setName"));
 			set.setRarity = rs.getString(getColumn(col,"setRarity"));
-			set.setPrice = rs.getString(getColumn(col,"setPrice"));
+			set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
+			set.cardType = rs.getString(getColumn(col,"type"));
+
+			setrs.add(set);
+		}
+
+		rs.close();
+
+		return setrs;
+	}
+
+	public ArrayList<CardSet> getRaritiesOfCardByID(int id) {
+		//TODO add name?
+
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		String setQuery = "Select * from cardSets a left join gamePlayCard b on a.wikiID = b.wikiID " +
+				"and b.title = a.cardName where a.wikiID=?";
+
+		String[] params = new String[]{id+""};
+
+
+		Cursor rs = connection.rawQuery(setQuery, params);
+
+		String[] col = rs.getColumnNames();
+
+		ArrayList<CardSet> setrs = new ArrayList<>();
+
+		while (rs.moveToNext ()) {
+			CardSet set = new CardSet();
+			set.id = rs.getInt(getColumn(col,"wikiID"));
+			set.cardName = rs.getString(getColumn(col,"cardName"));
+			set.setNumber = rs.getString(getColumn(col,"setNumber"));
+			set.setName = rs.getString(getColumn(col,"setName"));
+			set.setRarity = rs.getString(getColumn(col,"setRarity"));
+			set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
 			set.cardType = rs.getString(getColumn(col,"type"));
 
 			setrs.add(set);
@@ -328,7 +363,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			set.setNumber = rs.getString(getColumn(col,"setNumber"));
 			set.setName = rs.getString(getColumn(col,"setName"));
 			set.setRarity = rs.getString(getColumn(col,"setRarity"));
-			set.setPrice = rs.getString(getColumn(col,"setPrice"));
+			set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
 			set.cardType = rs.getString(getColumn(col,"type"));
 
 			setrs.add(set);
@@ -338,6 +373,48 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 		rs.close();
 
 		return setrs;
+	}
+
+	public ArrayList<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy) {
+
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		ArrayList<OwnedCard> results = new ArrayList<>();
+
+		String[] Columns = new String[]{"a.wikiID","a.cardName as cardNameCol","a.setNumber as setNumberCol","a.setName",
+				"a.setRarity as setRarityCol","a.setPrice","sum(b.quantity) as quantity",
+				"MAX(b.dateBought) as maxDate"};
+
+		String[] selectionArgs = null;
+		String selection = "a.cardName like ?";
+		selectionArgs = new String[]{'%' + cardName.trim() + '%'};
+
+		String groupBy = "cardNameCol, setNumberCol, setRarityCol";
+
+		Cursor rs = connection.query("cardSets a left outer join ownedCards b " +
+						"on a.wikiID = b.wikiID and b.cardName = a.cardName " +
+						"and a.setNumber = b.setNumber and a.setRarity = b.setRarity",
+				Columns, selection,selectionArgs, groupBy,null, orderBy, null);
+
+		String[] col = rs.getColumnNames();
+
+		while (rs.moveToNext()) {
+			OwnedCard current = new OwnedCard();
+			current.id = rs.getInt(getColumn(col,"wikiID"));
+			current.cardName = rs.getString(getColumn(col,"cardNameCol"));
+			current.setNumber = rs.getString(getColumn(col,"setNumberCol"));
+			current.setName = rs.getString(getColumn(col,"setName"));
+			current.setRarity = rs.getString(getColumn(col,"setRarityCol"));
+			current.priceBought = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
+			current.quantity = rs.getInt(getColumn(col,"quantity"));
+			current.dateBought = rs.getString(getColumn(col,"maxDate"));
+
+			results.add(current);
+		}
+
+		rs.close();
+
+		return results;
 	}
 
 	public String getCardTitleFromID(int wikiID) {
@@ -806,7 +883,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 	public ArrayList<Integer> getDistinctCardIDsByArchetype(String archetype) {
 		SQLiteDatabase connection = SQLiteConnection.getInstance();
 
-		String setQuery = "select distinct wikiID from gamePlayCard where archetype = ?";
+		String setQuery = "select distinct wikiID from gamePlayCard where UPPER(archetype) = UPPER(?)";
 
 		String[] params = new String[]{archetype};
 		Cursor rs = connection.rawQuery(setQuery, params);
@@ -861,6 +938,29 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 		while (rs.moveToNext()) {
 			setsList.add(rs.getString(getColumn(col,"setName")));
 			
+		}
+
+		rs.close();
+
+		return setsList;
+	}
+
+	public ArrayList<String> getDistinctSetAndArchetypeNames() {
+
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		String query = "select * from (select distinct cardSets.setName from cardSets inner join setData on cardSets.setName = setData.setName order by setData.releaseDate desc)\n" +
+				"UNION ALL\n" +
+				"select * from (select distinct archetype from gamePlayCard where archetype is not null order by archetype asc)";
+
+		Cursor rs = connection.rawQuery(query, null);
+		String[] col = rs.getColumnNames();
+
+		ArrayList<String> setsList = new ArrayList<>();
+
+		while (rs.moveToNext()) {
+			setsList.add(rs.getString(getColumn(col,"setName")));
+
 		}
 
 		rs.close();
@@ -947,7 +1047,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			set.setNumber = rs.getString(getColumn(col,"setNumber"));
 			set.setName = rs.getString(getColumn(col,"setName"));
 			set.setRarity = rs.getString(getColumn(col,"setRarity"));
-			set.setPrice = rs.getString(getColumn(col,"setPrice"));
+			set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
 		}
 
 		rs.close();
@@ -1301,7 +1401,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 				+ "setNumber,setName,setRarity,setRarityColorVariant,condition,editionPrinting,dateBought"
 				+ ",priceBought,rarityUnsure, creationDate, modificationDate, priceLow, priceMid, priceMarket, UUID) "
 				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
-				+ "datetime('now','localtime'),datetime('now','localtime'),?,?,?,?)"
+				+ "datetime('now','localtime'),datetime('now','localtime'),?,?,?,?) "
 				+ "on conflict (wikiID,folderName,setNumber," + "condition,editionPrinting,dateBought,priceBought) "
 				+ "do update set quantity = ?, rarityUnsure = ?, setRarity = ?, setRarityColorVariant = ?, "
 				+ "modificationDate = datetime('now','localtime'), priceLow = ?, priceMid = ?, priceMarket = ?,"

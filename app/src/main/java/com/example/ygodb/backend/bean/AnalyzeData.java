@@ -15,12 +15,13 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	public Set<String> setName;
 	public Set<String> setRarities;
 	public String cardType;
-	public Set<String> mainSetNumber;
-	public Set<String> mainSetRarities;
 	public BigDecimal cardPriceAverage;
 
 	public String mainSetName;
+
 	public String mainSetCode;
+
+	public ArrayList<CardSet> mainSetCardSets;
 
 	public int id;
 
@@ -30,15 +31,14 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 		setName = new HashSet<String>();
 		setRarities = new HashSet<String>();
 
-		mainSetRarities = new HashSet<String>();
-		mainSetNumber = new HashSet<String>();
+		mainSetCardSets = new ArrayList<CardSet>();
 		cardPriceAverage = new BigDecimal(0);
 		cardPriceAverage = cardPriceAverage.setScale(2, RoundingMode.HALF_UP);
 
 	}
 
 	public String getAveragePrice(){
-		if(quantity == 0){
+		if(cardPriceAverage == null){
 			return "0.00";
 		}
 
@@ -119,8 +119,14 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	public String getStringOfMainSetNumbers() {
 
-		if(mainSetNumber.size() == 0) {
+		if(mainSetCardSets.size() == 0) {
 			return "";
+		}
+
+		HashSet<String> mainSetNumber = new HashSet<>();
+
+		for(int i = 0; i < mainSetCardSets.size(); i++){
+			mainSetNumber.add(mainSetCardSets.get(i).setNumber);
 		}
 
 		ArrayList<String> results = new ArrayList<String>(mainSetNumber);
@@ -181,8 +187,14 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	public String getStringOfMainRarities() {
 
-		if(setRarities.size() == 0) {
+		if(mainSetCardSets.size() == 0) {
 			return "";
+		}
+
+		HashSet<String> mainSetRarities = new HashSet<>();
+
+		for(int i = 0; i < mainSetCardSets.size(); i++){
+			mainSetRarities.add(mainSetCardSets.get(i).setRarity);
 		}
 
 		HashSet<Rarity> enumList = new HashSet<Rarity>();
@@ -214,4 +226,30 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	}
 
+    public BigDecimal getLowestPriceFromMainSet() {
+
+		BigDecimal lowestPrice = null;
+
+		BigDecimal zero = new BigDecimal(0);
+
+		for(CardSet current: mainSetCardSets){
+
+			BigDecimal newPrice = new BigDecimal(current.setPrice);
+
+			if(newPrice.compareTo(zero) == 0){
+				continue;
+			}
+
+			if(lowestPrice == null || (lowestPrice.compareTo(newPrice) > 0)) {
+				newPrice = newPrice.setScale(2, RoundingMode.HALF_UP);
+				lowestPrice = newPrice;
+			}
+		}
+
+		if(lowestPrice == null){
+			return new BigDecimal("0.00");
+		}
+		return lowestPrice;
+
+    }
 }

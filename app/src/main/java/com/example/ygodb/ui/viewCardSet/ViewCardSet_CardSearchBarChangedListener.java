@@ -45,15 +45,21 @@ class ViewCardSet_CardSearchBarChangedListener extends TextChangedListener<EditT
             @Override
             public void run() {
                 try {
-                    filteredCardsList.clear();
 
-                    for(OwnedCard current: cardsList){
-                        if(cardNameSearch.equals("") || current.cardName.toUpperCase().contains(cardNameSearch)){
-                            filteredCardsList.add(current);
-                        }
+                    if(viewCardsViewModel.isCardNameMode()){
+                        viewCardsViewModel.loadInitialCardNameData(cardNameSearch);
                     }
+                    else {
+                        filteredCardsList.clear();
 
-                    viewCardsViewModel.sortData(filteredCardsList, viewCardsViewModel.getCurrentComparator());
+                        for (OwnedCard current : cardsList) {
+                            if (cardNameSearch.equals("") || current.cardName.toUpperCase().contains(cardNameSearch)) {
+                                filteredCardsList.add(current);
+                            }
+                        }
+
+                        viewCardsViewModel.sortData(filteredCardsList, viewCardsViewModel.getCurrentComparator());
+                    }
 
                     handler.post(new Runnable() {
                         @Override

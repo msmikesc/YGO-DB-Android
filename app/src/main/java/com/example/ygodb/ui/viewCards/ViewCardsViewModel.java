@@ -21,7 +21,7 @@ public class ViewCardsViewModel extends ViewModel {
     private String cardNameSearch = null;
 
     public ViewCardsViewModel() {
-        sortOrder = "dateBought desc, cardName asc";
+        sortOrder = "dateBought desc, modificationDate desc";
         sortOption = "Date Bought";
         cardsList = new ArrayList<>();
     }

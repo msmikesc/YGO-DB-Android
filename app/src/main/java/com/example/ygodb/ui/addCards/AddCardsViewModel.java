@@ -1,8 +1,12 @@
 package com.example.ygodb.ui.addCards;
 
+import android.view.View;
+
 import androidx.lifecycle.ViewModel;
 
+import com.example.ygodb.backend.bean.CardSet;
 import com.example.ygodb.backend.bean.OwnedCard;
+import com.example.ygodb.backend.bean.Rarity;
 import com.example.ygodb.backend.connection.SQLiteConnection;
 import com.example.ygodb.backend.connection.Util;
 
@@ -56,6 +60,11 @@ public class AddCardsViewModel extends ViewModel {
 
     public void addNewFromOwnedCard(OwnedCard current){
 
+        if(current.setNumber == null || current.setRarity == null ||
+                current.setName == null || current.cardName == null){
+            return;
+        }
+
         String key = current.setNumber + current.setRarity;
 
         Integer position = keyToPosition.get(key);
@@ -76,7 +85,6 @@ public class AddCardsViewModel extends ViewModel {
             newCard.dateBought = sdf.format(new Date());
             newCard.id = current.id;
             newCard.setRarity = current.setRarity;
-            newCard.priceBought = "0.10";
             newCard.setName = current.setName;
             newCard.quantity = 1;
             newCard.rarityUnsure= 0;
@@ -84,6 +92,9 @@ public class AddCardsViewModel extends ViewModel {
             newCard.folderName = "UnSynced Folder";
             newCard.setNumber = current.setNumber;
             newCard.colorVariant = "-1";
+            newCard.mainSetCardSets = current.mainSetCardSets;
+
+            newCard.priceBought = getEstimatePriceFromRarity(current.setRarity);
 
             if(current.condition == null || current.condition.equals("")){
                 newCard.condition = "NearMint";
@@ -107,6 +118,89 @@ public class AddCardsViewModel extends ViewModel {
             }
 
         }
+
+    }
+
+    public void setAllPricesEstimate(){
+        for(OwnedCard current: cardsList){
+
+            String rarity = (current.dropdownSelectedRarity == null) ? current.setRarity: current.dropdownSelectedRarity;
+
+            current.priceBought = getEstimatePriceFromRarity(rarity);
+        }
+    }
+
+    public void setAllPricesAPI(){
+        for(OwnedCard current: cardsList){
+
+            String rarity = (current.dropdownSelectedRarity == null) ? current.setRarity: current.dropdownSelectedRarity;
+
+            String setNumber = (current.dropdownSelectedSetNumber == null) ? current.setNumber: current.dropdownSelectedSetNumber;
+
+            current.priceBought = getAPIPriceFromRarity(rarity, current.mainSetCardSets,
+                    current.cardName, current.setName, current.id, setNumber);
+        }
+    }
+
+    public void setAllPricesZero(){
+        for(OwnedCard current: cardsList){
+            current.priceBought = "0.00";
+        }
+    }
+
+    public String getEstimatePriceFromRarity(String rarity){
+        String[] rarities = rarity.split(", ");
+
+        String assumedRarity = rarity.trim();
+
+        if(rarities.length > 1){
+            assumedRarity = rarities[0].trim();
+        }
+
+        if(assumedRarity.equalsIgnoreCase(Rarity.Common.toString())){
+            return "0.15";
+        }
+
+        if(assumedRarity.equalsIgnoreCase(Rarity.Rare.toString())){
+            return "0.15";
+        }
+
+        if(assumedRarity.equalsIgnoreCase(Rarity.SuperRare.toString())){
+            return "0.25";
+        }
+
+        return "0.00";
+
+    }
+
+    public String getAPIPriceFromRarity(String rarity, ArrayList<CardSet> mainSetCardSets,
+                                        String cardName, String setName, int id, String setNumber){
+
+        if(mainSetCardSets == null){
+            mainSetCardSets = SQLiteConnection.getObj().
+                    getRaritiesOfCardInSetByIDAndName(id, setName, cardName);
+        }
+
+        if(mainSetCardSets.size() == 1){
+            return mainSetCardSets.get(0).setPrice;
+        }
+
+        String[] rarities = rarity.split(", ");
+
+        String assumedRarity = rarity.trim();
+
+        if(rarities.length == 1){
+            assumedRarity = rarities[0].trim();
+        }
+
+        for(int i = 0; i < mainSetCardSets.size(); i++){
+            if(mainSetCardSets.get(i).setRarity.equalsIgnoreCase(assumedRarity) &&
+                    mainSetCardSets.get(i).setNumber.equalsIgnoreCase(setNumber)){
+                return mainSetCardSets.get(i).setPrice;
+            }
+        }
+
+        return getEstimatePriceFromRarity(assumedRarity);
 
     }
 

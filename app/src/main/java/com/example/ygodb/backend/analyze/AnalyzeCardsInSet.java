@@ -122,17 +122,23 @@ public class AnalyzeCardsInSet {
 
 	public void addAnalyzeDataForSet(HashMap<String, AnalyzeData> h, String setName) throws SQLException {
 		ArrayList<Integer> list = SQLiteConnection.getObj().getDistinctCardIDsInSetByName(setName);
+		boolean archetypeMode = false;
 
 		if (list.size() == 0) {
 			ArrayList<SetMetaData> setNames = SQLiteConnection.getObj().getSetMetaDataFromSetCode(setName.toUpperCase());
 
 			if (setNames == null || setNames.isEmpty() ) {
-				System.out.println("Unable to identify card set:" + setName);
-				return;
-			}
 
-			setName = setNames.get(0).set_name;
-			list = SQLiteConnection.getObj().getDistinctCardIDsInSetByName(setName);
+				list = SQLiteConnection.getObj().getDistinctCardIDsByArchetype(setName);
+				archetypeMode = true;
+				if (list.size() == 0) {
+					return;
+				}
+			}
+			else {
+				setName = setNames.get(0).set_name;
+				list = SQLiteConnection.getObj().getDistinctCardIDsInSetByName(setName);
+			}
 		}
 
 		ArrayList<SetMetaData> setMetaData = SQLiteConnection.getObj().getSetMetaDataFromSetName(setName);
@@ -140,7 +146,13 @@ public class AnalyzeCardsInSet {
 		for (int i : list) {
 			ArrayList<OwnedCard> cardsList = SQLiteConnection.getObj().getNumberOfOwnedCardsById(i);
 
-			ArrayList<CardSet> rarityList = SQLiteConnection.getObj().getRaritiesOfCardInSetByID(i, setName);
+			ArrayList<CardSet> rarityList = null;
+			if(!archetypeMode) {
+				rarityList = SQLiteConnection.getObj().getRaritiesOfCardInSetByID(i, setName);
+			}
+			else{
+				rarityList = SQLiteConnection.getObj().getRaritiesOfCardByID(i);
+			}
 
 			if (cardsList.size() == 0) {
 
@@ -156,21 +168,43 @@ public class AnalyzeCardsInSet {
 					currentData.quantity = 0;
 				}
 
-				for (CardSet rarity : rarityList) {
-					currentData.setRarities.add(rarity.setRarity);
+				if(!archetypeMode){
+					for (CardSet rarity : rarityList) {
+						currentData.setRarities.add(rarity.setRarity);
 
-					if(rarity.setName.equalsIgnoreCase(setName)){
-						currentData.mainSetRarities.add(rarity.setRarity);
-						currentData.mainSetNumber.add(rarity.setNumber);
+						if(rarity.setName.equalsIgnoreCase(setName)){
+							currentData.mainSetCardSets.add(rarity);
+						}
+
 					}
-
+					currentData.cardPriceAverage = currentData.getLowestPriceFromMainSet();
 				}
+				else{
+					BigDecimal origSetPrice = new BigDecimal(Integer.MAX_VALUE);
+					currentData.cardPriceAverage = origSetPrice;
+					for (CardSet rarity : rarityList) {
+						currentData.setName.add(rarity.setName);
+						currentData.setRarities.add(rarity.setRarity);
+						BigDecimal setPrice = new BigDecimal(rarity.setPrice);
+
+						if (!("0.00".equals(rarity.setPrice)) && currentData.cardPriceAverage.compareTo(setPrice) > 0){
+							currentData.cardPriceAverage = setPrice;
+						}
+					}
+					if(origSetPrice.equals(currentData.cardPriceAverage)){
+						currentData.cardPriceAverage = new BigDecimal(0);
+					}
+				}
+
 				currentData.id = i;
-				currentData.setNumber.add(rarityList.get(0).setNumber);
-				currentData.cardType = rarityList.get(0).cardType;
-				currentData.setName.add(setName);
-				currentData.mainSetName = setName;
-				currentData.mainSetCode = setMetaData.get(0).set_code;
+
+				if(!archetypeMode) {
+					currentData.setNumber.add(rarityList.get(0).setNumber);
+					currentData.cardType = rarityList.get(0).cardType;
+					currentData.setName.add(setName);
+					currentData.mainSetName = setName;
+					currentData.mainSetCode = setMetaData.get(0).set_code;
+				}
 				addToHashMap(h, currentData);
 			}
 
@@ -180,22 +214,30 @@ public class AnalyzeCardsInSet {
 				currentData.cardName = current.cardName;
 				currentData.quantity = current.quantity;
 
-				for (CardSet rarity : rarityList) {
-					currentData.setRarities.add(rarity.setRarity);
+				if(!archetypeMode) {
+					for (CardSet rarity : rarityList) {
+						currentData.setRarities.add(rarity.setRarity);
 
-					if(rarity.setName.equalsIgnoreCase(setName)){
-						currentData.mainSetRarities.add(rarity.setRarity);
-						currentData.mainSetNumber.add(rarity.setNumber);
+						if (rarity.setName.equalsIgnoreCase(setName)) {
+							currentData.mainSetCardSets.add(rarity);
+						}
+					}
+				}
+				else{
+					for (CardSet rarity : rarityList) {
+						currentData.setName.add(rarity.setName);
+						currentData.setRarities.add(rarity.setRarity);
 					}
 				}
 
 				currentData.id = i;
-				currentData.setNumber.add(rarityList.get(0).setNumber);
-				currentData.cardType = rarityList.get(0).cardType;
-				currentData.mainSetName = setName;
-				currentData.mainSetCode = setMetaData.get(0).set_code;
-
-				for(String s: current.setName.split(",")){
+				if(!archetypeMode) {
+					currentData.setNumber.add(rarityList.get(0).setNumber);
+					currentData.cardType = rarityList.get(0).cardType;
+					currentData.mainSetName = setName;
+					currentData.mainSetCode = setMetaData.get(0).set_code;
+				}
+				for (String s : current.setName.split(",")) {
 					currentData.setName.add(s);
 				}
 				currentData.cardPriceAverage = new BigDecimal(current.priceBought);

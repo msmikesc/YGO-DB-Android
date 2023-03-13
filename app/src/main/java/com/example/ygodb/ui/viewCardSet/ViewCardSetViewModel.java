@@ -25,6 +25,8 @@ public class ViewCardSetViewModel extends ViewModel {
     private String cardNameSearch = null;
     private String setNameSearch = null;
 
+    private boolean isCardNameMode = true;
+
     private String[] setNamesDropdownList = null;
 
     public ViewCardSetViewModel() {
@@ -33,11 +35,13 @@ public class ViewCardSetViewModel extends ViewModel {
         cardsList = new ArrayList<>();
         filteredCardsList = new ArrayList<>();
 
-        ArrayList<String> setNamesArrayList = SQLiteConnection.getObj().getDistinctSetNames();
+        ArrayList<String> setNamesArrayList = SQLiteConnection.getObj().getDistinctSetAndArchetypeNames();
 
         setNamesDropdownList = new String[setNamesArrayList.size()];
 
         setNamesArrayList.toArray(setNamesDropdownList);
+
+        isCardNameMode = true;
     }
 
     private MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
@@ -51,9 +55,38 @@ public class ViewCardSetViewModel extends ViewModel {
     }
 
     public void refreshViewDBUpdate() {
-        loadInitialData(setNameSearch);
+        if(!isCardNameMode) {
+            loadInitialData(setNameSearch);
+        }
+        else{
+            loadInitialCardNameData(cardNameSearch);
+        }
 
         this.dbRefreshIndicator.postValue(true);
+    }
+
+    public void loadInitialCardNameData(String cardName) {
+
+        ArrayList<OwnedCard> results = null;
+
+        if(cardName == null || cardName.trim().equals("") || cardName.trim().length() < 3){
+            filteredCardsList.clear();
+            return;
+        }
+
+        results = SQLiteConnection.getObj().getAllPossibleCardsByNameSearch(cardName,
+                "a.cardName asc, a.setNumber asc, a.setRarity asc");
+
+        //sortData(results, currentComparator);
+
+        if(results.size() > 0){
+            isCardNameMode = true;
+        }
+
+        cardsList.clear();
+        filteredCardsList.clear();
+
+        filteredCardsList.addAll(results);
     }
 
     public void loadInitialData(String setName) {
@@ -66,6 +99,10 @@ public class ViewCardSetViewModel extends ViewModel {
         if(setName == null || setName.equals("")){
             cardsList.clear();
             filteredCardsList.clear();
+            isCardNameMode = true;
+            if(cardNameSearch != null && cardNameSearch.length() > 0){
+                loadInitialCardNameData(cardNameSearch);
+            }
             return;
         }
 
@@ -86,6 +123,7 @@ public class ViewCardSetViewModel extends ViewModel {
             currentCard.setNumber = current.getStringOfMainSetNumbers();
             currentCard.priceBought = current.getAveragePrice();
             currentCard.setCode = current.mainSetCode;
+            currentCard.mainSetCardSets = current.mainSetCardSets;
             newList.add(currentCard);
         }
 
@@ -95,6 +133,10 @@ public class ViewCardSetViewModel extends ViewModel {
         filteredCardsList.clear();
 
         cardsList.addAll(newList);
+
+        if(newList.size() > 0){
+            isCardNameMode = false;
+        }
 
         for(OwnedCard current: cardsList){
             if(cardNameSearch == null ||cardNameSearch.equals("") || current.cardName.toUpperCase().contains(cardNameSearch.toUpperCase())){
@@ -159,5 +201,9 @@ public class ViewCardSetViewModel extends ViewModel {
 
     public static void setCurrentComparator(Comparator<OwnedCard> currentComparator) {
         ViewCardSetViewModel.currentComparator = currentComparator;
+    }
+
+    public boolean isCardNameMode() {
+        return isCardNameMode;
     }
 }

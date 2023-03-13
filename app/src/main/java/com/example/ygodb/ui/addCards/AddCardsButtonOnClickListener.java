@@ -41,6 +41,11 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setFocusableInTouchMode(false);
+
         // Initializing the popup menu and giving the reference as current context
         PopupMenu popupMenu = new PopupMenu(context, fab);
 
@@ -50,7 +55,65 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                if (menuItem.getTitle().equals("Save Cards") && addCardsViewModel.getCardsList().size() > 0) {
+                if(addCardsViewModel.getCardsList().size() < 1){
+                    return true;
+                }
+
+                if (menuItem.getTitle().equals("Set Prices Zero") ) {
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            addCardsViewModel.setAllPricesZero();
+
+                            view.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        }
+                    });
+                }
+
+                if (menuItem.getTitle().equals("Set Estimated Prices") ) {
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            addCardsViewModel.setAllPricesEstimate();
+
+                            view.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        }
+                    });
+                }
+
+                if (menuItem.getTitle().equals("Set API Prices") ) {
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            addCardsViewModel.setAllPricesAPI();
+
+                            view.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        }
+                    });
+                }
+
+                if (menuItem.getTitle().equals("Save Cards") ) {
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {

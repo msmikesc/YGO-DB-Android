@@ -1,5 +1,7 @@
 package com.example.ygodb.backend.bean;
 
+import java.util.ArrayList;
+
 public class OwnedCard {
 
 	public int id;
@@ -28,5 +30,7 @@ public class OwnedCard {
 
 	public String dropdownSelectedSetNumber;
 	public String dropdownSelectedRarity;
+
+	public ArrayList<CardSet> mainSetCardSets;
 
 }
