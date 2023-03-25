@@ -883,9 +883,9 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 	public ArrayList<Integer> getDistinctCardIDsByArchetype(String archetype) {
 		SQLiteDatabase connection = SQLiteConnection.getInstance();
 
-		String setQuery = "select distinct wikiID from gamePlayCard where UPPER(archetype) = UPPER(?)";
+		String setQuery = "select distinct wikiID from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
 
-		String[] params = new String[]{archetype};
+		String[] params = new String[]{archetype, "%"+archetype+"%"};
 		Cursor rs = connection.rawQuery(setQuery, params);
 		String[] col = rs.getColumnNames();
 

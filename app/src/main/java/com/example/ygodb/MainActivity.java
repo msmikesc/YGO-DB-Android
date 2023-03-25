@@ -3,6 +3,7 @@ package com.example.ygodb;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,10 +26,12 @@ import com.example.ygodb.abs.CopyDBOutCallback;
 import com.example.ygodb.abs.Util;
 import com.example.ygodb.backend.connection.SQLiteConnection;
 import com.example.ygodb.databinding.ActivityMainBinding;
+import com.example.ygodb.ui.viewCardSet.ViewCardSetViewModel;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,6 +88,23 @@ public class MainActivity extends AppCompatActivity {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        ViewCardSetViewModel viewCardSetViewModel =
+                new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ArrayList<String> setNamesArrayList = SQLiteConnection.getObj().getDistinctSetAndArchetypeNames();
+                    viewCardSetViewModel.setNamesDropdownList = new String[setNamesArrayList.size()];
+                    setNamesArrayList.toArray(viewCardSetViewModel.setNamesDropdownList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     // Function to check and request permission

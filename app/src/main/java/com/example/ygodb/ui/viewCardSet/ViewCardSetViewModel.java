@@ -27,20 +27,13 @@ public class ViewCardSetViewModel extends ViewModel {
 
     private boolean isCardNameMode = true;
 
-    private String[] setNamesDropdownList = null;
+    public String[] setNamesDropdownList = null;
 
     public ViewCardSetViewModel() {
         currentComparator = new OwnedCardQuantityComparator();
         sortOption = "Quantity";
         cardsList = new ArrayList<>();
         filteredCardsList = new ArrayList<>();
-
-        ArrayList<String> setNamesArrayList = SQLiteConnection.getObj().getDistinctSetAndArchetypeNames();
-
-        setNamesDropdownList = new String[setNamesArrayList.size()];
-
-        setNamesArrayList.toArray(setNamesDropdownList);
-
         isCardNameMode = true;
     }
 
@@ -82,6 +75,7 @@ public class ViewCardSetViewModel extends ViewModel {
         if(results.size() > 0){
             isCardNameMode = true;
         }
+        sortOption = "Default";
 
         cardsList.clear();
         filteredCardsList.clear();
@@ -96,7 +90,7 @@ public class ViewCardSetViewModel extends ViewModel {
         ArrayList<AnalyzeData> results = null;
         ArrayList<OwnedCard> newList = new ArrayList<>();
 
-        if(setName == null || setName.equals("")){
+        if(setName == null || setName.equals("") || setName.trim().length() < 3){
             cardsList.clear();
             filteredCardsList.clear();
             isCardNameMode = true;
