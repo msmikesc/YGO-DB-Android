@@ -47,7 +47,8 @@ public class ViewCardSetFragment extends Fragment {
         textView.setThreshold(3);
         textView.setAdapter(autoCompleteAdapter);
 
-        SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewCardSetViewModel.getFilteredCardsList(), addCardsViewModel);
+        SingleCardToListAdapter adapter = new SingleCardToListAdapter(
+                viewCardSetViewModel.getFilteredCardsList(), addCardsViewModel, null);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
         layout = linearLayoutManager;

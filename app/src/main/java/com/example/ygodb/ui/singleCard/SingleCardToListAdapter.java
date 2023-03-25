@@ -16,6 +16,7 @@ import com.example.ygodb.R;
 import com.example.ygodb.abs.Util;
 import com.example.ygodb.backend.bean.OwnedCard;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
+import com.example.ygodb.ui.sellCards.SellCardsViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.InputStream;
@@ -25,10 +26,14 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
     private ArrayList<OwnedCard> ownedCards;
 
     private AddCardsViewModel addCardsViewModel;
+    private SellCardsViewModel sellCardsViewModel;
 
-    public SingleCardToListAdapter(ArrayList<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel) {
+    public SingleCardToListAdapter(ArrayList<OwnedCard> ownedCards,
+           AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel) {
         this.ownedCards = ownedCards;
         this.addCardsViewModel = addCardsViewModel;
+        this.sellCardsViewModel = sellCardsViewModel;
+
     }
 
     @NonNull
@@ -42,6 +47,12 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
     public void onPlusButtonClick(View view, OwnedCard current) {
         addCardsViewModel.addNewFromOwnedCard(current);
+    }
+
+    public void onSellButtonClick(View view, OwnedCard current) {
+        if(sellCardsViewModel != null) {
+            sellCardsViewModel.addNewFromOwnedCard(current);
+        }
     }
 
     @Override
@@ -58,6 +69,16 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             }
         });
 
+        if(sellCardsViewModel != null){
+            ImageButton sellButton = viewHolder.itemView.findViewById(R.id.sellButton);
+            sellButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onSellButtonClick(view, current);
+                }
+            });
+        }
+
         viewHolder.title.setText(current.cardName);
 
         if(current.setNumber == null || current.setNumber.trim().equals("")) {
@@ -73,6 +94,13 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             viewHolder.cardRarity.setVisibility(View.VISIBLE);
             viewHolder.plusButton.setVisibility(View.VISIBLE);
             viewHolder.setName.setMaxLines(2);
+        }
+
+        if(sellCardsViewModel == null){
+            viewHolder.sellButton.setVisibility(View.GONE);
+        }
+        else{
+            viewHolder.sellButton.setVisibility(View.VISIBLE);
         }
 
         if(current.multiListSetNames == null || current.multiListSetNames.equals("")){
@@ -141,6 +169,8 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         ImageView firstEdition;
         ImageButton plusButton;
 
+        ImageButton sellButton;
+
         public ItemViewHolder(@NonNull View view) {
             super(view);
 
@@ -154,6 +184,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             cardImage = view.findViewById(R.id.cardImage);
             firstEdition = view.findViewById(R.id.firststEditionIcon);
             plusButton = view.findViewById(R.id.plusButton);
+            sellButton = view.findViewById(R.id.sellButton);
 
         }
 

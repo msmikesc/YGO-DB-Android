@@ -13,9 +13,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.UUID;
 
 import com.example.ygodb.backend.bean.AnalyzePrintedOnceData;
@@ -33,6 +36,8 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 	//private static String OLD_DB_PATH = DB_DIR + "old_" + DB_NAME;
 
 	private static final String dbFilePath = "database/YGO-DB.db";
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
 	private SQLiteConnection(Context context, String path){
 		super(context, path, null, 1);
@@ -624,7 +629,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 
 		String[] Columns = new String[]{"wikiID", "quantity", "cardName", "setNumber", "setName",
 				"setRarity", "setRarityColorVariant", "editionPrinting", "dateBought", "priceBought",
-				"UUID", "setCode"};
+				"UUID", "setCode", "folderName", "rarityUnsure", "condition", "creationDate", "modificationDate"};
 
 		String selection = null;
 		String[] selectionArgs = null;
@@ -657,6 +662,12 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			current.priceBought = rs.getString(getColumn(col,"priceBought"));
 			current.UUID = rs.getString(getColumn(col,"UUID"));
 			current.setCode = rs.getString(getColumn(col,"setCode"));
+			current.folderName = rs.getString(getColumn(col,"folderName"));
+			current.rarityUnsure = rs.getInt(getColumn(col,"rarityUnsure"));
+			current.condition = rs.getString(getColumn(col,"condition"));
+			current.creationDate = rs.getString(getColumn(col,"creationDate"));
+			current.modificationDate = rs.getString(getColumn(col,"modificationDate"));
+
 
 			cardsInSetList.add(current);
 
@@ -1332,30 +1343,84 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 
 		SQLiteStatement statement = connection.compileStatement(ownedInsert);
 
-		statement.bindLong(1, id);
-		statement.bindString(2, folder);
-		statement.bindString(3, name);
-		statement.bindLong(4, quantity);
-		statement.bindString(5, setCode);
-		statement.bindString(6, setNumber);
-		statement.bindString(7, setName);
-		statement.bindString(8, setRarity);
-		statement.bindString(9, colorVariant);
-		statement.bindString(10, condition);
-		statement.bindString(11, printing);
-		statement.bindString(12, dateBought);
-		statement.bindString(13, normalizedPrice);
-		statement.bindLong(14, rarityUnsure);
+		setIntegerOrNull(statement,1, id);
+		setStringOrNull(statement,2, folder);
+		setStringOrNull(statement,3, name);
+		setIntegerOrNull(statement,4, quantity);
+		setStringOrNull(statement,5, setCode);
+		setStringOrNull(statement,6, setNumber);
+		setStringOrNull(statement,7, setName);
+		setStringOrNull(statement,8, setRarity);
+		setStringOrNull(statement,9, colorVariant);
+		setStringOrNull(statement,10, condition);
+		setStringOrNull(statement,11, printing);
+		setStringOrNull(statement,12, dateBought);
+		setStringOrNull(statement,13, normalizedPrice);
+		setIntegerOrNull(statement,14, rarityUnsure);
 		
-		statement.bindString(15, low);
-		statement.bindString(16, mid);
-		statement.bindString(17, market);
+		setStringOrNull(statement,15, low);
+		setStringOrNull(statement,16, mid);
+		setStringOrNull(statement,17, market);
 		
-		statement.bindString(18, UUID);
+		setStringOrNull(statement,18, UUID);
 		
 		statement.execute();
 		statement.close();
 
+	}
+
+	public void sellCards(OwnedCard card, int quantity, String priceSold) {
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		// Decrease the quantity of ownedCards by the amount sold
+		int newQuantity = card.quantity - quantity;
+		if (newQuantity < 0) {
+			newQuantity = 0;
+		}
+
+		// If the quantity reaches 0, remove the entry from the ownedCards table
+		if (newQuantity == 0) {
+			String ownedDelete = "DELETE FROM ownedCards WHERE UUID = ?";
+			SQLiteStatement statement = connection.compileStatement(ownedDelete);
+			setStringOrNull(statement,1, card.UUID);
+			statement.execute();
+			statement.close();
+		}
+		else{
+			// Update the ownedCards table
+			String ownedInsert = "UPDATE ownedCards SET quantity = ?, " +
+					"modificationDate = datetime('now','localtime') WHERE UUID = ?";
+			SQLiteStatement statement = connection.compileStatement(ownedInsert);
+			setIntegerOrNull(statement,1, newQuantity);
+			setStringOrNull(statement,2, card.UUID);
+			statement.execute();
+			statement.close();
+		}
+
+		// Insert a corresponding entry into the soldCards table
+		String soldInsert = "INSERT INTO soldCards (wikiID, cardName, quantity, setCode, setNumber, " +
+				"setName, setRarity, setRarityColorVariant, condition, editionPrinting, dateBought, " +
+				"priceBought, dateSold, priceSold, UUID, creationDate, modificationDate) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now','localtime'))";
+		SQLiteStatement statement = connection.compileStatement(soldInsert);
+		setIntegerOrNull(statement,1, card.id);
+		setStringOrNull(statement,2, card.cardName);
+		setIntegerOrNull(statement,3, quantity);
+		setStringOrNull(statement,4, card.setCode);
+		setStringOrNull(statement,5, card.setNumber);
+		setStringOrNull(statement,6, card.setName);
+		setStringOrNull(statement,7, card.setRarity);
+		setStringOrNull(statement,8, card.colorVariant);
+		setStringOrNull(statement,9, card.condition);
+		setStringOrNull(statement,10, card.editionPrinting);
+		setStringOrNull(statement,11, card.dateBought);
+		setStringOrNull(statement,12, card.priceBought);
+		setStringOrNull(statement,13, sdf.format(new Date()));
+		setStringOrNull(statement,14, priceSold);
+		setStringOrNull(statement,15, card.UUID);
+		setStringOrNull(statement,16, card.creationDate);
+		statement.execute();
+		statement.close();
 	}
 	
 	public void upsertOwnedCardBatch(OwnedCard card) {

@@ -18,6 +18,7 @@ import com.example.ygodb.abs.Util;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
 import com.example.ygodb.abs.EndlessScrollListener;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
+import com.example.ygodb.ui.sellCards.SellCardsViewModel;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 
 import java.util.ArrayList;
@@ -35,12 +36,16 @@ public class ViewCardsFragment extends Fragment {
         AddCardsViewModel addCardsViewModel =
                 new ViewModelProvider(Util.getViewModelOwner()).get(AddCardsViewModel.class);
 
+        SellCardsViewModel sellCardsViewModel =
+                new ViewModelProvider(Util.getViewModelOwner()).get(SellCardsViewModel.class);
+
         binding = FragmentViewcardsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         RecyclerView cardsListView = binding.viewList;
 
-        SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewCardsViewModel.getCardsList(), addCardsViewModel);
+        SingleCardToListAdapter adapter = new SingleCardToListAdapter(
+                viewCardsViewModel.getCardsList(), addCardsViewModel, sellCardsViewModel);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         layout = linearLayoutManager;

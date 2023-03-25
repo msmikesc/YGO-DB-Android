@@ -33,4 +33,7 @@ public class OwnedCard {
 
 	public ArrayList<CardSet> mainSetCardSets;
 
+	public int sellQuantity;
+	public String priceSold;
+	public String dateSold;
 }

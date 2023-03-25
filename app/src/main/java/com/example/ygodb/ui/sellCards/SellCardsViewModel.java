@@ -1,6 +1,4 @@
-package com.example.ygodb.ui.addCards;
-
-import android.view.View;
+package com.example.ygodb.ui.sellCards;
 
 import androidx.lifecycle.ViewModel;
 
@@ -8,23 +6,20 @@ import com.example.ygodb.backend.bean.CardSet;
 import com.example.ygodb.backend.bean.OwnedCard;
 import com.example.ygodb.backend.bean.Rarity;
 import com.example.ygodb.backend.connection.SQLiteConnection;
-import com.example.ygodb.backend.connection.Util;
 
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Locale;
 
-public class AddCardsViewModel extends ViewModel {
+public class SellCardsViewModel extends ViewModel {
 
     private HashMap<String,Integer> keyToPosition;
     private ArrayList<OwnedCard> cardsList;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    public AddCardsViewModel() {
+    public SellCardsViewModel() {
         cardsList = new ArrayList<>();
         keyToPosition = new HashMap<>();
     }
@@ -32,21 +27,8 @@ public class AddCardsViewModel extends ViewModel {
 
     public void saveToDB(){
         for(OwnedCard current: cardsList){
-            if(current.dropdownSelectedSetNumber != null && !current.dropdownSelectedSetNumber.equals("")){
-                current.setNumber = current.dropdownSelectedSetNumber;
-            }
-            if(current.dropdownSelectedRarity != null && !current.dropdownSelectedRarity.equals("")){
-                current.setRarity = current.dropdownSelectedRarity;
-            }
 
-            OwnedCard existingRecord = SQLiteConnection.getObj().getExistingOwnedCardByObject(current);
-
-            if(existingRecord != null){
-                existingRecord.quantity += current.quantity;
-                current = existingRecord;
-            }
-
-            SQLiteConnection.getObj().upsertOwnedCardBatch(current);
+            SQLiteConnection.getObj().sellCards(current, current.sellQuantity, current.priceSold);
 
         }
         keyToPosition.clear();
@@ -65,58 +47,61 @@ public class AddCardsViewModel extends ViewModel {
             return;
         }
 
-        String key = current.setNumber + current.setRarity;
+        String key = current.UUID;
 
         Integer position = keyToPosition.get(key);
 
-        OwnedCard newCard = null;
+        OwnedCard sellingCard = null;
 
         if(position != null){
-            newCard = cardsList.get(position);
+            sellingCard = cardsList.get(position);
         }
-        if(newCard != null){
-            newCard.quantity++;
+        if(sellingCard != null){
+
+            if(sellingCard.quantity > sellingCard.sellQuantity){
+                sellingCard.sellQuantity++;
+            }
         }
         else{
-            newCard = new OwnedCard();
+            sellingCard = new OwnedCard();
             keyToPosition.put(key, cardsList.size());
-            cardsList.add(newCard);
-            newCard.cardName = current.cardName;
-            newCard.dateBought = sdf.format(new Date());
-            newCard.id = current.id;
-            newCard.setRarity = current.setRarity;
-            newCard.setName = current.setName;
-            newCard.quantity = 1;
-            newCard.rarityUnsure= 0;
-            newCard.setCode = current.setCode;
-            newCard.folderName = "UnSynced Folder";
-            newCard.setNumber = current.setNumber;
-            newCard.colorVariant = "-1";
-            newCard.mainSetCardSets = current.mainSetCardSets;
+            cardsList.add(sellingCard);
+            sellingCard.cardName = current.cardName;
+            sellingCard.dateBought = current.dateBought;
+            sellingCard.dateSold = sdf.format(new Date());
+            sellingCard.id = current.id;
+            sellingCard.setRarity = current.setRarity;
+            sellingCard.setName = current.setName;
+            sellingCard.quantity = current.quantity;
+            sellingCard.sellQuantity = 1;
+            sellingCard.rarityUnsure= 0;
+            sellingCard.setCode = current.setCode;
+            sellingCard.setNumber = current.setNumber;
+            sellingCard.colorVariant = current.colorVariant;
+            sellingCard.UUID = current.UUID;
 
-            newCard.priceBought = getAPIPriceFromRarity(current.setRarity,
+            sellingCard.priceBought = current.priceBought;
+            sellingCard.priceSold = getAPIPriceFromRarity(current.setRarity,
                     current.mainSetCardSets, current.cardName, current.setName,
                     current.id, current.setNumber);
 
+            sellingCard.creationDate = current.creationDate;
+
+            sellingCard.mainSetCardSets = current.mainSetCardSets;
+
             if(current.condition == null || current.condition.equals("")){
-                newCard.condition = "NearMint";
+                sellingCard.condition = "NearMint";
             }
             else{
-                newCard.condition = current.condition;
+                sellingCard.condition = current.condition;
             }
 
             if(current.editionPrinting == null || current.editionPrinting.equals("")){
-                //assume ots unlimited, everything else 1st
-                if(newCard.setName.contains("OTS")){
-                    newCard.editionPrinting = "Unlimited";
-                }
-                else{
-                    newCard.editionPrinting = "1st Edition";
-                }
-
+                //assume unlimited
+                sellingCard.editionPrinting = "Unlimited";
             }
             else{
-                newCard.editionPrinting = current.editionPrinting;
+                sellingCard.editionPrinting = current.editionPrinting;
             }
 
         }
@@ -128,7 +113,7 @@ public class AddCardsViewModel extends ViewModel {
 
             String rarity = (current.dropdownSelectedRarity == null) ? current.setRarity: current.dropdownSelectedRarity;
 
-            current.priceBought = getEstimatePriceFromRarity(rarity);
+            current.priceSold = getEstimatePriceFromRarity(rarity);
         }
     }
 
@@ -139,14 +124,14 @@ public class AddCardsViewModel extends ViewModel {
 
             String setNumber = (current.dropdownSelectedSetNumber == null) ? current.setNumber: current.dropdownSelectedSetNumber;
 
-            current.priceBought = getAPIPriceFromRarity(rarity, current.mainSetCardSets,
+            current.priceSold = getAPIPriceFromRarity(rarity, current.mainSetCardSets,
                     current.cardName, current.setName, current.id, setNumber);
         }
     }
 
     public void setAllPricesZero(){
         for(OwnedCard current: cardsList){
-            current.priceBought = "0.00";
+            current.priceSold = "0.00";
         }
     }
 
@@ -208,7 +193,7 @@ public class AddCardsViewModel extends ViewModel {
 
     public void removeNewFromOwnedCard(OwnedCard current){
 
-        String key = current.setNumber + current.setRarity;
+        String key = current.UUID;
 
         Integer position = keyToPosition.get(key);
         OwnedCard newCard = null;

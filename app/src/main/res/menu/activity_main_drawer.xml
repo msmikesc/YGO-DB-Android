@@ -11,17 +11,13 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_importDS"
-            android:icon="@android:drawable/arrow_up_float"
-            android:title="@string/menu_importDS" />
+            android:id="@+id/nav_viewCardsSummary"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="@string/menu_viewCardsSummary"/>
         <item
             android:id="@+id/nav_viewCards"
             android:icon="@android:drawable/ic_menu_view"
             android:title="@string/menu_viewCards" />
-        <item
-            android:id="@+id/nav_viewCardsSummary"
-            android:icon="@android:drawable/ic_menu_view"
-            android:title="@string/menu_viewCardsSummary"/>
         <item
             android:id="@+id/nav_viewCardSet"
             android:icon="@android:drawable/ic_menu_view"
@@ -30,5 +26,9 @@
             android:id="@+id/nav_addCards"
             android:icon="@android:drawable/ic_menu_view"
             android:title="@string/menu_addCards" />
+        <item
+            android:id="@+id/nav_sellCards"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="@string/menu_sellCards" />
     </group>
 </menu>

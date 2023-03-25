@@ -11,11 +11,9 @@
     <string name="action_export">Export DB</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_importDS">Import from Dragon Shield</string>
-    <string name="menu_viewCards">View Cards</string>
-    <string name="menu_viewCardsSummary">View Cards Summary</string>
-    <string name="menu_viewCardSet">View Card Set</string>
+    <string name="menu_viewCards">View Card Details</string>
+    <string name="menu_viewCardsSummary">View Card Summary</string>
+    <string name="menu_viewCardSet">View Card Sets</string>
     <string name="menu_addCards">Add Cards</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_sellCards">Sell Cards</string>
 </resources>
