@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
@@ -88,8 +89,40 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             viewHolder.setName.setMaxLines(3);
         }
         else{
+
+            String setRarityText = current.setRarity;
+
+            if(current.colorVariant != null && !current.colorVariant.equals("") && !current.colorVariant.equals("-1")){
+                if(current.colorVariant.equalsIgnoreCase("a")){
+                    setRarityText = "Alt Art " + setRarityText;
+                    viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.Gold));
+                }
+                else{
+                    setRarityText = current.colorVariant.toUpperCase() + " " + setRarityText;
+                    switch(current.colorVariant.toUpperCase()){
+                        case "R":
+                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.Crimson));
+                            break;
+                        case "G":
+                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.LimeGreen));
+                            break;
+                        case "B":
+                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.DeepSkyBlue));
+                            break;
+                        case "P":
+                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.BlueViolet));
+                            break;
+                        default:
+                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.White));
+                    }
+                }
+            }
+            else{
+                viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.White));
+            }
+
             viewHolder.setCode.setText(current.setNumber);
-            viewHolder.cardRarity.setText(current.setRarity);
+            viewHolder.cardRarity.setText(setRarityText);
             viewHolder.setCode.setVisibility(View.VISIBLE);
             viewHolder.cardRarity.setVisibility(View.VISIBLE);
             viewHolder.plusButton.setVisibility(View.VISIBLE);
