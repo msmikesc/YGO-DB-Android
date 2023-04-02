@@ -5,30 +5,25 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
-        <item
             android:id="@+id/nav_viewCardsSummary"
             android:icon="@android:drawable/ic_menu_view"
             android:title="@string/menu_viewCardsSummary"/>
         <item
             android:id="@+id/nav_viewCards"
-            android:icon="@android:drawable/ic_menu_view"
+            android:icon="@android:drawable/ic_menu_zoom"
             android:title="@string/menu_viewCards" />
         <item
             android:id="@+id/nav_viewCardSet"
-            android:icon="@android:drawable/ic_menu_view"
+            android:icon="@drawable/layers"
             android:title="@string/menu_viewCardSet" />
         <item
             android:id="@+id/nav_addCards"
-            android:icon="@android:drawable/ic_menu_view"
-            android:title="@string/menu_addCards" />
+            android:icon="@drawable/plus_circle"
+            android:title="@string/menu_addCards"
+            android:tint="@android:color/white" />
         <item
             android:id="@+id/nav_sellCards"
-            android:icon="@android:drawable/ic_menu_view"
+            android:icon="@drawable/dollar_sign"
             android:title="@string/menu_sellCards" />
     </group>
 </menu>

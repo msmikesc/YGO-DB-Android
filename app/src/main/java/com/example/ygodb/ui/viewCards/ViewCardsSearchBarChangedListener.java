@@ -38,19 +38,18 @@ class ViewCardsSearchBarChangedListener extends TextChangedListener<EditText> {
 
         viewCardsViewModel.setCardNameSearch(cardNameSearch);
 
-        ArrayList<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
-
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    cardsList.clear();
-                    cardsList.addAll(viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
-                            ViewCardsViewModel.LOADING_LIMIT, 0, cardNameSearch));
+                    ArrayList<OwnedCard> newList = viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
+                            ViewCardsViewModel.LOADING_LIMIT, 0, cardNameSearch);
 
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            viewCardsViewModel.setCardsList(newList);
+                            adapter.setOwnedCards(newList);
                             layout.scrollToPositionWithOffset(0, 0);
                             adapter.notifyDataSetChanged();
                         }

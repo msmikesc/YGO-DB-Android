@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textColorHint">#8E8E8E</item>
     </style>
 
     <style name="Theme.YGODB.NoActionBar">
@@ -21,5 +22,5 @@
 
     <style name="Theme.YGODB.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.YGODB.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.YGODB.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 </resources>

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_viewCardsSummary, R.id.nav_viewCards,
+                R.id.nav_viewCardsSummary, R.id.nav_viewCards,
                  R.id.nav_viewCardSet, R.id.nav_addCards,  R.id.nav_sellCards)
                 .setOpenableLayout(drawer)
                 .build();
@@ -82,12 +82,6 @@ public class MainActivity extends AppCompatActivity {
         copyDBOutIntent = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new CopyDBOutCallback(this));
-
-        try {
-            SQLiteConnection.initializeInstance(getApplicationContext());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
         ViewCardSetViewModel viewCardSetViewModel =
                 new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);

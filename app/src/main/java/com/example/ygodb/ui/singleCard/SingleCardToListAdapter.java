@@ -34,7 +34,10 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         this.ownedCards = ownedCards;
         this.addCardsViewModel = addCardsViewModel;
         this.sellCardsViewModel = sellCardsViewModel;
+    }
 
+    public void setOwnedCards(ArrayList<OwnedCard> ownedCards) {
+        this.ownedCards = ownedCards;
     }
 
     @NonNull

@@ -78,4 +78,8 @@ public class ViewCardsSummaryViewModel extends ViewModel {
     public void setCardNameSearch(String cardNameSearch) {
         this.cardNameSearch = cardNameSearch;
     }
+
+    public void setCardsList(ArrayList<OwnedCard> cardsList) {
+        this.cardsList = cardsList;
+    }
 }

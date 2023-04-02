@@ -25,6 +25,10 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
         this.ownedCards = ownedCards;
     }
 
+    public void setOwnedCards(ArrayList<OwnedCard> ownedCards) {
+        this.ownedCards = ownedCards;
+    }
+
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

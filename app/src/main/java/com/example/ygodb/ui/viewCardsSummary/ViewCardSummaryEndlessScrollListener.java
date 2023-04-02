@@ -44,7 +44,7 @@ class ViewCardSummaryEndlessScrollListener extends EndlessScrollListener {
                     view.post(new Runnable() {
                         @Override
                         public void run() {
-                            adapter.notifyItemRangeInserted(curSize, moreCards.size() - 1);
+                            adapter.notifyItemRangeInserted(curSize, moreCards.size());
                         }
                     });
                 } catch (Exception e) {
