@@ -38,32 +38,33 @@ class ViewCardSet_CardSearchBarChangedListener extends TextChangedListener<EditT
 
         viewCardsViewModel.setCardNameSearch(cardNameSearch);
 
-        ArrayList<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
-        ArrayList<OwnedCard> filteredCardsList = viewCardsViewModel.getFilteredCardsList();
-
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 try {
+                    ArrayList<OwnedCard> results = null;
+                    ArrayList<OwnedCard> filteredResults = null;
 
                     if(viewCardsViewModel.isCardNameMode()){
-                        viewCardsViewModel.loadInitialCardNameData(cardNameSearch);
+                        results = viewCardsViewModel.getInitialCardNameData(cardNameSearch);
+                        filteredResults = (ArrayList<OwnedCard>) results.clone();
                     }
                     else {
-                        filteredCardsList.clear();
+                        results = viewCardsViewModel.getCardsList();
+                        filteredResults = viewCardsViewModel.getFilteredList(viewCardsViewModel.getCardsList(), cardNameSearch);
 
-                        for (OwnedCard current : cardsList) {
-                            if (cardNameSearch.equals("") || current.cardName.toUpperCase().contains(cardNameSearch)) {
-                                filteredCardsList.add(current);
-                            }
-                        }
-
-                        viewCardsViewModel.sortData(filteredCardsList, viewCardsViewModel.getCurrentComparator());
+                        viewCardsViewModel.sortData(filteredResults, viewCardsViewModel.getCurrentComparator());
                     }
 
+                    ArrayList<OwnedCard> finalResults = results;
+                    ArrayList<OwnedCard> finalFilteredResults = filteredResults;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            viewCardsViewModel.setCardsList(finalResults);
+                            viewCardsViewModel.setFilteredCardsList(finalFilteredResults);
+                            adapter.setOwnedCards(finalFilteredResults);
+
                             layout.scrollToPositionWithOffset(0, 0);
                             adapter.notifyDataSetChanged();
                         }

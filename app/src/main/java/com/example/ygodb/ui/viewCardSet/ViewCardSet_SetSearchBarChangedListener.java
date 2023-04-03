@@ -8,7 +8,10 @@ import android.widget.EditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ygodb.abs.TextChangedListener;
+import com.example.ygodb.backend.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
+
+import java.util.ArrayList;
 
 class ViewCardSet_SetSearchBarChangedListener extends TextChangedListener<EditText> {
     private final ViewCardSetViewModel viewCardsViewModel;
@@ -39,11 +42,23 @@ class ViewCardSet_SetSearchBarChangedListener extends TextChangedListener<EditTe
             @Override
             public void run() {
                 try {
-                    viewCardsViewModel.loadInitialData(setNameSearch);
+                    ArrayList<OwnedCard> results = null;
+                    ArrayList<OwnedCard> filteredResults = null;
 
+                    results = viewCardsViewModel.getInitialData(setNameSearch);
+                    filteredResults = viewCardsViewModel.getFilteredList(results, viewCardsViewModel.getCardNameSearch());
+
+                    viewCardsViewModel.sortData(filteredResults, viewCardsViewModel.getCurrentComparator());
+
+                    ArrayList<OwnedCard> finalResults = results;
+                    ArrayList<OwnedCard> finalFilteredResults = filteredResults;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            viewCardsViewModel.setCardsList(finalResults);
+                            viewCardsViewModel.setFilteredCardsList(finalFilteredResults);
+                            adapter.setOwnedCards(finalFilteredResults);
+
                             layout.scrollToPositionWithOffset(0, 0);
                             adapter.notifyDataSetChanged();
                         }

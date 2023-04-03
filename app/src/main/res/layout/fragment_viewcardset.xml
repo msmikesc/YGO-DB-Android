@@ -12,30 +12,65 @@
         android:background="#232020"
         >
 
-        <EditText
-            android:id="@+id/cardSearch"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cardSearchLayout"
             android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:textColor="#FFFFFF"
-            android:hint="Card Name"
-            android:textColorHint="#8E8E8E"
+            android:layout_height="48dp"
+            app:hintEnabled="false"
+            app:hintAnimationEnabled="false"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/white"
+            app:boxBackgroundMode="none"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <AutoCompleteTextView
-            android:id="@+id/setSearch"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:textColor="#FFFFFF"
-            android:dropDownHeight="wrap_content"
-            android:hint="Set Name"
-            android:textColorHint="#8E8E8E"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cardSearch"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:padding="0dp"
+                android:paddingStart="4dp"
+                android:textSize="18sp"
+                android:inputType="text"
+                android:hint="Card Name"
+                android:background="@drawable/edit_text_border"
+                app:hintTextColor="#8E8E8E"
+                android:textColor="#FFFFFF"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/setSearchLayout"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            app:hintEnabled="false"
+            app:hintAnimationEnabled="false"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/white"
+            app:boxBackgroundMode="none"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardSearch" />
+            app:layout_constraintTop_toBottomOf="@id/cardSearchLayout"
+            app:hintTextColor="#8E8E8E"
+            >
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/setSearch"
+                android:hint="Set Name"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:padding="0dp"
+                android:paddingStart="4dp"
+                android:textSize="18sp"
+                android:inputType="text"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#8E8E8E"
+                android:dropDownHeight="wrap_content"
+                android:background="@drawable/edit_text_border"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/view_list"
@@ -46,7 +81,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setSearch"
+            app:layout_constraintTop_toBottomOf="@+id/setSearchLayout"
             app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
