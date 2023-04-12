@@ -388,7 +388,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 
 		String[] Columns = new String[]{"a.wikiID","a.cardName as cardNameCol","a.setNumber as setNumberCol","a.setName",
 				"a.setRarity as setRarityCol","a.setPrice","sum(b.quantity) as quantity",
-				"MAX(b.dateBought) as maxDate"};
+				"MAX(b.dateBought) as maxDate, c.setCode"};
 
 		String[] selectionArgs = null;
 		String selection = "a.cardName like ?";
@@ -398,7 +398,8 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 
 		Cursor rs = connection.query("cardSets a left outer join ownedCards b " +
 						"on a.wikiID = b.wikiID and b.cardName = a.cardName " +
-						"and a.setNumber = b.setNumber and a.setRarity = b.setRarity",
+						"and a.setNumber = b.setNumber and a.setRarity = b.setRarity " +
+						"left outer join setData c on a.setName = c.setName",
 				Columns, selection,selectionArgs, groupBy,null, orderBy, null);
 
 		String[] col = rs.getColumnNames();
@@ -408,6 +409,7 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			current.id = rs.getInt(getColumn(col,"wikiID"));
 			current.cardName = rs.getString(getColumn(col,"cardNameCol"));
 			current.setNumber = rs.getString(getColumn(col,"setNumberCol"));
+			current.setCode = rs.getString(getColumn(col,"setCode"));
 			current.setName = rs.getString(getColumn(col,"setName"));
 			current.setRarity = rs.getString(getColumn(col,"setRarityCol"));
 			current.priceBought = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
