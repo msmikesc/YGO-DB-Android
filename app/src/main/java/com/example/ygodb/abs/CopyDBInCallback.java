@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> {
     private final MainActivity activity;
@@ -93,12 +94,17 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 
                     editor.putString("pref_db_location", chosenURI.toString());
 
+                    ViewCardSetViewModel viewCardSetViewModel =
+                            new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
+
+                    ArrayList<String> setNamesArrayList = SQLiteConnection.getObj().getDistinctSetAndArchetypeNames();
+                    viewCardSetViewModel.setNamesDropdownList = new String[setNamesArrayList.size()];
+                    setNamesArrayList.toArray(viewCardSetViewModel.setNamesDropdownList);
+
                     ViewCardsViewModel viewCardsViewModel =
                             new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsViewModel.class);
                     viewCardsViewModel.refreshViewDBUpdate();
 
-                    ViewCardSetViewModel viewCardSetViewModel =
-                            new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
                     viewCardSetViewModel.refreshViewDBUpdate();
 
                     ViewCardsSummaryViewModel viewCardsSummaryViewModel =

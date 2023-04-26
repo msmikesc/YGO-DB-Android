@@ -37,6 +37,7 @@ public enum Rarity {
 	StarlightRare("Starlight Rare"),
 	GhostRare("Ghost Rare"),
 	UltimateRare("Ultimate Rare"),
+	QuarterCenturySecretRare("Quarter Century Secret Rare"),
 	nullRarity("nullRarity");
 
 	private String name;

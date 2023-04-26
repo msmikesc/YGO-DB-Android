@@ -577,6 +577,13 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 		//PRIMARY KEY("wikiID","folderName","setNumber","setRarity","setRarityColorVariant",
 		// "condition","editionPrinting","dateBought","priceBought")
 
+
+		if (query.folderName == null || query.setNumber == null ||
+				query.setRarity == null || query.colorVariant == null || query.condition == null ||
+				query.editionPrinting == null || query.dateBought == null || query.priceBought == null) {
+			return null;
+		}
+
 		String[] selectionArgs = null;
 		String selection = "wikiID = ? AND folderName = ? AND setNumber = ? AND setRarity = ? AND " +
 				"setRarityColorVariant = ? AND condition = ? AND editionPrinting = ? AND " +

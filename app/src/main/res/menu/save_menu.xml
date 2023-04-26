@@ -6,6 +6,10 @@
         android:title="Save Cards"/>
 
     <item
+        android:id="@+id/menuInvert"
+        android:title="Invert Editions"/>
+
+    <item
         android:id="@+id/menuEstimated"
         android:title="Set Estimated Prices"/>
 

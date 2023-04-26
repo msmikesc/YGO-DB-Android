@@ -59,6 +59,24 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
                     return true;
                 }
 
+                if (menuItem.getTitle().equals("Invert Editions") ) {
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            addCardsViewModel.invertAllEditions();
+
+                            view.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        }
+                    });
+                }
+
                 if (menuItem.getTitle().equals("Set Prices Zero") ) {
                     AsyncTask.execute(new Runnable() {
                         @Override

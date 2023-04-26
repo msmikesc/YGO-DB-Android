@@ -39,6 +39,10 @@ public class AddCardsViewModel extends ViewModel {
                 current.setRarity = current.dropdownSelectedRarity;
             }
 
+            if(current.priceBought == null){
+                current.priceBought = "0.00";
+            }
+
             OwnedCard existingRecord = SQLiteConnection.getObj().getExistingOwnedCardByObject(current);
 
             if(existingRecord != null){
@@ -51,6 +55,17 @@ public class AddCardsViewModel extends ViewModel {
         }
         keyToPosition.clear();
         cardsList.clear();
+    }
+
+    public void invertAllEditions(){
+        for(OwnedCard o : cardsList){
+            if(o.editionPrinting.equals("1st Edition")){
+                o.editionPrinting = "Unlimited";
+            }
+            else{
+                o.editionPrinting = "1st Edition";
+            }
+        }
     }
 
 

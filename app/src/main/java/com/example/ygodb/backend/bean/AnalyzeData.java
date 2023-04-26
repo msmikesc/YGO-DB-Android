@@ -234,6 +234,10 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 		for(CardSet current: mainSetCardSets){
 
+			if(current.setPrice == null){
+				current.setPrice = "0";
+			}
+
 			BigDecimal newPrice = new BigDecimal(current.setPrice);
 
 			if(newPrice.compareTo(zero) == 0){
