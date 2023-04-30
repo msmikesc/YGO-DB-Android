@@ -10,18 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ygodb.abs.Util;
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
 import com.example.ygodb.abs.EndlessScrollListener;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
 import com.example.ygodb.ui.sellCards.SellCardsViewModel;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
-
-import java.util.ArrayList;
 
 public class ViewCardsFragment extends Fragment {
 
@@ -31,13 +28,13 @@ public class ViewCardsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ViewCardsViewModel viewCardsViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
 
         AddCardsViewModel addCardsViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(AddCardsViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(AddCardsViewModel.class);
 
         SellCardsViewModel sellCardsViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(SellCardsViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(SellCardsViewModel.class);
 
         binding = FragmentViewcardsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

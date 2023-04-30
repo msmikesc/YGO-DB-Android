@@ -2,10 +2,11 @@ package com.example.ygodb.ui.sellCards;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.ygodb.backend.bean.CardSet;
-import com.example.ygodb.backend.bean.OwnedCard;
-import com.example.ygodb.backend.bean.Rarity;
-import com.example.ygodb.backend.connection.SQLiteConnection;
+import com.example.ygodb.abs.AndroidUtil;
+
+import bean.CardSet;
+import bean.OwnedCard;
+import bean.Rarity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class SellCardsViewModel extends ViewModel {
     public void saveToDB(){
         for(OwnedCard current: cardsList){
 
-            SQLiteConnection.getObj().sellCards(current, current.sellQuantity, current.priceSold);
+            AndroidUtil.getDBInstance().sellCards(current, current.sellQuantity, current.priceSold);
 
         }
         keyToPosition.clear();
@@ -164,7 +165,7 @@ public class SellCardsViewModel extends ViewModel {
                                         String cardName, String setName, int id, String setNumber){
 
         if(mainSetCardSets == null){
-            mainSetCardSets = SQLiteConnection.getObj().
+            mainSetCardSets = AndroidUtil.getDBInstance().
                     getRaritiesOfCardInSetByIDAndName(id, setName, cardName);
         }
 

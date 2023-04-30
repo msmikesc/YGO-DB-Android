@@ -11,12 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
-import com.example.ygodb.abs.Util;
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.FragmentViewcardsetBinding;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
@@ -30,10 +29,10 @@ public class ViewCardSetFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ViewCardSetViewModel viewCardSetViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
         AddCardsViewModel addCardsViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(AddCardsViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(AddCardsViewModel.class);
 
         binding = FragmentViewcardsetBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

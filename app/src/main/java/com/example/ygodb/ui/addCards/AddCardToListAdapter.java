@@ -18,12 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
-import com.example.ygodb.abs.Util;
-import com.example.ygodb.backend.bean.OwnedCard;
+import com.example.ygodb.abs.AndroidUtil;
+import bean.OwnedCard;
+import connection.Util;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdapter.ItemViewHolder> {
     private ArrayList<OwnedCard> addingOwnedCards;
@@ -41,11 +41,11 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
         try {
             // get input stream
-            firstInputStream = Util.getAppContext().getAssets().open("images/1st.png");
+            firstInputStream = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
             // load image as Drawable
             firstDrawable = Drawable.createFromStream(firstInputStream, null);
 
-            firstInputStreamSmall = Util.getAppContext().getAssets().open("images/1st.png");
+            firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
             firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
         }
         catch (Exception e){
@@ -95,7 +95,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         String newPrice = priceBox.toString();
 
         try{
-            newPrice = com.example.ygodb.backend.connection.Util.normalizePrice(newPrice);
+            newPrice = Util.normalizePrice(newPrice);
 
             if(current.priceBought != null && current.priceBought.equals(newPrice)){
                 return;
@@ -293,7 +293,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
         try {
             // get input stream
-            InputStream ims = Util.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

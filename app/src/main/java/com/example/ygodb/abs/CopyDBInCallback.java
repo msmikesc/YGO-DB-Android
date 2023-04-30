@@ -12,7 +12,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ygodb.MainActivity;
-import com.example.ygodb.backend.connection.SQLiteConnection;
 import com.example.ygodb.ui.viewCardSet.ViewCardSetViewModel;
 import com.example.ygodb.ui.viewCards.ViewCardsViewModel;
 import com.example.ygodb.ui.viewCardsSummary.ViewCardsSummaryViewModel;
@@ -54,7 +53,7 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
             return;
         }
 
-        String fileName = Util.getFileName(chosenURI);
+        String fileName = AndroidUtil.getFileName(chosenURI);
 
         if (fileName == null) {
             Snackbar.make(view, "Error: Filename Null", Snackbar.LENGTH_LONG).show();
@@ -86,7 +85,7 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
             @Override
             public void run() {
                 try {
-                    SQLiteConnection.getObj().copyDataBaseFromURI(finalFile);
+                    AndroidUtil.getDBInstance().copyDataBaseFromURI(finalFile);
 
                     SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
@@ -95,20 +94,20 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
                     editor.putString("pref_db_location", chosenURI.toString());
 
                     ViewCardSetViewModel viewCardSetViewModel =
-                            new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
+                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
-                    ArrayList<String> setNamesArrayList = SQLiteConnection.getObj().getDistinctSetAndArchetypeNames();
+                    ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
                     viewCardSetViewModel.setNamesDropdownList = new String[setNamesArrayList.size()];
                     setNamesArrayList.toArray(viewCardSetViewModel.setNamesDropdownList);
 
                     ViewCardsViewModel viewCardsViewModel =
-                            new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsViewModel.class);
+                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
                     viewCardsViewModel.refreshViewDBUpdate();
 
                     viewCardSetViewModel.refreshViewDBUpdate();
 
                     ViewCardsSummaryViewModel viewCardsSummaryViewModel =
-                            new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
+                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
                     viewCardsSummaryViewModel.refreshViewDBUpdate();
 
                     view.post(new Runnable() {

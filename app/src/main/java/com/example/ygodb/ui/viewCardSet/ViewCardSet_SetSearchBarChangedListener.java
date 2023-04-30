@@ -8,7 +8,7 @@ import android.widget.EditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ygodb.abs.TextChangedListener;
-import com.example.ygodb.backend.bean.OwnedCard;
+import bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 
 import java.util.ArrayList;

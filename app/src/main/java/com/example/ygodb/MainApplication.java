@@ -1,22 +1,26 @@
 package com.example.ygodb;
 
 import android.app.Application;
+import android.icu.text.SimpleDateFormat;
 import android.os.Environment;
 
-import com.example.ygodb.backend.connection.SQLiteConnection;
+import com.example.ygodb.abs.AndroidUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.sql.SQLException;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        AndroidUtil.setAppContext(getApplicationContext());
 
         File logFile = null;
 
@@ -40,6 +44,13 @@ public class MainApplication extends Application {
                 try {
                     fos = new FileOutputStream(finalLogFile, true);
                     PrintStream ps = new PrintStream(fos);
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+                    String currentDateandTime = sdf.format(new Date());
+
+                    ps.println("--------------------------");
+                    ps.println(currentDateandTime);
+
                     paramThrowable.printStackTrace(ps);
                     ps.close();
                 } catch (FileNotFoundException e) {
@@ -51,11 +62,7 @@ public class MainApplication extends Application {
             }
         });
 
-        try {
-            SQLiteConnection.initializeInstance(getApplicationContext());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        AndroidUtil.getDBInstance();
     }
 
     public boolean isExternalStorageWritable() {

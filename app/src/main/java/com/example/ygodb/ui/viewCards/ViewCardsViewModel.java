@@ -5,8 +5,9 @@ import static java.lang.Thread.sleep;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ygodb.backend.bean.OwnedCard;
-import com.example.ygodb.backend.connection.SQLiteConnection;
+import com.example.ygodb.abs.AndroidUtil;
+
+import bean.OwnedCard;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,7 @@ public class ViewCardsViewModel extends ViewModel {
     }
 
     public ArrayList<OwnedCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch) {
-        ArrayList<OwnedCard> newList = SQLiteConnection.getObj().queryOwnedCards(orderBy,
+        ArrayList<OwnedCard> newList = AndroidUtil.getDBInstance().queryOwnedCards(orderBy,
                 limit, offset, cardNameSearch);
         return newList;
     }

@@ -1,21 +1,17 @@
 package com.example.ygodb.ui.addCards;
 
-import android.view.View;
-
 import androidx.lifecycle.ViewModel;
 
-import com.example.ygodb.backend.bean.CardSet;
-import com.example.ygodb.backend.bean.OwnedCard;
-import com.example.ygodb.backend.bean.Rarity;
-import com.example.ygodb.backend.connection.SQLiteConnection;
-import com.example.ygodb.backend.connection.Util;
+import com.example.ygodb.abs.AndroidUtil;
+
+import bean.CardSet;
+import bean.OwnedCard;
+import bean.Rarity;
 
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Locale;
 
 public class AddCardsViewModel extends ViewModel {
@@ -43,14 +39,14 @@ public class AddCardsViewModel extends ViewModel {
                 current.priceBought = "0.00";
             }
 
-            OwnedCard existingRecord = SQLiteConnection.getObj().getExistingOwnedCardByObject(current);
+            OwnedCard existingRecord = AndroidUtil.getDBInstance().getExistingOwnedCardByObject(current);
 
             if(existingRecord != null){
                 existingRecord.quantity += current.quantity;
                 current = existingRecord;
             }
 
-            SQLiteConnection.getObj().upsertOwnedCardBatch(current);
+            AndroidUtil.getDBInstance().upsertOwnedCardBatch(current);
 
         }
         keyToPosition.clear();
@@ -194,7 +190,7 @@ public class AddCardsViewModel extends ViewModel {
                                         String cardName, String setName, int id, String setNumber){
 
         if(mainSetCardSets == null){
-            mainSetCardSets = SQLiteConnection.getObj().
+            mainSetCardSets = AndroidUtil.getDBInstance().
                     getRaritiesOfCardInSetByIDAndName(id, setName, cardName);
         }
 

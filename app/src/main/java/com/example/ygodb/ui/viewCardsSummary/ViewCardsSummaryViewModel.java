@@ -1,11 +1,11 @@
 package com.example.ygodb.ui.viewCardsSummary;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ygodb.backend.bean.OwnedCard;
-import com.example.ygodb.backend.connection.SQLiteConnection;
+import com.example.ygodb.abs.AndroidUtil;
+
+import bean.OwnedCard;
 
 import java.util.ArrayList;
 
@@ -45,7 +45,7 @@ public class ViewCardsSummaryViewModel extends ViewModel {
     }
 
     public ArrayList<OwnedCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch) {
-        ArrayList<OwnedCard> newList = SQLiteConnection.getObj().queryOwnedCardsGrouped(orderBy,
+        ArrayList<OwnedCard> newList = AndroidUtil.getDBInstance().queryOwnedCardsGrouped(orderBy,
                 limit, offset, cardNameSearch);
         return newList;
     }

@@ -1,6 +1,6 @@
 package com.example.ygodb.abs;
 
-import com.example.ygodb.backend.bean.OwnedCard;
+import bean.OwnedCard;
 
 import java.math.BigDecimal;
 import java.util.Comparator;

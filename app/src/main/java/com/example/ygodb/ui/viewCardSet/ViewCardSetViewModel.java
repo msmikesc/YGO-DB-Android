@@ -3,11 +3,12 @@ package com.example.ygodb.ui.viewCardSet;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.abs.OwnedCardQuantityComparator;
-import com.example.ygodb.backend.analyze.AnalyzeCardsInSet;
-import com.example.ygodb.backend.bean.AnalyzeData;
-import com.example.ygodb.backend.bean.OwnedCard;
-import com.example.ygodb.backend.connection.SQLiteConnection;
+
+import analyze.AnalyzeCardsInSet;
+import bean.AnalyzeData;
+import bean.OwnedCard;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class ViewCardSetViewModel extends ViewModel {
             return new ArrayList<>();
         }
 
-        results = SQLiteConnection.getObj().getAllPossibleCardsByNameSearch(cardName,
+        results = AndroidUtil.getDBInstance().getAllPossibleCardsByNameSearch(cardName,
                 "a.cardName asc, a.setNumber asc, a.setRarity asc");
 
         if(results.size() > 0){
@@ -102,7 +103,7 @@ public class ViewCardSetViewModel extends ViewModel {
         }
 
         try {
-            results = runner.runFor(setName);
+            results = runner.runFor(setName, AndroidUtil.getDBInstance());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

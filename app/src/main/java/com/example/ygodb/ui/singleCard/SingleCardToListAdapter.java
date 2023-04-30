@@ -1,7 +1,6 @@
 package com.example.ygodb.ui.singleCard;
 
 import android.graphics.drawable.Drawable;
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
-import com.example.ygodb.abs.Util;
-import com.example.ygodb.backend.bean.OwnedCard;
+import com.example.ygodb.abs.AndroidUtil;
+import bean.OwnedCard;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
 import com.example.ygodb.ui.sellCards.SellCardsViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -98,30 +96,30 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             if(current.colorVariant != null && !current.colorVariant.equals("") && !current.colorVariant.equals("-1")){
                 if(current.colorVariant.equalsIgnoreCase("a")){
                     setRarityText = "Alt Art " + setRarityText;
-                    viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.Gold));
+                    viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold));
                 }
                 else{
                     setRarityText = current.colorVariant.toUpperCase() + " " + setRarityText;
                     switch(current.colorVariant.toUpperCase()){
                         case "R":
-                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.Crimson));
+                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson));
                             break;
                         case "G":
-                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.LimeGreen));
+                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen));
                             break;
                         case "B":
-                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.DeepSkyBlue));
+                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue));
                             break;
                         case "P":
-                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.BlueViolet));
+                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet));
                             break;
                         default:
-                            viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.White));
+                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
                     }
                 }
             }
             else{
-                viewHolder.title.setTextColor(ContextCompat.getColor(Util.getAppContext(), R.color.White));
+                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
             }
 
             viewHolder.setCode.setText(current.setNumber);
@@ -157,7 +155,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         try {
             if(current.editionPrinting.contains("1st")){
                 // get input stream
-                InputStream ims = Util.getAppContext().getAssets().open("images/1st.png");
+                InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
                 // load image as Drawable
                 Drawable d = Drawable.createFromStream(ims, null);
                 // set image to ImageView
@@ -174,7 +172,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
         try {
             // get input stream
-            InputStream ims = Util.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

@@ -8,10 +8,8 @@ import android.net.Uri;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.viewbinding.ViewBinding;
 
 import com.example.ygodb.MainActivity;
-import com.example.ygodb.backend.connection.SQLiteConnection;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
@@ -49,7 +47,7 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
             return;
         }
 
-        String fileName = Util.getFileName(chosenURI);
+        String fileName = AndroidUtil.getFileName(chosenURI);
 
         if (fileName == null) {
             Snackbar.make(view, "Error: Filename Null", Snackbar.LENGTH_LONG).show();
@@ -76,7 +74,7 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
         }
 
         try {
-            SQLiteConnection.getObj().copyDataBaseToURI(file);
+            AndroidUtil.getDBInstance().copyDataBaseToURI(file);
 
             SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 

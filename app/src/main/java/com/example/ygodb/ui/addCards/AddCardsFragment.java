@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ygodb.abs.Util;
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.FragmentAddcardsBinding;
 
 public class AddCardsFragment extends Fragment {
@@ -25,7 +24,7 @@ public class AddCardsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AddCardsViewModel addCardsViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(AddCardsViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(AddCardsViewModel.class);
 
         binding = FragmentAddcardsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

@@ -10,12 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.abs.EndlessScrollListener;
-import com.example.ygodb.abs.Util;
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.FragmentViewcardsSummaryBinding;
 import com.example.ygodb.ui.singleCard.SummaryCardToListAdapter;
 import com.example.ygodb.ui.viewCards.ViewCardsViewModel;
@@ -28,7 +27,7 @@ public class ViewCardsSummaryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ViewCardsSummaryViewModel viewCardsViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
 
         binding = FragmentViewcardsSummaryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

@@ -10,15 +10,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ygodb.R;
-import com.example.ygodb.abs.Util;
-import com.example.ygodb.backend.bean.OwnedCard;
-import com.example.ygodb.ui.singleCard.SummaryCardToListAdapter;
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.ui.viewCardSet.ViewCardSetViewModel;
 import com.example.ygodb.ui.viewCards.ViewCardsViewModel;
 import com.example.ygodb.ui.viewCardsSummary.ViewCardsSummaryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 class AddCardsButtonOnClickListener implements View.OnClickListener {
 
@@ -139,15 +135,15 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
                             addCardsViewModel.saveToDB();
 
                             ViewCardsViewModel viewCardsViewModel =
-                                    new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsViewModel.class);
+                                    new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
                             viewCardsViewModel.refreshViewDBUpdate();
 
                             ViewCardSetViewModel viewCardSetViewModel =
-                                    new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
+                                    new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
                             viewCardSetViewModel.refreshViewDBUpdate();
 
                             ViewCardsSummaryViewModel viewCardsSummaryViewModel =
-                                    new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
+                                    new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
                             viewCardsSummaryViewModel.refreshViewDBUpdate();
 
                             view.post(new Runnable() {

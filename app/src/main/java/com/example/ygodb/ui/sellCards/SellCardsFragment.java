@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ygodb.abs.Util;
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.FragmentSellcardsBinding;
 
 
@@ -25,7 +25,7 @@ public class SellCardsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SellCardsViewModel sellCardsViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(SellCardsViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(SellCardsViewModel.class);
 
         binding = FragmentSellcardsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

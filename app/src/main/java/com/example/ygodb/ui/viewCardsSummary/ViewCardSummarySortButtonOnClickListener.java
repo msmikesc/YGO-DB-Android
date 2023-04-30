@@ -9,7 +9,7 @@ import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ygodb.R;
-import com.example.ygodb.backend.bean.OwnedCard;
+import bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SummaryCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

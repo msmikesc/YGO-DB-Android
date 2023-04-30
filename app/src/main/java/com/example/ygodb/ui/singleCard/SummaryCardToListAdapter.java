@@ -1,6 +1,5 @@
 package com.example.ygodb.ui.singleCard;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
-import com.example.ygodb.abs.Util;
-import com.example.ygodb.backend.bean.OwnedCard;
+import com.example.ygodb.abs.AndroidUtil;
+import bean.OwnedCard;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
 
         try {
             // get input stream
-            InputStream ims = Util.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

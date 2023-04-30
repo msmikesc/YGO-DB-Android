@@ -10,9 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ygodb.R;
-import com.example.ygodb.abs.Util;
-import com.example.ygodb.ui.addCards.AddCardToListAdapter;
-import com.example.ygodb.ui.addCards.AddCardsViewModel;
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.ui.viewCardSet.ViewCardSetViewModel;
 import com.example.ygodb.ui.viewCards.ViewCardsViewModel;
 import com.example.ygodb.ui.viewCardsSummary.ViewCardsSummaryViewModel;
@@ -119,15 +117,15 @@ class SellCardsButtonOnClickListener implements View.OnClickListener {
                             sellCardsViewModel.saveToDB();
 
                             ViewCardsViewModel viewCardsViewModel =
-                                    new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsViewModel.class);
+                                    new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
                             viewCardsViewModel.refreshViewDBUpdate();
 
                             ViewCardSetViewModel viewCardSetViewModel =
-                                    new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
+                                    new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
                             viewCardSetViewModel.refreshViewDBUpdate();
 
                             ViewCardsSummaryViewModel viewCardsSummaryViewModel =
-                                    new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
+                                    new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
                             viewCardsSummaryViewModel.refreshViewDBUpdate();
 
                             view.post(new Runnable() {

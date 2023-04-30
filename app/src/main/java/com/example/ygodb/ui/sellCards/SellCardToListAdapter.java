@@ -18,8 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
-import com.example.ygodb.abs.Util;
-import com.example.ygodb.backend.bean.OwnedCard;
+import com.example.ygodb.abs.AndroidUtil;
+import bean.OwnedCard;
+import connection.Util;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 
         try {
 
-            firstInputStreamSmall = Util.getAppContext().getAssets().open("images/1st.png");
+            firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
             firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
         }
         catch (Exception e){
@@ -81,7 +82,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         String newPrice = priceBox.toString();
 
         try{
-            newPrice = com.example.ygodb.backend.connection.Util.normalizePrice(newPrice);
+            newPrice = Util.normalizePrice(newPrice);
 
             if(current.priceSold != null && current.priceSold.equals(newPrice)){
                 return;
@@ -269,7 +270,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 
         try {
             // get input stream
-            InputStream ims = Util.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

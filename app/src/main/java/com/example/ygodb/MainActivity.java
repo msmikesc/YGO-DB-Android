@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -23,14 +22,13 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.ygodb.abs.CopyDBInCallback;
 import com.example.ygodb.abs.CopyDBOutCallback;
-import com.example.ygodb.abs.Util;
-import com.example.ygodb.backend.connection.SQLiteConnection;
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.ActivityMainBinding;
+
+
 import com.example.ygodb.ui.viewCardSet.ViewCardSetViewModel;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Util.setAppContext(getApplicationContext());
 
-        Util.setViewModelOwner(this);
+
+        AndroidUtil.setViewModelOwner(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -84,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
                 new CopyDBOutCallback(this));
 
         ViewCardSetViewModel viewCardSetViewModel =
-                new ViewModelProvider(Util.getViewModelOwner()).get(ViewCardSetViewModel.class);
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ArrayList<String> setNamesArrayList = SQLiteConnection.getObj().getDistinctSetAndArchetypeNames();
+                    ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
                     viewCardSetViewModel.setNamesDropdownList = new String[setNamesArrayList.size()];
                     setNamesArrayList.toArray(viewCardSetViewModel.setNamesDropdownList);
                 } catch (Exception e) {
