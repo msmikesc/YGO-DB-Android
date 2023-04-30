@@ -59,7 +59,7 @@ public class AddFromOwnedCards {
 			if (sets.size() == 0) {
 				// add it
 				System.out.println("No rarity entries found for " + card.cardName + ":" + card.id + ":" + card.setName);
-				db.replaceIntoCardSet(card.setNumber, card.setRarity, card.setName, card.id, "0",
+				db.replaceIntoCardSet(card.setNumber, card.setRarity, card.setName, card.id, null,
 						card.cardName);
 			} else {
 				boolean match = false;
@@ -76,7 +76,7 @@ public class AddFromOwnedCards {
 					// add it
 					System.out.println("No matching rarity entries found for " + card.cardName + ":" + card.id + ":"
 							+ card.setName);
-					db.replaceIntoCardSet(card.setNumber, card.setRarity, card.setName, card.id, "0",
+					db.replaceIntoCardSet(card.setNumber, card.setRarity, card.setName, card.id, null,
 							card.cardName);
 				}
 			}

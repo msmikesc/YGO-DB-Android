@@ -486,9 +486,7 @@ public class CsvConnection {
 			System.out.println("Unable to find valid passcode for " + cardNumber + ":" + name);
 		}
 
-		String price = Util.getAdjustedPriceFromRarity(rarity, "0");
-
-		db.replaceIntoCardSet(cardNumber, rarity, setName, wikiID, price, name);
+		db.replaceIntoCardSet(cardNumber, rarity, setName, wikiID, null, name);
 	}
 
 	public static void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {

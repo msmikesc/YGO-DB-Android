@@ -15,13 +15,6 @@ import bean.SetMetaData;
 import bean.Rarity;
 
 public class Util {
-
-	public static BigDecimal one = new BigDecimal(1);
-	public static BigDecimal two = new BigDecimal(2);
-	public static BigDecimal cent50 = new BigDecimal(.5);
-	public static BigDecimal ten = new BigDecimal(10);
-	public static BigDecimal thirty = new BigDecimal(30);
-	public static BigDecimal oneCent = new BigDecimal(0.01);
 	
 	public static String defaultColorVariant = "-1";
 	
@@ -467,68 +460,6 @@ public class Util {
 		System.out.println("Took a guess that " + setNumber + ":" + cardName + " is:" + rValue.setRarity);
 
 		return rValue;
-
-	}
-
-	public static String getAdjustedPriceFromRarity(String rarity, String inputPrice) {
-
-		BigDecimal price = new BigDecimal(inputPrice);
-
-		if (price.compareTo(oneCent) < 0) {
-			price = oneCent;
-		}
-
-		if (rarity.contains("Collector")) {
-			price = price.add(thirty);
-		}
-
-		if (rarity.contains("Ultimate")) {
-			price = price.add(ten);
-		}
-
-		if (rarity.contains("Starlight")) {
-			price = price.add(thirty);
-		}
-
-		if (rarity.contains("Ghost")) {
-			price = price.add(thirty);
-		}
-
-		if (rarity.contains("Duel Terminal")) {
-			price = price.add(cent50);
-		}
-
-		if (rarity.contains("Gold")) {
-			price = price.add(one);
-		}
-
-		if (rarity.contains("Starfoil")) {
-			price = price.add(cent50);
-		}
-
-		if (rarity.contains("Shatterfoil")) {
-			price = price.add(cent50);
-		}
-
-		if (rarity.contains("Mosaic")) {
-			price = price.add(cent50);
-		}
-
-		if (rarity.contains("Super")) {
-			price = price.add(cent50);
-		}
-
-		if (rarity.contains("Ultra")) {
-			price = price.add(one);
-		}
-
-		if (rarity.contains("Secret")) {
-			price = price.add(two);
-		}
-
-		price = price.setScale(2, RoundingMode.HALF_UP);
-
-		return price.toString();
 
 	}
 
