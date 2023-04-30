@@ -15,7 +15,7 @@ public class AddFromOwnedCards {
 	public static void main(String[] args) throws SQLException, IOException {
 		AddFromOwnedCards mainObj = new AddFromOwnedCards();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 		System.out.println("Process Complete");
 	}*/
 
@@ -41,8 +41,14 @@ public class AddFromOwnedCards {
 					// add it
 					System.out.println("No gamePlayCard found for " + card.cardName + ":" + card.id);
 
-					db.replaceIntoGamePlayCard(card.id, card.cardName, "unknown", card.id, null, null,
-							null, null, null, null, null, null, null);
+					GamePlayCard GPC = new GamePlayCard();
+
+					GPC.cardName = card.cardName;
+					GPC.cardType = "unknown";
+					GPC.passcode = card.id;
+					GPC.wikiID = card.id;
+
+					db.replaceIntoGamePlayCard(GPC);
 
 				}
 			}

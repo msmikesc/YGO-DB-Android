@@ -15,7 +15,7 @@ public class ImportCardSetFromCSV {
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportCardSetFromCSV mainObj = new ImportCardSetFromCSV();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 		System.out.println("Import Complete");
 	}*/
 

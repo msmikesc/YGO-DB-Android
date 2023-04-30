@@ -20,7 +20,7 @@ public class AnalyzeCardsToSell {
 	public static void main(String[] args) throws SQLException, IOException {
 		AnalyzeCardsToSell mainObj = new AnalyzeCardsToSell();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

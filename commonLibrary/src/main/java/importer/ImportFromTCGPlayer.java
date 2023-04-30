@@ -21,7 +21,7 @@ public class ImportFromTCGPlayer {
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportFromTCGPlayer mainObj = new ImportFromTCGPlayer();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 		System.out.println("Import Complete");
 	}*/
 
@@ -74,6 +74,8 @@ public class ImportFromTCGPlayer {
 		for (OwnedCard card : map.values()) {
 			db.upsertOwnedCardBatch(card);
 		}
+
+		db.closeInstance();
 
 		System.out.println("Imported " + count + " cards");
 		System.out.println("Total cards: "+db.getCountQuantity() + " + " + db.getCountQuantityManual() + " Manual");

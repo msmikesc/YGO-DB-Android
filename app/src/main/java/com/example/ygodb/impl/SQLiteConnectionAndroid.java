@@ -33,7 +33,7 @@ import connection.Util;
 
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
 
-	private static SQLiteDatabase connection = null;
+	private SQLiteDatabase connection = null;
 	private final Context cont;
 	private static final String DB_NAME = "database.sqlite";
 	//private static String OLD_DB_PATH = DB_DIR + "old_" + DB_NAME;
@@ -266,6 +266,16 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public ArrayList<CardSet> getAllCardSetsOfCardByIDAndSet(int id, String setName) throws SQLException {
+		return null;
+	}
+
+	@Override
+	public ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException {
+		return null;
+	}
+
+	@Override
 	public ArrayList<CardSet> getRaritiesOfCardInSetByID(int id, String setName) {
 		//TODO add name?
 
@@ -441,6 +451,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			return titlesFound.get(0);
 		}
 
+		return null;
+	}
+
+	@Override
+	public ArrayList<String> getMultiCardTitlesFromID(int wikiID) throws SQLException {
 		return null;
 	}
 
@@ -1426,28 +1441,26 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void replaceIntoGamePlayCard(Integer wikiID, String name, String type, Integer passcode, String desc,
-										String attribute, String race, Integer linkval, Integer level, Integer scale, Integer atk, Integer def,
-										String archetype) {
+	public void replaceIntoGamePlayCard(GamePlayCard input) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String gamePlayCard = "Replace into gamePlayCard(wikiID,title,type,passcode,lore,attribute,race,linkValue,level,pendScale,atk,def,archetype) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		SQLiteStatement statement = connection.compileStatement(gamePlayCard);
 
-		setIntegerOrNull(statement, 1, wikiID);
-		setStringOrNull(statement, 2, name);
-		setStringOrNull(statement, 3, type);
-		setIntegerOrNull(statement, 4, passcode);
-		setStringOrNull(statement, 5, desc);
-		setStringOrNull(statement, 6, attribute);
-		setStringOrNull(statement, 7, race);
-		setIntegerOrNull(statement, 8, linkval);
-		setIntegerOrNull(statement, 9, level);
-		setIntegerOrNull(statement, 10, scale);
-		setIntegerOrNull(statement, 11, atk);
-		setIntegerOrNull(statement, 12, def);
-		setStringOrNull(statement, 13, archetype);
+		setIntegerOrNull(statement, 1, input.wikiID);
+		setStringOrNull(statement, 2, input.cardName);
+		setStringOrNull(statement, 3, input.cardType);
+		setIntegerOrNull(statement, 4, input.passcode);
+		setStringOrNull(statement, 5, input.desc);
+		setStringOrNull(statement, 6, input.attribute);
+		setStringOrNull(statement, 7, input.race);
+		setStringOrNull(statement, 8, input.linkval);
+		setStringOrNull(statement, 9, input.level);
+		setStringOrNull(statement, 10, input.scale);
+		setStringOrNull(statement, 11, input.atk);
+		setStringOrNull(statement, 12, input.def);
+		setStringOrNull(statement, 13, input.archetype);
 
 		statement.execute();
 
@@ -1723,6 +1736,21 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		statementSetInsert.execute();
 		statementSetInsert.close();
+	}
+
+	@Override
+	public int updateCardSetPrice(String setNumber, String rarity, String price) throws SQLException {
+		return 0;
+	}
+
+	@Override
+	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName) throws SQLException {
+		return 0;
+	}
+
+	@Override
+	public int updateCardSetPrice(String setNumber, String price) throws SQLException {
+		return 0;
 	}
 
 	private boolean createDatabase = false;

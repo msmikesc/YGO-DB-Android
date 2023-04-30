@@ -4,28 +4,21 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import org.json.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import bean.GamePlayCard;
+import bean.SetMetaData;
 import connection.SQLiteConnection;
 import connection.Util;
 
 import java.sql.SQLException;
 
 public class ImportFromYGOPROAPI {
-
-	/*
-	
-	public static void main(String[] args) throws SQLException, IOException {
-		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();
-		mainObj.run();
-		
-		System.out.println("Import Finished");
-	}*/
-	
-	
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
@@ -65,34 +58,32 @@ public class ImportFromYGOPROAPI {
 				// Close the scanner
 				scanner.close();
 
-				JSONObject jo = new JSONObject(inline);
+				ObjectMapper objectMapper = new ObjectMapper();
+				JsonNode jsonNode = objectMapper.readTree(inline);
 
 				inline = null;
 
-				JSONArray cards = (JSONArray) jo.get("data");
+				JsonNode cards = jsonNode.get("data");
 
-				for(int iterator = 0; iterator < cards.length(); iterator++){
+				Iterator<JsonNode> keyset = cards.iterator();
 
-					JSONObject current = cards.getJSONObject(iterator);
+				while (keyset.hasNext()) {
+
+					JsonNode current = keyset.next();
 
 					insertGameplayCardFromYGOPRO(current, db);
 
-					int cardID = current.getInt("id");
-					String name = current.getString("name");
+					int cardID = current.get("id").asInt();
+					String name = current.get("name").asText();
 
-					JSONArray sets = null;
-					Iterator<Object> setIteraor = null;
-					boolean isSets = false;
+					JsonNode sets = null;
+					Iterator<JsonNode> setIteraor = null;
+					sets = current.get("card_sets");
 
-					try {
-						sets = current.getJSONArray("card_sets");
-						isSets = true;
-					} catch (JSONException e) {
 
-					}
-
-					if (isSets) {
-						insertCardSetsForOneCard(sets, name, cardID, db);
+					if (sets != null) {
+						setIteraor = sets.iterator();
+						insertCardSetsForOneCard(setIteraor, name, cardID, db);
 					}
 
 				}
@@ -106,7 +97,7 @@ public class ImportFromYGOPROAPI {
 		}
 	}
 
-	public static void insertGameplayCardFromYGOPRO(JSONObject current, SQLiteConnection db) throws SQLException {
+	public static void insertGameplayCardFromYGOPRO(JsonNode current, SQLiteConnection db) throws SQLException {
 
 		Integer wikiID = Util.getIntOrNull(current, "id");
 		String name = Util.getStringOrNull(current, "name");
@@ -115,23 +106,38 @@ public class ImportFromYGOPROAPI {
 		String desc = Util.getStringOrNull(current, "desc");
 		String attribute = Util.getStringOrNull(current, "attribute");
 		String race = Util.getStringOrNull(current, "race");
-		Integer linkval = Util.getIntOrNull(current, "linkval");
-		Integer level = Util.getIntOrNull(current, "level");
-		Integer scale = Util.getIntOrNull(current, "scale");
-		Integer atk = Util.getIntOrNull(current, "atk");
-		Integer def = Util.getIntOrNull(current, "def");
+		String linkval = Util.getStringOrNull(current, "linkval");
+		String level = Util.getStringOrNull(current, "level");
+		String scale = Util.getStringOrNull(current, "scale");
+		String atk = Util.getStringOrNull(current, "atk");
+		String def = Util.getStringOrNull(current, "def");
 		String archetype = Util.getStringOrNull(current, "archetype");
 
-		db.replaceIntoGamePlayCard(wikiID, name, type, passcode, desc, attribute, race, linkval, level,
-				scale, atk, def, archetype);
+		GamePlayCard GPC = new GamePlayCard();
+
+		GPC.cardName = name;
+		GPC.cardType = type;
+		GPC.archetype = archetype;
+		GPC.passcode = passcode;
+		GPC.wikiID = wikiID;
+		GPC.desc = desc;
+		GPC.attribute = attribute;
+		GPC.race = race;
+		GPC.linkval = linkval;
+		GPC.scale = scale;
+		GPC.level = level;
+		GPC.atk = atk;
+		GPC.def = def;
+
+		db.replaceIntoGamePlayCard(GPC);
 	}
 
-	public static void insertCardSetsForOneCard(JSONArray sets, String name, int wikiID, SQLiteConnection db)
-			throws SQLException, JSONException {
+	public static void insertCardSetsForOneCard(Iterator<JsonNode> setIteraor, String name, int wikiID, SQLiteConnection db)
+			throws SQLException {
 
-		for (int i = 0; i < sets.length(); i++) {
+		while(setIteraor.hasNext()) {
 
-			JSONObject currentSet = sets.getJSONObject(i);
+			JsonNode currentSet = setIteraor.next();
 
 			String set_code = null;
 			String set_name = null;
@@ -139,17 +145,17 @@ public class ImportFromYGOPROAPI {
 			String set_price = null;
 
 			try {
-				set_code = currentSet.getString("set_code");
-				set_name = currentSet.getString("set_name");
-				set_rarity = currentSet.getString("set_rarity");
-				set_price = currentSet.getString("set_price");
+				set_code = currentSet.get("set_code").asText();
+				set_name = currentSet.get("set_name").asText();
+				set_rarity = currentSet.get("set_rarity").asText();
+				set_price = currentSet.get("set_price").asText();
 			} catch (Exception e) {
 				System.out.println("issue found on " + name);
 				continue;
 			}
 
-			set_price = Util.getAdjustedPriceFromRarity(set_rarity, set_price);
-			
+			//set_price = Util.getAdjustedPriceFromRarity(set_rarity, set_price);
+
 			set_name = Util.checkForTranslatedSetName(set_name);
 
 			db.replaceIntoCardSet(set_code, set_rarity, set_name, wikiID, set_price, name);
@@ -191,12 +197,22 @@ public class ImportFromYGOPROAPI {
 				// Close the scanner
 				scanner.close();
 
-				JSONArray array = new JSONArray(inline);
+				ObjectMapper objectMapper = new ObjectMapper();
+				JsonNode jsonNode = objectMapper.readTree(inline);
 
 				inline = null;
 
-				for(int iterator = 0; iterator < array.length(); iterator++){
-					JSONObject set = array.getJSONObject(iterator);
+				ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
+				ArrayList<String> dbSetNames = new ArrayList<>();
+
+				for(SetMetaData current : list) {
+					dbSetNames.add(current.set_name);
+				}
+
+				Iterator<JsonNode> keyset = jsonNode.iterator();
+
+				while (keyset.hasNext()) {
+					JsonNode set = keyset.next();
 
 					String set_name = Util.getStringOrNull(set, "set_name");
 					String set_code = Util.getStringOrNull(set, "set_code");
@@ -205,12 +221,15 @@ public class ImportFromYGOPROAPI {
 					
 					String newSetName = Util.checkForTranslatedSetName(set_name);
 
+					if(!dbSetNames.contains(newSetName)) {
+						System.out.println("Missing Set: "+ newSetName);
+					}
+
 					if (!specificSet) {
 						db.replaceIntoCardSetMetaData(newSetName, set_code, num_of_cards, tcg_date);
 					}
 					if (specificSet && set_name.equalsIgnoreCase(setName)) {
 						db.replaceIntoCardSetMetaData(newSetName, set_code, num_of_cards, tcg_date);
-						return;
 					}
 				}
 

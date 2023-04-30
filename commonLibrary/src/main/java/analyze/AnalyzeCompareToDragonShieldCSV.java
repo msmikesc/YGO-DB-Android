@@ -26,7 +26,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 	public static void main(String[] args) throws SQLException, IOException {
 		AnalyzeCompareToDragonShieldCSV mainObj = new AnalyzeCompareToDragonShieldCSV();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 		System.out.println("Analyze Complete");
 	}*/
 

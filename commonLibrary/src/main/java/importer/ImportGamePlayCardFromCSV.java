@@ -15,7 +15,7 @@ public class ImportGamePlayCardFromCSV {
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportGamePlayCardFromCSV mainObj = new ImportGamePlayCardFromCSV();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 		System.out.println("Import Complete");
 	}*/
 

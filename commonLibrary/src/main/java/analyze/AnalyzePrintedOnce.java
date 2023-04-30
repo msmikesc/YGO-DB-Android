@@ -17,7 +17,7 @@ public class AnalyzePrintedOnce {
 	public static void main(String[] args) throws SQLException, IOException {
 		AnalyzePrintedOnce mainObj = new AnalyzePrintedOnce();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

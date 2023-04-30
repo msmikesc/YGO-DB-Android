@@ -12,25 +12,31 @@ import bean.SetMetaData;
 
 public interface SQLiteConnection {
 
-    void closeInstance();
+    void closeInstance() throws SQLException;
 
-    HashMap<String, ArrayList<CardSet>> getAllCardRarities();
+    HashMap<String, ArrayList<CardSet>> getAllCardRarities() throws SQLException;
 
-    ArrayList<CardSet> getAllRaritiesOfCardByID(int id);
+    ArrayList<CardSet> getAllRaritiesOfCardByID(int id) throws SQLException;
 
-    ArrayList<CardSet> getRaritiesOfCardInSetByID(int id, String setName);
+    ArrayList<CardSet> getAllCardSetsOfCardByIDAndSet(int id, String setName) throws SQLException;
+
+    ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException;
+
+    ArrayList<CardSet> getRaritiesOfCardInSetByID(int id, String setName) throws SQLException;
 
     ArrayList<CardSet> getRaritiesOfCardByID(int id);
 
-    ArrayList<CardSet> getRaritiesOfCardInSetByIDAndName(int id, String setName, String cardName);
+    ArrayList<CardSet> getRaritiesOfCardInSetByIDAndName(int id, String setName, String cardName) throws SQLException;
 
     ArrayList<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy);
 
-    String getCardTitleFromID(int wikiID);
+    String getCardTitleFromID(int wikiID) throws SQLException;
 
-    int getCardIdFromTitle(String title);
+    ArrayList<String> getMultiCardTitlesFromID(int wikiID) throws SQLException;
 
-    ArrayList<OwnedCard> getNumberOfOwnedCardsById(int id);
+    int getCardIdFromTitle(String title) throws SQLException;
+
+    ArrayList<OwnedCard> getNumberOfOwnedCardsById(int id) throws SQLException;
 
     ArrayList<OwnedCard> getNumberOfOwnedCardsByName(String name);
 
@@ -42,62 +48,67 @@ public interface SQLiteConnection {
 
     ArrayList<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch);
 
-    ArrayList<OwnedCard> getAllOwnedCardsWithoutSetCode();
+    ArrayList<OwnedCard> getAllOwnedCardsWithoutSetCode() throws SQLException;
 
-    HashMap<String, ArrayList<OwnedCard>> getAllOwnedCardsForHashMap();
+    HashMap<String, ArrayList<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException;
 
-    ArrayList<OwnedCard> getRarityUnsureOwnedCards();
+    ArrayList<OwnedCard> getRarityUnsureOwnedCards() throws SQLException;
 
-    ArrayList<Integer> getDistinctCardIDsInSetByName(String setName);
+    ArrayList<Integer> getDistinctCardIDsInSetByName(String setName) throws SQLException;
 
     ArrayList<String> getDistinctCardNamesInSetByName(String setName);
 
     ArrayList<CardSet> getDistinctCardNamesAndIdsInSetByName(String setName);
 
-    ArrayList<Integer> getDistinctCardIDsByArchetype(String archetype);
+    ArrayList<Integer> getDistinctCardIDsByArchetype(String archetype) throws SQLException;
 
     ArrayList<String> getDistinctCardNamesByArchetype(String archetype);
 
     ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype);
 
-    ArrayList<String> getSortedCardsInSetByName(String setName);
+    ArrayList<String> getSortedCardsInSetByName(String setName) throws SQLException;
 
-    ArrayList<String> getDistinctSetNames();
+    ArrayList<String> getDistinctSetNames() throws SQLException;
 
     ArrayList<String> getDistinctSetAndArchetypeNames();
 
-    int getCountDistinctCardsInSet(String setName);
+    int getCountDistinctCardsInSet(String setName) throws SQLException;
 
-    int getCountQuantity();
+    int getCountQuantity() throws SQLException;
 
-    int getCountQuantityManual();
+    int getCountQuantityManual() throws SQLException;
 
-    CardSet getFirstCardSetForCardInSet(String cardName, String setName);
+    CardSet getFirstCardSetForCardInSet(String cardName, String setName) throws SQLException;
 
-    ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName);
+    ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName) throws SQLException;
 
-    ArrayList<SetMetaData> getSetMetaDataFromSetCode(String setCode);
+    ArrayList<SetMetaData> getSetMetaDataFromSetCode(String setCode) throws SQLException;
 
-    ArrayList<SetMetaData> getAllSetMetaDataFromSetData();
+    ArrayList<SetMetaData> getAllSetMetaDataFromSetData() throws SQLException;
 
-    HashMap<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce();
+    HashMap<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() throws SQLException;
 
-    void replaceIntoCardSetMetaData(String set_name, String set_code, int num_of_cards, String tcg_date);
+    void replaceIntoCardSetMetaData(String set_name, String set_code, int num_of_cards, String tcg_date) throws SQLException;
 
-    GamePlayCard getGamePlayCardByNameAndID(Integer wikiID, String name);
+    GamePlayCard getGamePlayCardByNameAndID(Integer wikiID, String name) throws SQLException;
 
-    void replaceIntoGamePlayCard(Integer wikiID, String name, String type, Integer passcode, String desc,
-                                 String attribute, String race, Integer linkval, Integer level, Integer scale, Integer atk, Integer def,
-                                 String archetype);
+    void replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 
-    void UpdateOwnedCardByUUID(OwnedCard card);
+    void UpdateOwnedCardByUUID(OwnedCard card) throws SQLException;
 
     void sellCards(OwnedCard card, int quantity, String priceSold);
 
-    void upsertOwnedCardBatch(OwnedCard card);
+    void upsertOwnedCardBatch(OwnedCard card) throws SQLException;
 
     void replaceIntoCardSet(String setNumber, String rarity, String setName, int wikiID, String price,
-                            String cardName);
+                            String cardName) throws SQLException;
 
-    void updateSetName(String original, String newName);
+    void updateSetName(String original, String newName) throws SQLException;
+
+    int updateCardSetPrice(String setNumber, String rarity, String price) throws SQLException;
+
+    int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName)
+            throws SQLException;
+
+    int updateCardSetPrice(String setNumber, String price) throws SQLException;
 }

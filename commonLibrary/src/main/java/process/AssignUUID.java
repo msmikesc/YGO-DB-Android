@@ -14,7 +14,7 @@ public class AssignUUID {
 	public static void main(String[] args) throws SQLException, IOException {
 		AssignUUID mainObj = new AssignUUID();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 		System.out.println("Process Finished");
 	}*/
 

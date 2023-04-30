@@ -18,7 +18,7 @@ public class ReformatFromTCGPlayerForPurchase {
 	public static void main(String[] args) throws SQLException, IOException {
 		ReformatFromTCGPlayerForPurchase mainObj = new ReformatFromTCGPlayerForPurchase();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

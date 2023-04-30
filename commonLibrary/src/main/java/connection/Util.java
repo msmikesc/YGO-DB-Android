@@ -1,14 +1,13 @@
 package connection;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import bean.CardSet;
 import bean.OwnedCard;
@@ -27,12 +26,13 @@ public class Util {
 	public static String defaultColorVariant = "-1";
 	
 	private static HashMap<String, String> setNameMap = null;
-	
+	private static HashMap<String, String> rarityMap = null;
+
 
 	public static HashMap<String, String> getSetNameMapInstance() {
 		if (setNameMap == null) {
 			setNameMap = new HashMap<String,String>();
-			
+
 			setNameMap.put("King of Games: Yugi's Legendary Decks", "Yugi's Legendary Decks");
 			setNameMap.put("Yugi'S Legendary Decks", "Yugi's Legendary Decks");
 			setNameMap.put("Legendary Collection 2", "Legendary Collection 2: The Duel Academy Years Mega Pack");
@@ -81,13 +81,106 @@ public class Util {
 			setNameMap.put("2013 Collectible Tins Wave 2", "Collectible Tins 2013");
 			setNameMap.put("Duelist Pack 8: Yusei Fudo", "Duelist Pack: Yusei");
 			setNameMap.put("Duelist Pack Collection Tin", "Duelist Pack Collection Tin 2009");
-			
-			
+			setNameMap.put("2006 Collectors Tin", "Collectible Tins 2006");
+			setNameMap.put("2007 Collectors Tin", "Collectible Tins 2007");
+			setNameMap.put("2008 Collectors Tin", "Collectible Tins 2008");
+			setNameMap.put("2009 Collectors Tin", "Collectible Tins 2009");
+			setNameMap.put("2010 Collectors Tin", "Collectible Tins 2010");
+			setNameMap.put("2011 Collectors Tin", "Collectible Tins 2011");
+			setNameMap.put("2012 Collectors Tin", "Collectible Tins 2012");
+			setNameMap.put("2013 Collectors Tin", "Collectible Tins 2013");
+			setNameMap.put("2020 Tin of Lost Memories", "2020 Tin of Lost Memories Mega Pack");
+			setNameMap.put("Duel Terminal 5a", "Duel Terminal 5");
+			setNameMap.put("Duel Terminal 5b", "Duel Terminal 5");
+			setNameMap.put("Duel Terminal 6a", "Duel Terminal 6");
+			setNameMap.put("Duel Terminal 6b", "Duel Terminal 6");
+			setNameMap.put("Duel Terminal 7a", "Duel Terminal 7");
+			setNameMap.put("Duel Terminal 7b", "Duel Terminal 7");
+			setNameMap.put("Legendary Collection 1", "Legendary Collection");
+			setNameMap.put("Advent Calendar 2019", "Yu-Gi-Oh! Advent Calendar (2019)");
+			setNameMap.put("Advent Calendar 2018", "Yu-Gi-Oh! Advent Calendar (2018)");
+			setNameMap.put("The Legend of Blue Eyes White Dragon", "Legend of Blue Eyes White Dragon");
 			//setNameMap.put("", "");
-			
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+			//setNameMap.put("", "");
+
 		}
 
 		return setNameMap;
+	}
+
+	public static HashMap<String, String> getRarityMapInstance() {
+		if (rarityMap == null) {
+			rarityMap = new HashMap<String,String>();
+
+			rarityMap.put("Collectors Rare", "Collector's Rare");
+			rarityMap.put("URPR", "Ultra Rare (Pharaoh's Rare)");
+			rarityMap.put("Super Short Print", "Short Print");
+			rarityMap.put("SSP", "Short Print");
+			rarityMap.put("Duel Terminal Technology Common", "Duel Terminal Normal Parallel Rare");
+			rarityMap.put("Secret Pharaohâ€™s Rare", "Secret Rare (Pharaoh's Rare)");
+			rarityMap.put("Ultra Pharaohâ€™s Rare", "Ultra Rare (Pharaoh's Rare)");
+			rarityMap.put("Duel Terminal Technology Ultra Rare", "Duel Terminal Ultra Parallel Rare");
+			rarityMap.put("Ultra Pharaoh’s Rare", "Ultra Rare (Pharaoh's Rare)");
+			rarityMap.put("Secret Pharaoh’s Rare", "Secret Rare (Pharaoh's Rare)");
+
+			//rarityMap.put("", "");
+
+		}
+
+		return rarityMap;
 	}
 	
 	public static String flipStructureEnding(String input, String match) {
@@ -100,26 +193,58 @@ public class Util {
 		return input;
 		
 	}
-	
-	
+
+
 	public static String checkForTranslatedSetName(String setName) {
-		
+
 		if(setName.contains("The Lost Art Promotion")) {
 			setName = "The Lost Art Promotion";
 		}
-		
+
+		if(setName.contains("(Worldwide English)")) {
+			setName = setName.replace("(Worldwide English)", "");
+			setName = setName.trim();
+		}
+
+		if(setName.contains("Sneak Peek Participation Card")) {
+			setName = setName.replace("Sneak Peek Participation Card", "");
+			setName = setName.trim();
+		}
+
+		if(setName.contains(": Special Edition")) {
+			setName = setName.replace(": Special Edition", "");
+			setName = setName.trim();
+		}
+
+		if(setName.contains("Special Edition")) {
+			setName = setName.replace("Special Edition", "");
+			setName = setName.trim();
+		}
+
 		setName = flipStructureEnding(setName, "Starter Deck");
 		setName = flipStructureEnding(setName, "Structure Deck");
-		
+
 		HashMap<String, String> instance = getSetNameMapInstance();
-		
+
 		String newSetName = instance.get(setName);
-		
+
 		if(newSetName == null) {
 			return setName;
 		}
-		
+
 		return newSetName;
+	}
+
+	public static String checkForTranslatedRarity(String rarity) {
+		HashMap<String, String> instance = getRarityMapInstance();
+
+		String newRarity = instance.get(rarity);
+
+		if(newRarity == null) {
+			return rarity;
+		}
+
+		return newRarity;
 	}
 	
 	public static OwnedCard formOwnedCard(String folder, String name, String quantity, String setCode, String condition,
@@ -151,8 +276,7 @@ public class Util {
 	}
 	
 	public static boolean doesCardExactlyMatch(String folder, String name, String setCode, String setNumber,
-			String condition, String printing, String priceBought, String dateBought, OwnedCard existingCard)
-			throws SQLException {
+			String condition, String printing, String priceBought, String dateBought, OwnedCard existingCard) {
 		if (setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
 				&& dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
 				&& condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)) {
@@ -163,7 +287,7 @@ public class Util {
 	
 	public static boolean doesCardExactlyMatchWithColor(String folder, String name, String setCode, String setNumber,
 			String condition, String printing, String priceBought, String dateBought, String colorVariant,
-			OwnedCard existingCard) throws SQLException {
+			OwnedCard existingCard) {
 		if (setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
 				&& dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
 				&& condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
@@ -217,12 +341,20 @@ public class Util {
 	}
 
 	public static String normalizePrice(String input) {
-		
+
 		if(input == null || input.trim().equals("")) {
 			return null;
 		}
-		
-		BigDecimal price = new BigDecimal(input);
+
+		BigDecimal price;
+
+		try {
+			price = new BigDecimal(input.replace(",", ""));
+		}
+		catch(Exception e) {
+			System.out.println("Invalid price input:" + input);
+			price = new BigDecimal("0");
+		}
 
 		price = price.setScale(2, RoundingMode.HALF_UP);
 
@@ -400,6 +532,18 @@ public class Util {
 
 	}
 
+	public static void checkForIssuesWithCardNamesInSet(String setName, SQLiteConnection db) throws SQLException {
+		ArrayList<Integer> list = db.getDistinctCardIDsInSetByName(setName);
+		for (int i : list) {
+			String title = db.getCardTitleFromID(i);
+
+			if(title == null) {
+				System.out.println("Not exactly 1 gameplaycard found for ID " + i);
+			}
+
+		}
+	}
+
 	public static void checkForIssuesWithSet(String setName, SQLiteConnection db) throws SQLException {
 
 		ArrayList<String> cardsInSetList = db.getSortedCardsInSetByName(setName);
@@ -475,20 +619,20 @@ public class Util {
 		}
 	}
 
-	public static String getStringOrNull(JSONObject current, String id) {
+	public static String getStringOrNull(JsonNode current, String id) {
 		try {
-			String value = current.getString(id);
+			String value = current.get(id).asText();
 			return value;
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
 
-	public static Integer getIntOrNull(JSONObject current, String id) {
+	public static Integer getIntOrNull(JsonNode current, String id) {
 		try {
-			int value = current.getInt(id);
+			int value = current.get(id).asInt();
 			return value;
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}

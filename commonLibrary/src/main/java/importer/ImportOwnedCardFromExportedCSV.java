@@ -20,7 +20,7 @@ public class ImportOwnedCardFromExportedCSV {
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportOwnedCardFromExportedCSV mainObj = new ImportOwnedCardFromExportedCSV();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 		System.out.println("Import Complete");
 	}*/
 
@@ -67,8 +67,8 @@ public class ImportOwnedCardFromExportedCSV {
 				db.upsertOwnedCardBatch(card);
 			}
 		}
-		
-		
+
+		db.closeInstance();
 		
 		System.out.println("Imported " + count + " cards");
 

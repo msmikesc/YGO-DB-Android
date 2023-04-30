@@ -16,7 +16,7 @@ public class UpdateOwnedCardsBySetName {
 	public static void main(String[] args) throws SQLException, IOException {
 		UpdateOwnedCardsBySetName mainObj = new UpdateOwnedCardsBySetName();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

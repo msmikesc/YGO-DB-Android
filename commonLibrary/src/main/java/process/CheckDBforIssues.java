@@ -13,7 +13,8 @@ public class CheckDBforIssues {
 	public static void main(String[] args) throws SQLException, IOException {
 		CheckDBforIssues mainObj = new CheckDBforIssues();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
+		System.out.println("Analyze complete");
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
@@ -27,6 +28,7 @@ public class CheckDBforIssues {
 			}
 
 			Util.checkForIssuesWithSet(setName, db);
+			Util.checkForIssuesWithCardNamesInSet(setName, db);
 
 		}
 		Util.checkSetCounts(db);

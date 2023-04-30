@@ -14,7 +14,7 @@ public class ExportUnSyncedForUpload {
 	public static void main(String[] args) throws SQLException, IOException {
 		ExportUnSyncedForUpload mainObj = new ExportUnSyncedForUpload();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

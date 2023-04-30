@@ -14,7 +14,7 @@ public class ExportRarityUnsureToCSV {
 	public static void main(String[] args) throws SQLException, IOException {
 		ExportRarityUnsureToCSV mainObj = new ExportRarityUnsureToCSV();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

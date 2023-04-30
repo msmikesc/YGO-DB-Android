@@ -15,7 +15,7 @@ public class ExportAllOwnedCardToCSV {
 	public static void main(String[] args) throws SQLException, IOException {
 		ExportAllOwnedCardToCSV mainObj = new ExportAllOwnedCardToCSV();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

@@ -20,7 +20,7 @@ public class ImportFromDragonShield {
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportFromDragonShield mainObj = new ImportFromDragonShield();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 		System.out.println("Import Complete");
 	}*/
 
@@ -71,7 +71,7 @@ public class ImportFromDragonShield {
 			}
 		}
 
-		
+		db.closeInstance();
 
 		System.out.println("Imported " + count + " cards");
 		System.out.println("Total cards: " + db.getCountQuantity() + " + "

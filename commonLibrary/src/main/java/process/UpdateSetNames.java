@@ -14,7 +14,7 @@ public class UpdateSetNames {
 	public static void main(String[] args) throws SQLException, IOException {
 		UpdateSetNames mainObj = new UpdateSetNames();
 		mainObj.run();
-		
+		SQLiteConnection.closeInstance();
 	}*/
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

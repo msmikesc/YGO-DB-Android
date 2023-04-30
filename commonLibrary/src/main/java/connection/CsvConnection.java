@@ -21,6 +21,7 @@ import org.apache.commons.csv.CSVRecord;
 
 import analyze.AnalyzeCompareToDragonShieldCSV;
 import bean.CardSet;
+import bean.GamePlayCard;
 import bean.OwnedCard;
 import bean.SetMetaData;
 
@@ -430,15 +431,30 @@ public class CsvConnection {
 		String lore = getStringOrNull(current, "Card Text");
 		String attribute = getStringOrNull(current, "Attribute");
 		String race = getStringOrNull(current, "Race");
-		Integer linkValue = getIntOrNull(current, "Link Value");
-		Integer pendScale = getIntOrNull(current, "Pendulum Scale");
-		Integer level = getIntOrNull(current, "Level/Rank");
-		Integer atk = getIntOrNull(current, "Attack");
-		Integer def = getIntOrNull(current, "Defense");
+		String linkValue = getStringOrNull(current, "Link Value");
+		String pendScale = getStringOrNull(current, "Pendulum Scale");
+		String level = getStringOrNull(current, "Level/Rank");
+		String atk = getStringOrNull(current, "Attack");
+		String def = getStringOrNull(current, "Defense");
 		String archetype = getStringOrNull(current, "Archetype");
 
-		db.replaceIntoGamePlayCard(passcode, name, type, passcode, lore, attribute, race, linkValue,
-				pendScale, level, atk, def, archetype);
+		GamePlayCard GPC = new GamePlayCard();
+
+		GPC.cardName = name;
+		GPC.cardType = type;
+		GPC.archetype = archetype;
+		GPC.passcode = passcode;
+		GPC.wikiID = passcode;
+		GPC.desc = lore;
+		GPC.attribute = attribute;
+		GPC.race = race;
+		GPC.linkval = linkValue;
+		GPC.scale = pendScale;
+		GPC.level = level;
+		GPC.atk = atk;
+		GPC.def = def;
+
+		db.replaceIntoGamePlayCard(GPC);
 	}
 
 	public static void insertCardSetFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
@@ -467,7 +483,7 @@ public class CsvConnection {
 		}
 
 		if (wikiID == -1) {
-			System.out.println("Unable to find match for " + cardNumber + ":" + name);
+			System.out.println("Unable to find valid passcode for " + cardNumber + ":" + name);
 		}
 
 		String price = Util.getAdjustedPriceFromRarity(rarity, "0");
