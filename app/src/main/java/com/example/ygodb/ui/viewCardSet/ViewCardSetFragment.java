@@ -68,6 +68,7 @@ public class ViewCardSetFragment extends Fragment {
                     viewCardSetViewModel.setDbRefreshIndicatorFalse();
                     layout.scrollToPositionWithOffset(0, 0);
                     adapter.notifyDataSetChanged();
+                    autoCompleteAdapter.notifyDataSetChanged();
                 }
             }
         });

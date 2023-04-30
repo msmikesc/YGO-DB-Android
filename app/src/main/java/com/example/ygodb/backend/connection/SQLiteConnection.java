@@ -519,6 +519,42 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 		return cardsInSetList;
 	}
 
+	public ArrayList<OwnedCard> getNumberOfOwnedCardsByName(String name) {
+
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		String setQuery = "select sum(quantity), cardName, " +
+				"group_concat(DISTINCT setName), MAX(dateBought) as maxDate, " +
+				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
+				"wikiID " +
+				"from ownedCards where cardName = ? group by cardName";
+
+		String[] params = new String[]{name};
+
+		Cursor rs = connection.rawQuery(setQuery, params);
+
+		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+
+		while (rs.moveToNext()) {
+
+			OwnedCard current = new OwnedCard();
+
+			current.id = rs.getInt(5);
+			current.quantity = rs.getInt(0);
+			current.cardName = rs.getString(1);
+			current.setName = rs.getString(2);
+			current.dateBought = rs.getString(3);
+			current.priceBought = rs.getString(4);
+
+			cardsInSetList.add(current);
+
+		}
+
+		rs.close();
+
+		return cardsInSetList;
+	}
+
 	public ArrayList<OwnedCard> getAllOwnedCards() throws SQLException {
 		SQLiteDatabase connection = SQLiteConnection.getInstance();
 
@@ -900,6 +936,52 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 		return cardsInSetList;
 	}
 
+	public ArrayList<String> getDistinctCardNamesInSetByName(String setName) {
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		String setQuery = "select distinct cardName from cardSets where setName = ?";
+
+		String[] params = new String[]{setName};
+		Cursor rs = connection.rawQuery(setQuery, params);
+
+		ArrayList<String> cardsInSetList = new ArrayList<>();
+
+		while (rs.moveToNext()) {
+
+			cardsInSetList.add(rs.getString(0));
+
+		}
+
+		rs.close();
+
+		return cardsInSetList;
+	}
+
+	public ArrayList<CardSet> getDistinctCardNamesAndIdsInSetByName(String setName) {
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		String setQuery = "select distinct cardName, wikiID from cardSets where setName = ?";
+
+		String[] params = new String[]{setName};
+		Cursor rs = connection.rawQuery(setQuery, params);
+
+		ArrayList<CardSet> cardsInSetList = new ArrayList<>();
+
+		while (rs.moveToNext()) {
+
+			CardSet current = new CardSet();
+			current.cardName = rs.getString(0);
+			current.id = rs.getInt(1);
+
+			cardsInSetList.add(current);
+
+		}
+
+		rs.close();
+
+		return cardsInSetList;
+	}
+
 	public ArrayList<Integer> getDistinctCardIDsByArchetype(String archetype) {
 		SQLiteDatabase connection = SQLiteConnection.getInstance();
 
@@ -917,6 +999,50 @@ public class SQLiteConnection extends SQLiteOpenHelper {
 			
 		}
 
+		rs.close();
+
+		return cardsInSetList;
+	}
+
+	public ArrayList<String> getDistinctCardNamesByArchetype(String archetype) {
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		String setQuery = "select distinct title from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
+
+		String[] params = new String[]{archetype, "%"+archetype+"%"};
+		Cursor rs = connection.rawQuery(setQuery, params);
+
+		ArrayList<String> cardsInSetList = new ArrayList<>();
+
+		while (rs.moveToNext()) {
+
+			cardsInSetList.add(rs.getString(0));
+
+		}
+
+		rs.close();
+
+		return cardsInSetList;
+	}
+
+	public ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype) {
+		SQLiteDatabase connection = SQLiteConnection.getInstance();
+
+		String setQuery = "select distinct title, wikiID from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
+
+		String[] params = new String[]{archetype, "%"+archetype+"%"};
+		Cursor rs = connection.rawQuery(setQuery, params);
+
+		ArrayList<CardSet> cardsInSetList = new ArrayList<>();
+
+		while (rs.moveToNext()) {
+
+			CardSet current = new CardSet();
+			current.cardName = rs.getString(0);
+			current.id = rs.getInt(1);
+
+			cardsInSetList.add(current);
+		}
 		rs.close();
 
 		return cardsInSetList;

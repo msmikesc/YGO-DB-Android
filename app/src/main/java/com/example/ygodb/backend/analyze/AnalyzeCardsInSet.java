@@ -121,7 +121,7 @@ public class AnalyzeCardsInSet {
 	}
 
 	public void addAnalyzeDataForSet(HashMap<String, AnalyzeData> h, String setName) throws SQLException {
-		ArrayList<Integer> list = SQLiteConnection.getObj().getDistinctCardIDsInSetByName(setName);
+		ArrayList<CardSet> list = SQLiteConnection.getObj().getDistinctCardNamesAndIdsInSetByName(setName);
 		boolean archetypeMode = false;
 
 		if (list.size() == 0) {
@@ -129,7 +129,7 @@ public class AnalyzeCardsInSet {
 
 			if (setNames == null || setNames.isEmpty() ) {
 
-				list = SQLiteConnection.getObj().getDistinctCardIDsByArchetype(setName);
+				list = SQLiteConnection.getObj().getDistinctCardNamesAndIdsByArchetype(setName);
 				archetypeMode = true;
 				if (list.size() == 0) {
 					return;
@@ -137,34 +137,36 @@ public class AnalyzeCardsInSet {
 			}
 			else {
 				setName = setNames.get(0).set_name;
-				list = SQLiteConnection.getObj().getDistinctCardIDsInSetByName(setName);
+				list = SQLiteConnection.getObj().getDistinctCardNamesAndIdsInSetByName(setName);
 			}
 		}
 
 		ArrayList<SetMetaData> setMetaData = SQLiteConnection.getObj().getSetMetaDataFromSetName(setName);
 
-		for (int i : list) {
-			ArrayList<OwnedCard> cardsList = SQLiteConnection.getObj().getNumberOfOwnedCardsById(i);
+		for (CardSet currentCardSet : list) {
+
+			String currentCard = currentCardSet.cardName;
+			int cardPasscode = currentCardSet.id;
+
+			ArrayList<OwnedCard> cardsList = SQLiteConnection.getObj().getNumberOfOwnedCardsByName(currentCard);
 
 			ArrayList<CardSet> rarityList = null;
 			if(!archetypeMode) {
-				rarityList = SQLiteConnection.getObj().getRaritiesOfCardInSetByID(i, setName);
+				rarityList = SQLiteConnection.getObj().getRaritiesOfCardInSetByIDAndName(cardPasscode, setName, currentCard);
 			}
 			else{
-				rarityList = SQLiteConnection.getObj().getRaritiesOfCardByID(i);
+				rarityList = SQLiteConnection.getObj().getRaritiesOfCardByID(cardPasscode);
 			}
 
 			if (cardsList.size() == 0) {
 
-				String title = SQLiteConnection.getObj().getCardTitleFromID(i);
-
 				AnalyzeData currentData = new AnalyzeData();
 
-				if (title == null) {
-					currentData.cardName = "No cards found for id:" + i;
+				if (currentCard == null) {
+					currentData.cardName = "No cards found for id:" + cardPasscode;
 					currentData.quantity = -1;
 				} else {
-					currentData.cardName = title;
+					currentData.cardName = currentCard;
 					currentData.quantity = 0;
 				}
 
@@ -196,7 +198,7 @@ public class AnalyzeCardsInSet {
 					}
 				}
 
-				currentData.id = i;
+				currentData.id = cardPasscode;
 
 				if(!archetypeMode) {
 					currentData.setNumber.add(rarityList.get(0).setNumber);
@@ -230,7 +232,7 @@ public class AnalyzeCardsInSet {
 					}
 				}
 
-				currentData.id = i;
+				currentData.id = cardPasscode;
 				if(!archetypeMode) {
 					currentData.setNumber.add(rarityList.get(0).setNumber);
 					currentData.cardType = rarityList.get(0).cardType;
