@@ -1,23 +1,26 @@
 package process;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import bean.SetMetaData;
 import connection.SQLiteConnection;
 import connection.Util;
+import connection.WindowsUtil;
 
 public class UpdateSetNames {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
+	public static void main(String[] args) throws SQLException {
 		UpdateSetNames mainObj = new UpdateSetNames();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-	}*/
 
-	public void run(SQLiteConnection db) throws SQLException, IOException {
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+
+		mainObj.run(db);
+		db.closeInstance();
+		System.out.println("Process complete");
+	}
+
+	public void run(SQLiteConnection db) throws SQLException {
 
 		ArrayList<String> setsList = db.getDistinctSetNames();
 		
@@ -38,14 +41,10 @@ public class UpdateSetNames {
 			String newSetName = Util.checkForTranslatedSetName(setName);
 			
 			if(!newSetName.equals(setName)) {
+				System.out.println("Updating " + setName + " to " + newSetName);
 				db.updateSetName(setName, newSetName);
 			}
-
-			
-
 		}
-		
-
 	}
 
 }

@@ -19,12 +19,7 @@ import connection.SQLiteConnection;
 
 public class AnalyzeCardsInSet {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
-		AnalyzeCardsInSet mainObj = new AnalyzeCardsInSet();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-	}*/
+
 
 	public ArrayList<AnalyzeData> runFor(String setName, SQLiteConnection db) throws SQLException {
 		HashMap<String, AnalyzeData> h = new HashMap<String, AnalyzeData>();

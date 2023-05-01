@@ -6,16 +6,19 @@ import java.util.ArrayList;
 
 import connection.SQLiteConnection;
 import connection.Util;
+import connection.WindowsUtil;
 
-public class CheckDBforIssues {
+public class CheckDBForIssues {
 
-	/*
 	public static void main(String[] args) throws SQLException, IOException {
-		CheckDBforIssues mainObj = new CheckDBforIssues();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
+		CheckDBForIssues mainObj = new CheckDBForIssues();
+
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+
+		mainObj.run(db);
+		db.closeInstance();
 		System.out.println("Analyze complete");
-	}*/
+	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 

@@ -11,15 +11,19 @@ import org.apache.commons.csv.CSVRecord;
 import bean.OwnedCard;
 import connection.CsvConnection;
 import connection.SQLiteConnection;
+import connection.WindowsUtil;
 
 public class ReformatFromTCGPlayerForPurchase {
 
-	/*
+
 	public static void main(String[] args) throws SQLException, IOException {
 		ReformatFromTCGPlayerForPurchase mainObj = new ReformatFromTCGPlayerForPurchase();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-	}*/
+
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+
+		mainObj.run(db);
+		db.closeInstance();
+	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 

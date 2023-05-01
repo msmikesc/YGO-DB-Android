@@ -1,6 +1,5 @@
 package process;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -11,15 +10,7 @@ import connection.SQLiteConnection;
 
 public class AddFromOwnedCards {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
-		AddFromOwnedCards mainObj = new AddFromOwnedCards();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-		System.out.println("Process Complete");
-	}*/
-
-	private void run(SQLiteConnection db) throws SQLException {
+	public void run(SQLiteConnection db) throws SQLException {
 		ArrayList<OwnedCard> cards = db.getAllOwnedCards();
 
 		for (OwnedCard card : cards) {

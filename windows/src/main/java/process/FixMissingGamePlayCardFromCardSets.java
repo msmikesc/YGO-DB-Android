@@ -1,25 +1,26 @@
 package process;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import bean.CardSet;
 import bean.GamePlayCard;
 import connection.SQLiteConnection;
-import connection.Util;
+import connection.WindowsUtil;
 
 public class FixMissingGamePlayCardFromCardSets {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
+	public static void main(String[] args) throws SQLException {
 		FixMissingGamePlayCardFromCardSets mainObj = new FixMissingGamePlayCardFromCardSets();
-		mainObj.run();
+
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+
+		mainObj.run(db);
 		db.closeInstance();
 		System.out.println("Analyze complete");
-	}*/
+	}
 
-	public void run(SQLiteConnection db) throws SQLException, IOException {
+	public void run(SQLiteConnection db) throws SQLException {
 
 		ArrayList<String> setsList = db.getDistinctSetNames();
 

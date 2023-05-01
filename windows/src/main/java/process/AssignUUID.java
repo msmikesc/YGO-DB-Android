@@ -7,18 +7,22 @@ import java.util.UUID;
 
 import bean.OwnedCard;
 import connection.SQLiteConnection;
+import connection.WindowsUtil;
 
 public class AssignUUID {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
-		AssignUUID mainObj = new AssignUUID();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-		System.out.println("Process Finished");
-	}*/
 
-	public void run(SQLiteConnection db) throws SQLException, IOException {
+	public static void main(String[] args) throws SQLException {
+		AssignUUID mainObj = new AssignUUID();
+
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+
+		mainObj.run(db);
+		db.closeInstance();
+		System.out.println("Process Finished");
+	}
+
+	public void run(SQLiteConnection db) throws SQLException {
 
 		ArrayList<OwnedCard> cards = db.getAllOwnedCards();
 		

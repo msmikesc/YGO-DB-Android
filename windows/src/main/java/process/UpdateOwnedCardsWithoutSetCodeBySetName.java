@@ -1,6 +1,5 @@
 package process;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -9,17 +8,21 @@ import bean.OwnedCard;
 import bean.SetMetaData;
 import connection.SQLiteConnection;
 import connection.Util;
+import connection.WindowsUtil;
 
-public class UpdateOwnedCardsBySetName {
+public class UpdateOwnedCardsWithoutSetCodeBySetName {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
-		UpdateOwnedCardsBySetName mainObj = new UpdateOwnedCardsBySetName();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-	}*/
 
-	public void run(SQLiteConnection db) throws SQLException, IOException {
+	public static void main(String[] args) throws SQLException {
+		UpdateOwnedCardsWithoutSetCodeBySetName mainObj = new UpdateOwnedCardsWithoutSetCodeBySetName();
+
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+
+		mainObj.run(db);
+		db.closeInstance();
+	}
+
+	public void run(SQLiteConnection db) throws SQLException {
 
 		ArrayList<OwnedCard> cards = db.getAllOwnedCardsWithoutSetCode();
 		
