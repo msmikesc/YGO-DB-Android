@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ygodb.abs.AndroidUtil;
 
-import bean.CardSet;
-import bean.OwnedCard;
-import bean.Rarity;
+import ygodb.commonLibrary.bean.CardSet;
+import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonLibrary.bean.Rarity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

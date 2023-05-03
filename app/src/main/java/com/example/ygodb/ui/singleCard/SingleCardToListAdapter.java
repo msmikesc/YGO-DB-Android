@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
-import bean.OwnedCard;
+import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
 import com.example.ygodb.ui.sellCards.SellCardsViewModel;
 

@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.abs.OwnedCardQuantityComparator;
 
-import analyze.AnalyzeCardsInSet;
-import bean.AnalyzeData;
-import bean.OwnedCard;
+import ygodb.commonLibrary.analyze.AnalyzeCardsInSet;
+import ygodb.commonLibrary.bean.AnalyzeData;
+import ygodb.commonLibrary.bean.OwnedCard;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

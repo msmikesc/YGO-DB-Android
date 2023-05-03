@@ -14,7 +14,7 @@ import com.example.ygodb.abs.OwnedCardNameComparator;
 import com.example.ygodb.abs.OwnedCardPriceComparator;
 import com.example.ygodb.abs.OwnedCardQuantityComparator;
 import com.example.ygodb.abs.OwnedCardSetNumberComparator;
-import bean.OwnedCard;
+import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.addCards.AddCardsFragment;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

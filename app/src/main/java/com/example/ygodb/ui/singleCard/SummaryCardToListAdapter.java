@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
-import bean.OwnedCard;
+import ygodb.commonLibrary.bean.OwnedCard;
 
 import java.io.InputStream;
 import java.util.ArrayList;

@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ygodb.impl.SQLiteConnectionAndroid;
 
-import connection.SQLiteConnection;
-
 public class AndroidUtil {
 
     private static Context appContext = null;

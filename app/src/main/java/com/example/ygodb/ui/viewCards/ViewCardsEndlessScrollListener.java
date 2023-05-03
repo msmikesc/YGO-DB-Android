@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.abs.EndlessScrollListener;
-import bean.OwnedCard;
+import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 
 import java.util.ArrayList;

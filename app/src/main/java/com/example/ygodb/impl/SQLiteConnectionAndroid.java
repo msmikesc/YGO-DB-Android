@@ -22,14 +22,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-import bean.AnalyzePrintedOnceData;
-import bean.CardSet;
-import bean.GamePlayCard;
-import bean.OwnedCard;
-import bean.SetMetaData;
-import connection.FileHelper;
-import connection.SQLiteConnection;
-import connection.Util;
+import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
+import ygodb.commonLibrary.bean.CardSet;
+import ygodb.commonLibrary.bean.GamePlayCard;
+import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonLibrary.bean.SetMetaData;
+import ygodb.commonLibrary.connection.FileHelper;
+import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.connection.Util;
 
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
 
@@ -537,9 +537,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				"group_concat(DISTINCT setName), MAX(dateBought) as maxDate, " +
 				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
 				"wikiID " +
-				"from ownedCards where cardName = ? group by cardName";
+				"from ownedCards where UPPER(TRIM(cardName)) = ? group by cardName";
 
-		String[] params = new String[]{name};
+		String[] params = new String[]{name.trim().toUpperCase()};
 
 		Cursor rs = connection.rawQuery(setQuery, params);
 
