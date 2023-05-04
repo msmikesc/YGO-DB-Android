@@ -47,10 +47,7 @@ public class ImportOwnedCardFromExportedCSV {
 						existingCard)) {
 					// exact match found
 					if (existingCard.quantity == card.quantity && existingCard.rarityUnsure == card.rarityUnsure
-							&& existingCard.setRarity.equals(card.setRarity)
-							&& existingCard.priceLow.equals(card.priceLow)
-							&& existingCard.priceMid.equals(card.priceMid)
-							&& existingCard.priceMarket.equals(card.priceMarket)) {
+							&& existingCard.setRarity.equals(card.setRarity)) {
 						// nothing to update
 						card = null;
 						break;

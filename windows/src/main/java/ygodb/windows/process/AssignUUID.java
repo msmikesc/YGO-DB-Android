@@ -2,8 +2,10 @@ package ygodb.windows.process;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.windows.connection.WindowsUtil;
@@ -33,8 +35,17 @@ public class AssignUUID {
 				
 			}
 		}
-		
-		
+
+		List<GamePlayCard> gamePlayCards = db.getAllGamePlayCard();
+
+		for(GamePlayCard card: gamePlayCards) {
+			if(card.gamePlayCardUUID == null) {
+				UUID id = UUID.randomUUID();
+				card.gamePlayCardUUID = id.toString();
+				db.replaceIntoGamePlayCard(card);
+
+			}
+		}
 		
 
 	}

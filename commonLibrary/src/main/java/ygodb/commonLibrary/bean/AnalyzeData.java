@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class AnalyzeData implements Comparable<AnalyzeData> {
 
+	public String gamePlayCardUUID;
 	public int quantity;
 	public String cardName;
 	public Set<String> setNumber;

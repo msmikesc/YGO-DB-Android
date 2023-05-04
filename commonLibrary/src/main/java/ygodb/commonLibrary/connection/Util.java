@@ -241,8 +241,7 @@ public class Util {
 	}
 	
 	public static OwnedCard formOwnedCard(String folder, String name, String quantity, String setCode, String condition,
-			String printing, String priceBought, String dateBought, CardSet setIdentified, String priceLow, String priceMid,
-			String priceMarket) {
+			String printing, String priceBought, String dateBought, CardSet setIdentified) {
 		OwnedCard card = new OwnedCard();
 		
 		card.folderName = folder;
@@ -259,10 +258,7 @@ public class Util {
 		card.setName = setIdentified.setName;
 		card.setNumber = setIdentified.setNumber;
 		card.rarityUnsure = setIdentified.rarityUnsure;
-		
-		card.priceLow = priceLow;
-		card.priceMid = priceMid;
-		card.priceMarket = priceMarket;
+
 		card.UUID = UUID.randomUUID().toString();
 		
 		return card;

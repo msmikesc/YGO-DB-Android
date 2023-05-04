@@ -9,6 +9,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonLibrary.bean.CardSet;
@@ -457,10 +458,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			current.creationDate = rs.getString("creationDate");
 			current.modificationDate = rs.getString("modificationDate");
 
-			current.priceLow = rs.getString("priceLow");
-			current.priceMid = rs.getString("priceMid");
-			current.priceMarket = rs.getString("priceMarket");
-
 			current.UUID = rs.getString("UUID");
 
 			cardsInSetList.add(current);
@@ -520,10 +517,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			current.creationDate = rs.getString("creationDate");
 			current.modificationDate = rs.getString("modificationDate");
 
-			current.priceLow = rs.getString("priceLow");
-			current.priceMid = rs.getString("priceMid");
-			current.priceMarket = rs.getString("priceMarket");
-
 			current.UUID = rs.getString("UUID");
 
 			cardsInSetList.add(current);
@@ -567,10 +560,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			current.priceBought = Util.normalizePrice(rs.getString("priceBought"));
 			current.creationDate = rs.getString("creationDate");
 			current.modificationDate = rs.getString("modificationDate");
-
-			current.priceLow = rs.getString("priceLow");
-			current.priceMid = rs.getString("priceMid");
-			current.priceMarket = rs.getString("priceMarket");
 
 			current.UUID = rs.getString("UUID");
 
@@ -625,10 +614,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			current.priceBought = Util.normalizePrice(rs.getString("priceBought"));
 			current.creationDate = rs.getString("creationDate");
 			current.modificationDate = rs.getString("modificationDate");
-
-			current.priceLow = rs.getString("priceLow");
-			current.priceMid = rs.getString("priceMid");
-			current.priceMarket = rs.getString("priceMarket");
 
 			current.UUID = rs.getString("UUID");
 
@@ -1094,6 +1079,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			return null;
 		}
 
+		current.gamePlayCardUUID = rs.getString("gamePlayCardUUID");
 		current.wikiID = rs.getInt("wikiID");
 		current.cardName = rs.getString("title");
 		current.cardType = rs.getString("type");
@@ -1107,6 +1093,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		current.atk = rs.getString("atk");
 		current.def = rs.getString("def");
 		current.archetype = rs.getString("archetype");
+		current.modificationDate = rs.getString("modificationDate");
 
 		rs.close();
 		statementgamePlayCard.close();
@@ -1116,10 +1103,55 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public List<GamePlayCard> getAllGamePlayCard() throws SQLException {
+		Connection connection = this.getInstance();
+
+		String gamePlayCard = "select * from gamePlayCard";
+
+		PreparedStatement statementGamePlayCard = connection.prepareStatement(gamePlayCard);
+
+		ResultSet rs = statementGamePlayCard.executeQuery();
+
+		ArrayList<GamePlayCard> results = new ArrayList<>();
+
+		while (rs.next()) {
+
+			GamePlayCard current = new GamePlayCard();
+
+			current.gamePlayCardUUID = rs.getString("gamePlayCardUUID");
+			current.wikiID = rs.getInt("wikiID");
+			current.cardName = rs.getString("title");
+			current.cardType = rs.getString("type");
+			current.passcode = rs.getInt("passcode");
+			current.desc = rs.getString("lore");
+			current.attribute = rs.getString("attribute");
+			current.race = rs.getString("race");
+			current.linkval = rs.getString("linkValue");
+			current.level = rs.getString("level");
+			current.scale = rs.getString("pendScale");
+			current.atk = rs.getString("atk");
+			current.def = rs.getString("def");
+			current.archetype = rs.getString("archetype");
+			current.modificationDate = rs.getString("modificationDate");
+
+			results.add(current);
+		}
+
+		rs.close();
+		statementGamePlayCard.close();
+
+		return results;
+
+	}
+
+	@Override
 	public void replaceIntoGamePlayCard(GamePlayCard input) throws SQLException {
 		Connection connection = this.getInstance();
 
-		String gamePlayCard = "Replace into gamePlayCard(wikiID,title,type,passcode,lore,attribute,race,linkValue,level,pendScale,atk,def,archetype) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String gamePlayCard = "Replace into gamePlayCard(wikiID,title,type,passcode,lore," +
+				"attribute,race,linkValue,level,pendScale,atk,def,archetype, " +
+				"gamePlayCardUUID, modificationDate) " +
+				"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now','localtime'))";
 
 		PreparedStatement statementgamePlayCard = connection.prepareStatement(gamePlayCard);
 
@@ -1136,6 +1168,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		setStringOrNull(statementgamePlayCard, 11, input.atk);
 		setStringOrNull(statementgamePlayCard, 12, input.def);
 		setStringOrNull(statementgamePlayCard, 13, input.archetype);
+		setStringOrNull(statementgamePlayCard, 14, input.gamePlayCardUUID);
 
 		statementgamePlayCard.execute();
 
@@ -1166,10 +1199,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		String setName = card.setName;
 		String setRarity = card.setRarity;
 
-		String low = card.priceLow;
-		String mid = card.priceMid;
-		String market = card.priceMarket;
-
 		String UUID = card.UUID;
 
 		Connection connection = this.getInstance();
@@ -1187,7 +1216,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		String ownedInsert = "update ownedCards set wikiID = ?,folderName = ?,cardName = ?,quantity = ?,"
 				+ "setCode = ?, setNumber = ?,setName = ?,setRarity = ?,setRarityColorVariant = ?,"
 				+ "condition = ?,editionPrinting = ?,dateBought = ?,priceBought = ?,rarityUnsure = ?, "
-				+ "modificationDate = datetime('now','localtime'), priceLow = ?, priceMid = ?, priceMarket = ? "
+				+ "modificationDate = datetime('now','localtime') "
 				+ "where UUID = ?";
 
 		PreparedStatement statement = connection.prepareStatement(ownedInsert);
@@ -1207,11 +1236,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statement.setString(13, normalizedPrice);
 		statement.setInt(14, rarityUnsure);
 
-		statement.setString(15, low);
-		statement.setString(16, mid);
-		statement.setString(17, market);
-
-		statement.setString(18, UUID);
+		statement.setString(15, UUID);
 
 		statement.execute();
 		statement.close();
@@ -1241,10 +1266,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		String setName = card.setName;
 		String setRarity = card.setRarity;
 
-		String low = card.priceLow;
-		String mid = card.priceMid;
-		String market = card.priceMarket;
-
 		String UUID = card.UUID;
 
 		Connection connection = this.getInstance();
@@ -1261,12 +1282,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String ownedInsert = "insert into ownedCards(wikiID,folderName,cardName,quantity,setCode,"
 				+ "setNumber,setName,setRarity,setRarityColorVariant,condition,editionPrinting,dateBought"
-				+ ",priceBought,rarityUnsure, creationDate, modificationDate, priceLow, priceMid, priceMarket, UUID) "
+				+ ",priceBought,rarityUnsure, creationDate, modificationDate, UUID) "
 				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
-				+ "datetime('now','localtime'),datetime('now','localtime'),?,?,?,?)"
+				+ "datetime('now','localtime'),datetime('now','localtime'),?)"
 				+ "on conflict (wikiID,folderName,setNumber," + "condition,editionPrinting,dateBought,priceBought) "
 				+ "do update set quantity = ?, rarityUnsure = ?, setRarity = ?, setRarityColorVariant = ?, "
-				+ "modificationDate = datetime('now','localtime'), priceLow = ?, priceMid = ?, priceMarket = ?,"
+				+ "modificationDate = datetime('now','localtime'), "
 				+ "UUID = ?";
 
 		if (batchUpsertOwnedCard == null) {
@@ -1289,24 +1310,16 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		batchUpsertOwnedCard.setString(13, normalizedPrice);
 		batchUpsertOwnedCard.setInt(14, rarityUnsure);
 
-		batchUpsertOwnedCard.setString(15, low);
-		batchUpsertOwnedCard.setString(16, mid);
-		batchUpsertOwnedCard.setString(17, market);
-
-		batchUpsertOwnedCard.setString(18, UUID);
+		batchUpsertOwnedCard.setString(15, UUID);
 
 		// conflict fields
 
-		batchUpsertOwnedCard.setInt(19, Integer.valueOf(quantity));
-		batchUpsertOwnedCard.setInt(20, rarityUnsure);
-		batchUpsertOwnedCard.setString(21, setRarity);
-		batchUpsertOwnedCard.setString(22, colorVariant);
+		batchUpsertOwnedCard.setInt(16, Integer.valueOf(quantity));
+		batchUpsertOwnedCard.setInt(17, rarityUnsure);
+		batchUpsertOwnedCard.setString(18, setRarity);
+		batchUpsertOwnedCard.setString(19, colorVariant);
 
-		batchUpsertOwnedCard.setString(23, low);
-		batchUpsertOwnedCard.setString(24, mid);
-		batchUpsertOwnedCard.setString(25, market);
-
-		batchUpsertOwnedCard.setString(26, UUID);
+		batchUpsertOwnedCard.setString(20, UUID);
 
 		batchUpsertOwnedCard.addBatch();
 		batchUpsertCurrentSize++;

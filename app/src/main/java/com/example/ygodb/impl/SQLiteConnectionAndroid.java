@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
@@ -598,10 +599,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			current.creationDate = rs.getString(getColumn(col,"creationDate"));
 			current.modificationDate = rs.getString(getColumn(col,"modificationDate"));
 
-			current.priceLow = rs.getString(getColumn(col,"priceLow"));
-			current.priceMid = rs.getString(getColumn(col,"priceMid"));
-			current.priceMarket = rs.getString(getColumn(col,"priceMarket"));
-
 			current.UUID = rs.getString(getColumn(col,"UUID"));
 
 			cardsInSetList.add(current);
@@ -620,7 +617,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String[] Columns = new String[]{"wikiID","rarityUnsure","quantity","cardName","setCode",
 				"setNumber","setName","setRarity","setRarityColorVariant","folderName","condition",
 				"editionPrinting","dateBought","priceBought","creationDate","modificationDate",
-				"priceLow","priceMid","priceMarket","UUID"};
+				"UUID"};
 
 		//PRIMARY KEY("wikiID","folderName","setNumber","setRarity","setRarityColorVariant",
 		// "condition","editionPrinting","dateBought","priceBought")
@@ -668,10 +665,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		current.priceBought = rs.getString(getColumn(col,"priceBought"));
 		current.creationDate = rs.getString(getColumn(col,"creationDate"));
 		current.modificationDate = rs.getString(getColumn(col,"modificationDate"));
-
-		current.priceLow = rs.getString(getColumn(col,"priceLow"));
-		current.priceMid = rs.getString(getColumn(col,"priceMid"));
-		current.priceMarket = rs.getString(getColumn(col,"priceMarket"));
 
 		current.UUID = rs.getString(getColumn(col,"UUID"));
 
@@ -810,10 +803,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			current.creationDate = rs.getString(getColumn(col,"creationDate"));
 			current.modificationDate = rs.getString(getColumn(col,"modificationDate"));
 
-			current.priceLow = rs.getString(getColumn(col,"priceLow"));
-			current.priceMid = rs.getString(getColumn(col,"priceMid"));
-			current.priceMarket = rs.getString(getColumn(col,"priceMarket"));
-
 			current.UUID = rs.getString(getColumn(col,"UUID"));
 
 			cardsInSetList.add(current);
@@ -856,10 +845,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			current.priceBought = rs.getString(getColumn(col,"priceBought"));
 			current.creationDate = rs.getString(getColumn(col,"creationDate"));
 			current.modificationDate = rs.getString(getColumn(col,"modificationDate"));
-
-			current.priceLow = rs.getString(getColumn(col,"priceLow"));
-			current.priceMid = rs.getString(getColumn(col,"priceMid"));
-			current.priceMarket = rs.getString(getColumn(col,"priceMarket"));
 
 			current.UUID = rs.getString(getColumn(col,"UUID"));
 
@@ -913,10 +898,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			current.priceBought = rs.getString(getColumn(col,"priceBought"));
 			current.creationDate = rs.getString(getColumn(col,"creationDate"));
 			current.modificationDate = rs.getString(getColumn(col,"modificationDate"));
-
-			current.priceLow = rs.getString(getColumn(col,"priceLow"));
-			current.priceMid = rs.getString(getColumn(col,"priceMid"));
-			current.priceMarket = rs.getString(getColumn(col,"priceMarket"));
 
 			current.UUID = rs.getString(getColumn(col,"UUID"));
 
@@ -1441,6 +1422,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public List<GamePlayCard> getAllGamePlayCard() throws SQLException {
+		return null;
+	}
+
+	@Override
 	public void replaceIntoGamePlayCard(GamePlayCard input) {
 		SQLiteDatabase connection = this.getInstance();
 
@@ -1485,10 +1471,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setName = card.setName;
 		String setRarity = card.setRarity;
 		
-		String low = card.priceLow;
-		String mid = card.priceMid;
-		String market = card.priceMarket;
-		
 		String UUID = card.UUID;
 
 		SQLiteDatabase connection = this.getInstance();
@@ -1506,7 +1488,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String ownedInsert = "update ownedCards set wikiID = ?,folderName = ?,cardName = ?,quantity = ?,"
 				+ "setCode = ?, setNumber = ?,setName = ?,setRarity = ?,setRarityColorVariant = ?,"
 				+ "condition = ?,editionPrinting = ?,dateBought = ?,priceBought = ?,rarityUnsure = ?, "
-				+ "modificationDate = datetime('now','localtime'), priceLow = ?, priceMid = ?, priceMarket = ? "
+				+ "modificationDate = datetime('now','localtime') "
 				+ "where UUID = ?";
 
 		SQLiteStatement statement = connection.compileStatement(ownedInsert);
@@ -1526,11 +1508,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		setStringOrNull(statement,13, normalizedPrice);
 		setIntegerOrNull(statement,14, rarityUnsure);
 		
-		setStringOrNull(statement,15, low);
-		setStringOrNull(statement,16, mid);
-		setStringOrNull(statement,17, market);
-		
-		setStringOrNull(statement,18, UUID);
+		setStringOrNull(statement,15, UUID);
 		
 		statement.execute();
 		statement.close();
@@ -1610,10 +1588,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setName = card.setName;
 		String setRarity = card.setRarity;
 		
-		String low = card.priceLow;
-		String mid = card.priceMid;
-		String market = card.priceMarket;
-		
 		String UUID = card.UUID;
 
 		if(UUID == null || UUID.equals("")) {
@@ -1634,12 +1608,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String ownedInsert = "insert into ownedCards(wikiID,folderName,cardName,quantity,setCode,"
 				+ "setNumber,setName,setRarity,setRarityColorVariant,condition,editionPrinting,dateBought"
-				+ ",priceBought,rarityUnsure, creationDate, modificationDate, priceLow, priceMid, priceMarket, UUID) "
+				+ ",priceBought,rarityUnsure, creationDate, modificationDate, UUID) "
 				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
-				+ "datetime('now','localtime'),datetime('now','localtime'),?,?,?,?) "
+				+ "datetime('now','localtime'),datetime('now','localtime'),?) "
 				+ "on conflict (wikiID,folderName,setNumber," + "condition,editionPrinting,dateBought,priceBought) "
 				+ "do update set quantity = ?, rarityUnsure = ?, setRarity = ?, setRarityColorVariant = ?, "
-				+ "modificationDate = datetime('now','localtime'), priceLow = ?, priceMid = ?, priceMarket = ?,"
+				+ "modificationDate = datetime('now','localtime'), "
 				+ "UUID = ?";
 
 		SQLiteStatement batchUpsertOwnedCard = connection.compileStatement(ownedInsert);
@@ -1659,24 +1633,16 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		setStringOrNull(batchUpsertOwnedCard,13, normalizedPrice);
 		setIntegerOrNull(batchUpsertOwnedCard,14, rarityUnsure);
 		
-		setStringOrNull(batchUpsertOwnedCard,15, low);
-		setStringOrNull(batchUpsertOwnedCard,16, mid);
-		setStringOrNull(batchUpsertOwnedCard,17, market);
-		
-		setStringOrNull(batchUpsertOwnedCard,18, UUID);
+		setStringOrNull(batchUpsertOwnedCard,15, UUID);
 		
 		//conflict fields
 		
-		setIntegerOrNull(batchUpsertOwnedCard,19, quantity);
-		setIntegerOrNull(batchUpsertOwnedCard,20, rarityUnsure);
-		setStringOrNull(batchUpsertOwnedCard,21, setRarity);
-		setStringOrNull(batchUpsertOwnedCard,22, colorVariant);
+		setIntegerOrNull(batchUpsertOwnedCard,16, quantity);
+		setIntegerOrNull(batchUpsertOwnedCard,17, rarityUnsure);
+		setStringOrNull(batchUpsertOwnedCard,18, setRarity);
+		setStringOrNull(batchUpsertOwnedCard,19, colorVariant);
 		
-		setStringOrNull(batchUpsertOwnedCard,23, low);
-		setStringOrNull(batchUpsertOwnedCard,24, mid);
-		setStringOrNull(batchUpsertOwnedCard,25, market);
-		
-		setStringOrNull(batchUpsertOwnedCard,26, UUID);
+		setStringOrNull(batchUpsertOwnedCard,20, UUID);
 
 		batchUpsertOwnedCard.execute();
 	}

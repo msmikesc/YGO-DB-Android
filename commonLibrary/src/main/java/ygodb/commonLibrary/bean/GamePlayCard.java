@@ -2,6 +2,7 @@ package ygodb.commonLibrary.bean;
 
 public class GamePlayCard {
 
+	public String gamePlayCardUUID;
 	public int wikiID;
 	public String cardName;
 	public String cardType;
@@ -15,5 +16,6 @@ public class GamePlayCard {
 	public String atk;
 	public String def;
 	public String archetype;
+	public String modificationDate;
 	
 }

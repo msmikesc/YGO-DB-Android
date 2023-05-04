@@ -75,7 +75,7 @@ public class CsvConnection {
 
 			p.printRecord("Folder Name", "Quantity", "Card Name", "Set Code", "Set Name", "Card Number", "Condition",
 					"Printing", "Price Bought", "Date Bought", "Rarity", "Rarity Color Variant", "Rarity Unsure",
-					"Passcode", "LOW", "MID", "MARKET", "UUID");
+					"Passcode", "UUID");
 
 			return p;
 
@@ -128,8 +128,7 @@ public class CsvConnection {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
 			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
 
-			p.printRecord("Quantity", "Card Name", "Rarity", "Set Name", "Set Code", "Price Bought", "LOW",
-					"MID", "MARKET");
+			p.printRecord("Quantity", "Card Name", "Rarity", "Set Name", "Set Code", "Price Bought");
 
 			return p;
 
@@ -214,7 +213,7 @@ public class CsvConnection {
 				setIdentified.rarityUnsure = existingCard.rarityUnsure;
 				
 				OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-						dateBought, setIdentified, priceLow, priceMid, priceMarket);
+						dateBought, setIdentified);
 				
 				card.UUID = existingCard.UUID;
 				
@@ -228,7 +227,7 @@ public class CsvConnection {
 		setIdentified.colorVariant = colorCode;
 		
 		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-				dateBought, setIdentified, priceLow, priceMid, priceMarket);
+				dateBought, setIdentified);
 
 		return card;
 	}
@@ -250,10 +249,6 @@ public class CsvConnection {
 		String rarityUnsure = current.get("Rarity Unsure").trim();
 		Integer wikiID = getIntOrNull(current, "Passcode");
 		
-		String priceLow = Util.normalizePrice(current.get("LOW"));
-		String priceMid = Util.normalizePrice(current.get("MID"));
-		String priceMarket = Util.normalizePrice(current.get("MARKET"));
-		
 		String UUID = current.get("UUID");
 
 		if (printing.equals("Foil")) {
@@ -273,7 +268,7 @@ public class CsvConnection {
 		setIdentified.id = wikiID;
 		
 		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-				dateBought, setIdentified, priceLow, priceMid, priceMarket);
+				dateBought, setIdentified);
 		
 		card.UUID = UUID;
 
@@ -386,7 +381,7 @@ public class CsvConnection {
 		String dateBought = java.time.LocalDate.now().toString();
 
 		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-				dateBought, setIdentified, null, null, null);
+				dateBought, setIdentified);
 
 		return card;
 	}
@@ -493,11 +488,10 @@ public class CsvConnection {
 		// p.printRecord("Folder Name","Quantity","Card Name","Set Code","Set
 		// Name","Card Number","Condition","Printing","Price Bought","Date
 		// Bought","Rarity","Rarity Color Variant", "Rarity Unsure","Passcode");
-		// low, mid, market
+		// UUID
 		p.printRecord(current.folderName, current.quantity, current.cardName, current.setCode, current.setName,
 				current.setNumber, current.condition, current.editionPrinting, current.priceBought, current.dateBought,
-				current.setRarity, current.colorVariant, current.rarityUnsure, current.id, current.priceLow, current.priceMid, 
-				current.priceMarket, current.UUID);
+				current.setRarity, current.colorVariant, current.rarityUnsure, current.id, current.UUID);
 
 	}
 	

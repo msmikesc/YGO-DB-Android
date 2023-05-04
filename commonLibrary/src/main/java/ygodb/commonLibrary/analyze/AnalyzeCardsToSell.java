@@ -63,15 +63,6 @@ public class AnalyzeCardsToSell {
 			 if(card.priceBought != null) {
 				 priceList.add(card.priceBought);
 			 }
-			 if(card.priceLow != null) {
-				 priceList.add(card.priceLow);
-			 }
-			 if(card.priceMid != null) {
-				 priceList.add(card.priceMid);
-			 }
-			 if(card.priceMarket != null) {
-				 priceList.add(card.priceMarket);
-			 }
 		 }
 		 
 
@@ -112,9 +103,9 @@ public class AnalyzeCardsToSell {
 				
 				for(OwnedCard card: cardMap.get(cardName)) {
 					
-					//p.printRecord("Quantity", "Card Name", "Card Type", "Rarity", "Set Name", "Set Code", "Price Bought", "LOW", "MID", "MARKET");
+					//p.printRecord("Quantity", "Card Name", "Card Type", "Rarity", "Set Name", "Set Code", "Price Bought");
 					
-					p.printRecord(card.quantity, card.cardName, card.setRarity, card.setName, card.setCode, card.priceBought, card.priceLow, card.priceMid, card.priceMarket);
+					p.printRecord(card.quantity, card.cardName, card.setRarity, card.setName, card.setCode, card.priceBought);
 				}
 				
 			}

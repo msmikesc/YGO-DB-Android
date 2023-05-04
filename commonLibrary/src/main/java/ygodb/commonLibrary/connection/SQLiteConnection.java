@@ -3,6 +3,7 @@ package ygodb.commonLibrary.connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonLibrary.bean.CardSet;
@@ -91,6 +92,8 @@ public interface SQLiteConnection {
     void replaceIntoCardSetMetaData(String set_name, String set_code, int num_of_cards, String tcg_date) throws SQLException;
 
     GamePlayCard getGamePlayCardByNameAndID(Integer wikiID, String name) throws SQLException;
+
+    List<GamePlayCard> getAllGamePlayCard() throws SQLException;
 
     void replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 

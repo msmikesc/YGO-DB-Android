@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class OwnedCard {
 
+	public String gamePlayCardUUID;
 	public int id;
 	public String folderName;
 	public String cardName;
@@ -20,10 +21,7 @@ public class OwnedCard {
 	public String priceBought;
 	public String creationDate;
 	public String modificationDate;
-	
-	public String priceLow;
-	public String priceMid;
-	public String priceMarket;
+
 	public String UUID;
 
 	public String multiListSetNames;

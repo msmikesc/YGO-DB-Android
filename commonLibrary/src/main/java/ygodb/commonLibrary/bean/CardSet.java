@@ -2,6 +2,7 @@ package ygodb.commonLibrary.bean;
 
 public class CardSet {
 
+	public String gamePlayCardUUID;
 	public int id;
 	public String cardName;
 	public String setNumber;
