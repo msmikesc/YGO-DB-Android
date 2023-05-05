@@ -1,5 +1,6 @@
 package ygodb.commonLibrary.connection;
 
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javafx.util.Pair;
 import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
@@ -241,7 +243,7 @@ public class Util {
 	}
 	
 	public static OwnedCard formOwnedCard(String folder, String name, String quantity, String setCode, String condition,
-			String printing, String priceBought, String dateBought, CardSet setIdentified) {
+			String printing, String priceBought, String dateBought, CardSet setIdentified, int passcode) {
 		OwnedCard card = new OwnedCard();
 		
 		card.folderName = folder;
@@ -253,11 +255,12 @@ public class Util {
 		card.priceBought = normalizePrice(priceBought);
 		card.dateBought = dateBought;
 		card.setRarity = setIdentified.setRarity;
-		card.id = setIdentified.id;
+		card.gamePlayCardUUID = setIdentified.gamePlayCardUUID;
 		card.colorVariant = setIdentified.colorVariant;
 		card.setName = setIdentified.setName;
 		card.setNumber = setIdentified.setNumber;
 		card.rarityUnsure = setIdentified.rarityUnsure;
+		card.passcode = passcode;
 
 		card.UUID = UUID.randomUUID().toString();
 		
@@ -355,7 +358,7 @@ public class Util {
 
 		c.cardName = o.cardName;
 		c.colorVariant = o.colorVariant;
-		c.id = o.id;
+		c.gamePlayCardUUID = o.gamePlayCardUUID;
 		c.rarityUnsure = o.rarityUnsure;
 		c.setName = o.setName;
 		c.setNumber = o.setNumber;
@@ -403,7 +406,7 @@ public class Util {
 			setIdentified.rarityUnsure = 1;
 
 			// check for name
-			setIdentified.id = db.getCardIdFromTitle(cardName);
+			setIdentified.gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(cardName);
 
 			return setIdentified;
 		}
@@ -460,9 +463,9 @@ public class Util {
 	}
 
 	public static void checkForIssuesWithCardNamesInSet(String setName, SQLiteConnection db) throws SQLException {
-		ArrayList<Integer> list = db.getDistinctCardIDsInSetByName(setName);
-		for (int i : list) {
-			String title = db.getCardTitleFromID(i);
+		ArrayList<String> list = db.getDistinctGamePlayCardUUIDsInSetByName(setName);
+		for (String i : list) {
+			String title = db.getCardTitleFromGamePlayCardUUID(i);
 
 			if(title == null) {
 				System.out.println("Not exactly 1 gameplaycard found for ID " + i);
@@ -544,6 +547,40 @@ public class Util {
 			}
 
 		}
+	}
+
+	public static Pair<String, String> getGamePlayCardUUIDFromTitleWithSkillCheck(String name, SQLiteConnection db) throws SQLException {
+		String gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
+		// try skill card
+		if (gamePlayCardUUID == null) {
+			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name + " (Skill Card)");
+			if (gamePlayCardUUID != null) {
+				name = name + " (Skill Card)";
+			}
+		}
+
+		if (gamePlayCardUUID == null) {
+			System.out.println("Unable to find valid gamePlayCardUUID for :" + name);
+		}
+
+		return new Pair<>(gamePlayCardUUID, name);
+	}
+
+	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(String name, SQLiteConnection db) throws SQLException {
+		String gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
+		// try skill card
+		if (gamePlayCardUUID == null) {
+			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name + " (Skill Card)");
+			if (gamePlayCardUUID != null) {
+				name = name + " (Skill Card)";
+			}
+		}
+
+		if (gamePlayCardUUID == null) {
+			gamePlayCardUUID = UUID.randomUUID().toString();
+		}
+
+		return new Pair<>(gamePlayCardUUID, name);
 	}
 
 	public static String getStringOrNull(JsonNode current, String id) {

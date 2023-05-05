@@ -3,7 +3,6 @@ package ygodb.commonLibrary.bean;
 public class GamePlayCard {
 
 	public String gamePlayCardUUID;
-	public int wikiID;
 	public String cardName;
 	public String cardType;
 	public int passcode;

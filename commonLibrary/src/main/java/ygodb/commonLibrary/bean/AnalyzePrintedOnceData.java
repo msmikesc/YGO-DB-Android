@@ -9,7 +9,6 @@ import java.util.Set;
 public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData> {
 
 	public String gamePlayCardUUID;
-	public int wikiID;
 	public String cardName;
 	public Set<String> setNumber;
 	public Set<String> setName;

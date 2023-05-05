@@ -94,7 +94,7 @@ public class AddCardsViewModel extends ViewModel {
             cardsList.add(newCard);
             newCard.cardName = current.cardName;
             newCard.dateBought = sdf.format(new Date());
-            newCard.id = current.id;
+            newCard.gamePlayCardUUID = current.gamePlayCardUUID;
             newCard.setRarity = current.setRarity;
             newCard.setName = current.setName;
             newCard.quantity = 1;
@@ -107,7 +107,7 @@ public class AddCardsViewModel extends ViewModel {
 
             newCard.priceBought = getAPIPriceFromRarity(current.setRarity,
                     current.mainSetCardSets, current.cardName, current.setName,
-                    current.id, current.setNumber);
+                    current.gamePlayCardUUID, current.setNumber);
 
             if(current.condition == null || current.condition.equals("")){
                 newCard.condition = "NearMint";
@@ -151,7 +151,7 @@ public class AddCardsViewModel extends ViewModel {
             String setNumber = (current.dropdownSelectedSetNumber == null) ? current.setNumber: current.dropdownSelectedSetNumber;
 
             current.priceBought = getAPIPriceFromRarity(rarity, current.mainSetCardSets,
-                    current.cardName, current.setName, current.id, setNumber);
+                    current.cardName, current.setName, current.gamePlayCardUUID, setNumber);
         }
     }
 
@@ -187,11 +187,11 @@ public class AddCardsViewModel extends ViewModel {
     }
 
     public String getAPIPriceFromRarity(String rarity, ArrayList<CardSet> mainSetCardSets,
-                                        String cardName, String setName, int id, String setNumber){
+                                        String cardName, String setName, String gamePlayCardUUID, String setNumber){
 
         if(mainSetCardSets == null){
             mainSetCardSets = AndroidUtil.getDBInstance().
-                    getRaritiesOfCardInSetByIDAndName(id, setName, cardName);
+                    getRaritiesOfCardInSetByGamePlayCardUUIDAndName(gamePlayCardUUID, setName, cardName);
         }
 
         if(mainSetCardSets.size() == 1){

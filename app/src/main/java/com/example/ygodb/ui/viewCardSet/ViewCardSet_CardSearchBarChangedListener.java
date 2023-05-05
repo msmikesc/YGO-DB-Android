@@ -12,6 +12,7 @@ import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 class ViewCardSet_CardSearchBarChangedListener extends TextChangedListener<EditText> {
     private final ViewCardSetViewModel viewCardsViewModel;
@@ -29,7 +30,7 @@ class ViewCardSet_CardSearchBarChangedListener extends TextChangedListener<EditT
 
     @Override
     public void onTextChanged(EditText target, Editable s) {
-        String cardNameSearch = s.toString().toUpperCase();
+        String cardNameSearch = s.toString().toLowerCase(Locale.ROOT);
 
         if(viewCardsViewModel.getCardNameSearch().equals(cardNameSearch)){
             //nothing to update

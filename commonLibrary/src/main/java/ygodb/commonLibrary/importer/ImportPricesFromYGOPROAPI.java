@@ -81,7 +81,7 @@ public class ImportPricesFromYGOPROAPI {
 
 					if (sets != null) {
 						setIteraor = sets.iterator();
-						insertCardSetsForOneCard(setIteraor, name, cardID, db);
+						insertCardSetsForOneCard(setIteraor, name, db);
 					}
 
 				}
@@ -104,7 +104,7 @@ public class ImportPricesFromYGOPROAPI {
 		}
 	}
 
-	public void insertCardSetsForOneCard(Iterator<JsonNode> setIteraor, String name, int wikiID, SQLiteConnection db)
+	public void insertCardSetsForOneCard(Iterator<JsonNode> setIteraor, String name, SQLiteConnection db)
 			throws SQLException {
 		
 		while (setIteraor.hasNext()) {

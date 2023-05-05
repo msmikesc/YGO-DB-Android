@@ -38,7 +38,7 @@ public class AnalyzePrintedOnce {
 		CSVPrinter p = CsvConnection.getAnalyzePrintedOnceOutputFile(filename);
 
 		for (AnalyzePrintedOnceData s : array) {
-			p.printRecord(s.wikiID, s.cardName, s.cardType, s.getStringOfRarities(), s.getStringOfSetNames(),
+			p.printRecord(s.gamePlayCardUUID, s.cardName, s.cardType, s.getStringOfRarities(), s.getStringOfSetNames(),
 					s.getStringOfSetNumbers(), s.releaseDate, s.archetype);
 
 		}

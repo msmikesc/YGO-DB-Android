@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 public class ViewCardSetViewModel extends ViewModel {
 
@@ -112,7 +113,7 @@ public class ViewCardSetViewModel extends ViewModel {
             OwnedCard currentCard = new OwnedCard();
             currentCard.cardName = current.cardName;
             currentCard.setRarity = current.getStringOfMainRarities();
-            currentCard.id = current.id;
+            currentCard.gamePlayCardUUID = current.gamePlayCardUUID;
             currentCard.setName = current.mainSetName;
             currentCard.multiListSetNames = current.getStringOfSetNames();
             currentCard.quantity = current.quantity;
@@ -137,7 +138,7 @@ public class ViewCardSetViewModel extends ViewModel {
         ArrayList<OwnedCard> newList = new ArrayList<>();
         
         for(OwnedCard current: inputList){
-            if(filter == null ||filter.equals("") || current.cardName.toUpperCase().contains(filter.toUpperCase())){
+            if(filter == null ||filter.equals("") || current.cardName.toLowerCase(Locale.ROOT).contains(filter.toLowerCase(Locale.ROOT))){
                 newList.add(current);
             }
         }

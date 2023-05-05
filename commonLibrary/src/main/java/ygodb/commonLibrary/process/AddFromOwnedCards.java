@@ -18,39 +18,38 @@ public class AddFromOwnedCards {
 			card.cardName = card.cardName.trim();
 			card.setName = card.setName.trim();
 
-			GamePlayCard gamePlayCard = db.getGamePlayCardByNameAndID(card.id, card.cardName);
+			GamePlayCard gamePlayCard = db.getGamePlayCardByNameAndUUID(card.gamePlayCardUUID, card.cardName);
 
 			if (gamePlayCard == null) {
 				// check for skill card
 				String newCardName = card.cardName + " (Skill Card)";
 
-				gamePlayCard = db.getGamePlayCardByNameAndID(card.id, newCardName);
+				gamePlayCard = db.getGamePlayCardByNameAndUUID(card.gamePlayCardUUID, newCardName);
 
 				if (gamePlayCard != null) {
 					card.cardName = newCardName;
 				} else {
 					// add it
-					System.out.println("No gamePlayCard found for " + card.cardName + ":" + card.id);
+					System.out.println("No gamePlayCard found for " + card.cardName + ":" + card.gamePlayCardUUID);
 
 					GamePlayCard GPC = new GamePlayCard();
 
 					GPC.cardName = card.cardName;
 					GPC.cardType = "unknown";
-					GPC.passcode = card.id;
-					GPC.wikiID = card.id;
+					GPC.gamePlayCardUUID = card.gamePlayCardUUID;
 
 					db.replaceIntoGamePlayCard(GPC);
 
 				}
 			}
 
-			ArrayList<CardSet> sets = db.getRaritiesOfCardInSetByIDAndName(card.id, card.setName,
+			ArrayList<CardSet> sets = db.getRaritiesOfCardInSetByGamePlayCardUUIDAndName(card.gamePlayCardUUID, card.setName,
 					card.cardName);
 
 			if (sets.size() == 0) {
 				// add it
-				System.out.println("No rarity entries found for " + card.cardName + ":" + card.id + ":" + card.setName);
-				db.replaceIntoCardSet(card.setNumber, card.setRarity, card.setName, card.id, null,
+				System.out.println("No rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":" + card.setName);
+				db.replaceIntoCardSet(card.setNumber, card.setRarity, card.setName, card.gamePlayCardUUID, null,
 						card.cardName);
 			} else {
 				boolean match = false;
@@ -65,9 +64,9 @@ public class AddFromOwnedCards {
 
 				if (!match) {
 					// add it
-					System.out.println("No matching rarity entries found for " + card.cardName + ":" + card.id + ":"
+					System.out.println("No matching rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":"
 							+ card.setName);
-					db.replaceIntoCardSet(card.setNumber, card.setRarity, card.setName, card.id, null,
+					db.replaceIntoCardSet(card.setNumber, card.setRarity, card.setName, card.gamePlayCardUUID, null,
 							card.cardName);
 				}
 			}

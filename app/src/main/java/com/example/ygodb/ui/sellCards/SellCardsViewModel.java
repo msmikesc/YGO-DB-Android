@@ -70,7 +70,7 @@ public class SellCardsViewModel extends ViewModel {
             sellingCard.cardName = current.cardName;
             sellingCard.dateBought = current.dateBought;
             sellingCard.dateSold = sdf.format(new Date());
-            sellingCard.id = current.id;
+            sellingCard.gamePlayCardUUID = current.gamePlayCardUUID;
             sellingCard.setRarity = current.setRarity;
             sellingCard.setName = current.setName;
             sellingCard.quantity = current.quantity;
@@ -84,7 +84,7 @@ public class SellCardsViewModel extends ViewModel {
             sellingCard.priceBought = current.priceBought;
             sellingCard.priceSold = getAPIPriceFromRarity(current.setRarity,
                     current.mainSetCardSets, current.cardName, current.setName,
-                    current.id, current.setNumber);
+                    current.gamePlayCardUUID, current.setNumber);
 
             sellingCard.creationDate = current.creationDate;
 
@@ -126,7 +126,7 @@ public class SellCardsViewModel extends ViewModel {
             String setNumber = (current.dropdownSelectedSetNumber == null) ? current.setNumber: current.dropdownSelectedSetNumber;
 
             current.priceSold = getAPIPriceFromRarity(rarity, current.mainSetCardSets,
-                    current.cardName, current.setName, current.id, setNumber);
+                    current.cardName, current.setName, current.gamePlayCardUUID, setNumber);
         }
     }
 
@@ -162,11 +162,11 @@ public class SellCardsViewModel extends ViewModel {
     }
 
     public String getAPIPriceFromRarity(String rarity, ArrayList<CardSet> mainSetCardSets,
-                                        String cardName, String setName, int id, String setNumber){
+                                        String cardName, String setName, String gamePlayCardUUID, String setNumber){
 
         if(mainSetCardSets == null){
             mainSetCardSets = AndroidUtil.getDBInstance().
-                    getRaritiesOfCardInSetByIDAndName(id, setName, cardName);
+                    getRaritiesOfCardInSetByGamePlayCardUUIDAndName(gamePlayCardUUID, setName, cardName);
         }
 
         if(mainSetCardSets.size() == 1){

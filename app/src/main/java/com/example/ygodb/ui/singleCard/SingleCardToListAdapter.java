@@ -20,6 +20,7 @@ import com.example.ygodb.ui.sellCards.SellCardsViewModel;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToListAdapter.ItemViewHolder> {
     private ArrayList<OwnedCard> ownedCards;
@@ -99,8 +100,8 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
                     viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold));
                 }
                 else{
-                    setRarityText = current.colorVariant.toUpperCase() + " " + setRarityText;
-                    switch(current.colorVariant.toUpperCase()){
+                    setRarityText = current.colorVariant.toUpperCase(Locale.ROOT) + " " + setRarityText;
+                    switch(current.colorVariant.toUpperCase(Locale.ROOT)){
                         case "R":
                             viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson));
                             break;
@@ -172,7 +173,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
         try {
             // get input stream
-            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.passcode+ ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

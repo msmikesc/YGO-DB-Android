@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class OwnedCard {
 
 	public String gamePlayCardUUID;
-	public int id;
 	public String folderName;
 	public String cardName;
 	public int quantity;
@@ -34,4 +33,6 @@ public class OwnedCard {
 	public int sellQuantity;
 	public String priceSold;
 	public String dateSold;
+
+	public int passcode;
 }

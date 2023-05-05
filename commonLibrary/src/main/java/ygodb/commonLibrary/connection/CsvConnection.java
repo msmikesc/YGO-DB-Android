@@ -19,6 +19,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
+import javafx.util.Pair;
 import ygodb.commonLibrary.analyze.AnalyzeCompareToDragonShieldCSV;
 import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.GamePlayCard;
@@ -75,7 +76,7 @@ public class CsvConnection {
 
 			p.printRecord("Folder Name", "Quantity", "Card Name", "Set Code", "Set Name", "Card Number", "Condition",
 					"Printing", "Price Bought", "Date Bought", "Rarity", "Rarity Color Variant", "Rarity Unsure",
-					"Passcode", "UUID");
+					"gamePlayCardUUID", "UUID", "passcode");
 
 			return p;
 
@@ -145,7 +146,7 @@ public class CsvConnection {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
 			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
 
-			p.printRecord("wikiID", "Card Name","Card Type", "Rarities","Set Names","Set Codes", "Release Date", "Archetype");
+			p.printRecord("gamePlayCardUUID", "Card Name","Card Type", "Rarities","Set Names","Set Codes", "Release Date", "Archetype");
 
 			return p;
 
@@ -208,12 +209,22 @@ public class CsvConnection {
 				setIdentified.colorVariant = existingCard.colorVariant;
 				setIdentified.setName = existingCard.setName;
 				setIdentified.setNumber = existingCard.setNumber;
-				setIdentified.id = existingCard.id;
+				setIdentified.gamePlayCardUUID = existingCard.gamePlayCardUUID;
 				setIdentified.setRarity = existingCard.setRarity;
 				setIdentified.rarityUnsure = existingCard.rarityUnsure;
+
+				int passcode = -1;
+				GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(setIdentified.gamePlayCardUUID, name);
+
+				if(gpc == null){
+					System.out.println("Unknown gamePlayCard for " + name);
+				}
+				else{
+					passcode = gpc.passcode;
+				}
 				
 				OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-						dateBought, setIdentified);
+						dateBought, setIdentified, passcode);
 				
 				card.UUID = existingCard.UUID;
 				
@@ -225,9 +236,19 @@ public class CsvConnection {
 				setName, name, db);
 		
 		setIdentified.colorVariant = colorCode;
+
+		int passcode = -1;
+		GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(setIdentified.gamePlayCardUUID, name);
+
+		if(gpc == null){
+			System.out.println("Unknown gamePlayCard for " + name);
+		}
+		else{
+			passcode = gpc.passcode;
+		}
 		
 		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-				dateBought, setIdentified);
+				dateBought, setIdentified, passcode);
 
 		return card;
 	}
@@ -247,16 +268,29 @@ public class CsvConnection {
 		String rarity = current.get("Rarity").trim();
 		String rarityColorVariant = current.get("Rarity Color Variant").trim();
 		String rarityUnsure = current.get("Rarity Unsure").trim();
-		Integer wikiID = getIntOrNull(current, "Passcode");
+		String gamePlayCardUUID = getStringOrNull(current, "gamePlayCardUUID");
+		int passcode = getIntOrNegativeOne(current, "passcode");
 		
 		String UUID = current.get("UUID");
 
 		if (printing.equals("Foil")) {
 			printing = "1st Edition";
 		}
-		
-		if(wikiID == null) {
-			wikiID = db.getCardIdFromTitle(name);
+
+
+		if(gamePlayCardUUID == null) {
+			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
+		}
+
+		if(passcode == -1) {
+
+			GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(gamePlayCardUUID, name);
+
+			if (gpc == null) {
+				System.out.println("Unknown gamePlayCard for " + name);
+			} else {
+				passcode = gpc.passcode;
+			}
 		}
 
 		CardSet setIdentified = new CardSet();
@@ -265,10 +299,10 @@ public class CsvConnection {
 		setIdentified.setRarity = rarity;
 		setIdentified.setName = setName;
 		setIdentified.setNumber = setNumber;
-		setIdentified.id = wikiID;
+		setIdentified.gamePlayCardUUID = gamePlayCardUUID;
 		
 		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-				dateBought, setIdentified);
+				dateBought, setIdentified, passcode);
 		
 		card.UUID = UUID;
 
@@ -361,7 +395,6 @@ public class CsvConnection {
 			setIdentified.colorVariant = Util.defaultColorVariant;
 			setIdentified.setName = setName;
 			setIdentified.setNumber = "";
-			setIdentified.id = -1;
 		}
 
 		setIdentified.setRarity = rarity;
@@ -380,8 +413,18 @@ public class CsvConnection {
 		String priceBought = Util.normalizePrice(price);
 		String dateBought = java.time.LocalDate.now().toString();
 
+		int passcode = -1;
+		GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(setIdentified.gamePlayCardUUID, name);
+
+		if(gpc == null){
+			System.out.println("Unknown gamePlayCard for " + name);
+		}
+		else{
+			passcode = gpc.passcode;
+		}
+
 		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-				dateBought, setIdentified);
+				dateBought, setIdentified, passcode);
 
 		return card;
 	}
@@ -439,7 +482,12 @@ public class CsvConnection {
 		GPC.cardType = type;
 		GPC.archetype = archetype;
 		GPC.passcode = passcode;
-		GPC.wikiID = passcode;
+
+		Pair<String, String> UUIDAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+
+		GPC.gamePlayCardUUID = UUIDAndName.getKey();
+		GPC.cardName = UUIDAndName.getValue();
+
 		GPC.desc = lore;
 		GPC.attribute = attribute;
 		GPC.race = race;
@@ -468,30 +516,22 @@ public class CsvConnection {
 		
 		setName = Util.checkForTranslatedSetName(setName);
 
-		int wikiID = db.getCardIdFromTitle(name);
-		// try skill card
-		if (wikiID == -1) {
-			wikiID = db.getCardIdFromTitle(name + " (Skill Card)");
-			if (wikiID != -1) {
-				name = name + " (Skill Card)";
-			}
-		}
+		Pair<String, String> UUIDAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
 
-		if (wikiID == -1) {
-			System.out.println("Unable to find valid passcode for " + cardNumber + ":" + name);
-		}
+		String gamePlayCardUUID = UUIDAndName.getKey();
+		name = UUIDAndName.getValue();
 
-		db.replaceIntoCardSet(cardNumber, rarity, setName, wikiID, null, name);
+		db.replaceIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, null, name);
 	}
 
 	public static void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
 		// p.printRecord("Folder Name","Quantity","Card Name","Set Code","Set
 		// Name","Card Number","Condition","Printing","Price Bought","Date
-		// Bought","Rarity","Rarity Color Variant", "Rarity Unsure","Passcode");
+		// Bought","Rarity","Rarity Color Variant", "Rarity Unsure","gamePlayCardUUID");
 		// UUID
 		p.printRecord(current.folderName, current.quantity, current.cardName, current.setCode, current.setName,
 				current.setNumber, current.condition, current.editionPrinting, current.priceBought, current.dateBought,
-				current.setRarity, current.colorVariant, current.rarityUnsure, current.id, current.UUID);
+				current.setRarity, current.colorVariant, current.rarityUnsure, current.gamePlayCardUUID, current.UUID, current.passcode);
 
 	}
 	

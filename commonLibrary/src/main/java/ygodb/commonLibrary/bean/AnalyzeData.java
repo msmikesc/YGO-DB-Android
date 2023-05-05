@@ -24,8 +24,6 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	public ArrayList<CardSet> mainSetCardSets;
 
-	public int id;
-
 
 	public AnalyzeData() {
 		setNumber = new HashSet<String>();

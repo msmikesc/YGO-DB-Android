@@ -17,27 +17,21 @@ public interface SQLiteConnection {
 
     HashMap<String, ArrayList<CardSet>> getAllCardRarities() throws SQLException;
 
-    ArrayList<CardSet> getAllRaritiesOfCardByID(int id) throws SQLException;
-
-    ArrayList<CardSet> getAllCardSetsOfCardByIDAndSet(int id, String setName) throws SQLException;
+    ArrayList<CardSet> getAllCardSetsOfCardByGamePlayCardUUIDAndSet(String gamePlayCardUUID, String setName) throws SQLException;
 
     ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException;
 
-    ArrayList<CardSet> getRaritiesOfCardInSetByID(int id, String setName) throws SQLException;
+    ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID);
 
-    ArrayList<CardSet> getRaritiesOfCardByID(int id);
-
-    ArrayList<CardSet> getRaritiesOfCardInSetByIDAndName(int id, String setName, String cardName) throws SQLException;
+    ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUIDAndName(String gamePlayCardUUID, String setName, String cardName) throws SQLException;
 
     ArrayList<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy);
 
-    String getCardTitleFromID(int wikiID) throws SQLException;
+    String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
-    ArrayList<String> getMultiCardTitlesFromID(int wikiID) throws SQLException;
+    ArrayList<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
-    int getCardIdFromTitle(String title) throws SQLException;
-
-    ArrayList<OwnedCard> getNumberOfOwnedCardsById(int id) throws SQLException;
+    String getGamePlayCardUUIDFromTitle(String title) throws SQLException;
 
     ArrayList<OwnedCard> getNumberOfOwnedCardsByName(String name) throws SQLException;
 
@@ -55,15 +49,9 @@ public interface SQLiteConnection {
 
     ArrayList<OwnedCard> getRarityUnsureOwnedCards() throws SQLException;
 
-    ArrayList<Integer> getDistinctCardIDsInSetByName(String setName) throws SQLException;
+    ArrayList<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) throws SQLException;
 
-    ArrayList<String> getDistinctCardNamesInSetByName(String setName);
-
-    ArrayList<CardSet> getDistinctCardNamesAndIdsInSetByName(String setName) throws SQLException;
-
-    ArrayList<Integer> getDistinctCardIDsByArchetype(String archetype) throws SQLException;
-
-    ArrayList<String> getDistinctCardNamesByArchetype(String archetype);
+    ArrayList<CardSet> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) throws SQLException;
 
     ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype);
 
@@ -91,7 +79,7 @@ public interface SQLiteConnection {
 
     void replaceIntoCardSetMetaData(String set_name, String set_code, int num_of_cards, String tcg_date) throws SQLException;
 
-    GamePlayCard getGamePlayCardByNameAndID(Integer wikiID, String name) throws SQLException;
+    GamePlayCard getGamePlayCardByNameAndUUID(String gamePlayCardUUID, String name) throws SQLException;
 
     List<GamePlayCard> getAllGamePlayCard() throws SQLException;
 
@@ -103,7 +91,7 @@ public interface SQLiteConnection {
 
     void upsertOwnedCardBatch(OwnedCard card) throws SQLException;
 
-    void replaceIntoCardSet(String setNumber, String rarity, String setName, int wikiID, String price,
+    void replaceIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
                             String cardName) throws SQLException;
 
     void updateSetName(String original, String newName) throws SQLException;

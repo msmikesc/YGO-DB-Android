@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
+
 import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonLibrary.bean.AnalyzeData;
@@ -52,7 +54,7 @@ public class AnalyzeCardsInSet {
 			finalFileName = "Combined";
 		}
 
-		HashMap<String, AnalyzeData> h = new HashMap<String, AnalyzeData>();
+		HashMap<String, AnalyzeData> h = new HashMap<>();
 
 		String[] sets = setName.split(";");
 
@@ -117,11 +119,11 @@ public class AnalyzeCardsInSet {
 	}
 
 	public void addAnalyzeDataForSet(HashMap<String, AnalyzeData> h, String setName, SQLiteConnection db) throws SQLException {
-		ArrayList<CardSet> list = db.getDistinctCardNamesAndIdsInSetByName(setName);
+		ArrayList<CardSet> list = db.getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(setName);
 		boolean archetypeMode = false;
 
 		if (list.size() == 0) {
-			ArrayList<SetMetaData> setNames = db.getSetMetaDataFromSetCode(setName.toUpperCase());
+			ArrayList<SetMetaData> setNames = db.getSetMetaDataFromSetCode(setName.toUpperCase(Locale.ROOT));
 
 			if (setNames == null || setNames.isEmpty() ) {
 
@@ -133,7 +135,7 @@ public class AnalyzeCardsInSet {
 			}
 			else {
 				setName = setNames.get(0).set_name;
-				list = db.getDistinctCardNamesAndIdsInSetByName(setName);
+				list = db.getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(setName);
 			}
 		}
 
@@ -142,16 +144,16 @@ public class AnalyzeCardsInSet {
 		for (CardSet currentCardSet : list) {
 
 			String currentCard = currentCardSet.cardName;
-			int cardPasscode = currentCardSet.id;
+			String gamePlayCardUUID = currentCardSet.gamePlayCardUUID;
 
 			ArrayList<OwnedCard> cardsList = db.getNumberOfOwnedCardsByName(currentCard);
 
 			ArrayList<CardSet> rarityList = null;
 			if(!archetypeMode) {
-				rarityList = db.getRaritiesOfCardInSetByIDAndName(cardPasscode, setName, currentCard);
+				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUIDAndName(gamePlayCardUUID, setName, currentCard);
 			}
 			else{
-				rarityList = db.getRaritiesOfCardByID(cardPasscode);
+				rarityList = db.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID);
 			}
 
 			if (cardsList.size() == 0) {
@@ -159,7 +161,7 @@ public class AnalyzeCardsInSet {
 				AnalyzeData currentData = new AnalyzeData();
 
 				if (currentCard == null) {
-					currentData.cardName = "No cards found for id:" + cardPasscode;
+					currentData.cardName = "No cards found for id:" + gamePlayCardUUID;
 					currentData.quantity = -1;
 				} else {
 					currentData.cardName = currentCard;
@@ -194,7 +196,7 @@ public class AnalyzeCardsInSet {
 					}
 				}
 
-				currentData.id = cardPasscode;
+				currentData.gamePlayCardUUID = gamePlayCardUUID;
 
 				if(!archetypeMode) {
 					currentData.setNumber.add(rarityList.get(0).setNumber);
@@ -228,7 +230,7 @@ public class AnalyzeCardsInSet {
 					}
 				}
 
-				currentData.id = cardPasscode;
+				currentData.gamePlayCardUUID = gamePlayCardUUID;
 				if(!archetypeMode) {
 					currentData.setNumber.add(rarityList.get(0).setNumber);
 					currentData.cardType = rarityList.get(0).cardType;

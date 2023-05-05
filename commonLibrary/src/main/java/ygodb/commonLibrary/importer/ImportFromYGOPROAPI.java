@@ -1,6 +1,8 @@
 package ygodb.commonLibrary.importer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -11,6 +13,7 @@ import java.util.Scanner;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javafx.util.Pair;
 import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
@@ -48,15 +51,14 @@ public class ImportFromYGOPROAPI {
 			} else {
 
 				String inline = "";
-				Scanner scanner = new Scanner(url.openStream());
+				InputStream inputStreamFromURL = url.openStream();
 
-				// Write all the JSON data into a string using a scanner
-				while (scanner.hasNext()) {
-					inline += scanner.nextLine();
+				ByteArrayOutputStream result = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
+					result.write(buffer, 0, length);
 				}
-
-				// Close the scanner
-				scanner.close();
+				inline = result.toString("UTF-8");
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
@@ -71,10 +73,7 @@ public class ImportFromYGOPROAPI {
 
 					JsonNode current = keyset.next();
 
-					insertGameplayCardFromYGOPRO(current, db);
-
-					int cardID = current.get("id").asInt();
-					String name = current.get("name").asText();
+					GamePlayCard inserted = insertGameplayCardFromYGOPRO(current, db);
 
 					JsonNode sets = null;
 					Iterator<JsonNode> setIteraor = null;
@@ -83,7 +82,7 @@ public class ImportFromYGOPROAPI {
 
 					if (sets != null) {
 						setIteraor = sets.iterator();
-						insertCardSetsForOneCard(setIteraor, name, cardID, db);
+						insertCardSetsForOneCard(setIteraor, inserted.cardName, inserted.gamePlayCardUUID, db);
 					}
 
 				}
@@ -97,10 +96,9 @@ public class ImportFromYGOPROAPI {
 		}
 	}
 
-	public static void insertGameplayCardFromYGOPRO(JsonNode current, SQLiteConnection db) throws SQLException {
+	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, SQLiteConnection db) throws SQLException {
 
-		Integer wikiID = Util.getIntOrNull(current, "id");
-		String name = Util.getStringOrNull(current, "name");
+		String name = Util.getStringOrNull(current, "name").trim();
 		String type = Util.getStringOrNull(current, "type");
 		Integer passcode = Util.getIntOrNull(current, "id");// passcode
 		String desc = Util.getStringOrNull(current, "desc");
@@ -119,7 +117,12 @@ public class ImportFromYGOPROAPI {
 		GPC.cardType = type;
 		GPC.archetype = archetype;
 		GPC.passcode = passcode;
-		GPC.wikiID = wikiID;
+
+		Pair<String, String> UUIDAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+
+		GPC.gamePlayCardUUID = UUIDAndName.getKey();
+		GPC.cardName = UUIDAndName.getValue();
+
 		GPC.desc = desc;
 		GPC.attribute = attribute;
 		GPC.race = race;
@@ -130,9 +133,11 @@ public class ImportFromYGOPROAPI {
 		GPC.def = def;
 
 		db.replaceIntoGamePlayCard(GPC);
+
+		return GPC;
 	}
 
-	public static void insertCardSetsForOneCard(Iterator<JsonNode> setIteraor, String name, int wikiID, SQLiteConnection db)
+	public static void insertCardSetsForOneCard(Iterator<JsonNode> setIteraor, String name, String gamePlayCardUUID, SQLiteConnection db)
 			throws SQLException {
 
 		while(setIteraor.hasNext()) {
@@ -158,7 +163,7 @@ public class ImportFromYGOPROAPI {
 
 			set_name = Util.checkForTranslatedSetName(set_name);
 
-			db.replaceIntoCardSet(set_code, set_rarity, set_name, wikiID, set_price, name);
+			db.replaceIntoCardSet(set_code, set_rarity, set_name, gamePlayCardUUID, set_price, name);
 
 		}
 	}

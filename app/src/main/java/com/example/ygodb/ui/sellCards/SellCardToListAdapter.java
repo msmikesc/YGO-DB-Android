@@ -270,7 +270,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 
         try {
             // get input stream
-            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.id+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.passcode+ ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

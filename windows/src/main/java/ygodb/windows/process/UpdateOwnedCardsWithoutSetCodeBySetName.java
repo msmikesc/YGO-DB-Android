@@ -40,7 +40,7 @@ public class UpdateOwnedCardsWithoutSetCodeBySetName {
 				continue;
 			}
 
-			card.id = setIdentified.id;
+			card.gamePlayCardUUID = setIdentified.gamePlayCardUUID;
 			card.setNumber = setIdentified.setNumber;
 
 			ArrayList<SetMetaData> metaData = db.getSetMetaDataFromSetName(newSetName);

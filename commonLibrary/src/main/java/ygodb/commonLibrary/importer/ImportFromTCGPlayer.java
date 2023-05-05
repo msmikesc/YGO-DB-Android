@@ -61,6 +61,7 @@ public class ImportFromTCGPlayer {
 								card.colorVariant, existingCard)) {
 							card.quantity += existingCard.quantity;
 							card.UUID = existingCard.UUID;
+							card.gamePlayCardUUID = existingCard.gamePlayCardUUID;
 							break;
 						}
 					}
