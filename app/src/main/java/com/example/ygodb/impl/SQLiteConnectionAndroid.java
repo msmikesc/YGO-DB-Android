@@ -318,7 +318,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] Columns = new String[]{"a.gamePlayCardUUID","a.cardName as cardNameCol","a.setNumber as setNumberCol","a.setName",
 				"a.setRarity as setRarityCol","a.setPrice","sum(b.quantity) as quantity",
-				"MAX(b.dateBought) as maxDate, c.setCode"};
+				"MAX(b.dateBought) as maxDate, c.setCode", "d.passcode"};
 
 		String selection = "a.cardName like ?";
 		String[] selectionArgs = new String[]{'%' + cardName.trim() + '%'};
@@ -328,7 +328,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		Cursor rs = connection.query("cardSets a left outer join ownedCards b " +
 						"on a.gamePlayCardUUID = b.gamePlayCardUUID and b.cardName = a.cardName " +
 						"and a.setNumber = b.setNumber and a.setRarity = b.setRarity " +
-						"left outer join setData c on a.setName = c.setName",
+						"left outer join setData c on a.setName = c.setName " +
+						"left outer join gamePlayCard d on a.gamePlayCardUUID = d.gamePlayCardUUID",
 				Columns, selection,selectionArgs, groupBy,null, orderBy, null);
 
 		String[] col = rs.getColumnNames();
@@ -344,6 +345,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			current.priceBought = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
 			current.quantity = rs.getInt(getColumn(col,"quantity"));
 			current.dateBought = rs.getString(getColumn(col,"maxDate"));
+			current.passcode = rs.getInt(getColumn(col,"passcode"));
 
 			results.add(current);
 		}

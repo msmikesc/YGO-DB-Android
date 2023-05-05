@@ -967,7 +967,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		String gamePlayCard = "Replace into gamePlayCard(gamePlayCardUUID,title,type,passcode,lore," +
 				"attribute,race,linkValue,level,pendScale,atk,def,archetype, " +
 				"modificationDate) " +
-				"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now','localtime'))";
+				"values(?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now','localtime'))";
 
 		PreparedStatement statementgamePlayCard = connection.prepareStatement(gamePlayCard);
 

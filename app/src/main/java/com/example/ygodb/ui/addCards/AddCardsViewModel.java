@@ -104,6 +104,7 @@ public class AddCardsViewModel extends ViewModel {
             newCard.setNumber = current.setNumber;
             newCard.colorVariant = "-1";
             newCard.mainSetCardSets = current.mainSetCardSets;
+            newCard.passcode = current.passcode;
 
             newCard.priceBought = getAPIPriceFromRarity(current.setRarity,
                     current.mainSetCardSets, current.cardName, current.setName,

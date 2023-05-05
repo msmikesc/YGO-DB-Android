@@ -121,6 +121,7 @@ public class ViewCardSetViewModel extends ViewModel {
             currentCard.priceBought = current.getAveragePrice();
             currentCard.setCode = current.mainSetCode;
             currentCard.mainSetCardSets = current.mainSetCardSets;
+            currentCard.passcode = current.passcode;
             newList.add(currentCard);
         }
 

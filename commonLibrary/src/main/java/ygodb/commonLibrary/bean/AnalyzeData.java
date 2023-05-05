@@ -22,6 +22,8 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	public String mainSetCode;
 
+	public int passcode;
+
 	public ArrayList<CardSet> mainSetCardSets;
 
 

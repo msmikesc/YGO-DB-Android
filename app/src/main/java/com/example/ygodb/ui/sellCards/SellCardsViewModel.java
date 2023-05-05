@@ -80,6 +80,7 @@ public class SellCardsViewModel extends ViewModel {
             sellingCard.setNumber = current.setNumber;
             sellingCard.colorVariant = current.colorVariant;
             sellingCard.UUID = current.UUID;
+            sellingCard.passcode = current.passcode;
 
             sellingCard.priceBought = current.priceBought;
             sellingCard.priceSold = getAPIPriceFromRarity(current.setRarity,

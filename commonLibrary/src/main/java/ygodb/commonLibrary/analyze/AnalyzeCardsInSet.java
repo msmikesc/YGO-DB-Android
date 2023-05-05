@@ -14,6 +14,7 @@ import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonLibrary.bean.AnalyzeData;
 import ygodb.commonLibrary.bean.CardSet;
+import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.CsvConnection;
@@ -146,6 +147,14 @@ public class AnalyzeCardsInSet {
 			String currentCard = currentCardSet.cardName;
 			String gamePlayCardUUID = currentCardSet.gamePlayCardUUID;
 
+			GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(gamePlayCardUUID,currentCard);
+
+			int passcode = -1;
+
+			if(gpc != null){
+				passcode = gpc.passcode;
+			}
+
 			ArrayList<OwnedCard> cardsList = db.getNumberOfOwnedCardsByName(currentCard);
 
 			ArrayList<CardSet> rarityList = null;
@@ -197,6 +206,7 @@ public class AnalyzeCardsInSet {
 				}
 
 				currentData.gamePlayCardUUID = gamePlayCardUUID;
+				currentData.passcode = passcode;
 
 				if(!archetypeMode) {
 					currentData.setNumber.add(rarityList.get(0).setNumber);
@@ -231,6 +241,7 @@ public class AnalyzeCardsInSet {
 				}
 
 				currentData.gamePlayCardUUID = gamePlayCardUUID;
+				currentData.passcode = passcode;
 				if(!archetypeMode) {
 					currentData.setNumber.add(rarityList.get(0).setNumber);
 					currentData.cardType = rarityList.get(0).cardType;

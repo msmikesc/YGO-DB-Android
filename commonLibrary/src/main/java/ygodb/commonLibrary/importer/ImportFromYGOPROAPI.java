@@ -25,7 +25,7 @@ public class ImportFromYGOPROAPI {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		String setName = "Amazing Defenders";
+		String setName = "Cyberstorm Access";
 
 		setName = setName.trim();
 
