@@ -585,19 +585,19 @@ public class Util {
 
 	public static String getStringOrNull(JsonNode current, String id) {
 		try {
-			String value = current.get(id).asText();
+			String value = current.get(id).asText().trim();
 			return value;
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
-	public static Integer getIntOrNull(JsonNode current, String id) {
+	public static Integer getIntOrNegativeOne(JsonNode current, String id) {
 		try {
 			int value = current.get(id).asInt();
 			return value;
 		} catch (Exception e) {
-			return null;
+			return -1;
 		}
 	}
 

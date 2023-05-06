@@ -61,12 +61,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		while (rarities.next()) {
 			CardSet set = new CardSet();
-			set.gamePlayCardUUID = rarities.getString(Const.gamePlayCardUUID);
-			set.cardName = rarities.getString("cardName");
-			set.setNumber = rarities.getString("setNumber");
-			set.setName = rarities.getString("setName");
-			set.setRarity = rarities.getString("setRarity");
-			set.setPrice = rarities.getString("setPrice");
+			getAllCardSetFieldsFromRS(rarities, set);
 
 			ArrayList<CardSet> currentList = setRarities.get(set.setNumber);
 
@@ -101,12 +96,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		while (rarities.next()) {
 			CardSet set = new CardSet();
-			set.gamePlayCardUUID = rarities.getString(Const.gamePlayCardUUID);
-			set.cardName = rarities.getString("cardName");
-			set.setNumber = rarities.getString("setNumber");
-			set.setName = rarities.getString("setName");
-			set.setRarity = rarities.getString("setRarity");
-			set.setPrice = rarities.getString("setPrice");
+			getAllCardSetFieldsFromRS(rarities, set);
 
 			setRarities.add(set);
 		}
@@ -133,12 +123,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		while (rarities.next()) {
 			CardSet set = new CardSet();
-			set.gamePlayCardUUID = rarities.getString(Const.gamePlayCardUUID);
-			set.cardName = rarities.getString("cardName");
-			set.setNumber = rarities.getString("setNumber");
-			set.setName = rarities.getString("setName");
-			set.setRarity = rarities.getString("setRarity");
-			set.setPrice = rarities.getString("setPrice");
+			getAllCardSetFieldsFromRS(rarities, set);
 
 			setRarities.add(set);
 		}
@@ -149,9 +134,43 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		return setRarities;
 	}
 
+	private void getAllCardSetFieldsFromRS(ResultSet rarities, CardSet set) throws SQLException {
+		set.gamePlayCardUUID = rarities.getString(Const.gamePlayCardUUID);
+		set.cardName = rarities.getString("cardName");
+		set.setNumber = rarities.getString("setNumber");
+		set.setName = rarities.getString("setName");
+		set.setRarity = rarities.getString("setRarity");
+		set.setPrice = rarities.getString("setPrice");
+		set.setPriceUpdateTime = rarities.getString("setPriceUpdateTime");
+	}
+
 	@Override
-	public ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) {
-		return null;
+	public ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		String setQuery = "Select * from cardSets a left join gamePlayCard b on a.gamePlayCardUUID = b.gamePlayCardUUID " +
+				"and b.title = a.cardName where a.gamePlayCardUUID=?";
+
+		PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
+		statementSetQuery.setString(1, gamePlayCardUUID);
+
+
+		ResultSet rarities = statementSetQuery.executeQuery();
+
+		ArrayList<CardSet> setrs = new ArrayList<>();
+
+		while (rarities.next()) {
+			CardSet set = new CardSet();
+			getAllCardSetFieldsFromRS(rarities, set);
+			set.cardType = rarities.getString("type");
+
+			setrs.add(set);
+		}
+
+		rarities.close();
+
+		return setrs;
 	}
 
 	@Override
@@ -176,12 +195,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		while (rarities.next()) {
 			CardSet set = new CardSet();
-			set.gamePlayCardUUID = rarities.getString(Const.gamePlayCardUUID);
-			set.cardName = rarities.getString("cardName");
-			set.setNumber = rarities.getString("setNumber");
-			set.setName = rarities.getString("setName");
-			set.setRarity = rarities.getString("setRarity");
-			set.setPrice = rarities.getString("setPrice");
+			getAllCardSetFieldsFromRS(rarities, set);
 			set.cardType = rarities.getString("type");
 
 			setRarities.add(set);
@@ -414,6 +428,33 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException {
+		Connection connection = this.getInstance();
+
+		String setQuery = "select * from ownedCards where passcode = -1";
+
+		PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
+
+		ResultSet rs = setQueryStatement.executeQuery();
+
+		ArrayList<OwnedCard> cardsInSetList = new ArrayList<OwnedCard>();
+
+		while (rs.next()) {
+
+			OwnedCard current = new OwnedCard();
+
+			getAllOwnedCardFieldsFromRS(rs, current);
+
+			cardsInSetList.add(current);
+		}
+
+		rs.close();
+		setQueryStatement.close();
+
+		return cardsInSetList;
+	}
+
+	@Override
 	public HashMap<String, ArrayList<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
 		Connection connection = this.getInstance();
 
@@ -531,8 +572,31 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype) {
-		return null;
+	public ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype) throws SQLException {
+		Connection connection = this.getInstance();
+
+		String setQuery = "select distinct title, gamePlayCardUUID from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
+
+		PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
+		setQueryStatement.setString(1, archetype);
+
+		ResultSet rs = setQueryStatement.executeQuery();
+
+		ArrayList<CardSet> cardsInSetList = new ArrayList<>();
+
+		while (rs.next()) {
+
+			CardSet current = new CardSet();
+			current.cardName = rs.getString(1);
+			current.gamePlayCardUUID = rs.getString(2);
+
+			cardsInSetList.add(current);
+
+		}
+
+		rs.close();
+
+		return cardsInSetList;
 	}
 
 	@Override
@@ -677,12 +741,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		while (rs.next()) {
 			set = new CardSet();
-			set.gamePlayCardUUID = rs.getString(Const.gamePlayCardUUID);
-			set.cardName = rs.getString("cardName");
-			set.setNumber = rs.getString("setNumber");
-			set.setName = rs.getString("setName");
-			set.setRarity = rs.getString("setRarity");
-			set.setPrice = rs.getString("setPrice");
+			getAllCardSetFieldsFromRS(rs, set);
 			break;
 		}
 
@@ -690,6 +749,37 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		distrinctQueryStatement.close();
 
 		return set;
+	}
+
+	@Override
+	public List<CardSet> getCardSetsForValues(String setNumber, String rarity, String setName)
+			throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		String setQuery = "select * from cardSets where UPPER(setName) = UPPER(?) " +
+				"and UPPER(setNumber) = UPPER(?) and UPPER(setRarity) = UPPER(?) ";
+
+		PreparedStatement statement = connection.prepareStatement(setQuery);
+
+		statement.setString(1, setName);
+		statement.setString(2, setNumber);
+		statement.setString(3, rarity);
+
+		ResultSet rs = statement.executeQuery();
+
+		ArrayList<CardSet> results = new ArrayList<>();
+
+		while (rs.next()) {
+			CardSet set = new CardSet();
+			getAllCardSetFieldsFromRS(rs, set);
+			results.add(set);
+		}
+
+		rs.close();
+		statement.close();
+
+		return results;
 	}
 
 	@Override
@@ -1014,6 +1104,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		String setName = card.setName;
 		String setRarity = card.setRarity;
 
+		int passcode = card.passcode;
+
 		String UUID = card.UUID;
 
 		Connection connection = this.getInstance();
@@ -1031,7 +1123,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		String ownedInsert = "update ownedCards set gamePlayCardUUID = ?,folderName = ?,cardName = ?,quantity = ?,"
 				+ "setCode = ?, setNumber = ?,setName = ?,setRarity = ?,setRarityColorVariant = ?,"
 				+ "condition = ?,editionPrinting = ?,dateBought = ?,priceBought = ?,rarityUnsure = ?, "
-				+ "modificationDate = datetime('now','localtime') "
+				+ "modificationDate = datetime('now','localtime'), passcode = ? "
 				+ "where UUID = ?";
 
 		PreparedStatement statement = connection.prepareStatement(ownedInsert);
@@ -1051,7 +1143,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statement.setString(13, normalizedPrice);
 		statement.setInt(14, rarityUnsure);
 
-		statement.setString(15, UUID);
+		statement.setInt(15, passcode);
+		statement.setString(16, UUID);
 
 		statement.execute();
 		statement.close();
@@ -1154,38 +1247,29 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public void replaceIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
-								   String cardName) throws SQLException {
+	public void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
+													  String cardName) throws SQLException {
 
 		Connection connection = this.getInstance();
 
-		String setInsert = "REPLACE INTO cardSets (gamePlayCardUUID, setNumber, setName, setRarity, setPrice, cardName, setPriceUpdateTime) " +
-				" SELECT ?, ?, ?, ?, " +
-				" CASE WHEN setPrice IS NULL THEN ? ELSE setPrice END, " +
-				" ?, " +
-				" CASE WHEN setPriceUpdateTime IS NULL THEN " +
-				" CASE WHEN ? IS NULL THEN NULL ELSE datetime('now','localtime') END " +
-				" ELSE setPriceUpdateTime END " +
-				" FROM cardSets " +
-				" WHERE gamePlayCardUUID = ? AND setNumber = ? and setName = ? and setRarity = ? and cardName = ?";
+		String setInsert = "INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName,setRarity,cardName) values(?,?,?,?,?)";
 
-		PreparedStatement statementSetInsert = connection.prepareStatement(setInsert);
+		PreparedStatement statementSetInsert  = connection.prepareStatement(setInsert);
 
 		setStringOrNull(statementSetInsert,1, gamePlayCardUUID);
-		setStringOrNull(statementSetInsert, 2, setNumber);
+		setStringOrNull(statementSetInsert,2, setNumber);
 		setStringOrNull(statementSetInsert,3, setName);
 		setStringOrNull(statementSetInsert,4, rarity);
-		setStringOrNull(statementSetInsert,5, price);
-		setStringOrNull(statementSetInsert,6, cardName);
+		setStringOrNull(statementSetInsert,5, cardName);
 
-		setStringOrNull(statementSetInsert,7, price);
+		if(price != null && !Util.normalizePrice(price).equals(Util.normalizePrice("0"))){
 
-		setStringOrNull(statementSetInsert,8, gamePlayCardUUID);
-		setStringOrNull(statementSetInsert,9, setNumber);
-		setStringOrNull(statementSetInsert,10, setName);
-		setStringOrNull(statementSetInsert,11, rarity);
-		setStringOrNull(statementSetInsert,12, cardName);
+			List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
 
+			if(list.size() > 0 && list.get(0).setPrice == null || Util.normalizePrice(price).equals(Util.normalizePrice("0"))) {
+				updateCardSetPriceWithSetName(setNumber, rarity, price, setName);
+			}
+		}
 
 		statementSetInsert.execute();
 		statementSetInsert.close();
@@ -1256,6 +1340,16 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statement.execute();
 		statement.close();
 
+		int updated = getUpdatedRowCount();
+
+		return updated;
+
+	}
+
+	@Override
+	public int getUpdatedRowCount() throws SQLException {
+		Connection connection = this.getInstance();
+		PreparedStatement statement;
 		String query = "select changes()";
 
 		statement = connection.prepareStatement(query);
@@ -1264,9 +1358,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		rs.next();
 		int updated = rs.getInt(1);
-
 		return updated;
-
 	}
 
 	@Override
@@ -1288,14 +1380,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statement.execute();
 		statement.close();
 
-		String query = "select changes()";
-
-		statement = connection.prepareStatement(query);
-
-		ResultSet rs = statement.executeQuery();
-
-		rs.next();
-		int updated = rs.getInt(1);
+		int updated = getUpdatedRowCount();
 
 		return updated;
 
@@ -1317,14 +1402,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statement.execute();
 		statement.close();
 
-		String query = "select changes()";
-
-		statement = connection.prepareStatement(query);
-
-		ResultSet rs = statement.executeQuery();
-
-		rs.next();
-		int updated = rs.getInt(1);
+		int updated = getUpdatedRowCount();
 
 		return updated;
 

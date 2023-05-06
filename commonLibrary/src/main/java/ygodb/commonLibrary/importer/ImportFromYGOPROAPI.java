@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.util.Pair;
 import ygodb.commonLibrary.bean.GamePlayCard;
+import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.connection.Util;
@@ -23,9 +24,7 @@ import java.sql.SQLException;
 
 public class ImportFromYGOPROAPI {
 
-	public void run(SQLiteConnection db) throws SQLException, IOException {
-
-		String setName = "Cyberstorm Access";
+	public void run(SQLiteConnection db, String setName) throws SQLException, IOException {
 
 		setName = setName.trim();
 
@@ -69,20 +68,22 @@ public class ImportFromYGOPROAPI {
 
 				Iterator<JsonNode> keyset = cards.iterator();
 
+				ArrayList<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
+
 				while (keyset.hasNext()) {
 
 					JsonNode current = keyset.next();
 
-					GamePlayCard inserted = insertGameplayCardFromYGOPRO(current, db);
+					GamePlayCard inserted = insertGameplayCardFromYGOPRO(current, ownedCardsToCheck, db);
 
 					JsonNode sets = null;
-					Iterator<JsonNode> setIteraor = null;
+					Iterator<JsonNode> setIterator = null;
 					sets = current.get("card_sets");
 
 
 					if (sets != null) {
-						setIteraor = sets.iterator();
-						insertCardSetsForOneCard(setIteraor, inserted.cardName, inserted.gamePlayCardUUID, db);
+						setIterator = sets.iterator();
+						insertCardSetsForOneCard(setIterator, inserted.cardName, inserted.gamePlayCardUUID, db);
 					}
 
 				}
@@ -96,11 +97,11 @@ public class ImportFromYGOPROAPI {
 		}
 	}
 
-	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, SQLiteConnection db) throws SQLException {
+	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, ArrayList<OwnedCard> ownedCardsToCheck, SQLiteConnection db) throws SQLException {
 
-		String name = Util.getStringOrNull(current, "name").trim();
+		String name = Util.getStringOrNull(current, "name");
 		String type = Util.getStringOrNull(current, "type");
-		Integer passcode = Util.getIntOrNull(current, "id");// passcode
+		Integer passcode = Util.getIntOrNegativeOne(current, "id");// passcode
 		String desc = Util.getStringOrNull(current, "desc");
 		String attribute = Util.getStringOrNull(current, "attribute");
 		String race = Util.getStringOrNull(current, "race");
@@ -134,15 +135,22 @@ public class ImportFromYGOPROAPI {
 
 		db.replaceIntoGamePlayCard(GPC);
 
+		for(OwnedCard currentOwnedCard : ownedCardsToCheck){
+			if(currentOwnedCard.gamePlayCardUUID.equals(GPC.gamePlayCardUUID)){
+				currentOwnedCard.passcode = passcode;
+				db.UpdateOwnedCardByUUID(currentOwnedCard);
+			}
+		}
+
 		return GPC;
 	}
 
-	public static void insertCardSetsForOneCard(Iterator<JsonNode> setIteraor, String name, String gamePlayCardUUID, SQLiteConnection db)
+	public static void insertCardSetsForOneCard(Iterator<JsonNode> setIterator, String name, String gamePlayCardUUID, SQLiteConnection db)
 			throws SQLException {
 
-		while(setIteraor.hasNext()) {
+		while(setIterator.hasNext()) {
 
-			JsonNode currentSet = setIteraor.next();
+			JsonNode currentSet = setIterator.next();
 
 			String set_code = null;
 			String set_name = null;
@@ -150,10 +158,10 @@ public class ImportFromYGOPROAPI {
 			String set_price = null;
 
 			try {
-				set_code = currentSet.get("set_code").asText();
-				set_name = currentSet.get("set_name").asText();
-				set_rarity = currentSet.get("set_rarity").asText();
-				set_price = currentSet.get("set_price").asText();
+				set_code = Util.getStringOrNull(currentSet,"set_code");
+				set_name = Util.getStringOrNull(currentSet,"set_name");
+				set_rarity = Util.getStringOrNull(currentSet,"set_rarity");
+				set_price = Util.getStringOrNull(currentSet,"set_price");
 			} catch (Exception e) {
 				System.out.println("issue found on " + name);
 				continue;
@@ -161,9 +169,11 @@ public class ImportFromYGOPROAPI {
 
 			//set_price = Util.getAdjustedPriceFromRarity(set_rarity, set_price);
 
+			set_rarity = Util.checkForTranslatedRarity(set_rarity);
+
 			set_name = Util.checkForTranslatedSetName(set_name);
 
-			db.replaceIntoCardSet(set_code, set_rarity, set_name, gamePlayCardUUID, set_price, name);
+			db.replaceIntoCardSetWithSoftPriceUpdate(set_code, set_rarity, set_name, gamePlayCardUUID, set_price, name);
 
 		}
 	}
@@ -221,7 +231,7 @@ public class ImportFromYGOPROAPI {
 
 					String set_name = Util.getStringOrNull(set, "set_name");
 					String set_code = Util.getStringOrNull(set, "set_code");
-					int num_of_cards = Util.getIntOrNull(set, "num_of_cards");
+					int num_of_cards = Util.getIntOrNegativeOne(set, "num_of_cards");
 					String tcg_date = Util.getStringOrNull(set, "tcg_date");
 					
 					String newSetName = Util.checkForTranslatedSetName(set_name);

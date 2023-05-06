@@ -70,8 +70,8 @@ public class ImportPricesFromYGOPROAPI {
 
 					JsonNode current = keyset.next();
 
-					int cardID = current.get("id").asInt();
-					String name = current.get("name").asText();
+					int cardID = Util.getIntOrNegativeOne(current,"id");
+					String name = Util.getStringOrNull(current,"name");
 
 					JsonNode sets = null;
 					Iterator<JsonNode> setIteraor = null;
@@ -104,12 +104,12 @@ public class ImportPricesFromYGOPROAPI {
 		}
 	}
 
-	public void insertCardSetsForOneCard(Iterator<JsonNode> setIteraor, String name, SQLiteConnection db)
+	public void insertCardSetsForOneCard(Iterator<JsonNode> setIterator, String name, SQLiteConnection db)
 			throws SQLException {
 		
-		while (setIteraor.hasNext()) {
+		while (setIterator.hasNext()) {
 
-			JsonNode currentSet = setIteraor.next();
+			JsonNode currentSet = setIterator.next();
 
 			String set_code = null;
 			String set_name = null;
@@ -117,13 +117,13 @@ public class ImportPricesFromYGOPROAPI {
 			String set_price = null;
 
 			try {
-				set_code = currentSet.get("set_code").asText();
-				set_name = currentSet.get("set_name").asText();
-				set_rarity = currentSet.get("set_rarity").asText();
-				set_price = currentSet.get("set_price").asText();
-				//set_rarity_code = currentSet.get("set_rarity_code").asText();
-				//set_edition = currentSet.get("set_edition").asText();
-				//set_url = currentSet.get("set_url").asText();
+				set_code = Util.getStringOrNull(currentSet,"set_code");
+				set_name = Util.getStringOrNull(currentSet,"set_name");
+				set_rarity = Util.getStringOrNull(currentSet,"set_rarity");
+				set_price = Util.getStringOrNull(currentSet,"set_price");
+				//set_rarity_code = Util.getStringOrNull(currentSet,"set_rarity_code");
+				//set_edition = Util.getStringOrNull(currentSet,"set_edition");
+				//set_url = Util.getStringOrNull(currentSet,"set_url");
 			} catch (Exception e) {
 				System.out.println("issue found on " + name);
 				continue;

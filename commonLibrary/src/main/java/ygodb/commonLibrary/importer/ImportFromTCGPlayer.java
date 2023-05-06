@@ -17,14 +17,6 @@ import ygodb.commonLibrary.connection.Util;
 
 public class ImportFromTCGPlayer {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
-		ImportFromTCGPlayer mainObj = new ImportFromTCGPlayer();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-		System.out.println("Import Complete");
-	}*/
-
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
 		Iterator<CSVRecord> it = CsvConnection.getIterator(

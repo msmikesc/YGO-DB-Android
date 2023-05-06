@@ -11,14 +11,6 @@ import ygodb.commonLibrary.connection.SQLiteConnection;
 
 public class ImportCardSetFromCSV {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
-		ImportCardSetFromCSV mainObj = new ImportCardSetFromCSV();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-		System.out.println("Import Complete");
-	}*/
-
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
 		String csvFileName = "cardsets";

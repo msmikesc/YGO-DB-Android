@@ -159,22 +159,22 @@ public class CsvConnection {
 
 	public static OwnedCard getOwnedCardFromDragonShieldCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
-		String folder = current.get("Folder Name").trim();
-		String name = current.get("Card Name").trim();
-		String quantity = current.get("Quantity").trim();
-		String setCode = current.get("Set Code").trim();
-		String setNumber = current.get("Card Number").trim();
-		String setName = current.get("Set Name").trim();
-		String condition = current.get("Condition").trim();
-		String printing = current.get("Printing").trim();
-		String priceBought = Util.normalizePrice(current.get("Price Bought"));
-		String dateBought = current.get("Date Bought").trim();
+		String folder = getStringOrNull(current,"Folder Name");
+		String name = getStringOrNull(current,"Card Name");
+		String quantity = getStringOrNull(current,"Quantity");
+		String setCode = getStringOrNull(current,"Set Code");
+		String setNumber = getStringOrNull(current,"Card Number");
+		String setName = getStringOrNull(current,"Set Name");
+		String condition = getStringOrNull(current,"Condition");
+		String printing = getStringOrNull(current,"Printing");
+		String priceBought = Util.normalizePrice(getStringOrNull(current,"Price Bought"));
+		String dateBought = getStringOrNull(current,"Date Bought");
 		
 		String colorCode = Util.defaultColorVariant;
 		
-		String priceLow = Util.normalizePrice(current.get("LOW"));
-		String priceMid = Util.normalizePrice(current.get("MID"));
-		String priceMarket = Util.normalizePrice(current.get("MARKET"));
+		String priceLow = Util.normalizePrice(getStringOrNull(current,"LOW"));
+		String priceMid = Util.normalizePrice(getStringOrNull(current,"MID"));
+		String priceMarket = Util.normalizePrice(getStringOrNull(current,"MARKET"));
 
 		if (printing.equals("Foil")) {
 			printing = "1st Edition";
@@ -255,23 +255,23 @@ public class CsvConnection {
 
 	public static OwnedCard getOwnedCardFromExportedCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
-		String folder = current.get("Folder Name").trim();
-		String name = current.get("Card Name").trim();
-		String quantity = current.get("Quantity").trim();
-		String setCode = current.get("Set Code").trim();
-		String setNumber = current.get("Card Number").trim();
-		String setName = current.get("Set Name").trim();
-		String condition = current.get("Condition").trim();
-		String printing = current.get("Printing").trim();
-		String priceBought = Util.normalizePrice(current.get("Price Bought").trim());
-		String dateBought = current.get("Date Bought").trim();
-		String rarity = current.get("Rarity").trim();
-		String rarityColorVariant = current.get("Rarity Color Variant").trim();
-		String rarityUnsure = current.get("Rarity Unsure").trim();
+		String folder = getStringOrNull(current,"Folder Name");
+		String name = getStringOrNull(current,"Card Name");
+		String quantity = getStringOrNull(current,"Quantity");
+		String setCode = getStringOrNull(current,"Set Code");
+		String setNumber = getStringOrNull(current,"Card Number");
+		String setName = getStringOrNull(current,"Set Name");
+		String condition = getStringOrNull(current,"Condition");
+		String printing = getStringOrNull(current,"Printing");
+		String priceBought = Util.normalizePrice(getStringOrNull(current,"Price Bought"));
+		String dateBought = getStringOrNull(current,"Date Bought");
+		String rarity = getStringOrNull(current,"Rarity");
+		String rarityColorVariant = getStringOrNull(current,"Rarity Color Variant");
+		String rarityUnsure = getStringOrNull(current,"Rarity Unsure");
 		String gamePlayCardUUID = getStringOrNull(current, "gamePlayCardUUID");
 		int passcode = getIntOrNegativeOne(current, "passcode");
 		
-		String UUID = current.get("UUID");
+		String UUID = getStringOrNull(current,"UUID");
 
 		if (printing.equals("Foil")) {
 			printing = "1st Edition";
@@ -313,10 +313,10 @@ public class CsvConnection {
 
 		String folder = "UnSynced Folder";
 
-		String items = current.get("ITEMS").trim();
-		String details = current.get("DETAILS").trim();
-		String price = current.get("PRICE").trim().replace("$", "");
-		String quantity = current.get("QUANTITY").trim();
+		String items = getStringOrNull(current,"ITEMS");
+		String details = getStringOrNull(current,"DETAILS");
+		String price = getStringOrNull(current,"PRICE").replace("$", "");
+		String quantity = getStringOrNull(current,"QUANTITY");
 		
 		String colorVariant = Util.defaultColorVariant;
 
@@ -370,6 +370,8 @@ public class CsvConnection {
 
 		String rarity = rarityConditionPrinting[0].replace("Rarity:", "").trim();
 
+		rarity = Util.checkForTranslatedRarity(rarity);
+
 		String printing = "Limited";
 
 		if (rarityConditionPrinting[1].contains("1st Edition")) {
@@ -394,7 +396,9 @@ public class CsvConnection {
 			setIdentified.rarityUnsure = 1;
 			setIdentified.colorVariant = Util.defaultColorVariant;
 			setIdentified.setName = setName;
-			setIdentified.setNumber = "";
+			setIdentified.setNumber = null;
+			setIdentified.gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
+
 		}
 
 		setIdentified.setRarity = rarity;
@@ -427,15 +431,6 @@ public class CsvConnection {
 				dateBought, setIdentified, passcode);
 
 		return card;
-	}
-
-	public static Integer getIntOrNull(CSVRecord current, String recordName) {
-		try {
-			Integer returnVal = Integer.parseInt(current.get(recordName));
-			return returnVal;
-		} catch (Exception e) {
-			return null;
-		}
 	}
 
 	public static Integer getIntOrNegativeOne(CSVRecord current, String recordName) {
@@ -502,14 +497,14 @@ public class CsvConnection {
 
 	public static void insertCardSetFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
 
-		String name = current.get("Name").trim();
-		String cardNumber = current.get("Card number").trim();
-		String rarity = current.get("Rarity").trim();
+		String name = getStringOrNull(current,"Name");
+		String cardNumber = getStringOrNull(current,"Card number");
+		String rarity = getStringOrNull(current,"Rarity");
 
 		String setName = null;
 
 		try {
-			setName = current.get("Set Name").trim();
+			setName = getStringOrNull(current,"Set Name");
 		} catch (Exception e) {
 			setName = defaultSetName;
 		}
@@ -521,7 +516,7 @@ public class CsvConnection {
 		String gamePlayCardUUID = UUIDAndName.getKey();
 		name = UUIDAndName.getValue();
 
-		db.replaceIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, null, name);
+		db.replaceIntoCardSetWithSoftPriceUpdate(cardNumber, rarity, setName, gamePlayCardUUID, null, name);
 	}
 
 	public static void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {

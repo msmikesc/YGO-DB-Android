@@ -235,6 +235,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		set.setName = rs.getString(getColumn(col,"setName"));
 		set.setRarity = rs.getString(getColumn(col,"setRarity"));
 		set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
+		set.setPriceUpdateTime = rs.getString(getColumn(col,"setPriceUpdateTime"));
 	}
 
 	@Override
@@ -660,6 +661,32 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException {
+		SQLiteDatabase connection = this.getInstance();
+
+		String setQuery = "select * from ownedCards where passcode = -1";
+
+		Cursor rs = connection.rawQuery(setQuery, null);
+		String[] col = rs.getColumnNames();
+
+		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+
+		while (rs.moveToNext()) {
+
+			OwnedCard current = new OwnedCard();
+
+			getAllOwnedCardFieldsFromRS(rs, col, current);
+
+			cardsInSetList.add(current);
+
+		}
+
+		rs.close();
+
+		return cardsInSetList;
+	}
+
+	@Override
 	public HashMap<String, ArrayList<OwnedCard>> getAllOwnedCardsForHashMap() {
 		SQLiteDatabase connection = this.getInstance();
 
@@ -953,6 +980,30 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public List<CardSet> getCardSetsForValues(String setNumber, String rarity, String setName) throws SQLException {
+		SQLiteDatabase connection = this.getInstance();
+
+		String setQuery = "select * from cardSets where UPPER(setName) = UPPER(?) " +
+				"and UPPER(setNumber) = UPPER(?) and UPPER(setRarity) = UPPER(?) ";
+
+		String[] params = new String[]{setName, setNumber, rarity};
+		Cursor rs = connection.rawQuery(setQuery, params);
+		String[] col = rs.getColumnNames();
+
+		ArrayList<CardSet> results = new ArrayList<>();
+
+		while (rs.moveToNext()) {
+			CardSet set = new CardSet();
+			getAllCardSetFieldsFromRS(rs, col, set);
+			results.add(set);
+		}
+
+		rs.close();
+
+		return results;
+	}
+
+	@Override
 	public ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName) {
 
 		SQLiteDatabase connection = this.getInstance();
@@ -1183,8 +1234,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		SQLiteDatabase connection = this.getInstance();
 
 		String gamePlayCard = "Replace into gamePlayCard(gamePlayCardUUID,title,type,passcode,lore," +
-				"attribute,race,linkValue,level,pendScale,atk,def,archetype) " +
-				"values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"attribute,race,linkValue,level,pendScale,atk,def,archetype,modificationDate) " +
+				"values(?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now','localtime'))";
 
 		SQLiteStatement statement = connection.compileStatement(gamePlayCard);
 
@@ -1224,6 +1275,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setNumber = card.setNumber;
 		String setName = card.setName;
 		String setRarity = card.setRarity;
+		int passcode = card.passcode;
 		
 		String UUID = card.UUID;
 
@@ -1242,7 +1294,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String ownedInsert = "update ownedCards set gamePlayCardUUID = ?,folderName = ?,cardName = ?,quantity = ?,"
 				+ "setCode = ?, setNumber = ?,setName = ?,setRarity = ?,setRarityColorVariant = ?,"
 				+ "condition = ?,editionPrinting = ?,dateBought = ?,priceBought = ?,rarityUnsure = ?, "
-				+ "modificationDate = datetime('now','localtime') "
+				+ "modificationDate = datetime('now','localtime'), passcode = ? "
 				+ "where UUID = ?";
 
 		SQLiteStatement statement = connection.compileStatement(ownedInsert);
@@ -1262,7 +1314,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		setStringOrNull(statement,13, normalizedPrice);
 		setIntegerOrNull(statement,14, rarityUnsure);
 		
-		setStringOrNull(statement,15, UUID);
+		setIntegerOrNull(statement,15, passcode);
+		setStringOrNull(statement,16, UUID);
 		
 		statement.execute();
 		statement.close();
@@ -1410,12 +1463,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void replaceIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
-								   String cardName) {
+	public void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
+													  String cardName) throws SQLException {
 
 		SQLiteDatabase connection = this.getInstance();
 
-		String setInsert = "replace into cardSets(gamePlayCardUUID,setNumber,setName,setRarity,setPrice, cardName) values(?,?,?,?,?,?)";
+		String setInsert = "INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName,setRarity, cardName) values(?,?,?,?,?)";
 
 		SQLiteStatement statementSetInsert = connection.compileStatement(setInsert);
 
@@ -1423,8 +1476,16 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		statementSetInsert.bindString(2, setNumber);
 		statementSetInsert.bindString(3, setName);
 		statementSetInsert.bindString(4, rarity);
-		statementSetInsert.bindString(5, price);
-		statementSetInsert.bindString(6, cardName);
+		statementSetInsert.bindString(5, cardName);
+
+		if(price != null && !Util.normalizePrice(price).equals(Util.normalizePrice("0"))){
+
+			List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
+
+			if(list.size() > 0 && list.get(0).setPrice != null) {
+				updateCardSetPriceWithSetName(setNumber, rarity, price, setName);
+			}
+		}
 
 		statementSetInsert.execute();
 		statementSetInsert.close();
@@ -1473,7 +1534,39 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	@Override
 	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName) throws SQLException {
-		return 0;
+		SQLiteDatabase connection = this.getInstance();
+
+		String update = "update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
+				+ " where setNumber = ? and setRarity = ? and setName = ?";
+
+		SQLiteStatement statement = connection.compileStatement(update);
+
+		statement.bindString(1, price);
+		statement.bindString(2, setNumber);
+		statement.bindString(3, rarity);
+		statement.bindString(4, setName);
+
+		statement.execute();
+		statement.close();
+
+		int updated = getUpdatedRowCount();
+
+		return updated;
+
+	}
+
+	@Override
+	public int getUpdatedRowCount() {
+
+		SQLiteDatabase connection = this.getInstance();
+
+		String query = "select changes()";
+
+		Cursor rs = connection.rawQuery(query,null);
+
+		rs.moveToNext();
+		int updated = rs.getInt(1);
+		return updated;
 	}
 
 	@Override

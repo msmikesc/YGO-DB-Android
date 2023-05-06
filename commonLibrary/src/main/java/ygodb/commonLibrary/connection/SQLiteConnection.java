@@ -21,7 +21,7 @@ public interface SQLiteConnection {
 
     ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException;
 
-    ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID);
+    ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
     ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUIDAndName(String gamePlayCardUUID, String setName, String cardName) throws SQLException;
 
@@ -45,6 +45,8 @@ public interface SQLiteConnection {
 
     ArrayList<OwnedCard> getAllOwnedCardsWithoutSetCode() throws SQLException;
 
+    ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException;
+
     HashMap<String, ArrayList<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException;
 
     ArrayList<OwnedCard> getRarityUnsureOwnedCards() throws SQLException;
@@ -53,7 +55,7 @@ public interface SQLiteConnection {
 
     ArrayList<CardSet> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) throws SQLException;
 
-    ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype);
+    ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype) throws SQLException;
 
     ArrayList<String> getSortedCardsInSetByName(String setName) throws SQLException;
 
@@ -68,6 +70,9 @@ public interface SQLiteConnection {
     int getCountQuantityManual() throws SQLException;
 
     CardSet getFirstCardSetForCardInSet(String cardName, String setName) throws SQLException;
+
+    List<CardSet> getCardSetsForValues(String setNumber, String rarity, String setName)
+            throws SQLException;
 
     ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName) throws SQLException;
 
@@ -91,8 +96,8 @@ public interface SQLiteConnection {
 
     void upsertOwnedCardBatch(OwnedCard card) throws SQLException;
 
-    void replaceIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
-                            String cardName) throws SQLException;
+    void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
+                                               String cardName) throws SQLException;
 
     void updateSetName(String original, String newName) throws SQLException;
 
@@ -100,6 +105,8 @@ public interface SQLiteConnection {
 
     int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName)
             throws SQLException;
+
+    int getUpdatedRowCount() throws SQLException;
 
     int updateCardSetPrice(String setNumber, String price) throws SQLException;
 }
