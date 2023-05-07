@@ -33,7 +33,7 @@ public interface SQLiteConnection {
 
     String getGamePlayCardUUIDFromTitle(String title) throws SQLException;
 
-    ArrayList<OwnedCard> getNumberOfOwnedCardsByName(String name) throws SQLException;
+    ArrayList<OwnedCard> getNumberOfOwnedCardsByGamePlayCardUUID(String name) throws SQLException;
 
     ArrayList<OwnedCard> getAllOwnedCards() throws SQLException;
 
@@ -53,9 +53,9 @@ public interface SQLiteConnection {
 
     ArrayList<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) throws SQLException;
 
-    ArrayList<CardSet> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) throws SQLException;
+    ArrayList<GamePlayCard> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) throws SQLException;
 
-    ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype) throws SQLException;
+    ArrayList<GamePlayCard> getDistinctCardNamesAndIdsByArchetype(String archetype) throws SQLException;
 
     ArrayList<String> getSortedCardsInSetByName(String setName) throws SQLException;
 

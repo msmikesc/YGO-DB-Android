@@ -420,7 +420,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getNumberOfOwnedCardsByName(String name) {
+	public ArrayList<OwnedCard> getNumberOfOwnedCardsByGamePlayCardUUID(String name) {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -428,7 +428,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				"group_concat(DISTINCT setName), MAX(dateBought) as maxDate, " +
 				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
 				"gamePlayCardUUID " +
-				"from ownedCards where UPPER(cardName) = UPPER(?) group by cardName";
+				"from ownedCards where gamePlayCardUUID = ? group by cardName";
 
 		String[] params = new String[]{name};
 
@@ -770,21 +770,25 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<CardSet> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) {
+	public ArrayList<GamePlayCard> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String setQuery = "select distinct cardName, gamePlayCardUUID from cardSets where setName = ?";
+		String setQuery = "select a.* from gamePlayCard a left join cardSets b " +
+				"on a.gamePlayCardUUID = b.gamePlayCardUUID " +
+				"where b.setName = ?";
 
 		String[] params = new String[]{setName};
 		Cursor rs = connection.rawQuery(setQuery, params);
 
-		ArrayList<CardSet> cardsInSetList = new ArrayList<>();
+		ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
+
+		String[] col = rs.getColumnNames();
 
 		while (rs.moveToNext()) {
 
-			CardSet current = new CardSet();
-			current.cardName = rs.getString(0);
-			current.gamePlayCardUUID = rs.getString(1);
+			GamePlayCard current = new GamePlayCard();
+
+			getAllGamePlayCardFieldsFromRS(rs, col, current);
 
 			cardsInSetList.add(current);
 
@@ -796,21 +800,23 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype) {
+	public ArrayList<GamePlayCard> getDistinctCardNamesAndIdsByArchetype(String archetype) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String setQuery = "select distinct title, gamePlayCardUUID from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
+		String setQuery = "select * from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
 
 		String[] params = new String[]{archetype, "%"+archetype+"%"};
 		Cursor rs = connection.rawQuery(setQuery, params);
 
-		ArrayList<CardSet> cardsInSetList = new ArrayList<>();
+		ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
+
+		String[] col = rs.getColumnNames();
 
 		while (rs.moveToNext()) {
 
-			CardSet current = new CardSet();
-			current.cardName = rs.getString(0);
-			current.gamePlayCardUUID = rs.getString(1);
+			GamePlayCard current = new GamePlayCard();
+
+			getAllGamePlayCardFieldsFromRS(rs, col, current);
 
 			cardsInSetList.add(current);
 		}

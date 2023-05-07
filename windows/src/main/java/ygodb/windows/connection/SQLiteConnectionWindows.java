@@ -297,7 +297,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getNumberOfOwnedCardsByName(String name) throws SQLException {
+	public ArrayList<OwnedCard> getNumberOfOwnedCardsByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -305,11 +305,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				"group_concat(DISTINCT setName), MAX(dateBought) as maxDate, " +
 				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
 				"gamePlayCardUUID " +
-				"from ownedCards where UPPER(cardName) = UPPER(?) group by cardName";
+				"from ownedCards where gamePlayCardUUID = ? group by cardName";
 
 		PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
 
-		setQueryStatement.setString(1, name);
+		setQueryStatement.setString(1, gamePlayCardUUID);
 
 		ResultSet rs = setQueryStatement.executeQuery();
 
@@ -542,23 +542,24 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<CardSet> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) throws SQLException {
+	public ArrayList<GamePlayCard> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) throws SQLException {
 		Connection connection = this.getInstance();
 
-		String setQuery = "select distinct cardName, gamePlayCardUUID from cardSets where setName = ?";
+		String setQuery = "select a.* from gamePlayCard a left join cardSets b " +
+				"on a.gamePlayCardUUID = b.gamePlayCardUUID " +
+				"where b.setName = ?";
 
 		PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
 		setQueryStatement.setString(1, setName);
 
 		ResultSet rs = setQueryStatement.executeQuery();
 
-		ArrayList<CardSet> cardsInSetList = new ArrayList<>();
+		ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
 
 		while (rs.next()) {
 
-			CardSet current = new CardSet();
-			current.cardName = rs.getString(1);
-			current.gamePlayCardUUID = rs.getString(2);
+			GamePlayCard current = new GamePlayCard();
+			getAllGamePlayCardFieldsFromRS(rs, current);
 
 			cardsInSetList.add(current);
 
@@ -570,23 +571,23 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<CardSet> getDistinctCardNamesAndIdsByArchetype(String archetype) throws SQLException {
+	public ArrayList<GamePlayCard> getDistinctCardNamesAndIdsByArchetype(String archetype) throws SQLException {
 		Connection connection = this.getInstance();
 
-		String setQuery = "select distinct title, gamePlayCardUUID from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
+		String setQuery = "select * from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
 
 		PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
-		setQueryStatement.setString(1, archetype);
+		setQueryStatement.setString(1, "%"+archetype+"%");
 
 		ResultSet rs = setQueryStatement.executeQuery();
 
-		ArrayList<CardSet> cardsInSetList = new ArrayList<>();
+		ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
 
 		while (rs.next()) {
 
-			CardSet current = new CardSet();
-			current.cardName = rs.getString(1);
-			current.gamePlayCardUUID = rs.getString(2);
+			GamePlayCard current = new GamePlayCard();
+
+			getAllGamePlayCardFieldsFromRS(rs, current);
 
 			cardsInSetList.add(current);
 
@@ -986,6 +987,16 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			return null;
 		}
 
+		getAllGamePlayCardFieldsFromRS(rs, current);
+
+		rs.close();
+		statementgamePlayCard.close();
+
+		return current;
+
+	}
+
+	private void getAllGamePlayCardFieldsFromRS(ResultSet rs, GamePlayCard current) throws SQLException {
 		current.gamePlayCardUUID = rs.getString(Const.gamePlayCardUUID);
 		current.cardName = rs.getString("title");
 		current.cardType = rs.getString("type");
@@ -1000,12 +1011,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		current.def = rs.getString("def");
 		current.archetype = rs.getString("archetype");
 		current.modificationDate = rs.getString("modificationDate");
-
-		rs.close();
-		statementgamePlayCard.close();
-
-		return current;
-
 	}
 
 	@Override
@@ -1024,20 +1029,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 			GamePlayCard current = new GamePlayCard();
 
-			current.gamePlayCardUUID = rs.getString(Const.gamePlayCardUUID);
-			current.cardName = rs.getString("title");
-			current.cardType = rs.getString("type");
-			current.passcode = rs.getInt("passcode");
-			current.desc = rs.getString("lore");
-			current.attribute = rs.getString("attribute");
-			current.race = rs.getString("race");
-			current.linkval = rs.getString("linkValue");
-			current.level = rs.getString("level");
-			current.scale = rs.getString("pendScale");
-			current.atk = rs.getString("atk");
-			current.def = rs.getString("def");
-			current.archetype = rs.getString("archetype");
-			current.modificationDate = rs.getString("modificationDate");
+			getAllGamePlayCardFieldsFromRS(rs, current);
 
 			results.add(current);
 		}

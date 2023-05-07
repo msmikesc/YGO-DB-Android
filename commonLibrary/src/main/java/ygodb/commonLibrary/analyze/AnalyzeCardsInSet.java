@@ -120,7 +120,7 @@ public class AnalyzeCardsInSet {
 	}
 
 	public void addAnalyzeDataForSet(HashMap<String, AnalyzeData> h, String setName, SQLiteConnection db) throws SQLException {
-		ArrayList<CardSet> list = db.getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(setName);
+		ArrayList<GamePlayCard> list = db.getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(setName);
 		boolean archetypeMode = false;
 
 		if (list.size() == 0) {
@@ -142,20 +142,13 @@ public class AnalyzeCardsInSet {
 
 		ArrayList<SetMetaData> setMetaData = db.getSetMetaDataFromSetName(setName);
 
-		for (CardSet currentCardSet : list) {
+		for (GamePlayCard currentCardSet : list) {
 
 			String currentCard = currentCardSet.cardName;
 			String gamePlayCardUUID = currentCardSet.gamePlayCardUUID;
+			int passcode = currentCardSet.passcode;
 
-			GamePlayCard gpc = db.getGamePlayCardByUUID(gamePlayCardUUID);
-
-			int passcode = -1;
-
-			if(gpc != null){
-				passcode = gpc.passcode;
-			}
-
-			ArrayList<OwnedCard> cardsList = db.getNumberOfOwnedCardsByName(currentCard);
+			ArrayList<OwnedCard> cardsList = db.getNumberOfOwnedCardsByGamePlayCardUUID(gamePlayCardUUID);
 
 			ArrayList<CardSet> rarityList = null;
 			if(!archetypeMode) {
