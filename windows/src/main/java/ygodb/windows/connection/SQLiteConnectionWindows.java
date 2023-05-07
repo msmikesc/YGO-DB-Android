@@ -150,7 +150,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		Connection connection = this.getInstance();
 
 		String setQuery = "Select * from cardSets a left join gamePlayCard b on a.gamePlayCardUUID = b.gamePlayCardUUID " +
-				"and b.title = a.cardName where a.gamePlayCardUUID=?";
+				"where a.gamePlayCardUUID=?";
 
 		PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
 		statementSetQuery.setString(1, gamePlayCardUUID);
@@ -174,20 +174,18 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUIDAndName(String gamePlayCardUUID, String setName, String cardName)
+	public ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName)
 			throws SQLException {
 
 		Connection connection = this.getInstance();
 
 		String setQuery = "Select * from cardSets a left join gamePlayCard b " +
-				"on a.gamePlayCardUUID = b.gamePlayCardUUID and b.title = a.cardName " +
-				"where a.gamePlayCardUUID=? and UPPER(a.setName) = UPPER(?) and " +
-				"UPPER(a.cardName) = UPPER(?)";
+				"on a.gamePlayCardUUID = b.gamePlayCardUUID " +
+				"where a.gamePlayCardUUID=? and UPPER(a.setName) = UPPER(?)";
 
 		PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
 		statementSetQuery.setString(1, gamePlayCardUUID);
 		statementSetQuery.setString(2, setName);
-		statementSetQuery.setString(3, cardName);
 
 		ResultSet rarities = statementSetQuery.executeQuery();
 
@@ -307,11 +305,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				"group_concat(DISTINCT setName), MAX(dateBought) as maxDate, " +
 				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
 				"gamePlayCardUUID " +
-				"from ownedCards where UPPER(TRIM(cardName)) = UPPER(?) group by cardName";
+				"from ownedCards where UPPER(cardName) = UPPER(?) group by cardName";
 
 		PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
 
-		setQueryStatement.setString(1, name.trim());
+		setQueryStatement.setString(1, name);
 
 		ResultSet rs = setQueryStatement.executeQuery();
 
@@ -881,13 +879,15 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		Connection connection = this.getInstance();
 
-		String distrinctQuery = "select cardSets.gamePlayCardUUID, cardname, type, setNumber, " +
-				"setRarity, cardSets.setName, releaseDate, archetype from cardSets join setData on setData.setName = cardSets.setName "
-				+ "join gamePlayCard on cardSets.cardName = gamePlayCard.title and gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID "
+		String distrinctQuery = "select cardSets.gamePlayCardUUID, cardname, type, setNumber,setRarity, " +
+				"cardSets.setName, releaseDate, archetype from cardSets " +
+				"join setData on setData.setName = cardSets.setName "
+				+ "join gamePlayCard on gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID "
 				+ "where cardName in (select cardName from "
 				+ "(Select DISTINCT cardName, setName from cardSets join gamePlayCard on " +
-				" gamePlayCard.title = cardSets.cardName and gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID where type <>'Token') "
-				+ "group by cardname having count(cardname) = 1) " + "order by releaseDate";
+				" gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID where type <>'Token') "
+				+ "group by cardname having count(cardname) = 1) "
+				+ "order by releaseDate";
 
 		PreparedStatement distrinctQueryStatement = connection.prepareStatement(distrinctQuery);
 
@@ -969,15 +969,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public GamePlayCard getGamePlayCardByNameAndUUID(String gamePlayCardUUID, String name) throws SQLException {
+	public GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException {
 		Connection connection = this.getInstance();
 
-		String gamePlayCard = "select * from gamePlayCard where gamePlayCardUUID = ? and UPPER(title) = UPPER(?)";
+		String gamePlayCard = "select * from gamePlayCard where gamePlayCardUUID = ?";
 
 		PreparedStatement statementgamePlayCard = connection.prepareStatement(gamePlayCard);
 
 		setStringOrNull(statementgamePlayCard, 1, gamePlayCardUUID);
-		setStringOrNull(statementgamePlayCard, 2, name);
 
 		ResultSet rs = statementgamePlayCard.executeQuery();
 

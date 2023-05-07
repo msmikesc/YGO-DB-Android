@@ -192,7 +192,7 @@ public class AddCardsViewModel extends ViewModel {
 
         if(mainSetCardSets == null){
             mainSetCardSets = AndroidUtil.getDBInstance().
-                    getRaritiesOfCardInSetByGamePlayCardUUIDAndName(gamePlayCardUUID, setName, cardName);
+                    getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
         }
 
         if(mainSetCardSets.size() == 1){

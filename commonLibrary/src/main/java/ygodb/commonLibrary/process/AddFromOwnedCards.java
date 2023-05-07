@@ -18,13 +18,13 @@ public class AddFromOwnedCards {
 			card.cardName = card.cardName.trim();
 			card.setName = card.setName.trim();
 
-			GamePlayCard gamePlayCard = db.getGamePlayCardByNameAndUUID(card.gamePlayCardUUID, card.cardName);
+			GamePlayCard gamePlayCard = db.getGamePlayCardByUUID(card.gamePlayCardUUID);
 
 			if (gamePlayCard == null) {
 				// check for skill card
 				String newCardName = card.cardName + " (Skill Card)";
 
-				gamePlayCard = db.getGamePlayCardByNameAndUUID(card.gamePlayCardUUID, newCardName);
+				gamePlayCard = db.getGamePlayCardByUUID(card.gamePlayCardUUID);
 
 				if (gamePlayCard != null) {
 					card.cardName = newCardName;
@@ -43,8 +43,8 @@ public class AddFromOwnedCards {
 				}
 			}
 
-			ArrayList<CardSet> sets = db.getRaritiesOfCardInSetByGamePlayCardUUIDAndName(card.gamePlayCardUUID, card.setName,
-					card.cardName);
+			ArrayList<CardSet> sets = db.getRaritiesOfCardInSetByGamePlayCardUUID(card.gamePlayCardUUID, card.setName
+			);
 
 			if (sets.size() == 0) {
 				// add it

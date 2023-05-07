@@ -147,7 +147,7 @@ public class AnalyzeCardsInSet {
 			String currentCard = currentCardSet.cardName;
 			String gamePlayCardUUID = currentCardSet.gamePlayCardUUID;
 
-			GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(gamePlayCardUUID,currentCard);
+			GamePlayCard gpc = db.getGamePlayCardByUUID(gamePlayCardUUID);
 
 			int passcode = -1;
 
@@ -159,7 +159,7 @@ public class AnalyzeCardsInSet {
 
 			ArrayList<CardSet> rarityList = null;
 			if(!archetypeMode) {
-				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUIDAndName(gamePlayCardUUID, setName, currentCard);
+				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
 			}
 			else{
 				rarityList = db.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID);

@@ -254,7 +254,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = "Select * from cardSets a left join gamePlayCard b on a.gamePlayCardUUID = b.gamePlayCardUUID " +
-				"and b.title = a.cardName where a.gamePlayCardUUID=?";
+				"where a.gamePlayCardUUID=?";
 
 		String[] params = new String[]{gamePlayCardUUID};
 
@@ -279,16 +279,15 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUIDAndName(String gamePlayCardUUID, String setName, String cardName) {
+	public ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) {
 
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = "Select * from cardSets a left join gamePlayCard b " +
-				"on a.gamePlayCardUUID = b.gamePlayCardUUID and " +
-				"b.title = a.cardName where a.gamePlayCardUUID=? and " +
-				"UPPER(a.setName) = UPPER(?) and UPPER(a.cardName) = UPPER(?)";
+				"on a.gamePlayCardUUID = b.gamePlayCardUUID " +
+				"where a.gamePlayCardUUID=? and UPPER(a.setName) = UPPER(?)";
 
-		String[] params = new String[]{gamePlayCardUUID, setName, cardName};
+		String[] params = new String[]{gamePlayCardUUID, setName};
 
 		Cursor rs = connection.rawQuery(setQuery, params);
 
@@ -429,9 +428,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				"group_concat(DISTINCT setName), MAX(dateBought) as maxDate, " +
 				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
 				"gamePlayCardUUID " +
-				"from ownedCards where UPPER(TRIM(cardName)) = UPPER(?) group by cardName";
+				"from ownedCards where UPPER(cardName) = UPPER(?) group by cardName";
 
-		String[] params = new String[]{name.trim()};
+		String[] params = new String[]{name};
 
 		Cursor rs = connection.rawQuery(setQuery, params);
 
@@ -1097,10 +1096,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String query = "select cardSets.gamePlayCardUUID, cardname, type, setNumber,setRarity, " +
 				"cardSets.setName, releaseDate, archetype from cardSets " +
 				"join setData on setData.setName = cardSets.setName "
-				+ "join gamePlayCard on cardSets.cardName = gamePlayCard.title and gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID "
+				+ "join gamePlayCard on gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID "
 				+ "where cardName in (select cardName from "
 				+ "(Select DISTINCT cardName, setName from cardSets join gamePlayCard on " +
-				" gamePlayCard.title = cardSets.cardName and " +
 				" gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID where type <>'Token') "
 				+ "group by cardname having count(cardname) = 1) "
 				+ "order by releaseDate";
@@ -1185,12 +1183,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public GamePlayCard getGamePlayCardByNameAndUUID(String gamePlayCardUUID, String name) {
+	public GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String gamePlayCard = "select * from gamePlayCard where gamePlayCardUUID = ? and UPPER(title) = UPPER(?)";
+		String gamePlayCard = "select * from gamePlayCard where gamePlayCardUUID = ?";
 
-		String[] params = new String[]{gamePlayCardUUID, name};
+		String[] params = new String[]{gamePlayCardUUID};
 		Cursor rs = connection.rawQuery(gamePlayCard, params);
 		String[] col = rs.getColumnNames();
 

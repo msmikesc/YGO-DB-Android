@@ -23,7 +23,7 @@ public interface SQLiteConnection {
 
     ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
-    ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUIDAndName(String gamePlayCardUUID, String setName, String cardName) throws SQLException;
+    ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) throws SQLException;
 
     ArrayList<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy);
 
@@ -84,7 +84,7 @@ public interface SQLiteConnection {
 
     void replaceIntoCardSetMetaData(String set_name, String set_code, int num_of_cards, String tcg_date) throws SQLException;
 
-    GamePlayCard getGamePlayCardByNameAndUUID(String gamePlayCardUUID, String name) throws SQLException;
+    GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException;
 
     List<GamePlayCard> getAllGamePlayCard() throws SQLException;
 

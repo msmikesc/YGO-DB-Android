@@ -216,7 +216,7 @@ public class CsvConnection {
 				setIdentified.rarityUnsure = existingCard.rarityUnsure;
 
 				int passcode = -1;
-				GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(setIdentified.gamePlayCardUUID, name);
+				GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
 
 				if(gpc == null){
 					System.out.println("Unknown gamePlayCard for " + name);
@@ -240,7 +240,7 @@ public class CsvConnection {
 		setIdentified.colorVariant = colorCode;
 
 		int passcode = -1;
-		GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(setIdentified.gamePlayCardUUID, name);
+		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
 
 		if(gpc == null){
 			System.out.println("Unknown gamePlayCard for " + name);
@@ -290,7 +290,7 @@ public class CsvConnection {
 
 		if(passcode == -1) {
 
-			GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(gamePlayCardUUID, name);
+			GamePlayCard gpc = db.getGamePlayCardByUUID(gamePlayCardUUID);
 
 			if (gpc == null) {
 				System.out.println("Unknown gamePlayCard for " + name);
@@ -424,7 +424,7 @@ public class CsvConnection {
 		String dateBought = java.time.LocalDate.now().toString();
 
 		int passcode = -1;
-		GamePlayCard gpc = db.getGamePlayCardByNameAndUUID(setIdentified.gamePlayCardUUID, name);
+		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
 
 		if(gpc == null){
 			System.out.println("Unknown gamePlayCard for " + name);
