@@ -179,8 +179,10 @@ public class CsvConnection {
 		if (printing.equals("Foil")) {
 			printing = "1st Edition";
 		}
-		
+
+		name = Util.checkForTranslatedCardName(name);
 		setName = Util.checkForTranslatedSetName(setName);
+		setNumber = Util.checkForTranslatedSetNumber(setNumber);
 
 		ArrayList<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(setNumber,
 				priceBought, dateBought, folder, condition, printing, db);
@@ -272,6 +274,10 @@ public class CsvConnection {
 		int passcode = getIntOrNegativeOne(current, "passcode");
 		
 		String UUID = getStringOrNull(current,"UUID");
+
+		name = Util.checkForTranslatedCardName(name);
+		rarity = Util.checkForTranslatedRarity(rarity);
+		passcode = Util.checkForTranslatedPasscode(passcode);
 
 		if (printing.equals("Foil")) {
 			printing = "1st Edition";
@@ -370,7 +376,9 @@ public class CsvConnection {
 
 		String rarity = rarityConditionPrinting[0].replace("Rarity:", "").trim();
 
+		name = Util.checkForTranslatedCardName(name);
 		rarity = Util.checkForTranslatedRarity(rarity);
+		setName = Util.checkForTranslatedSetName(setName);
 
 		String printing = "Limited";
 
@@ -385,8 +393,6 @@ public class CsvConnection {
 				.replace("1st Edition", "").replace("Condition:", "").replaceAll("\\s", "")
 				.replace("LightlyPlayed", "LightPlayed").replace("ModeratelyPlayed", "Played")
 				.replace("HeavilyPlayed", "Poor").replace("Damaged", "Poor");
-		
-		setName = Util.checkForTranslatedSetName(setName);
 
 		CardSet setIdentified = db.getFirstCardSetForCardInSet(name, setName);
 
@@ -456,7 +462,7 @@ public class CsvConnection {
 		}
 	}
 
-	public static void insertGamePlayCardFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
+	public static void insertGamePlayCardFromCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
 		String name = getStringOrNull(current, "Card Name");
 		String type = getStringOrNull(current, "Card Type");
@@ -472,6 +478,9 @@ public class CsvConnection {
 		String archetype = getStringOrNull(current, "Archetype");
 
 		GamePlayCard GPC = new GamePlayCard();
+
+		name = Util.checkForTranslatedCardName(name);
+		passcode = Util.checkForTranslatedPasscode(passcode);
 
 		GPC.cardName = name;
 		GPC.cardType = type;
@@ -505,11 +514,18 @@ public class CsvConnection {
 
 		try {
 			setName = getStringOrNull(current,"Set Name");
+
+			if(setName == null){
+				setName = defaultSetName;
+			}
 		} catch (Exception e) {
 			setName = defaultSetName;
 		}
-		
+
+		name = Util.checkForTranslatedCardName(name);
+		rarity = Util.checkForTranslatedRarity(rarity);
 		setName = Util.checkForTranslatedSetName(setName);
+		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
 
 		Pair<String, String> UUIDAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
 

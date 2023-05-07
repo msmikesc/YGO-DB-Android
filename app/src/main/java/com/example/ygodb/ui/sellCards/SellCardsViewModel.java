@@ -158,7 +158,7 @@ public class SellCardsViewModel extends ViewModel {
             return "0.25";
         }
 
-        return "0.00";
+        return "1.00";
 
     }
 

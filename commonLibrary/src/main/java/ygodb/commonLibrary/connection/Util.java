@@ -8,6 +8,7 @@ import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.UUID;
 
 import javafx.util.Pair;
@@ -22,11 +23,14 @@ public class Util {
 	
 	private static HashMap<String, String> setNameMap = null;
 	private static HashMap<String, String> rarityMap = null;
+	private static HashMap<String, String> setNumberMap = null;
+	private static HashMap<String, String> cardNameMap = null;
+	private static HashMap<Integer, Integer> passcodeMap = null;
 
 
 	public static HashMap<String, String> getSetNameMapInstance() {
 		if (setNameMap == null) {
-			setNameMap = new HashMap<String,String>();
+			setNameMap = new HashMap<>();
 
 			setNameMap.put("King of Games: Yugi's Legendary Decks", "Yugi's Legendary Decks");
 			setNameMap.put("Yugi'S Legendary Decks", "Yugi's Legendary Decks");
@@ -96,7 +100,7 @@ public class Util {
 			setNameMap.put("Advent Calendar 2018", "Yu-Gi-Oh! Advent Calendar (2018)");
 			setNameMap.put("The Legend of Blue Eyes White Dragon", "Legend of Blue Eyes White Dragon");
 			setNameMap.put("Speed Duel Decks: Ultimate Predators", "Speed Duel Starter Decks: Ultimate Predators");
-			//setNameMap.put("", "");
+			setNameMap.put("Structure Deck: Marik (TCG)", "Structure Deck: Marik");
 			//setNameMap.put("", "");
 			//setNameMap.put("", "");
 			//setNameMap.put("", "");
@@ -158,7 +162,7 @@ public class Util {
 
 	public static HashMap<String, String> getRarityMapInstance() {
 		if (rarityMap == null) {
-			rarityMap = new HashMap<String,String>();
+			rarityMap = new HashMap<>();
 
 			rarityMap.put("Collectors Rare", "Collector's Rare");
 			rarityMap.put("URPR", "Ultra Rare (Pharaoh's Rare)");
@@ -176,6 +180,86 @@ public class Util {
 		}
 
 		return rarityMap;
+	}
+
+	public static HashMap<String, String> getSetNumberMapInstance() {
+		if (setNumberMap == null) {
+			setNumberMap = new HashMap<>();
+
+			setNumberMap.put("GTP2-EN176", "GFP2-EN176");
+			setNumberMap.put("SSD-E001", "SDD-E001");
+			setNumberMap.put("SSD-E002", "SDD-E002");
+			setNumberMap.put("SSD-E003", "SDD-E003");
+			setNumberMap.put("OTPT-EN001", "OPTP-EN001");
+
+			//setNumberMap.put("", "");
+
+		}
+
+		return setNumberMap;
+	}
+
+	public static HashMap<Integer, Integer> getPasscodeMapInstance() {
+		if (passcodeMap == null) {
+			passcodeMap = new HashMap<>();
+
+			passcodeMap.put(74677427, 74677422);
+			passcodeMap.put(89943724, 89943723);
+
+
+			//passcodeMap.put("", "");
+
+		}
+
+		return passcodeMap;
+	}
+
+	public static HashMap<String, String> getCardNameMapInstance() {
+		if (cardNameMap == null) {
+			cardNameMap = new HashMap<>();
+
+			cardNameMap.put("after genocide","After the Struggle");
+			cardNameMap.put("amazon archer" ,"Amazoness Archer");
+			cardNameMap.put("armityle the chaos phantom","Armityle the Chaos Phantasm");
+			cardNameMap.put("big core" ,"B.E.S. Big Core");
+			cardNameMap.put("cliff the trap remover","Dark Scorpion - Cliff the Trap Remover");
+			cardNameMap.put("dark assassin","Dark Assailant");
+			cardNameMap.put("dark trap hole","Darkfall");
+			cardNameMap.put("forbidden graveyard","Silent Graveyard");
+			cardNameMap.put("frog the jam","Slime Toad");
+			cardNameMap.put("harpie's brother","Sky Scout");
+			cardNameMap.put("hidden book of spell","Hidden Spellbook");
+			cardNameMap.put("judgment of the pharaoh","Judgment of Pharaoh");
+			cardNameMap.put("kinetic soldier","Cipher Soldier");
+			cardNameMap.put("marie the fallen one","Darklord Marie");
+			cardNameMap.put("metaphysical regeneration","Supernatural Regeneration");
+			cardNameMap.put("null and void","Muko");
+			cardNameMap.put("nurse reficule the fallen one","Darklord Nurse Reficule");
+			cardNameMap.put("oscillo hero #2","Wattkid");
+			cardNameMap.put("pigeonholing books of spell","Spellbook Organization");
+			cardNameMap.put("red-eyes b. chick","Black Dragon's Chick");
+			cardNameMap.put("red-eyes b. dragon","Red-Eyes Black Dragon");
+			cardNameMap.put("red-moon baby","Vampire Baby");
+			cardNameMap.put("trial of hell","Trial of Nightmare");
+			cardNameMap.put("d. d. assailant","D.D. Assailant");
+			cardNameMap.put("d. d. borderline","D.D. Borderline");
+			cardNameMap.put("d. d. designator","D.D. Designator");
+			cardNameMap.put("d. d. scout plane","D.D. Scout Plane");
+			cardNameMap.put("d. d. trainer","D.D. Trainer");
+			cardNameMap.put("d. d. warrior lady","D.D. Warrior Lady");
+			cardNameMap.put("gradius's option","Gradius' Option");
+			cardNameMap.put("hundred-eyes dragon","Hundred Eyes Dragon");
+			cardNameMap.put("necrolancer the timelord","Necrolancer the Time-lord");
+			cardNameMap.put("sephylon,the Ultimate Time Lord","Sephylon, the Ultimate Timelord");
+			cardNameMap.put("winged dragon	Guardian of the Fortress #1","Winged Dragon, Guardian of the Fortress #1");
+			cardNameMap.put("blackwing  armed wing","Blackwing Armed Wing");
+			cardNameMap.put("b. skull dragon","Black Skull Dragon");
+
+			//cardNameMap.put("", "");
+
+		}
+
+		return cardNameMap;
 	}
 	
 	public static String flipStructureEnding(String input, String match) {
@@ -241,6 +325,44 @@ public class Util {
 
 		return newRarity;
 	}
+
+	public static String checkForTranslatedSetNumber(String setNumber) {
+		HashMap<String, String> instance = getSetNumberMapInstance();
+
+		String newSetNumber = instance.get(setNumber);
+
+		if(newSetNumber == null) {
+			return setNumber;
+		}
+
+		return newSetNumber;
+	}
+
+
+
+	public static String checkForTranslatedCardName(String cardName) {
+		HashMap<String, String> instance = getCardNameMapInstance();
+
+		String newName = instance.get(cardName.toLowerCase(Locale.ROOT));
+
+		if(newName == null) {
+			return cardName;
+		}
+
+		return newName;
+	}
+
+	public static int checkForTranslatedPasscode(int passcode) {
+		HashMap<Integer, Integer> instance = getPasscodeMapInstance();
+
+		Integer newPasscode = instance.get(passcode);
+
+		if(newPasscode == null) {
+			return passcode;
+		}
+
+		return newPasscode;
+	}
 	
 	public static OwnedCard formOwnedCard(String folder, String name, String quantity, String setCode, String condition,
 			String printing, String priceBought, String dateBought, CardSet setIdentified, int passcode) {
@@ -271,7 +393,8 @@ public class Util {
 			String condition, String printing, String priceBought, String dateBought, OwnedCard existingCard) {
 		if (setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
 				&& dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
-				&& condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)) {
+				&& condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
+				&& name.equals(existingCard.cardName) && setCode.equals(existingCard.setCode)) {
 			return true;
 		}
 		return false;
@@ -283,6 +406,7 @@ public class Util {
 		if (setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
 				&& dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
 				&& condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
+				&& name.equals(existingCard.cardName) && setCode.equals(existingCard.setCode)
 				&& colorVariant.equals(existingCard.colorVariant)) {
 			return true;
 		}
@@ -351,21 +475,6 @@ public class Util {
 		price = price.setScale(2, RoundingMode.HALF_UP);
 
 		return price.toString();
-	}
-
-	public static CardSet getFromOwnedCard(OwnedCard o) {
-		CardSet c = new CardSet();
-
-		c.cardName = o.cardName;
-		c.colorVariant = o.colorVariant;
-		c.gamePlayCardUUID = o.gamePlayCardUUID;
-		c.rarityUnsure = o.rarityUnsure;
-		c.setName = o.setName;
-		c.setNumber = o.setNumber;
-		c.setRarity = o.setRarity;
-		c.setPrice = o.setRarity;
-
-		return c;
 	}
 
 	public static CardSet findRarity(String priceBought, String dateBought, String folderName, String condition,
@@ -547,23 +656,6 @@ public class Util {
 			}
 
 		}
-	}
-
-	public static Pair<String, String> getGamePlayCardUUIDFromTitleWithSkillCheck(String name, SQLiteConnection db) throws SQLException {
-		String gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
-		// try skill card
-		if (gamePlayCardUUID == null) {
-			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name + " (Skill Card)");
-			if (gamePlayCardUUID != null) {
-				name = name + " (Skill Card)";
-			}
-		}
-
-		if (gamePlayCardUUID == null) {
-			System.out.println("Unable to find valid gamePlayCardUUID for :" + name);
-		}
-
-		return new Pair<>(gamePlayCardUUID, name);
 	}
 
 	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(String name, SQLiteConnection db) throws SQLException {

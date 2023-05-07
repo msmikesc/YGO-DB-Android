@@ -129,9 +129,10 @@ public class ImportPricesFromYGOPROAPI {
 				continue;
 			}
 
+			name = Util.checkForTranslatedCardName(name);
 			set_rarity = Util.checkForTranslatedRarity(set_rarity);
-			
 			set_name = Util.checkForTranslatedSetName(set_name);
+			set_code = Util.checkForTranslatedSetNumber(set_code);
 			
 			set_price = Util.normalizePrice(set_price);
 			
@@ -155,7 +156,7 @@ public class ImportPricesFromYGOPROAPI {
 						List<String> setNamesList = NameUpdateMap.get(set_name);
 						
 						if(setNamesList == null) {
-							setNamesList = new ArrayList<String>();
+							setNamesList = new ArrayList<>();
 							NameUpdateMap.put(set_name, setNamesList);
 						}
 						setNamesList.add(name);

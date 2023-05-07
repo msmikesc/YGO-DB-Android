@@ -395,7 +395,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		SQLiteDatabase connection = this.getInstance();
 
-		String setQuery = "Select * from gamePlayCard where title=?";
+		String setQuery = "Select * from gamePlayCard where UPPER(title)=UPPER(?)";
 
 		String[] params = new String[]{title};
 
@@ -635,7 +635,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCardsWithoutSetCode() {
+	public ArrayList<OwnedCard> getAllOwnedCardsWithoutSetNumber() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = "select * from ownedCards where setCode is null";

@@ -273,7 +273,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		Connection connection = this.getInstance();
 
-		String setQuery = "Select * from gamePlayCard where title=?";
+		String setQuery = "Select * from gamePlayCard where UPPER(title)=UPPER(?)";
 
 		PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
 		statementSetQuery.setString(1, title);
@@ -401,10 +401,10 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCardsWithoutSetCode() throws SQLException {
+	public ArrayList<OwnedCard> getAllOwnedCardsWithoutSetNumber() throws SQLException {
 		Connection connection = this.getInstance();
 
-		String setQuery = "select * from ownedCards where setCode is null";
+		String setQuery = "select * from ownedCards where setNumber is null";
 
 		PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
 

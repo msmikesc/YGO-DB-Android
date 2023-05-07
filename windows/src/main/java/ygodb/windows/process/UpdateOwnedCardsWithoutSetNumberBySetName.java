@@ -10,10 +10,10 @@ import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.connection.Util;
 import ygodb.windows.connection.WindowsUtil;
 
-public class UpdateOwnedCardsWithoutSetCodeBySetName {
+public class UpdateOwnedCardsWithoutSetNumberBySetName {
 
 	public static void main(String[] args) throws SQLException {
-		UpdateOwnedCardsWithoutSetCodeBySetName mainObj = new UpdateOwnedCardsWithoutSetCodeBySetName();
+		UpdateOwnedCardsWithoutSetNumberBySetName mainObj = new UpdateOwnedCardsWithoutSetNumberBySetName();
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
@@ -23,7 +23,7 @@ public class UpdateOwnedCardsWithoutSetCodeBySetName {
 
 	public void run(SQLiteConnection db) throws SQLException {
 
-		ArrayList<OwnedCard> cards = db.getAllOwnedCardsWithoutSetCode();
+		ArrayList<OwnedCard> cards = db.getAllOwnedCardsWithoutSetNumber();
 		
 		int count = 0;
 

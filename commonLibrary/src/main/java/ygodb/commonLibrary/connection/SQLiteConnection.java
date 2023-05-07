@@ -43,7 +43,7 @@ public interface SQLiteConnection {
 
     ArrayList<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch);
 
-    ArrayList<OwnedCard> getAllOwnedCardsWithoutSetCode() throws SQLException;
+    ArrayList<OwnedCard> getAllOwnedCardsWithoutSetNumber() throws SQLException;
 
     ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException;
 

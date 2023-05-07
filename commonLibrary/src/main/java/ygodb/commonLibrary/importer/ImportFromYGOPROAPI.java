@@ -114,6 +114,9 @@ public class ImportFromYGOPROAPI {
 
 		GamePlayCard GPC = new GamePlayCard();
 
+		name = Util.checkForTranslatedCardName(name);
+		passcode = Util.checkForTranslatedPasscode(passcode);
+
 		GPC.cardName = name;
 		GPC.cardType = type;
 		GPC.archetype = archetype;
@@ -169,9 +172,10 @@ public class ImportFromYGOPROAPI {
 
 			//set_price = Util.getAdjustedPriceFromRarity(set_rarity, set_price);
 
+			name = Util.checkForTranslatedCardName(name);
 			set_rarity = Util.checkForTranslatedRarity(set_rarity);
-
 			set_name = Util.checkForTranslatedSetName(set_name);
+			set_code = Util.checkForTranslatedSetNumber(set_code);
 
 			db.replaceIntoCardSetWithSoftPriceUpdate(set_code, set_rarity, set_name, gamePlayCardUUID, set_price, name);
 

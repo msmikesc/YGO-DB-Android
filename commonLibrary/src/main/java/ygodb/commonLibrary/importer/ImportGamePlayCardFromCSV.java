@@ -11,14 +11,6 @@ import java.sql.SQLException;
 
 public class ImportGamePlayCardFromCSV {
 
-	/*
-	public static void main(String[] args) throws SQLException, IOException {
-		ImportGamePlayCardFromCSV mainObj = new ImportGamePlayCardFromCSV();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-		System.out.println("Import Complete");
-	}*/
-
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 		
 		String csvFileName = "gamePlayCards";
@@ -31,7 +23,7 @@ public class ImportGamePlayCardFromCSV {
 
 			CSVRecord current = it.next();
 
-			CsvConnection.insertGamePlayCardFromCSV(current, csvFileName, db);
+			CsvConnection.insertGamePlayCardFromCSV(current, db);
 		}
 
 	}
