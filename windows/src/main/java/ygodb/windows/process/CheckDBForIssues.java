@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.connection.Util;
+import ygodb.commonLibrary.utility.Util;
 import ygodb.windows.connection.WindowsUtil;
 
 public class CheckDBForIssues {
@@ -26,7 +26,7 @@ public class CheckDBForIssues {
 
 		for (String setName : setsList) {
 
-			if (setName.contains("Tip Card") || setName.contains("(POR)")) {
+			if (setName.contains("Tip Card") || setName.contains("(POR)") || setName.equals("Redemption Replacement")) {
 				continue;
 			}
 

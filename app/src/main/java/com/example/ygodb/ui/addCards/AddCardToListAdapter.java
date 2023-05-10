@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.connection.Util;
+import ygodb.commonLibrary.utility.Util;
 
 import java.io.InputStream;
 import java.util.ArrayList;

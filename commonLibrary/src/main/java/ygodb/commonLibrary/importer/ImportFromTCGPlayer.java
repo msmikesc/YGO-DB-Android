@@ -13,7 +13,7 @@ import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.connection.CsvConnection;
 import ygodb.commonLibrary.connection.DatabaseHashMap;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.connection.Util;
+import ygodb.commonLibrary.utility.Util;
 
 public class ImportFromTCGPlayer {
 

@@ -30,7 +30,7 @@ import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.FileHelper;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.connection.Util;
+import ygodb.commonLibrary.utility.Util;
 import ygodb.commonLibrary.constant.Const;
 
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
@@ -1358,8 +1358,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		// Insert a corresponding entry into the soldCards table
 		String soldInsert = "INSERT INTO soldCards (gamePlayCardUUID, cardName, quantity, setCode, setNumber, " +
 				"setName, setRarity, setRarityColorVariant, condition, editionPrinting, dateBought, " +
-				"priceBought, dateSold, priceSold, UUID, creationDate, modificationDate) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now','localtime'))";
+				"priceBought, dateSold, priceSold, UUID, creationDate, modificationDate, passcode) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now','localtime'), ?)";
 		SQLiteStatement statement = connection.compileStatement(soldInsert);
 		setStringOrNull(statement,1, card.gamePlayCardUUID);
 		setStringOrNull(statement,2, card.cardName);
@@ -1377,6 +1377,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		setStringOrNull(statement,14, priceSold);
 		setStringOrNull(statement,15, card.UUID);
 		setStringOrNull(statement,16, card.creationDate);
+		setIntegerOrNull(statement,17, card.passcode);
 		statement.execute();
 		statement.close();
 	}

@@ -18,7 +18,7 @@ import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.connection.Util;
+import ygodb.commonLibrary.utility.Util;
 
 import java.sql.SQLException;
 
@@ -61,6 +61,8 @@ public class ImportFromYGOPROAPI {
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
+
+				System.out.println("Finished reading from API");
 
 				inline = null;
 

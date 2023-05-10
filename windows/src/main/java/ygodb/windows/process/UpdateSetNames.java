@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.connection.Util;
+import ygodb.commonLibrary.utility.Util;
 import ygodb.windows.connection.WindowsUtil;
 
 public class UpdateSetNames {

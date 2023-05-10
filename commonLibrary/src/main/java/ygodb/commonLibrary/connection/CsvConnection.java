@@ -1,13 +1,6 @@
 package ygodb.commonLibrary.connection;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -25,6 +18,7 @@ import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
+import ygodb.commonLibrary.utility.Util;
 
 public class CsvConnection {
 
@@ -40,6 +34,17 @@ public class CsvConnection {
 		Iterator<CSVRecord> it = parser.iterator();
 
 		return it;
+	}
+
+	public static CSVParser getParser(InputStream input, Charset charset) throws IOException {
+
+		BufferedReader fr = new BufferedReader(new InputStreamReader(input, charset));
+
+		skipByteOrderMark(fr);
+
+		CSVParser parser = CSVFormat.DEFAULT.withHeader().parse(fr);
+
+		return parser;
 	}
 
 	private static void skipByteOrderMark(Reader reader) throws IOException {

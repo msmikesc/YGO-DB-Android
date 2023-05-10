@@ -1,159 +1,73 @@
-package ygodb.commonLibrary.connection;
+package ygodb.commonLibrary.utility;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 import javafx.util.Pair;
 import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.bean.Rarity;
+import ygodb.commonLibrary.connection.DatabaseHashMap;
+import ygodb.commonLibrary.connection.SQLiteConnection;
 
 public class Util {
 	
 	public static String defaultColorVariant = "-1";
 	
-	private static HashMap<String, String> setNameMap = null;
+	private static KeyUpdateMap setNameMap = null;
 	private static HashMap<String, String> rarityMap = null;
 	private static HashMap<String, String> setNumberMap = null;
 	private static HashMap<String, String> cardNameMap = null;
 	private static HashMap<Integer, Integer> passcodeMap = null;
 
+	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
 
-	public static HashMap<String, String> getSetNameMapInstance() {
+	public static QuadKeyUpdateMap getQuadKeyUpdateMapInstance() {
+		if (quadKeyUpdateMap == null) {
+
+			try {
+				String filename = "quadUpdateMapping.csv";
+
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
+
+				quadKeyUpdateMap = new QuadKeyUpdateMap(inputStream, "|");
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
+
+		return quadKeyUpdateMap;
+	}
+
+	public static List<String> checkForTranslatedQuadKey(String cardName, String setNumber, String rarity, String setName) {
+		QuadKeyUpdateMap instance = getQuadKeyUpdateMapInstance();
+
+		return instance.getValues(cardName, setNumber, rarity, setName);
+	}
+
+	public static KeyUpdateMap getSetNameMapInstance() {
 		if (setNameMap == null) {
-			setNameMap = new HashMap<>();
 
-			setNameMap.put("King of Games: Yugi's Legendary Decks", "Yugi's Legendary Decks");
-			setNameMap.put("Yugi'S Legendary Decks", "Yugi's Legendary Decks");
-			setNameMap.put("Legendary Collection 2", "Legendary Collection 2: The Duel Academy Years Mega Pack");
-			setNameMap.put("2018 Mega-Tins Mega Pack", "2018 Mega-Tin Mega Pack");
-			setNameMap.put("2017 Mega-Tins Mega Pack", "2017 Mega-Tin Mega Pack");
-			setNameMap.put("2016 Mega-Tins Mega Pack", "2016 Mega-Tin Mega Pack");
-			setNameMap.put("2015 Mega-Tins Mega Pack", "2015 Mega-Tin Mega Pack");
-			setNameMap.put("2014 Mega-Tins Mega Pack", "2014 Mega-Tin Mega Pack");
-			setNameMap.put("Return of the Duelist SE", "Return of the Duelist: Special Edition");
-			setNameMap.put("Duelist Pack 7: Jesse Anderson", "Duelist Pack: Jesse Anderson");
-			setNameMap.put("Yu-Gi-Oh! Movie Exclusive Pack", "Exclusive Pack");
-			setNameMap.put("Collectible Tins 2013 Wave 2", "Collectible Tins 2013");
-			setNameMap.put("Collectible Tins 2012 Wave 2", "Collectible Tins 2012");
-			setNameMap.put("Collectible Tins 2011 Wave 2", "Collectible Tins 2011");
-			setNameMap.put("Collectible Tins 2006 Wave 2", "Collectible Tins 2006");
-			setNameMap.put("Collectible Tins 2007 Wave 2", "Collectible Tins 2007");
-			setNameMap.put("Collectible Tins 2008 Wave 2", "Collectible Tins 2008");
-			setNameMap.put("Collectible Tins 2009 Wave 2", "Collectible Tins 2009");
-			setNameMap.put("Collectible Tins 2010 Wave 2", "Collectible Tins 2010");
-			setNameMap.put("Collectible Tins 2013 Wave 1", "Collectible Tins 2013");
-			setNameMap.put("Collectible Tins 2012 Wave 1", "Collectible Tins 2012");
-			setNameMap.put("Collectible Tins 2011 Wave 1", "Collectible Tins 2011");
-			setNameMap.put("Collectible Tins 2006 Wave 1", "Collectible Tins 2006");
-			setNameMap.put("Collectible Tins 2007 Wave 1", "Collectible Tins 2007");
-			setNameMap.put("Collectible Tins 2008 Wave 1", "Collectible Tins 2008");
-			setNameMap.put("Collectible Tins 2009 Wave 1", "Collectible Tins 2009");
-			setNameMap.put("Collectible Tins 2010 Wave 1", "Collectible Tins 2010");
-			setNameMap.put("2013 Collectible Tins", "Collectible Tins 2013");
-			setNameMap.put("2012 Collectible Tins", "Collectible Tins 2012");
-			setNameMap.put("2011 Collectible Tins", "Collectible Tins 2011");
-			setNameMap.put("2006 Collectible Tins", "Collectible Tins 2006");
-			setNameMap.put("2007 Collectible Tins", "Collectible Tins 2007");
-			setNameMap.put("2008 Collectible Tins", "Collectible Tins 2008");
-			setNameMap.put("2009 Collectible Tins", "Collectible Tins 2009");
-			setNameMap.put("2010 Collectible Tins", "Collectible Tins 2010");
-			setNameMap.put("2013 Collectors Tins", "Collectible Tins 2013");
-			setNameMap.put("2012 Collectors Tins", "Collectible Tins 2012");
-			setNameMap.put("2011 Collectors Tins", "Collectible Tins 2011");
-			setNameMap.put("2006 Collectors Tins", "Collectible Tins 2006");
-			setNameMap.put("2007 Collectors Tins", "Collectible Tins 2007");
-			setNameMap.put("2008 Collectors Tins", "Collectible Tins 2008");
-			setNameMap.put("2009 Collectors Tins", "Collectible Tins 2009");
-			setNameMap.put("2010 Collectors Tins", "Collectible Tins 2010");
-			setNameMap.put("Collectible Tins 2012 Wave 2.5", "Collectible Tins 2012");
-			setNameMap.put("2013 Collectible Tins Wave 1", "Collectible Tins 2013");
-			setNameMap.put("2013 Collectible Tins Wave 2", "Collectible Tins 2013");
-			setNameMap.put("Duelist Pack 8: Yusei Fudo", "Duelist Pack: Yusei");
-			setNameMap.put("Duelist Pack Collection Tin", "Duelist Pack Collection Tin 2009");
-			setNameMap.put("2006 Collectors Tin", "Collectible Tins 2006");
-			setNameMap.put("2007 Collectors Tin", "Collectible Tins 2007");
-			setNameMap.put("2008 Collectors Tin", "Collectible Tins 2008");
-			setNameMap.put("2009 Collectors Tin", "Collectible Tins 2009");
-			setNameMap.put("2010 Collectors Tin", "Collectible Tins 2010");
-			setNameMap.put("2011 Collectors Tin", "Collectible Tins 2011");
-			setNameMap.put("2012 Collectors Tin", "Collectible Tins 2012");
-			setNameMap.put("2013 Collectors Tin", "Collectible Tins 2013");
-			setNameMap.put("2020 Tin of Lost Memories", "2020 Tin of Lost Memories Mega Pack");
-			setNameMap.put("Duel Terminal 5a", "Duel Terminal 5");
-			setNameMap.put("Duel Terminal 5b", "Duel Terminal 5");
-			setNameMap.put("Duel Terminal 6a", "Duel Terminal 6");
-			setNameMap.put("Duel Terminal 6b", "Duel Terminal 6");
-			setNameMap.put("Duel Terminal 7a", "Duel Terminal 7");
-			setNameMap.put("Duel Terminal 7b", "Duel Terminal 7");
-			setNameMap.put("Legendary Collection 1", "Legendary Collection");
-			setNameMap.put("Advent Calendar 2019", "Yu-Gi-Oh! Advent Calendar (2019)");
-			setNameMap.put("Advent Calendar 2018", "Yu-Gi-Oh! Advent Calendar (2018)");
-			setNameMap.put("The Legend of Blue Eyes White Dragon", "Legend of Blue Eyes White Dragon");
-			setNameMap.put("Speed Duel Decks: Ultimate Predators", "Speed Duel Starter Decks: Ultimate Predators");
-			setNameMap.put("Structure Deck: Marik (TCG)", "Structure Deck: Marik");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
-			//setNameMap.put("", "");
+			try {
+				String filename = "setNameUpdateMapping.csv";
+
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
+
+				setNameMap = new KeyUpdateMap(inputStream);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 
 		}
 
@@ -300,18 +214,45 @@ public class Util {
 			setName = setName.trim();
 		}
 
+		if(setName.contains(": Super Edition")) {
+			setName = setName.replace(": Super Edition", "");
+			setName = setName.trim();
+		}
+
+		if(setName.contains("Super Edition")) {
+			setName = setName.replace("Super Edition", "");
+			setName = setName.trim();
+		}
+
+		if(!setName.equals("Structure Deck: Deluxe Edition") && setName.contains(": Deluxe Edition")) {
+			setName = setName.replace(": Deluxe Edition", "");
+			setName = setName.trim();
+		}
+
+		if(!setName.equals("Structure Deck: Deluxe Edition") && setName.contains("Deluxe Edition")) {
+			setName = setName.replace("Deluxe Edition", "");
+			setName = setName.trim();
+		}
+
+		if(setName.contains("Premiere! promotional card")) {
+			setName = setName.replace("Premiere! promotional card", "");
+			setName = setName.trim();
+		}
+
+		if(setName.contains("Launch Event participation card")) {
+			setName = setName.replace("Launch Event participation card", "");
+			setName = setName.trim();
+		}
+
+		if(setName.endsWith(" SE")) {
+			setName = setName.substring(0, setName.length()-3);
+			setName = setName.trim();
+		}
+
 		setName = flipStructureEnding(setName, "Starter Deck");
 		setName = flipStructureEnding(setName, "Structure Deck");
 
-		HashMap<String, String> instance = getSetNameMapInstance();
-
-		String newSetName = instance.get(setName);
-
-		if(newSetName == null) {
-			return setName;
-		}
-
-		return newSetName;
+		return getSetNameMapInstance().getValue(setName);
 	}
 
 	public static String checkForTranslatedRarity(String rarity) {

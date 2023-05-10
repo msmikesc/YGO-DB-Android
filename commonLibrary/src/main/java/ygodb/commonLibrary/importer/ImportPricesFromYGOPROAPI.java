@@ -16,7 +16,7 @@ import java.util.List;
 
 import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.connection.Util;
+import ygodb.commonLibrary.utility.Util;
 
 public class ImportPricesFromYGOPROAPI {
 	
@@ -60,6 +60,8 @@ public class ImportPricesFromYGOPROAPI {
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
+				System.out.println("Finished reading from API");
+
 				inline = null;
 
 				JsonNode cards = jsonNode.get("data");
@@ -91,11 +93,11 @@ public class ImportPricesFromYGOPROAPI {
 				for(int i = 0; i < namesList.size(); i++) {
 					String setName = namesList.get(i);
 					System.out.println("Possibly need to handle set name issue count: " + NameUpdateMap.get(setName).size() + " " + setName );
-					/*
+
 					for(int j = 0; j < NameUpdateMap.get(setName).size(); j++) {
 						System.out.println(NameUpdateMap.get(setName).get(j));
 					}
-					*/
+
 				}
 
 			}
@@ -133,6 +135,12 @@ public class ImportPricesFromYGOPROAPI {
 			set_rarity = Util.checkForTranslatedRarity(set_rarity);
 			set_name = Util.checkForTranslatedSetName(set_name);
 			set_code = Util.checkForTranslatedSetNumber(set_code);
+
+			List<String> translatedList = Util.checkForTranslatedQuadKey(name, set_code, set_rarity, set_name);
+			name = translatedList.get(0);
+			set_code = translatedList.get(1);
+			set_rarity = translatedList.get(2);
+			set_name = translatedList.get(3);
 			
 			set_price = Util.normalizePrice(set_price);
 			
@@ -159,12 +167,12 @@ public class ImportPricesFromYGOPROAPI {
 							setNamesList = new ArrayList<>();
 							NameUpdateMap.put(set_name, setNamesList);
 						}
-						setNamesList.add(name);
+						setNamesList.add(name +" "+ set_code);
 					}
 				}
 				
 				if(updated != 1) {
-					System.out.println(updated + " rows updated for: "+name+":"+set_code + ":" + set_rarity + ":" + set_price+":"+set_name);
+					System.out.println("\"" +set_code +"\",\""+name + "\",\"" + set_rarity + "\",\"" + set_name + "\"," + set_price +","+ updated + " rows updated");
 				}
 			}
 		}

@@ -14,7 +14,7 @@ import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.connection.Util;
+import ygodb.commonLibrary.utility.Util;
 import ygodb.commonLibrary.constant.Const;
 
 public class SQLiteConnectionWindows implements SQLiteConnection {

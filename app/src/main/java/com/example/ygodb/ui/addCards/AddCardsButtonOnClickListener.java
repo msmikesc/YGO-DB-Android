@@ -134,6 +134,13 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
 
                             addCardsViewModel.saveToDB();
 
+                            view.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
                             ViewCardsViewModel viewCardsViewModel =
                                     new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
                             viewCardsViewModel.refreshViewDBUpdate();
@@ -145,13 +152,6 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
                             ViewCardsSummaryViewModel viewCardsSummaryViewModel =
                                     new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
                             viewCardsSummaryViewModel.refreshViewDBUpdate();
-
-                            view.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
 
                         }
                     });
