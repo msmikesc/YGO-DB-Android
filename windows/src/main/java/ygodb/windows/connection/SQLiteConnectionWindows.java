@@ -66,7 +66,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			ArrayList<CardSet> currentList = setRarities.get(set.setNumber);
 
 			if (currentList == null) {
-				currentList = new ArrayList<CardSet>();
+				currentList = new ArrayList<>();
 				setRarities.put(set.setNumber, currentList);
 			}
 
@@ -136,12 +136,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	private void getAllCardSetFieldsFromRS(ResultSet rarities, CardSet set) throws SQLException {
 		set.gamePlayCardUUID = rarities.getString(Const.gamePlayCardUUID);
-		set.cardName = rarities.getString("cardName");
-		set.setNumber = rarities.getString("setNumber");
-		set.setName = rarities.getString("setName");
-		set.setRarity = rarities.getString("setRarity");
-		set.setPrice = rarities.getString("setPrice");
-		set.setPriceUpdateTime = rarities.getString("setPriceUpdateTime");
+		set.cardName = rarities.getString(Const.cardName);
+		set.setNumber = rarities.getString(Const.setNumber);
+		set.setName = rarities.getString(Const.setName);
+		set.setRarity = rarities.getString(Const.setRarity);
+		set.setPrice = rarities.getString(Const.setPrice);
+		set.setPriceUpdateTime = rarities.getString(Const.setPriceUpdateTime);
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		while (rarities.next()) {
 			CardSet set = new CardSet();
 			getAllCardSetFieldsFromRS(rarities, set);
-			set.cardType = rarities.getString("type");
+			set.cardType = rarities.getString(Const.type);
 
 			setrs.add(set);
 		}
@@ -194,7 +194,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		while (rarities.next()) {
 			CardSet set = new CardSet();
 			getAllCardSetFieldsFromRS(rarities, set);
-			set.cardType = rarities.getString("type");
+			set.cardType = rarities.getString(Const.type);
 
 			setRarities.add(set);
 		}
@@ -226,7 +226,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		while (rarities.next()) {
 
-			titlesFound.add(rarities.getString("title"));
+			titlesFound.add(rarities.getString(Const.title));
 
 		}
 
@@ -256,7 +256,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		while (rarities.next()) {
 
-			titlesFound.add(rarities.getString("title"));
+			titlesFound.add(rarities.getString(Const.title));
 
 		}
 
@@ -364,23 +364,23 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	private static void getAllOwnedCardFieldsFromRS(ResultSet rs, OwnedCard current) throws SQLException {
 		current.gamePlayCardUUID = rs.getString(Const.gamePlayCardUUID);
-		current.rarityUnsure = rs.getInt("rarityUnsure");
-		current.quantity = rs.getInt("quantity");
-		current.cardName = rs.getString("cardName");
-		current.setCode = rs.getString("setCode");
-		current.setNumber = rs.getString("setNumber");
-		current.setName = rs.getString("setName");
-		current.setRarity = rs.getString("setRarity");
-		current.colorVariant = rs.getString("setRarityColorVariant");
-		current.folderName = rs.getString("folderName");
-		current.condition = rs.getString("condition");
-		current.editionPrinting = rs.getString("editionPrinting");
-		current.dateBought = rs.getString("dateBought");
-		current.priceBought = Util.normalizePrice(rs.getString("priceBought"));
-		current.creationDate = rs.getString("creationDate");
-		current.modificationDate = rs.getString("modificationDate");
-		current.UUID = rs.getString("UUID");
-		current.passcode = rs.getInt("passcode");
+		current.rarityUnsure = rs.getInt(Const.rarityUnsure);
+		current.quantity = rs.getInt(Const.quantity);
+		current.cardName = rs.getString(Const.cardName);
+		current.setCode = rs.getString(Const.setCode);
+		current.setNumber = rs.getString(Const.setNumber);
+		current.setName = rs.getString(Const.setName);
+		current.setRarity = rs.getString(Const.setRarity);
+		current.colorVariant = rs.getString(Const.setRarityColorVariant);
+		current.folderName = rs.getString(Const.folderName);
+		current.condition = rs.getString(Const.condition);
+		current.editionPrinting = rs.getString(Const.editionPrinting);
+		current.dateBought = rs.getString(Const.dateBought);
+		current.priceBought = Util.normalizePrice(rs.getString(Const.priceBought));
+		current.creationDate = rs.getString(Const.creationDate);
+		current.modificationDate = rs.getString(Const.modificationDate);
+		current.UUID = rs.getString(Const.UUID);
+		current.passcode = rs.getInt(Const.passcode);
 	}
 
 	@Override
@@ -900,13 +900,13 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 			String gamePlayCardUUID = rs.getString(Const.gamePlayCardUUID);
 
-			String cardName = rs.getString("cardname");
-			String type = rs.getString("type");
-			String setNumber = rs.getString("setNumber");
-			String setRarity = rs.getString("setRarity");
-			String setName = rs.getString("setName");
-			String releaseDate = rs.getString("releaseDate");
-			String archetype = rs.getString("archetype");
+			String cardName = rs.getString(Const.cardName);
+			String type = rs.getString(Const.type);
+			String setNumber = rs.getString(Const.setNumber);
+			String setRarity = rs.getString(Const.setRarity);
+			String setName = rs.getString(Const.setName);
+			String releaseDate = rs.getString(Const.releaseDate);
+			String archetype = rs.getString(Const.archetype);
 
 			AnalyzePrintedOnceData current = setsList.get(cardName);
 
@@ -998,19 +998,19 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	private void getAllGamePlayCardFieldsFromRS(ResultSet rs, GamePlayCard current) throws SQLException {
 		current.gamePlayCardUUID = rs.getString(Const.gamePlayCardUUID);
-		current.cardName = rs.getString("title");
-		current.cardType = rs.getString("type");
-		current.passcode = rs.getInt("passcode");
-		current.desc = rs.getString("lore");
-		current.attribute = rs.getString("attribute");
-		current.race = rs.getString("race");
-		current.linkval = rs.getString("linkValue");
-		current.level = rs.getString("level");
-		current.scale = rs.getString("pendScale");
-		current.atk = rs.getString("atk");
-		current.def = rs.getString("def");
-		current.archetype = rs.getString("archetype");
-		current.modificationDate = rs.getString("modificationDate");
+		current.cardName = rs.getString(Const.title);
+		current.cardType = rs.getString(Const.type);
+		current.passcode = rs.getInt(Const.passcode);
+		current.desc = rs.getString(Const.lore);
+		current.attribute = rs.getString(Const.attribute);
+		current.race = rs.getString(Const.race);
+		current.linkval = rs.getString(Const.linkValue);
+		current.level = rs.getString(Const.level);
+		current.scale = rs.getString(Const.pendScale);
+		current.atk = rs.getString(Const.atk);
+		current.def = rs.getString(Const.def);
+		current.archetype = rs.getString(Const.archetype);
+		current.modificationDate = rs.getString(Const.modificationDate);
 	}
 
 	@Override

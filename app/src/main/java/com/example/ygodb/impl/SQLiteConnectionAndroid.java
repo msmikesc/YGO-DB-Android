@@ -230,12 +230,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	private void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
 		set.gamePlayCardUUID = rs.getString(getColumn(col,Const.gamePlayCardUUID));
-		set.cardName = rs.getString(getColumn(col,"cardName"));
-		set.setNumber = rs.getString(getColumn(col,"setNumber"));
-		set.setName = rs.getString(getColumn(col,"setName"));
-		set.setRarity = rs.getString(getColumn(col,"setRarity"));
-		set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
-		set.setPriceUpdateTime = rs.getString(getColumn(col,"setPriceUpdateTime"));
+		set.cardName = rs.getString(getColumn(col,Const.cardName));
+		set.setNumber = rs.getString(getColumn(col,Const.setNumber));
+		set.setName = rs.getString(getColumn(col,Const.setName));
+		set.setRarity = rs.getString(getColumn(col,Const.setRarity));
+		set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,Const.setPrice)));
+		set.setPriceUpdateTime = rs.getString(getColumn(col,Const.setPriceUpdateTime));
 	}
 
 	@Override
@@ -268,7 +268,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		while (rs.moveToNext ()) {
 			CardSet set = new CardSet();
 			getAllCardSetFieldsFromRS(rs, col, set);
-			set.cardType = rs.getString(getColumn(col,"type"));
+			set.cardType = rs.getString(getColumn(col,Const.type));
 
 			setrs.add(set);
 		}
@@ -298,7 +298,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		while (rs.moveToNext()) {
 			CardSet set = new CardSet();
 			getAllCardSetFieldsFromRS(rs, col, set);
-			set.cardType = rs.getString(getColumn(col,"type"));
+			set.cardType = rs.getString(getColumn(col,Const.type));
 
 			setrs.add(set);
 			
@@ -339,13 +339,13 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			current.gamePlayCardUUID = rs.getString(getColumn(col,Const.gamePlayCardUUID));
 			current.cardName = rs.getString(getColumn(col,"cardNameCol"));
 			current.setNumber = rs.getString(getColumn(col,"setNumberCol"));
-			current.setCode = rs.getString(getColumn(col,"setCode"));
-			current.setName = rs.getString(getColumn(col,"setName"));
+			current.setCode = rs.getString(getColumn(col,Const.setCode));
+			current.setName = rs.getString(getColumn(col,Const.setName));
 			current.setRarity = rs.getString(getColumn(col,"setRarityCol"));
-			current.priceBought = Util.normalizePrice(rs.getString(getColumn(col,"setPrice")));
-			current.quantity = rs.getInt(getColumn(col,"quantity"));
+			current.priceBought = Util.normalizePrice(rs.getString(getColumn(col,Const.setPrice)));
+			current.quantity = rs.getInt(getColumn(col,Const.quantity));
 			current.dateBought = rs.getString(getColumn(col,"maxDate"));
-			current.passcode = rs.getInt(getColumn(col,"passcode"));
+			current.passcode = rs.getInt(getColumn(col,Const.passcode));
 
 			results.add(current);
 		}
@@ -372,7 +372,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		while (rs.moveToNext()) {
 
-			titlesFound.add(rs.getString(getColumn(col,"title")));
+			titlesFound.add(rs.getString(getColumn(col,Const.title)));
 			
 		}
 		rs.close();
@@ -487,13 +487,13 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public OwnedCard getExistingOwnedCardByObject(OwnedCard query) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String[] Columns = new String[]{"gamePlayCardUUID","rarityUnsure","quantity","cardName","setCode",
-				"setNumber","setName","setRarity","setRarityColorVariant","folderName","condition",
-				"editionPrinting","dateBought","priceBought","creationDate","modificationDate",
-				"UUID", "passcode"};
+		String[] Columns = new String[]{Const.gamePlayCardUUID,Const.rarityUnsure,Const.quantity,Const.cardName,Const.setCode,
+				Const.setNumber,Const.setName,Const.setRarity,Const.setRarityColorVariant,Const.folderName,Const.condition,
+				Const.editionPrinting,Const.dateBought,Const.priceBought,Const.creationDate,Const.modificationDate,
+				Const.UUID, Const.passcode};
 
-		//PRIMARY KEY("gamePlayCardUUID","folderName","setNumber","setRarity","setRarityColorVariant",
-		// "condition","editionPrinting","dateBought","priceBought")
+		//PRIMARY KEY(Const.gamePlayCardUUID,Const.folderName,Const.setNumber,Const.setRarity,Const.setRarityColorVariant,
+		// Const.condition,Const.editionPrinting,Const.dateBought,Const.priceBought)
 
 
 		if (query.folderName == null || query.setNumber == null ||
@@ -533,9 +533,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public ArrayList<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String[] Columns = new String[]{Const.gamePlayCardUUID, "quantity", "cardName", "setNumber", "setName",
-				"setRarity", "setRarityColorVariant", "editionPrinting", "dateBought", "priceBought",
-				"UUID", "setCode", "folderName", "rarityUnsure", "condition", "creationDate", "modificationDate", "passcode"};
+		String[] Columns = new String[]{Const.gamePlayCardUUID, Const.quantity, Const.cardName, Const.setNumber, Const.setName,
+				Const.setRarity, Const.setRarityColorVariant, Const.editionPrinting, Const.dateBought, Const.priceBought,
+				Const.UUID, Const.setCode, Const.folderName, Const.rarityUnsure, Const.condition, Const.creationDate, Const.modificationDate, Const.passcode};
 
 		String selection = null;
 		String[] selectionArgs = null;
@@ -569,23 +569,23 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	private void getAllOwnedCardFieldsFromRS(Cursor rs, String[] col, OwnedCard current) {
 		current.gamePlayCardUUID = rs.getString(getColumn(col,Const.gamePlayCardUUID));
-		current.quantity = rs.getInt(getColumn(col,"quantity"));
-		current.cardName = rs.getString(getColumn(col,"cardName"));
-		current.setNumber = rs.getString(getColumn(col,"setNumber"));
-		current.setName = rs.getString(getColumn(col,"setName"));
-		current.setRarity = rs.getString(getColumn(col,"setRarity"));
-		current.colorVariant = rs.getString(getColumn(col,"setRarityColorVariant"));
-		current.editionPrinting = rs.getString(getColumn(col,"editionPrinting"));
-		current.dateBought = rs.getString(getColumn(col,"dateBought"));
-		current.priceBought = rs.getString(getColumn(col,"priceBought"));
-		current.UUID = rs.getString(getColumn(col,"UUID"));
-		current.setCode = rs.getString(getColumn(col,"setCode"));
-		current.folderName = rs.getString(getColumn(col,"folderName"));
-		current.rarityUnsure = rs.getInt(getColumn(col,"rarityUnsure"));
-		current.condition = rs.getString(getColumn(col,"condition"));
-		current.creationDate = rs.getString(getColumn(col,"creationDate"));
-		current.modificationDate = rs.getString(getColumn(col,"modificationDate"));
-		current.passcode = rs.getInt(getColumn(col, "passcode"));
+		current.quantity = rs.getInt(getColumn(col,Const.quantity));
+		current.cardName = rs.getString(getColumn(col,Const.cardName));
+		current.setNumber = rs.getString(getColumn(col,Const.setNumber));
+		current.setName = rs.getString(getColumn(col,Const.setName));
+		current.setRarity = rs.getString(getColumn(col,Const.setRarity));
+		current.colorVariant = rs.getString(getColumn(col,Const.setRarityColorVariant));
+		current.editionPrinting = rs.getString(getColumn(col,Const.editionPrinting));
+		current.dateBought = rs.getString(getColumn(col,Const.dateBought));
+		current.priceBought = rs.getString(getColumn(col,Const.priceBought));
+		current.UUID = rs.getString(getColumn(col,Const.UUID));
+		current.setCode = rs.getString(getColumn(col,Const.setCode));
+		current.folderName = rs.getString(getColumn(col,Const.folderName));
+		current.rarityUnsure = rs.getInt(getColumn(col,Const.rarityUnsure));
+		current.condition = rs.getString(getColumn(col,Const.condition));
+		current.creationDate = rs.getString(getColumn(col,Const.creationDate));
+		current.modificationDate = rs.getString(getColumn(col,Const.modificationDate));
+		current.passcode = rs.getInt(getColumn(col, Const.passcode));
 
 	}
 
@@ -593,10 +593,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public ArrayList<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String[] Columns = new String[]{Const.gamePlayCardUUID, "sum(quantity) as totalQuantity", "cardName",
+		String[] Columns = new String[]{Const.gamePlayCardUUID, "sum(quantity) as totalQuantity", Const.cardName,
 				"group_concat(DISTINCT setName)", "MAX(dateBought) as maxDate",
 				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice",
-				"group_concat(DISTINCT setRarity) as rs", "passcode"};
+				"group_concat(DISTINCT setRarity) as rs", Const.passcode};
 
 		String selection = null;
 		String[] selectionArgs = null;
@@ -607,7 +607,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		}
 
 		Cursor rs = connection.query("ownedCards", Columns, selection,selectionArgs,
-				"cardName",null,orderBy, offset + "," + limit);
+				Const.cardName,null,orderBy, offset + "," + limit);
 
 		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
@@ -838,7 +838,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		ArrayList<String> cardsInSetList = new ArrayList<>();
 
 		while (rs.moveToNext()) {
-			cardsInSetList.add(rs.getString(getColumn(col,"setNumber")));
+			cardsInSetList.add(rs.getString(getColumn(col,Const.setNumber)));
 			
 		}
 
@@ -863,7 +863,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		ArrayList<String> setsList = new ArrayList<>();
 
 		while (rs.moveToNext()) {
-			setsList.add(rs.getString(getColumn(col,"setName")));
+			setsList.add(rs.getString(getColumn(col,Const.setName)));
 			
 		}
 
@@ -889,7 +889,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		ArrayList<String> setsList = new ArrayList<>();
 
 		while (rs.moveToNext()) {
-			setsList.add(rs.getString(getColumn(col,"setName")));
+			setsList.add(rs.getString(getColumn(col,Const.setName)));
 
 		}
 
@@ -1118,13 +1118,13 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 			String gamePlayCardUUID = rs.getString(getColumn(col,Const.gamePlayCardUUID));
 
-			String cardName = rs.getString(getColumn(col,"cardname"));
-			String type = rs.getString(getColumn(col,"type"));
-			String setNumber = rs.getString(getColumn(col,"setNumber"));
-			String setRarity = rs.getString(getColumn(col,"setRarity"));
-			String setName = rs.getString(getColumn(col,"setName"));
-			String releaseDate = rs.getString(getColumn(col,"releaseDate"));
-			String archetype = rs.getString(getColumn(col,"archetype"));
+			String cardName = rs.getString(getColumn(col,Const.cardName));
+			String type = rs.getString(getColumn(col,Const.type));
+			String setNumber = rs.getString(getColumn(col,Const.setNumber));
+			String setRarity = rs.getString(getColumn(col,Const.setRarity));
+			String setName = rs.getString(getColumn(col,Const.setName));
+			String releaseDate = rs.getString(getColumn(col,Const.releaseDate));
+			String archetype = rs.getString(getColumn(col,Const.archetype));
 
 
 			AnalyzePrintedOnceData current = setsList.get(cardName);
@@ -1213,19 +1213,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	private void getAllGamePlayCardFieldsFromRS(Cursor rs, String[] col, GamePlayCard current) {
 		current.gamePlayCardUUID = rs.getString(getColumn(col,Const.gamePlayCardUUID));
-		current.cardName = rs.getString(getColumn(col,"title"));
-		current.cardType = rs.getString(getColumn(col,"type"));
-		current.passcode = rs.getInt(getColumn(col,"passcode"));
-		current.desc = rs.getString(getColumn(col,"lore"));
-		current.attribute = rs.getString(getColumn(col,"attribute"));
-		current.race = rs.getString(getColumn(col,"race"));
-		current.linkval = rs.getString(getColumn(col,"linkValue"));
-		current.level = rs.getString(getColumn(col,"level"));
-		current.scale = rs.getString(getColumn(col,"pendScale"));
-		current.atk = rs.getString(getColumn(col,"atk"));
-		current.def = rs.getString(getColumn(col,"def"));
-		current.archetype = rs.getString(getColumn(col,"archetype"));
-		current.modificationDate = rs.getString(getColumn(col, "modificationDate"));
+		current.cardName = rs.getString(getColumn(col,Const.title));
+		current.cardType = rs.getString(getColumn(col,Const.type));
+		current.passcode = rs.getInt(getColumn(col,Const.passcode));
+		current.desc = rs.getString(getColumn(col,Const.lore));
+		current.attribute = rs.getString(getColumn(col,Const.attribute));
+		current.race = rs.getString(getColumn(col,Const.race));
+		current.linkval = rs.getString(getColumn(col,Const.linkValue));
+		current.level = rs.getString(getColumn(col,Const.level));
+		current.scale = rs.getString(getColumn(col,Const.pendScale));
+		current.atk = rs.getString(getColumn(col,Const.atk));
+		current.def = rs.getString(getColumn(col,Const.def));
+		current.archetype = rs.getString(getColumn(col,Const.archetype));
+		current.modificationDate = rs.getString(getColumn(col, Const.modificationDate));
 	}
 
 	@Override
