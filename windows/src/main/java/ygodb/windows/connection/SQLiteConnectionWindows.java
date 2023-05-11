@@ -21,6 +21,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	private Connection connection = null;
 
+	private PreparedStatement batchUpsertOwnedCard = null;
+
+	private final int batchUpsertSize = 1000;
+
+	private int batchUpsertCurrentSize = 0;
+
 	public Connection getInstance() throws SQLException {
 		if (connection == null) {
 			connection = DriverManager
@@ -63,12 +69,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			CardSet set = new CardSet();
 			getAllCardSetFieldsFromRS(rarities, set);
 
-			ArrayList<CardSet> currentList = setRarities.get(set.setNumber);
-
-			if (currentList == null) {
-				currentList = new ArrayList<>();
-				setRarities.put(set.setNumber, currentList);
-			}
+			ArrayList<CardSet> currentList = setRarities.computeIfAbsent(set.setNumber, k -> new ArrayList<>());
 
 			currentList.add(set);
 		}
@@ -473,12 +474,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			String key = current.setNumber + current.priceBought + current.dateBought + current.folderName
 					+ current.condition + current.editionPrinting;
 
-			ArrayList<OwnedCard> currentList = ownedCards.get(key);
-
-			if (currentList == null) {
-				currentList = new ArrayList<>();
-				ownedCards.put(key, currentList);
-			}
+			ArrayList<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
 
 			currentList.add(current);
 		}
@@ -736,12 +732,10 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		ResultSet rs = distrinctQueryStatement.executeQuery();
 
-		CardSet set = null;
+		CardSet set = new CardSet();
 
-		while (rs.next()) {
-			set = new CardSet();
+		if (rs.next()) {
 			getAllCardSetFieldsFromRS(rs, set);
-			break;
 		}
 
 		rs.close();
@@ -965,7 +959,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		if (value == null) {
 			p.setNull(index, Types.INTEGER);
 		} else {
-			p.setInt(index, value.intValue());
+			p.setInt(index, value);
 		}
 	}
 
@@ -1071,11 +1065,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statementgamePlayCard.close();
 	}
 
-	private PreparedStatement batchUpsertOwnedCard = null;
 
-	private final int batchUpsertSize = 1000;
-
-	private int batchUpsertCurrentSize = 0;
 
 	@Override
 	public void UpdateOwnedCardByUUID(OwnedCard card) throws SQLException {
@@ -1221,7 +1211,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		// conflict fields
 
-		batchUpsertOwnedCard.setInt(17, Integer.valueOf(quantity));
+		batchUpsertOwnedCard.setInt(17, quantity);
 		batchUpsertOwnedCard.setInt(18, rarityUnsure);
 		batchUpsertOwnedCard.setString(19, setRarity);
 		batchUpsertOwnedCard.setString(20, colorVariant);
@@ -1331,9 +1321,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statement.execute();
 		statement.close();
 
-		int updated = getUpdatedRowCount();
-
-		return updated;
+		return getUpdatedRowCount();
 
 	}
 
@@ -1349,6 +1337,9 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		rs.next();
 		int updated = rs.getInt(1);
+
+		rs.close();
+
 		return updated;
 	}
 
@@ -1371,9 +1362,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statement.execute();
 		statement.close();
 
-		int updated = getUpdatedRowCount();
-
-		return updated;
+		return getUpdatedRowCount();
 
 	}
 
@@ -1393,9 +1382,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statement.execute();
 		statement.close();
 
-		int updated = getUpdatedRowCount();
-
-		return updated;
+		return getUpdatedRowCount();
 
 	}
 

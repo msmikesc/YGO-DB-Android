@@ -81,6 +81,9 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
             SharedPreferences.Editor editor = prefs.edit();
 
             editor.putString("pref_db_location", chosenURI.toString());
+
+            editor.apply();
+
             Snackbar.make(view, "DB Exported", Snackbar.LENGTH_LONG).show();
 
         } catch (IOException e) {

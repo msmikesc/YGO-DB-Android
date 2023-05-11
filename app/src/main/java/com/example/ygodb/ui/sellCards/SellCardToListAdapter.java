@@ -24,6 +24,7 @@ import ygodb.commonLibrary.utility.Util;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAdapter.ItemViewHolder> {
     private final ArrayList<OwnedCard> sellingOwnedCards;
@@ -226,7 +227,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         if(current.priceSold != null) {
             double price = Double.parseDouble(current.priceSold);
             viewHolder.cardPrice.setText("$");
-            viewHolder.cardPriceTextBox.setText(String.format("%.2f", price));
+            viewHolder.cardPriceTextBox.setText(String.format(Locale.ROOT,"%.2f", price));
         }
         else{
             viewHolder.cardPrice.setText("$");

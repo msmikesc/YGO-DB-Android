@@ -93,6 +93,8 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 
                     editor.putString("pref_db_location", chosenURI.toString());
 
+                    editor.apply();
+
                     ViewCardSetViewModel viewCardSetViewModel =
                             new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 

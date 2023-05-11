@@ -16,6 +16,7 @@ import ygodb.commonLibrary.bean.OwnedCard;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardToListAdapter.ItemViewHolder> {
     ArrayList<OwnedCard> ownedCards;
@@ -46,7 +47,7 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
         viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
         if(current.priceBought != null) {
             double price = Double.parseDouble(current.priceBought);
-            viewHolder.cardPrice.setText("$" + String.format("%.2f", price));
+            viewHolder.cardPrice.setText("$" + String.format(Locale.ROOT,"%.2f", price));
         }
         viewHolder.cardDate.setText(current.dateBought);
         viewHolder.rarity.setText(current.setRarity);

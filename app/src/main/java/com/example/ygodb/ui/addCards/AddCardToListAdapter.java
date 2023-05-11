@@ -24,14 +24,13 @@ import ygodb.commonLibrary.utility.Util;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdapter.ItemViewHolder> {
     private final ArrayList<OwnedCard> addingOwnedCards;
 
     private final AddCardsViewModel addCardsViewModel;
 
-    private  InputStream firstInputStream;
-    private  InputStream firstInputStreamSmall;
     private Drawable firstDrawable;
     private Drawable firstDrawableSmall;
 
@@ -41,11 +40,11 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
         try {
             // get input stream
-            firstInputStream = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
+            InputStream firstInputStream = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
             // load image as Drawable
             firstDrawable = Drawable.createFromStream(firstInputStream, null);
 
-            firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
+            InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
             firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
         }
         catch (Exception e){
@@ -247,7 +246,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         if(current.priceBought != null) {
             double price = Double.parseDouble(current.priceBought);
             viewHolder.cardPrice.setText("$");
-            viewHolder.cardPriceTextBox.setText(String.format("%.2f", price));
+            viewHolder.cardPriceTextBox.setText(String.format(Locale.ROOT, "%.2f", price));
         }
         else{
             viewHolder.cardPrice.setText("$");

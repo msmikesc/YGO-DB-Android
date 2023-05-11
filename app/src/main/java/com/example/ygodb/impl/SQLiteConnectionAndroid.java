@@ -213,12 +213,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			CardSet set = new CardSet();
 			getAllCardSetFieldsFromRS(rs, col, set);
 
-			ArrayList<CardSet> currentList = setrs.get(set.setNumber);
-
-			if (currentList == null) {
-				currentList = new ArrayList<>();
-				setrs.put(set.setNumber, currentList);
-			}
+			ArrayList<CardSet> currentList = setrs.computeIfAbsent(set.setNumber, k -> new ArrayList<>());
 
 			currentList.add(set);
 			
@@ -705,12 +700,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			String key = current.setNumber + current.priceBought + current.dateBought + current.folderName
 					+ current.condition + current.editionPrinting;
 
-			ArrayList<OwnedCard> currentList = ownedCards.get(key);
-
-			if (currentList == null) {
-				currentList = new ArrayList<>();
-				ownedCards.put(key, currentList);
-			}
+			ArrayList<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
 
 			currentList.add(current);
 			
@@ -1554,9 +1544,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		statement.execute();
 		statement.close();
 
-		int updated = getUpdatedRowCount();
-
-		return updated;
+		return getUpdatedRowCount();
 
 	}
 
@@ -1570,7 +1558,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		Cursor rs = connection.rawQuery(query,null);
 
 		rs.moveToNext();
+
 		int updated = rs.getInt(1);
+
+		rs.close();
+
 		return updated;
 	}
 
