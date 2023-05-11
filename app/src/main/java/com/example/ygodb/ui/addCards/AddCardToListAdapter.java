@@ -26,9 +26,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdapter.ItemViewHolder> {
-    private ArrayList<OwnedCard> addingOwnedCards;
+    private final ArrayList<OwnedCard> addingOwnedCards;
 
-    private AddCardsViewModel addCardsViewModel;
+    private final AddCardsViewModel addCardsViewModel;
 
     private  InputStream firstInputStream;
     private  InputStream firstInputStreamSmall;
@@ -64,7 +64,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
     public void onPlusButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
         current.quantity++;
-        viewHolder.cardQuantity.setText(current.quantity + "");
+        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
     }
 
     public void onMinusButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
@@ -88,7 +88,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
             viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }
 
-        viewHolder.cardQuantity.setText(current.quantity + "");
+        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
     }
 
     public void onUpdatePrice(CharSequence priceBox, OwnedCard current, int position) {
@@ -269,8 +269,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if( v instanceof TextView ) {
-                        TextView textView = (TextView) v;
+                    if(v instanceof TextView textView) {
                         onUpdatePrice(textView.getText(), current, viewHolder.getAdapterPosition());
                     }
                 }
@@ -279,7 +278,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
 
         viewHolder.cardDate.setText(current.dateBought);
-        viewHolder.cardQuantity.setText(current.quantity + "");
+        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
 
         button3.setImageDrawable(firstDrawable);
 

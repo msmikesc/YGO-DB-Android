@@ -983,7 +983,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		GamePlayCard current = new GamePlayCard();
 
-		if (rs.next() == false) {
+		if (!rs.next()) {
 			return null;
 		}
 
@@ -1073,7 +1073,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	private PreparedStatement batchUpsertOwnedCard = null;
 
-	private int batchUpsertSize = 1000;
+	private final int batchUpsertSize = 1000;
 
 	private int batchUpsertCurrentSize = 0;
 

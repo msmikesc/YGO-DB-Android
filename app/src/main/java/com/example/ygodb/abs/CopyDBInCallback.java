@@ -123,7 +123,6 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
                             Snackbar.make(view, "Error: Exception " + e.getMessage(), Snackbar.LENGTH_LONG).show();
                         }
                     });
-                    return;
                 }
             }
         });

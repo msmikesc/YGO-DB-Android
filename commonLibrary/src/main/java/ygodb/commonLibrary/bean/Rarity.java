@@ -41,7 +41,7 @@ public enum Rarity {
 	MillenniumSecretRare("Millennium Secret Rare"),
 	nullRarity("nullRarity");
 
-	private String name;
+	private final String name;
 
 	Rarity(String s) {
 		name = s;

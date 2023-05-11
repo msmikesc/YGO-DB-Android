@@ -26,9 +26,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAdapter.ItemViewHolder> {
-    private ArrayList<OwnedCard> sellingOwnedCards;
+    private final ArrayList<OwnedCard> sellingOwnedCards;
 
-    private SellCardsViewModel sellCardsViewModel;
+    private final SellCardsViewModel sellCardsViewModel;
 
 
     private  InputStream firstInputStreamSmall;
@@ -65,7 +65,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         else {
             current.sellQuantity++;
         }
-        viewHolder.cardQuantity.setText(current.sellQuantity + "");
+        viewHolder.cardQuantity.setText(String.valueOf(current.sellQuantity));
     }
 
     public void onMinusButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
@@ -248,8 +248,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if( v instanceof TextView ) {
-                        TextView textView = (TextView) v;
+                    if(v instanceof TextView textView) {
                         onUpdatePrice(textView.getText(), current, viewHolder.getAdapterPosition());
                     }
                 }
@@ -258,7 +257,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 
 
         viewHolder.cardDate.setText(current.dateBought);
-        viewHolder.cardQuantity.setText(current.sellQuantity + "");
+        viewHolder.cardQuantity.setText(String.valueOf(current.sellQuantity));
 
         if(current.editionPrinting.contains("1st")){
             // set image to ImageView

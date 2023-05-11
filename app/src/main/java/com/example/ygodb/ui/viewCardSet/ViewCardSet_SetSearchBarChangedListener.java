@@ -16,7 +16,7 @@ import java.util.ArrayList;
 class ViewCardSet_SetSearchBarChangedListener extends TextChangedListener<EditText> {
     private final ViewCardSetViewModel viewCardsViewModel;
     private final SingleCardToListAdapter adapter;
-    private LinearLayoutManager layout;
+    private final LinearLayoutManager layout;
 
     private final Handler handler = new Handler();
 
@@ -48,7 +48,7 @@ class ViewCardSet_SetSearchBarChangedListener extends TextChangedListener<EditTe
                     results = viewCardsViewModel.getInitialData(setNameSearch);
                     filteredResults = viewCardsViewModel.getFilteredList(results, viewCardsViewModel.getCardNameSearch());
 
-                    viewCardsViewModel.sortData(filteredResults, viewCardsViewModel.getCurrentComparator());
+                    viewCardsViewModel.sortData(filteredResults, ViewCardSetViewModel.getCurrentComparator());
 
                     ArrayList<OwnedCard> finalResults = results;
                     ArrayList<OwnedCard> finalFilteredResults = filteredResults;

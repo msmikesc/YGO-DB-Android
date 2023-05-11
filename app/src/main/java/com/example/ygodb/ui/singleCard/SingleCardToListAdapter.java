@@ -25,8 +25,8 @@ import java.util.Locale;
 public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToListAdapter.ItemViewHolder> {
     private ArrayList<OwnedCard> ownedCards;
 
-    private AddCardsViewModel addCardsViewModel;
-    private SellCardsViewModel sellCardsViewModel;
+    private final AddCardsViewModel addCardsViewModel;
+    private final SellCardsViewModel sellCardsViewModel;
 
     public SingleCardToListAdapter(ArrayList<OwnedCard> ownedCards,
            AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel) {
@@ -151,7 +151,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         }
         viewHolder.cardDate.setText(current.dateBought);
 
-        viewHolder.cardQuantity.setText(current.quantity + "");
+        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
 
         try {
             if(current.editionPrinting.contains("1st")){

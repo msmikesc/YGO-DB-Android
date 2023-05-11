@@ -43,7 +43,7 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
 
         viewHolder.title.setText(current.cardName);
         viewHolder.setName.setText(current.setName);
-        viewHolder.cardQuantity.setText(current.quantity + "");
+        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
         if(current.priceBought != null) {
             double price = Double.parseDouble(current.priceBought);
             viewHolder.cardPrice.setText("$" + String.format("%.2f", price));

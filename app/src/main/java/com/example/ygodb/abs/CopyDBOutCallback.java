@@ -85,7 +85,6 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
 
         } catch (IOException e) {
             Snackbar.make(view, "Error: Exception " + e.getMessage(), Snackbar.LENGTH_LONG).show();
-            return;
         }
     }
 }

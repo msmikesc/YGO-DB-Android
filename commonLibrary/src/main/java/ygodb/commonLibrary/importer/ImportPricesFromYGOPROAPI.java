@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class ImportPricesFromYGOPROAPI {
 				for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
 				    result.write(buffer, 0, length);
 				}
-				inline = result.toString("UTF-8");
+				inline = result.toString(StandardCharsets.UTF_8);
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);

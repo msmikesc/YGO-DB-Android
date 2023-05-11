@@ -17,7 +17,7 @@ import java.util.ArrayList;
 class ViewCardSummarySearchBarChangedListener extends TextChangedListener<EditText> {
     private final ViewCardsSummaryViewModel viewCardsViewModel;
     private final SummaryCardToListAdapter adapter;
-    private LinearLayoutManager layout;
+    private final LinearLayoutManager layout;
 
     private final Handler handler = new Handler();
 

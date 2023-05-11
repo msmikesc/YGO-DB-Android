@@ -16,7 +16,7 @@ import java.util.ArrayList;
 class ViewCardsSearchBarChangedListener extends TextChangedListener<EditText> {
     private final ViewCardsViewModel viewCardsViewModel;
     private final SingleCardToListAdapter adapter;
-    private LinearLayoutManager layout;
+    private final LinearLayoutManager layout;
 
     private final Handler handler = new Handler();
 

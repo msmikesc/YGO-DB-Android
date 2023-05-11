@@ -38,7 +38,7 @@ public class ViewCardSetViewModel extends ViewModel {
         isCardNameMode = true;
     }
 
-    private MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
+    private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
 
     public MutableLiveData<Boolean> getDbRefreshIndicator() {
         return dbRefreshIndicator;

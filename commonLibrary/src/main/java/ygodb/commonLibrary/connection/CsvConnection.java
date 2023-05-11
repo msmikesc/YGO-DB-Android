@@ -196,7 +196,7 @@ public class CsvConnection {
 			// try removing color code
 
 			String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
-			String newColorCode = setNumber.substring(setNumber.length() - 1, setNumber.length());
+			String newColorCode = setNumber.substring(setNumber.length() - 1);
 
 			ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(newSetNumber, priceBought,
 					dateBought, folder, condition, printing, db);
@@ -305,7 +305,7 @@ public class CsvConnection {
 		}
 
 		CardSet setIdentified = new CardSet();
-		setIdentified.rarityUnsure = new Integer(rarityUnsure);
+		setIdentified.rarityUnsure = Integer.valueOf(rarityUnsure);
 		setIdentified.colorVariant = rarityColorVariant;
 		setIdentified.setRarity = rarity;
 		setIdentified.setName = setName;
@@ -449,7 +449,7 @@ public class CsvConnection {
 			Integer returnVal = Integer.parseInt(current.get(recordName));
 			return returnVal;
 		} catch (Exception e) {
-			return new Integer(-1);
+			return Integer.valueOf(-1);
 		}
 	}
 

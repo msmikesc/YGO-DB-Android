@@ -16,10 +16,10 @@ import java.util.Locale;
 
 public class AddCardsViewModel extends ViewModel {
 
-    private HashMap<String,Integer> keyToPosition;
-    private ArrayList<OwnedCard> cardsList;
+    private final HashMap<String,Integer> keyToPosition;
+    private final ArrayList<OwnedCard> cardsList;
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     public AddCardsViewModel() {
         cardsList = new ArrayList<>();
         keyToPosition = new HashMap<>();

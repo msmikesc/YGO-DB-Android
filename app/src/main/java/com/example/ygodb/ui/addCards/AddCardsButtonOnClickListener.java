@@ -20,9 +20,9 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
 
     private final AddCardsViewModel addCardsViewModel;
     private final AddCardToListAdapter adapter;
-    private LinearLayoutManager layout;
-    private FloatingActionButton fab;
-    private Context context;
+    private final LinearLayoutManager layout;
+    private final FloatingActionButton fab;
+    private final Context context;
 
     public AddCardsButtonOnClickListener(FloatingActionButton fab, Context context,
                                          AddCardsViewModel addCardsViewModel,

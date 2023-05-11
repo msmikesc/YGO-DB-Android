@@ -19,8 +19,7 @@ import ygodb.commonLibrary.utility.Util;
 
 public class AnalyzeCompareToDragonShieldCSV {
 
-	public static final List<String> setColorVariantUnsupportedDragonShield = Arrays
-			.asList("Legendary Duelists: Season 2");
+	public static final List<String> setColorVariantUnsupportedDragonShield = List.of("Legendary Duelists: Season 2");
 
 	/*
 	public static void main(String[] args) throws SQLException, IOException {
@@ -64,7 +63,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 			if (list == null) {
 				// try removing color code
-				colorCode = setNumber.substring(setNumber.length() - 1, setNumber.length());
+				colorCode = setNumber.substring(setNumber.length() - 1);
 				setNumber = setNumber.substring(0, setNumber.length() - 1);
 
 				key = setNumber + Util.normalizePrice(priceBought) + dateBought + folder + condition + printing;
@@ -120,7 +119,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 					}
 				}
 
-				if (foundMatch == false) {
+				if (!foundMatch) {
 					System.out.println("Unable to find exact match for key: " + key);
 				}
 

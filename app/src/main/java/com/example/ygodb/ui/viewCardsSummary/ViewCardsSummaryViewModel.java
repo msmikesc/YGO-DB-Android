@@ -23,7 +23,7 @@ public class ViewCardsSummaryViewModel extends ViewModel {
         cardsList = new ArrayList<>();
     }
 
-    private MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
+    private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
 
     public MutableLiveData<Boolean> getDbRefreshIndicator() {
         return dbRefreshIndicator;

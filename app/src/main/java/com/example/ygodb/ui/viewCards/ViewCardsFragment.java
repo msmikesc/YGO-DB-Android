@@ -77,7 +77,7 @@ public class ViewCardsFragment extends Fragment {
             });
         }
 
-        viewCardsViewModel.getDbRefreshIndicator().observe(this, new Observer<Boolean>() {
+        viewCardsViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){

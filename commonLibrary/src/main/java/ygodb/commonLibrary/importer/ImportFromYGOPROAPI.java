@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -57,7 +58,7 @@ public class ImportFromYGOPROAPI {
 				for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
 					result.write(buffer, 0, length);
 				}
-				inline = result.toString("UTF-8");
+				inline = result.toString(StandardCharsets.UTF_8);
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
@@ -187,11 +188,7 @@ public class ImportFromYGOPROAPI {
 	public static void updateDBWithSetsFromAPI(String setName, SQLiteConnection db) {
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardsets.php";
 
-		boolean specificSet = true;
-
-		if (setName == null || setName.isBlank()) {
-			specificSet = false;
-		}
+		boolean specificSet = setName != null && !setName.isBlank();
 
 		try {
 			URL url = new URL(setAPI);

@@ -332,27 +332,21 @@ public class Util {
 	
 	public static boolean doesCardExactlyMatch(String folder, String name, String setCode, String setNumber,
 			String condition, String printing, String priceBought, String dateBought, OwnedCard existingCard) {
-		if (setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
-				&& dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
-				&& condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
-				&& name.equals(existingCard.cardName) && setCode.equals(existingCard.setCode)) {
-			return true;
-		}
-		return false;
-	}
+        return setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
+                && dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
+                && condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
+                && name.equals(existingCard.cardName) && setCode.equals(existingCard.setCode);
+    }
 	
 	public static boolean doesCardExactlyMatchWithColor(String folder, String name, String setCode, String setNumber,
 			String condition, String printing, String priceBought, String dateBought, String colorVariant,
 			OwnedCard existingCard) {
-		if (setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
-				&& dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
-				&& condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
-				&& name.equals(existingCard.cardName) && setCode.equals(existingCard.setCode)
-				&& colorVariant.equals(existingCard.colorVariant)) {
-			return true;
-		}
-		return false;
-	}
+        return setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
+                && dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
+                && condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
+                && name.equals(existingCard.cardName) && setCode.equals(existingCard.setCode)
+                && colorVariant.equals(existingCard.colorVariant);
+    }
 
 	public static void checkSetCounts(SQLiteConnection db) throws SQLException {
 		ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
@@ -427,7 +421,7 @@ public class Util {
 			// try removing color code
 
 			String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
-			String colorcode = setNumber.substring(setNumber.length() - 1, setNumber.length());
+			String colorcode = setNumber.substring(setNumber.length() - 1);
 
 			setRarities = DatabaseHashMap.getRaritiesOfCardInSetFromHashMap(newSetNumber, db);
 
@@ -558,12 +552,12 @@ public class Util {
 
 			String identifiedLang = splitStrings[1].substring(0, numIndex);
 
-			String identifiedNumString = splitStrings[1].substring(numIndex, splitStrings[1].length());
+			String identifiedNumString = splitStrings[1].substring(numIndex);
 
 			Integer identifiedNumber = null;
 
 			try {
-				identifiedNumber = new Integer(identifiedNumString);
+				identifiedNumber = Integer.valueOf(identifiedNumString);
 			} catch (Exception e) {
 				System.out.println("Issue found with " + setName + ": " + lastFullString + " and " + currentCode);
 				lastPrefix = identifiedPrefix;

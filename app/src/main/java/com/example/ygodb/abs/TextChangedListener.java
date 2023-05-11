@@ -5,7 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 public abstract class TextChangedListener<T> implements TextWatcher {
-    private T target;
+    private final T target;
 
     public TextChangedListener(T target) {
         this.target = target;
@@ -20,7 +20,7 @@ public abstract class TextChangedListener<T> implements TextWatcher {
 
     Handler handler = new Handler();
 
-    private Runnable input_finish_checker = new Runnable() {
+    private final Runnable input_finish_checker = new Runnable() {
         public void run() {
             if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
                 objRef.onTextChanged(target, s);

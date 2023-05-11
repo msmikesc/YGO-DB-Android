@@ -83,9 +83,9 @@ public class AnalyzeCardsInSet {
 
 			if (!printedSeparator && s.quantity >= 3) {
 				printedSeparator = true;
-				System.out.println("");
+				System.out.println();
 				System.out.println("----");
-				System.out.println("");
+				System.out.println();
 			}
 
 			System.out.println(s.quantity + ":" + s.cardName + " " + s.getStringOfRarities());
@@ -241,9 +241,7 @@ public class AnalyzeCardsInSet {
 					currentData.mainSetName = setName;
 					currentData.mainSetCode = setMetaData.get(0).set_code;
 				}
-				for (String s : current.setName.split(",")) {
-					currentData.setName.add(s);
-				}
+                Collections.addAll(currentData.setName, current.setName.split(","));
 				currentData.cardPriceAverage = new BigDecimal(current.priceBought);
 				addToHashMap(h, currentData);
 			}

@@ -26,9 +26,9 @@ class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
 
     private final ViewCardSetViewModel viewCardsViewModel;
     private final SingleCardToListAdapter adapter;
-    private LinearLayoutManager layout;
-    private FloatingActionButton fab;
-    private Context context;
+    private final LinearLayoutManager layout;
+    private final FloatingActionButton fab;
+    private final Context context;
 
     public ViewCardSetSortButtonOnClickListener(FloatingActionButton fab, Context context,
                                                 ViewCardSetViewModel viewCardsViewModel,
@@ -61,7 +61,7 @@ class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
 
                 String sortOption = viewCardsViewModel.getSortOption();
 
-                Comparator<OwnedCard> currentComparator = viewCardsViewModel.getCurrentComparator();
+                Comparator<OwnedCard> currentComparator = ViewCardSetViewModel.getCurrentComparator();
 
                 if (!sortOption.equals(menuItem.getTitle())) {
                     sortOption = (String) menuItem.getTitle();
@@ -76,7 +76,7 @@ class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
                         currentComparator = new OwnedCardPriceComparator();
                     }
                     viewCardsViewModel.setSortOption(sortOption);
-                    viewCardsViewModel.setCurrentComparator(currentComparator);
+                    ViewCardSetViewModel.setCurrentComparator(currentComparator);
 
                     ArrayList<OwnedCard> filteredCardsList = viewCardsViewModel.getFilteredCardsList();
 

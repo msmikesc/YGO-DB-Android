@@ -20,9 +20,9 @@ class SellCardsButtonOnClickListener implements View.OnClickListener {
 
     private final SellCardsViewModel sellCardsViewModel;
     private final SellCardToListAdapter adapter;
-    private LinearLayoutManager layout;
-    private FloatingActionButton fab;
-    private Context context;
+    private final LinearLayoutManager layout;
+    private final FloatingActionButton fab;
+    private final Context context;
 
     public SellCardsButtonOnClickListener(FloatingActionButton fab, Context context,
                                           SellCardsViewModel sellCardsViewModel,
