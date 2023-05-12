@@ -12,7 +12,7 @@ import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SummaryCardToListAdapter;
 import com.example.ygodb.ui.viewCards.ViewCardsViewModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class ViewCardSummarySearchBarChangedListener extends TextChangedListener<EditText> {
     private final ViewCardsSummaryViewModel viewCardsViewModel;
@@ -39,13 +39,13 @@ class ViewCardSummarySearchBarChangedListener extends TextChangedListener<EditTe
 
         viewCardsViewModel.setCardNameSearch(cardNameSearch);
 
-        ArrayList<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
+        List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
 
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ArrayList<OwnedCard> newList = viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
+                    List<OwnedCard> newList = viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
                             ViewCardsViewModel.LOADING_LIMIT, 0, cardNameSearch);
 
                     handler.post(new Runnable() {

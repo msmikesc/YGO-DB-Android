@@ -87,6 +87,8 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
                 try {
                     AndroidUtil.getDBInstance().copyDataBaseFromURI(finalFile);
 
+                    finalFile.close();
+
                     SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
                     SharedPreferences.Editor editor = prefs.edit();

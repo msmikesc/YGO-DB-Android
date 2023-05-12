@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.csv.CSVPrinter;
 
@@ -24,8 +26,8 @@ public class AnalyzeCardsInSet {
 
 
 
-	public ArrayList<AnalyzeData> runFor(String setName, SQLiteConnection db) throws SQLException {
-		HashMap<String, AnalyzeData> h = new HashMap<String, AnalyzeData>();
+	public List<AnalyzeData> runFor(String setName, SQLiteConnection db) throws SQLException {
+		HashMap<String, AnalyzeData> h = new HashMap<>();
 
 		String[] sets = setName.split(";");
 
@@ -33,9 +35,7 @@ public class AnalyzeCardsInSet {
 			addAnalyzeDataForSet(h, individualSet, db);
 		}
 
-		ArrayList<AnalyzeData> array = new ArrayList<AnalyzeData>(h.values());
-
-		return array;
+		return new ArrayList<>(h.values());
 	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
@@ -63,19 +63,23 @@ public class AnalyzeCardsInSet {
 			addAnalyzeDataForSet(h, individualSet, db);
 		}
 
-		ArrayList<AnalyzeData> array = new ArrayList<AnalyzeData>(h.values());
+		ArrayList<AnalyzeData> array = new ArrayList<>(h.values());
 
 		printOutput(array, finalFileName);
 
 	}
 
-	public void printOutput(ArrayList<AnalyzeData> array, String setName) throws IOException {
+	public void printOutput(List<AnalyzeData> array, String setName) throws IOException {
 		Collections.sort(array);
 
 		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\Analyze-"
 				+ setName.replaceAll("[\\s\\\\/:*?\"<>|]", "") + ".csv";
 
 		CSVPrinter p = CsvConnection.getAnalyzeOutputFile(filename);
+
+		if(p == null){
+			return;
+		}
 
 		boolean printedSeparator = false;
 
@@ -119,23 +123,23 @@ public class AnalyzeCardsInSet {
 		p.close();
 	}
 
-	public void addAnalyzeDataForSet(HashMap<String, AnalyzeData> h, String setName, SQLiteConnection db) throws SQLException {
+	public void addAnalyzeDataForSet(Map<String, AnalyzeData> h, String setName, SQLiteConnection db) throws SQLException {
 		ArrayList<GamePlayCard> list = db.getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(setName);
 		boolean archetypeMode = false;
 
-		if (list.size() == 0) {
+		if (list.isEmpty()) {
 			ArrayList<SetMetaData> setNames = db.getSetMetaDataFromSetCode(setName.toUpperCase(Locale.ROOT));
 
 			if (setNames == null || setNames.isEmpty() ) {
 
 				list = db.getDistinctCardNamesAndIdsByArchetype(setName);
 				archetypeMode = true;
-				if (list.size() == 0) {
+				if (list.isEmpty()) {
 					return;
 				}
 			}
 			else {
-				setName = setNames.get(0).set_name;
+				setName = setNames.get(0).setName;
 				list = db.getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(setName);
 			}
 		}
@@ -150,7 +154,7 @@ public class AnalyzeCardsInSet {
 
 			ArrayList<OwnedCard> cardsList = db.getNumberOfOwnedCardsByGamePlayCardUUID(gamePlayCardUUID);
 
-			ArrayList<CardSet> rarityList = null;
+			ArrayList<CardSet> rarityList;
 			if(!archetypeMode) {
 				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
 			}
@@ -158,7 +162,7 @@ public class AnalyzeCardsInSet {
 				rarityList = db.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID);
 			}
 
-			if (cardsList.size() == 0) {
+			if (cardsList.isEmpty()) {
 
 				AnalyzeData currentData = new AnalyzeData();
 
@@ -187,9 +191,15 @@ public class AnalyzeCardsInSet {
 					for (CardSet rarity : rarityList) {
 						currentData.setName.add(rarity.setName);
 						currentData.setRarities.add(rarity.setRarity);
-						BigDecimal setPrice = new BigDecimal(rarity.setPrice);
 
-						if (!("0.00".equals(rarity.setPrice)) && currentData.cardPriceAverage.compareTo(setPrice) > 0){
+						if(rarity.setPrice == null){
+							rarity.setPrice = "0";
+						}
+
+						BigDecimal setPrice = new BigDecimal(rarity.setPrice);
+						BigDecimal zero = new BigDecimal(0);
+
+						if (!(zero.equals(setPrice)) && currentData.cardPriceAverage.compareTo(setPrice) > 0){
 							currentData.cardPriceAverage = setPrice;
 						}
 					}
@@ -206,7 +216,7 @@ public class AnalyzeCardsInSet {
 					currentData.cardType = rarityList.get(0).cardType;
 					currentData.setName.add(setName);
 					currentData.mainSetName = setName;
-					currentData.mainSetCode = setMetaData.get(0).set_code;
+					currentData.mainSetCode = setMetaData.get(0).setCode;
 				}
 				addToHashMap(h, currentData);
 			}
@@ -239,16 +249,16 @@ public class AnalyzeCardsInSet {
 					currentData.setNumber.add(rarityList.get(0).setNumber);
 					currentData.cardType = rarityList.get(0).cardType;
 					currentData.mainSetName = setName;
-					currentData.mainSetCode = setMetaData.get(0).set_code;
+					currentData.mainSetCode = setMetaData.get(0).setCode;
 				}
-                Collections.addAll(currentData.setName, current.setName.split(","));
+				Collections.addAll(currentData.setName, current.setName.split(","));
 				currentData.cardPriceAverage = new BigDecimal(current.priceBought);
 				addToHashMap(h, currentData);
 			}
 		}
 	}
 
-	private void addToHashMap(HashMap<String, AnalyzeData> h, AnalyzeData s) {
+	private void addToHashMap(Map<String, AnalyzeData> h, AnalyzeData s) {
 
 		AnalyzeData existing = h.get(s.cardName);
 

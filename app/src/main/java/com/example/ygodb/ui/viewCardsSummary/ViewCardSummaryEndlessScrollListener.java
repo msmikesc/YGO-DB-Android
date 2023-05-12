@@ -9,7 +9,7 @@ import com.example.ygodb.abs.EndlessScrollListener;
 import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SummaryCardToListAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class ViewCardSummaryEndlessScrollListener extends EndlessScrollListener {
     private final ViewCardsSummaryViewModel viewCardsViewModel;
@@ -28,14 +28,14 @@ class ViewCardSummaryEndlessScrollListener extends EndlessScrollListener {
             @Override
             public void run() {
                 try {
-                    ArrayList<OwnedCard> moreCards =
+                    List<OwnedCard> moreCards =
                             viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
                                     ViewCardsSummaryViewModel.LOADING_LIMIT,
                                     page * ViewCardsSummaryViewModel.LOADING_LIMIT,
                                     viewCardsViewModel.getCardNameSearch());
                     int curSize = adapter.getItemCount();
 
-                    ArrayList<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
+                    List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
 
                     cardsList.addAll(moreCards);
 

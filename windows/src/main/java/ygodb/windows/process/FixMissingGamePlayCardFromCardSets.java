@@ -36,7 +36,7 @@ public class FixMissingGamePlayCardFromCardSets {
 				
 				ArrayList<CardSet> cardSets = db.getAllCardSetsOfCardByGamePlayCardUUIDAndSet(gamePlayCardUUID, setName);
 				
-				if(titles == null || titles.size() == 0) {
+				if(titles == null || titles.isEmpty()) {
 					System.out.println("0 gameplaycard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).cardName);
 					
 					GamePlayCard current = new GamePlayCard();

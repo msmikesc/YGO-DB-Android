@@ -40,8 +40,8 @@ public class ViewCardSetFragment extends Fragment {
         RecyclerView cardsListView = binding.viewList;
 
         ArrayAdapter<String> autoCompleteAdapter=
-                new ArrayAdapter<String>(getContext(),android.R.layout.simple_dropdown_item_1line,
-                        viewCardSetViewModel.getSetNamesDropdownList());
+				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
+						viewCardSetViewModel.getSetNamesDropdownList());
         AutoCompleteTextView textView= root.findViewById(R.id.setSearch);
         textView.setThreshold(3);
         textView.setAdapter(autoCompleteAdapter);
@@ -60,17 +60,17 @@ public class ViewCardSetFragment extends Fragment {
 
         binding.setSearch.addTextChangedListener(new ViewCardSet_SetSearchBarChangedListener(binding.setSearch, viewCardSetViewModel, adapter, layout));
 
-        viewCardSetViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    viewCardSetViewModel.setDbRefreshIndicatorFalse();
-                    layout.scrollToPositionWithOffset(0, 0);
-                    adapter.notifyDataSetChanged();
-                    autoCompleteAdapter.notifyDataSetChanged();
-                }
-            }
-        });
+        viewCardSetViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), new Observer<>() {
+			@Override
+			public void onChanged(Boolean aBoolean) {
+				if (aBoolean) {
+					viewCardSetViewModel.setDbRefreshIndicatorFalse();
+					layout.scrollToPositionWithOffset(0, 0);
+					adapter.notifyDataSetChanged();
+					autoCompleteAdapter.notifyDataSetChanged();
+				}
+			}
+		});
 
         return root;
     }

@@ -21,17 +21,11 @@ import ygodb.commonLibrary.utility.Util;
 
 public class ImportPricesFromYGOPROAPI {
 	
-	HashMap<String, List<String>> NameUpdateMap = new HashMap<String, List<String>>();
+	HashMap<String, List<String>> NameUpdateMap = new HashMap<>();
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		//String setName = "OTS Tournament Pack 21";
-
-		//setName = setName.trim();
-
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardinfo.php?tcgplayer_data=true";
-
-		//String apiURL = setAPI + URLEncoder.encode(setName);
 
 		try {
 
@@ -48,33 +42,18 @@ public class ImportPricesFromYGOPROAPI {
 				throw new RuntimeException("HttpResponseCode: " + responsecode);
 			} else {
 
-				String inline = "";
-				InputStream inputStreamFromURL = url.openStream();
-
-				ByteArrayOutputStream result = new ByteArrayOutputStream();
-				byte[] buffer = new byte[1024];
-				for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
-				    result.write(buffer, 0, length);
-				}
-				inline = result.toString(StandardCharsets.UTF_8);
+				String inline = Util.getApiResponseFromURL(url);
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
 				System.out.println("Finished reading from API");
 
-				inline = null;
-
 				JsonNode cards = jsonNode.get("data");
 
-				Iterator<JsonNode> keyset = cards.iterator();
+				for (JsonNode current : cards) {
 
-				while (keyset.hasNext()) {
-
-					JsonNode current = keyset.next();
-
-					int cardID = Util.getIntOrNegativeOne(current,"id");
-					String name = Util.getStringOrNull(current,"name");
+					String name = Util.getStringOrNull(current, "name");
 
 					JsonNode sets = null;
 					Iterator<JsonNode> setIteraor = null;
@@ -89,13 +68,12 @@ public class ImportPricesFromYGOPROAPI {
 
 				}
 				
-				List<String> namesList = new ArrayList<String>(NameUpdateMap.keySet());
-				
-				for(int i = 0; i < namesList.size(); i++) {
-					String setName = namesList.get(i);
-					System.out.println("Possibly need to handle set name issue count: " + NameUpdateMap.get(setName).size() + " " + setName );
+				List<String> namesList = new ArrayList<>(NameUpdateMap.keySet());
 
-					for(int j = 0; j < NameUpdateMap.get(setName).size(); j++) {
+				for (String setName : namesList) {
+					System.out.println("Possibly need to handle set name issue count: " + NameUpdateMap.get(setName).size() + " " + setName);
+
+					for (int j = 0; j < NameUpdateMap.get(setName).size(); j++) {
 						System.out.println(NameUpdateMap.get(setName).get(j));
 					}
 
@@ -114,16 +92,16 @@ public class ImportPricesFromYGOPROAPI {
 
 			JsonNode currentSet = setIterator.next();
 
-			String set_code = null;
-			String set_name = null;
-			String set_rarity = null;
-			String set_price = null;
+			String setCode = null;
+			String setName = null;
+			String setRarity = null;
+			String setPrice = null;
 
 			try {
-				set_code = Util.getStringOrNull(currentSet,"set_code");
-				set_name = Util.getStringOrNull(currentSet,"set_name");
-				set_rarity = Util.getStringOrNull(currentSet,"set_rarity");
-				set_price = Util.getStringOrNull(currentSet,"set_price");
+				setCode = Util.getStringOrNull(currentSet,"set_code");
+				setName = Util.getStringOrNull(currentSet,"set_name");
+				setRarity = Util.getStringOrNull(currentSet,"set_rarity");
+				setPrice = Util.getStringOrNull(currentSet,"set_price");
 				//set_rarity_code = Util.getStringOrNull(currentSet,"set_rarity_code");
 				//set_edition = Util.getStringOrNull(currentSet,"set_edition");
 				//set_url = Util.getStringOrNull(currentSet,"set_url");
@@ -133,47 +111,43 @@ public class ImportPricesFromYGOPROAPI {
 			}
 
 			name = Util.checkForTranslatedCardName(name);
-			set_rarity = Util.checkForTranslatedRarity(set_rarity);
-			set_name = Util.checkForTranslatedSetName(set_name);
-			set_code = Util.checkForTranslatedSetNumber(set_code);
+			setRarity = Util.checkForTranslatedRarity(setRarity);
+			setName = Util.checkForTranslatedSetName(setName);
+			setCode = Util.checkForTranslatedSetNumber(setCode);
 
-			List<String> translatedList = Util.checkForTranslatedQuadKey(name, set_code, set_rarity, set_name);
+			List<String> translatedList = Util.checkForTranslatedQuadKey(name, setCode, setRarity, setName);
 			name = translatedList.get(0);
-			set_code = translatedList.get(1);
-			set_rarity = translatedList.get(2);
-			set_name = translatedList.get(3);
+			setCode = translatedList.get(1);
+			setRarity = translatedList.get(2);
+			setName = translatedList.get(3);
 			
-			set_price = Util.normalizePrice(set_price);
+			setPrice = Util.normalizePrice(setPrice);
 			
-			if(!set_price.equals("0.00")){
-				int updated = db.updateCardSetPriceWithSetName(set_code, set_rarity, set_price, set_name);
+			if(setPrice != null && !setPrice.equals("0.00")){
+				int updated = db.updateCardSetPriceWithSetName(setCode, setRarity, setPrice, setName);
 				
 				if(updated == 0) {
 				
-					updated = db.updateCardSetPrice(set_code, set_rarity, set_price);
+					updated = db.updateCardSetPrice(setCode, setRarity, setPrice);
 					
 					if(updated == 0) {
-						ArrayList<CardSet> list = db.getAllCardSetsOfCardBySetNumber(set_code);
+						ArrayList<CardSet> list = db.getAllCardSetsOfCardBySetNumber(setCode);
 						
 						if(list.size() == 1) {
-							updated = db.updateCardSetPrice(set_code, set_price);
+							updated = db.updateCardSetPrice(setCode, setPrice);
 						}
 						
 					}
 					else {
-						
-						List<String> setNamesList = NameUpdateMap.get(set_name);
-						
-						if(setNamesList == null) {
-							setNamesList = new ArrayList<>();
-							NameUpdateMap.put(set_name, setNamesList);
-						}
-						setNamesList.add(name +" "+ set_code);
+
+						List<String> setNamesList = NameUpdateMap.computeIfAbsent(setName, k -> new ArrayList<>());
+
+						setNamesList.add(name +" "+ setCode);
 					}
 				}
 				
 				if(updated != 1) {
-					System.out.println("\"" +set_code +"\",\""+name + "\",\"" + set_rarity + "\",\"" + set_name + "\"," + set_price +","+ updated + " rows updated");
+					System.out.println("\"" +setCode +"\",\""+name + "\",\"" + setRarity + "\",\"" + setName + "\"," + setPrice +","+ updated + " rows updated");
 				}
 			}
 		}

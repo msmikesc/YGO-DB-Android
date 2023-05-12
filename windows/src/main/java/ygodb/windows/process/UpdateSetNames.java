@@ -27,8 +27,8 @@ public class UpdateSetNames {
 		ArrayList<SetMetaData> metaData = db.getAllSetMetaDataFromSetData();
 		
 		for(SetMetaData meta: metaData) {
-			if(!setsList.contains(meta.set_name)) {
-				setsList.add(meta.set_name);
+			if(!setsList.contains(meta.setName)) {
+				setsList.add(meta.setName);
 			}
 		}
 

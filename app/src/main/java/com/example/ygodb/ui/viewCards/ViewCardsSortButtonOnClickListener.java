@@ -5,15 +5,13 @@ import android.os.AsyncTask;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.example.ygodb.R;
-import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import ygodb.commonLibrary.bean.OwnedCard;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class ViewCardsSortButtonOnClickListener implements View.OnClickListener {
 
@@ -49,22 +47,19 @@ class ViewCardsSortButtonOnClickListener implements View.OnClickListener {
 
                 String sortOrder = viewCardsViewModel.getSortOrder();
 
-                if (!sortOption.equals(menuItem.getTitle())) {
+                if (!sortOption.contentEquals(menuItem.getTitle())) {
                     sortOption = (String) menuItem.getTitle();
 
-                    if (sortOption.equals("Date Bought")) {
-                        sortOrder = "dateBought desc, modificationDate desc";
-                    } else if (sortOption.equals("Card Name")) {
-                        sortOrder = "cardName asc, dateBought desc";
-                    } else if (sortOption.equals("Set Number")) {
-                        sortOrder = "setName asc, setNumber asc";
-                    } else if (sortOption.equals("Price")) {
-                        sortOrder = "priceBought desc, cardName asc";
+                    switch (sortOption) {
+                        case "Date Bought" -> sortOrder = "dateBought desc, modificationDate desc";
+                        case "Card Name" -> sortOrder = "cardName asc, dateBought desc";
+                        case "Set Number" -> sortOrder = "setName asc, setNumber asc";
+                        case "Price" -> sortOrder = "priceBought desc, cardName asc";
                     }
                     viewCardsViewModel.setSortOption(sortOption);
                     viewCardsViewModel.setSortOrder(sortOrder);
 
-                    ArrayList<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
+                    List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
 
                     String finalSortOrder = sortOrder;
                     AsyncTask.execute(new Runnable() {
@@ -72,7 +67,7 @@ class ViewCardsSortButtonOnClickListener implements View.OnClickListener {
                         public void run() {
                             try {
                                 cardsList.clear();
-                                ArrayList<OwnedCard> moreCards =
+                                List<OwnedCard> moreCards =
                                         viewCardsViewModel.loadMoreData(finalSortOrder,
                                                 ViewCardsViewModel.LOADING_LIMIT,
                                                 0, viewCardsViewModel.getCardNameSearch());

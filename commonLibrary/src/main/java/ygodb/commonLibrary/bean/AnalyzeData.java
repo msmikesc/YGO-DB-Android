@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class AnalyzeData implements Comparable<AnalyzeData> {
@@ -17,22 +18,18 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	public Set<String> setRarities;
 	public String cardType;
 	public BigDecimal cardPriceAverage;
-
 	public String mainSetName;
-
 	public String mainSetCode;
-
 	public int passcode;
-
-	public ArrayList<CardSet> mainSetCardSets;
+	public List<CardSet> mainSetCardSets;
 
 
 	public AnalyzeData() {
-		setNumber = new HashSet<String>();
-		setName = new HashSet<String>();
-		setRarities = new HashSet<String>();
+		setNumber = new HashSet<>();
+		setName = new HashSet<>();
+		setRarities = new HashSet<>();
 
-		mainSetCardSets = new ArrayList<CardSet>();
+		mainSetCardSets = new ArrayList<>();
 		cardPriceAverage = new BigDecimal(0);
 		cardPriceAverage = cardPriceAverage.setScale(2, RoundingMode.HALF_UP);
 
@@ -51,7 +48,7 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 		int compare = 0;
 		
-		compare = Integer.valueOf(this.quantity).compareTo(Integer.valueOf(o.quantity));
+		compare = Integer.compare(this.quantity, o.quantity);
 
 		if (compare != 0) {
 			return compare;
@@ -74,156 +71,156 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	public String getStringOfSetNames() {
 		
-		if(setName.size() == 0) {
+		if(setName.isEmpty()) {
 			return "";
 		}
 
-		ArrayList<String> results = new ArrayList<String>(setName);
+		ArrayList<String> results = new ArrayList<>(setName);
 
 		Collections.sort(results);
 
-		String output = results.get(0);
+		StringBuilder output = new StringBuilder(results.get(0));
 
 		for (int i = 1; i < results.size(); i++) {
-			output += ", " + results.get(i);
+			output.append(", ").append(results.get(i));
 		}
 
-		return output;
+		return output.toString();
 	}
 
 	public String getStringOfSetNumbers() {
 		
-		if(setNumber.size() == 0) {
+		if(setNumber.isEmpty()) {
 			return "";
 		}
 		
-		ArrayList<String> results = new ArrayList<String>(setNumber);
+		ArrayList<String> results = new ArrayList<>(setNumber);
 
 		if(results.size() == 1){
 			return results.get(0);
 		}
 
-		if(results.size() == 0){
+		if(results.isEmpty()){
 			return "None Found";
 		}
 
 		Collections.sort(results);
 
-		String output = results.get(0);
+		StringBuilder output = new StringBuilder(results.get(0));
 
 		for (int i = 1; i < results.size(); i++) {
-			output += ", " + results.get(i);
+			output.append(", ").append(results.get(i));
 		}
 
-		return output;
+		return output.toString();
 	}
 
 	public String getStringOfMainSetNumbers() {
 
-		if(mainSetCardSets.size() == 0) {
+		if(mainSetCardSets.isEmpty()) {
 			return "";
 		}
 
 		HashSet<String> mainSetNumber = new HashSet<>();
 
-		for(int i = 0; i < mainSetCardSets.size(); i++){
-			mainSetNumber.add(mainSetCardSets.get(i).setNumber);
+		for (CardSet mainSetCardSet : mainSetCardSets) {
+			mainSetNumber.add(mainSetCardSet.setNumber);
 		}
 
-		ArrayList<String> results = new ArrayList<String>(mainSetNumber);
+		ArrayList<String> results = new ArrayList<>(mainSetNumber);
 
 		if(results.size() == 1){
 			return results.get(0);
 		}
 
-		if(results.size() == 0){
+		if(results.isEmpty()){
 			return "None Found";
 		}
 
 		Collections.sort(results);
 
-		String output = results.get(0);
+		StringBuilder output = new StringBuilder(results.get(0));
 
 		for (int i = 1; i < results.size(); i++) {
-			output += ", " + results.get(i);
+			output.append(", ").append(results.get(i));
 		}
 
-		return output;
+		return output.toString();
 	}
 
 	public String getStringOfRarities() {
 		
-		if(setRarities.size() == 0) {
+		if(setRarities.isEmpty()) {
 			return "";
 		}
 		
-		HashSet<Rarity> enumList = new HashSet<Rarity>();
+		HashSet<Rarity> enumList = new HashSet<>();
 
 		for (String s : setRarities) {
 			Rarity rarityValue = Rarity.fromString(s);
 			enumList.add(rarityValue);
 		}
 
-		ArrayList<Rarity> enumList2 = new ArrayList<Rarity>(enumList);
+		ArrayList<Rarity> enumList2 = new ArrayList<>(enumList);
 
 		if(enumList2.size() == 1){
 			return enumList2.get(0).toString();
 		}
 
-		if(enumList2.size() == 0){
+		if(enumList2.isEmpty()){
 			return "None Found";
 		}
 
 		Collections.sort(enumList2);
 
-		String output = enumList2.get(0).toString();
+		StringBuilder output = new StringBuilder(enumList2.get(0).toString());
 
 		for (int i = 1; i < enumList.size(); i++) {
-			output += ", " + enumList2.get(i).toString();
+			output.append(", ").append(enumList2.get(i).toString());
 		}
 
-		return output;
+		return output.toString();
 
 	}
 
 	public String getStringOfMainRarities() {
 
-		if(mainSetCardSets.size() == 0) {
+		if(mainSetCardSets.isEmpty()) {
 			return "";
 		}
 
 		HashSet<String> mainSetRarities = new HashSet<>();
 
-		for(int i = 0; i < mainSetCardSets.size(); i++){
-			mainSetRarities.add(mainSetCardSets.get(i).setRarity);
+		for (CardSet mainSetCardSet : mainSetCardSets) {
+			mainSetRarities.add(mainSetCardSet.setRarity);
 		}
 
-		HashSet<Rarity> enumList = new HashSet<Rarity>();
+		HashSet<Rarity> enumList = new HashSet<>();
 
 		for (String s : mainSetRarities) {
 			Rarity rarityValue = Rarity.fromString(s);
 			enumList.add(rarityValue);
 		}
 
-		ArrayList<Rarity> enumList2 = new ArrayList<Rarity>(enumList);
+		ArrayList<Rarity> enumList2 = new ArrayList<>(enumList);
 
 		if(enumList2.size() == 1){
 			return enumList2.get(0).toString();
 		}
 
-		if(enumList2.size() == 0){
+		if(enumList2.isEmpty()){
 			return "None Found";
 		}
 
 		Collections.sort(enumList2);
 
-		String output = enumList2.get(0).toString();
+		StringBuilder output = new StringBuilder(enumList2.get(0).toString());
 
 		for (int i = 1; i < enumList.size(); i++) {
-			output += ", " + enumList2.get(i).toString();
+			output.append(", ").append(enumList2.get(i).toString());
 		}
 
-		return output;
+		return output.toString();
 
 	}
 

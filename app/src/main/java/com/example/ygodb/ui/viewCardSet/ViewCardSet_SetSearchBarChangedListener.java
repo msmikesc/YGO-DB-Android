@@ -4,14 +4,12 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.Editable;
 import android.widget.EditText;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.example.ygodb.abs.TextChangedListener;
-import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
+import ygodb.commonLibrary.bean.OwnedCard;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class ViewCardSet_SetSearchBarChangedListener extends TextChangedListener<EditText> {
     private final ViewCardSetViewModel viewCardsViewModel;
@@ -42,16 +40,16 @@ class ViewCardSet_SetSearchBarChangedListener extends TextChangedListener<EditTe
             @Override
             public void run() {
                 try {
-                    ArrayList<OwnedCard> results = null;
-                    ArrayList<OwnedCard> filteredResults = null;
+                    List<OwnedCard> results = null;
+                    List<OwnedCard> filteredResults = null;
 
                     results = viewCardsViewModel.getInitialData(setNameSearch);
                     filteredResults = viewCardsViewModel.getFilteredList(results, viewCardsViewModel.getCardNameSearch());
 
-                    viewCardsViewModel.sortData(filteredResults, ViewCardSetViewModel.getCurrentComparator());
+                    viewCardsViewModel.sortData(filteredResults, viewCardsViewModel.getCurrentComparator());
 
-                    ArrayList<OwnedCard> finalResults = results;
-                    ArrayList<OwnedCard> finalFilteredResults = filteredResults;
+                    List<OwnedCard> finalResults = results;
+                    List<OwnedCard> finalFilteredResults = filteredResults;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

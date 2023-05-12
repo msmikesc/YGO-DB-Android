@@ -12,16 +12,16 @@ import ygodb.commonLibrary.bean.OwnedCard;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 public class ViewCardSetViewModel extends ViewModel {
 
-    private ArrayList<OwnedCard> cardsList;
-    private ArrayList<OwnedCard> filteredCardsList;
+    private List<OwnedCard> cardsList;
+    private List<OwnedCard> filteredCardsList;
 
-    private static Comparator<OwnedCard> currentComparator = null;
+    private Comparator<OwnedCard> currentComparator = null;
     private String sortOption = null;
     private String cardNameSearch = null;
     private String setNameSearch = null;
@@ -38,7 +38,7 @@ public class ViewCardSetViewModel extends ViewModel {
         isCardNameMode = true;
     }
 
-    private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
+    private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<>(false);
 
     public MutableLiveData<Boolean> getDbRefreshIndicator() {
         return dbRefreshIndicator;
@@ -50,16 +50,16 @@ public class ViewCardSetViewModel extends ViewModel {
 
     public void refreshViewDBUpdate() {
         if(!isCardNameMode) {
-            ArrayList<OwnedCard> results = getInitialData(setNameSearch);
+            List<OwnedCard> results = getInitialData(setNameSearch);
             cardsList.clear();
             cardsList.addAll(results);
 
-            ArrayList<OwnedCard> filteredResults = getFilteredList(results, cardNameSearch);
+            List<OwnedCard> filteredResults = getFilteredList(results, cardNameSearch);
             filteredCardsList.clear();
             filteredCardsList.addAll(filteredResults);
         }
         else{
-            ArrayList<OwnedCard> results = getInitialCardNameData(cardNameSearch);
+            List<OwnedCard> results = getInitialCardNameData(cardNameSearch);
             filteredCardsList.clear();
             filteredCardsList.addAll(results);
         }
@@ -67,7 +67,7 @@ public class ViewCardSetViewModel extends ViewModel {
         this.dbRefreshIndicator.postValue(true);
     }
 
-    public ArrayList<OwnedCard> getInitialCardNameData(String cardName) {
+    public List<OwnedCard> getInitialCardNameData(String cardName) {
 
         ArrayList<OwnedCard> results = null;
 
@@ -78,7 +78,7 @@ public class ViewCardSetViewModel extends ViewModel {
         results = AndroidUtil.getDBInstance().getAllPossibleCardsByNameSearch(cardName,
                 "a.cardName asc, a.setNumber asc, a.setRarity asc");
 
-        if(results.size() > 0){
+        if(!results.isEmpty()){
             isCardNameMode = true;
         }
         sortOption = "Default";
@@ -86,11 +86,11 @@ public class ViewCardSetViewModel extends ViewModel {
         return results;
     }
 
-    public ArrayList<OwnedCard> getInitialData(String setName) {
+    public List<OwnedCard> getInitialData(String setName) {
 
         AnalyzeCardsInSet runner = new AnalyzeCardsInSet();
 
-        ArrayList<AnalyzeData> results = null;
+        List<AnalyzeData> results = null;
         ArrayList<OwnedCard> newList = new ArrayList<>();
 
         if(setName == null || setName.equals("") || setName.trim().length() < 4){
@@ -127,14 +127,14 @@ public class ViewCardSetViewModel extends ViewModel {
 
         sortData(newList, currentComparator);
 
-        if(newList.size() > 0){
+        if(!newList.isEmpty()){
             isCardNameMode = false;
         }
 
         return newList;
     }
     
-    public ArrayList<OwnedCard> getFilteredList(ArrayList<OwnedCard> inputList, String filter){
+    public List<OwnedCard> getFilteredList(List<OwnedCard> inputList, String filter){
 
         ArrayList<OwnedCard> newList = new ArrayList<>();
         
@@ -147,15 +147,15 @@ public class ViewCardSetViewModel extends ViewModel {
         return newList;
     }
 
-    public void sortData(ArrayList<OwnedCard> cardsList, Comparator<OwnedCard> currentComparator){
-        Collections.sort(cardsList, currentComparator);
+    public void sortData(List<OwnedCard> cardsList, Comparator<OwnedCard> currentComparator){
+        cardsList.sort(currentComparator);
     }
 
-    public ArrayList<OwnedCard> getCardsList() {
+    public List<OwnedCard> getCardsList() {
         return cardsList;
     }
 
-    public ArrayList<OwnedCard> getFilteredCardsList() {
+    public List<OwnedCard> getFilteredCardsList() {
         return filteredCardsList;
     }
 
@@ -197,23 +197,23 @@ public class ViewCardSetViewModel extends ViewModel {
         return setNamesDropdownList;
     }
 
-    public static Comparator<OwnedCard> getCurrentComparator() {
+    public Comparator<OwnedCard> getCurrentComparator() {
         return currentComparator;
     }
 
-    public static void setCurrentComparator(Comparator<OwnedCard> currentComparator) {
-        ViewCardSetViewModel.currentComparator = currentComparator;
+    public void setCurrentComparator(Comparator<OwnedCard> currentComparator) {
+        this.currentComparator = currentComparator;
     }
 
     public boolean isCardNameMode() {
         return isCardNameMode;
     }
 
-    public void setCardsList(ArrayList<OwnedCard> cardsList) {
+    public void setCardsList(List<OwnedCard> cardsList) {
         this.cardsList = cardsList;
     }
 
-    public void setFilteredCardsList(ArrayList<OwnedCard> filteredCardsList) {
+    public void setFilteredCardsList(List<OwnedCard> filteredCardsList) {
         this.filteredCardsList = filteredCardsList;
     }
 }

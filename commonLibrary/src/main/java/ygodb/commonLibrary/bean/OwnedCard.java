@@ -1,6 +1,6 @@
 package ygodb.commonLibrary.bean;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class OwnedCard {
 
@@ -20,19 +20,13 @@ public class OwnedCard {
 	public String priceBought;
 	public String creationDate;
 	public String modificationDate;
-
-	public String UUID;
-
+	public String uuid;
 	public String multiListSetNames;
-
 	public String dropdownSelectedSetNumber;
 	public String dropdownSelectedRarity;
-
-	public ArrayList<CardSet> mainSetCardSets;
-
+	public List<CardSet> mainSetCardSets;
 	public int sellQuantity;
 	public String priceSold;
 	public String dateSold;
-
 	public int passcode;
 }

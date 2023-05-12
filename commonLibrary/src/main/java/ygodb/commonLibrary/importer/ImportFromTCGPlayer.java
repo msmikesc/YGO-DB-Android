@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.csv.CSVRecord;
 
@@ -22,7 +23,7 @@ public class ImportFromTCGPlayer {
 		Iterator<CSVRecord> it = CsvConnection.getIterator(
 				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\TCGPlayer.csv", StandardCharsets.UTF_16LE);
 
-		HashMap<String, OwnedCard> map = new HashMap<String, OwnedCard>();
+		HashMap<String, OwnedCard> map = new HashMap<>();
 
 		int count = 0;
 
@@ -43,7 +44,7 @@ public class ImportFromTCGPlayer {
 					map.get(key).quantity += card.quantity;
 				} else {
 
-					ArrayList<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(
+					List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(
 							card.setNumber, card.priceBought, card.dateBought, card.folderName, card.condition,
 							card.editionPrinting, db);
 
@@ -52,7 +53,7 @@ public class ImportFromTCGPlayer {
 								card.setNumber, card.condition, card.editionPrinting, card.priceBought, card.dateBought,
 								card.colorVariant, existingCard)) {
 							card.quantity += existingCard.quantity;
-							card.UUID = existingCard.UUID;
+							card.uuid = existingCard.uuid;
 							card.gamePlayCardUUID = existingCard.gamePlayCardUUID;
 							break;
 						}

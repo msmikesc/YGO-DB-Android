@@ -6,21 +6,19 @@ import android.os.AsyncTask;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.example.ygodb.R;
 import com.example.ygodb.abs.OwnedCardNameComparator;
 import com.example.ygodb.abs.OwnedCardPriceComparator;
 import com.example.ygodb.abs.OwnedCardQuantityComparator;
 import com.example.ygodb.abs.OwnedCardSetNumberComparator;
-import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.addCards.AddCardsFragment;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import ygodb.commonLibrary.bean.OwnedCard;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
 
@@ -52,7 +50,7 @@ class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                if ("Add Mode".equals(menuItem.getTitle())) {
+                if ("Add Mode".contentEquals(menuItem.getTitle())) {
 
                     Intent intent = new Intent(context, AddCardsFragment.class);
                     context.startActivity(intent);
@@ -61,24 +59,21 @@ class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
 
                 String sortOption = viewCardsViewModel.getSortOption();
 
-                Comparator<OwnedCard> currentComparator = ViewCardSetViewModel.getCurrentComparator();
+                Comparator<OwnedCard> currentComparator = viewCardsViewModel.getCurrentComparator();
 
-                if (!sortOption.equals(menuItem.getTitle())) {
+                if (!sortOption.contentEquals(menuItem.getTitle())) {
                     sortOption = (String) menuItem.getTitle();
 
-                    if (sortOption.equals("Quantity")) {
-                        currentComparator = new OwnedCardQuantityComparator();
-                    } else if (sortOption.equals("Card Name")) {
-                        currentComparator = new OwnedCardNameComparator();
-                    } else if (sortOption.equals("Set Number")) {
-                        currentComparator = new OwnedCardSetNumberComparator();
-                    } else if (sortOption.equals("Price")) {
-                        currentComparator = new OwnedCardPriceComparator();
+                    switch (sortOption) {
+                        case "Quantity" -> currentComparator = new OwnedCardQuantityComparator();
+                        case "Card Name" -> currentComparator = new OwnedCardNameComparator();
+                        case "Set Number" -> currentComparator = new OwnedCardSetNumberComparator();
+                        case "Price" -> currentComparator = new OwnedCardPriceComparator();
                     }
                     viewCardsViewModel.setSortOption(sortOption);
-                    ViewCardSetViewModel.setCurrentComparator(currentComparator);
+                    viewCardsViewModel.setCurrentComparator(currentComparator);
 
-                    ArrayList<OwnedCard> filteredCardsList = viewCardsViewModel.getFilteredCardsList();
+                    List<OwnedCard> filteredCardsList = viewCardsViewModel.getFilteredCardsList();
 
                     Comparator<OwnedCard> finalCurrentComparator = currentComparator;
                     AsyncTask.execute(new Runnable() {

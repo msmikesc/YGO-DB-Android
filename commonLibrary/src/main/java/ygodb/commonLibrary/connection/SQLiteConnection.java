@@ -82,7 +82,7 @@ public interface SQLiteConnection {
 
     HashMap<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() throws SQLException;
 
-    void replaceIntoCardSetMetaData(String set_name, String set_code, int num_of_cards, String tcg_date) throws SQLException;
+    void replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) throws SQLException;
 
     GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException;
 
@@ -90,7 +90,7 @@ public interface SQLiteConnection {
 
     void replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 
-    void UpdateOwnedCardByUUID(OwnedCard card) throws SQLException;
+    void updateOwnedCardByUUID(OwnedCard card) throws SQLException;
 
     void sellCards(OwnedCard card, int quantity, String priceSold);
 

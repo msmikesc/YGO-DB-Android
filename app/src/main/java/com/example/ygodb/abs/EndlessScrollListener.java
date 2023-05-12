@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class EndlessScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
@@ -16,7 +17,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     // True if we are still waiting for the last set of data to load.
     private boolean loading = true;
     // Sets the starting page index
-    private final int startingPageIndex = 0;
+    private static final int STARTING_PAGE_INDEX = 0;
 
     RecyclerView.LayoutManager mLayoutManager;
 
@@ -51,7 +52,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     // We are given a few useful parameters to help us work out if we need to load some more data,
     // but first we check if we are waiting for the previous load to finish.
     @Override
-    public void onScrolled(RecyclerView view, int dx, int dy) {
+    public void onScrolled(@NotNull RecyclerView view, int dx, int dy) {
         int lastVisibleItemPosition = 0;
         int totalItemCount = mLayoutManager.getItemCount();
 
@@ -86,7 +87,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
 
     // Call whenever performing new searches
     public void resetState() {
-        this.currentPage = this.startingPageIndex;
+        this.currentPage = STARTING_PAGE_INDEX;
         this.previousTotalItemCount = 0;
         this.loading = true;
     }

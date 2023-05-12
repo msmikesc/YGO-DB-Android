@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.csv.CSVRecord;
 
@@ -38,7 +39,7 @@ public class ImportOwnedCardFromExportedCSV {
 
 			OwnedCard card = CsvConnection.getOwnedCardFromExportedCSV(current, db);
 			
-			ArrayList<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(card.setNumber, card.priceBought,
+			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(card.setNumber, card.priceBought,
 					card.dateBought, card.folderName, card.condition, card.editionPrinting, db);
 
 			for (OwnedCard existingCard : ownedRarities) {
@@ -50,12 +51,11 @@ public class ImportOwnedCardFromExportedCSV {
 							&& existingCard.setRarity.equals(card.setRarity)) {
 						// nothing to update
 						card = null;
-						break;
 					} else {
 						// something to update
-						card.UUID = existingCard.UUID;
-						break;
+						card.uuid = existingCard.uuid;
 					}
+					break;
 				}
 			}
 

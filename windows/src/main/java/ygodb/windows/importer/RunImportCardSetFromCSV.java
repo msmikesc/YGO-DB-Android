@@ -2,7 +2,6 @@ package ygodb.windows.importer;
 
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.importer.ImportCardSetFromCSV;
-import ygodb.commonLibrary.importer.ImportGamePlayCardFromCSV;
 import ygodb.windows.connection.WindowsUtil;
 
 import java.io.IOException;

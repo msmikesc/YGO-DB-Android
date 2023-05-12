@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.csv.CSVPrinter;
 
@@ -27,34 +28,29 @@ public class AnalyzeCardsToSell {
 
 		 ArrayList<OwnedCard> cards = db.getAllOwnedCards();
 		 
-		 HashMap <String, ArrayList<String>> priceMap = new HashMap<String, ArrayList<String>>();
+		 HashMap <String, ArrayList<String>> priceMap = new HashMap<>();
 		 
-		 HashMap <String, Integer> countMap = new HashMap<String, Integer>();
+		 HashMap <String, Integer> countMap = new HashMap<>();
 		 
-		 HashMap <String, ArrayList<OwnedCard>> cardMap = new HashMap<String, ArrayList<OwnedCard>>();
+		 HashMap <String, ArrayList<OwnedCard>> cardMap = new HashMap<>();
 		 
 		 for(OwnedCard card: cards) {
 			 
 			 ArrayList<String> priceList = priceMap.get(card.cardName);
 			 
 			 Integer count = countMap.get(card.cardName);
-			 
-			 ArrayList<OwnedCard> cardList = cardMap.get(card.cardName);
-			 
-			 if(cardList == null) {
-				 cardList = new ArrayList<OwnedCard>();
-				 cardMap.put(card.cardName, cardList);
-			 }
-			 
+
+			 ArrayList<OwnedCard> cardList = cardMap.computeIfAbsent(card.cardName, k -> new ArrayList<>());
+
 			 cardList.add(card);
 			 
 			 if(priceMap.get(card.cardName) == null) {
-				 priceList = new ArrayList<String>();
+				 priceList = new ArrayList<>();
 				 priceMap.put(card.cardName, priceList);
 			 }
 			 
 			 if(count == null) {
-				 count = Integer.valueOf(0);
+				 count = 0;
 			 }
 			 
 			 count += card.quantity;
@@ -70,14 +66,12 @@ public class AnalyzeCardsToSell {
 
 	}
 
-	public void printOutput(HashMap<String, ArrayList<String>> priceMap, HashMap<String, Integer> countMap, HashMap<String, ArrayList<OwnedCard>> cardMap)
+	public void printOutput(Map<String, ArrayList<String>> priceMap, Map<String, Integer> countMap, Map<String, ArrayList<OwnedCard>> cardMap)
 			throws IOException {
 
 		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\Analyze-" + "Sell.csv";
 
 		CSVPrinter p = CsvConnection.getSellFile(filename);
-
-		countMap.keySet();
 
 		for (String cardName : countMap.keySet()) {
 

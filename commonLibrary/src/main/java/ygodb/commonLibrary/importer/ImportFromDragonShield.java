@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.csv.CSVRecord;
 
@@ -37,7 +38,7 @@ public class ImportFromDragonShield {
 
 			OwnedCard card = CsvConnection.getOwnedCardFromDragonShieldCSV(current, db);
 
-			ArrayList<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(
+			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(
 					card.setNumber, card.priceBought, card.dateBought, card.folderName, card.condition,
 					card.editionPrinting, db);
 
@@ -47,12 +48,11 @@ public class ImportFromDragonShield {
 					if (card.quantity == existingCard.quantity) {
 						// no changes, no need to update
 						card = null;
-						break;
 					} else {
 						// something to update
-						card.UUID = existingCard.UUID;
-						break;
+						card.uuid = existingCard.uuid;
 					}
+					break;
 				}
 			}
 

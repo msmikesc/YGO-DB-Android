@@ -42,7 +42,7 @@ public class ExportUnSyncedForUpload {
 					
 					current.folderName = "Sync Folder";
 					
-					db.UpdateOwnedCardByUUID(current);
+					db.updateOwnedCardByUUID(current);
 				}
 
 			}

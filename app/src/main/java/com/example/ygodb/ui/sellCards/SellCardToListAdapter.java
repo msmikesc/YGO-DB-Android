@@ -28,11 +28,7 @@ import java.util.Locale;
 
 public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAdapter.ItemViewHolder> {
     private final ArrayList<OwnedCard> sellingOwnedCards;
-
     private final SellCardsViewModel sellCardsViewModel;
-
-
-    private  InputStream firstInputStreamSmall;
     private Drawable firstDrawableSmall;
 
     public SellCardToListAdapter(ArrayList<OwnedCard> ownedCards, SellCardsViewModel sellCardsViewModel) {
@@ -40,8 +36,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         this.sellCardsViewModel = sellCardsViewModel;
 
         try {
-
-            firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
+            InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
             firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
         }
         catch (Exception e){
@@ -137,9 +132,9 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
             viewHolder.cardSetCodeDropdown.setVisibility(View.VISIBLE);
             viewHolder.setCode.setVisibility(View.INVISIBLE);
 
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>
-                    (viewHolder.itemView.getContext(),
-                            R.layout.spinner_text_red, setNumbers);
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>
+					(viewHolder.itemView.getContext(),
+							R.layout.spinner_text_red, setNumbers);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             viewHolder.cardSetCodeDropdown.setAdapter(adapter);
 
@@ -188,9 +183,9 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
             viewHolder.cardRarityDropdown.setVisibility(View.VISIBLE);
             viewHolder.cardRarity.setVisibility(View.INVISIBLE);
 
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>
-                    (viewHolder.itemView.getContext(),
-                            R.layout.spinner_text, rarities);
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>
+					(viewHolder.itemView.getContext(),
+							R.layout.spinner_text, rarities);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             viewHolder.cardRarityDropdown.setAdapter(adapter);
 

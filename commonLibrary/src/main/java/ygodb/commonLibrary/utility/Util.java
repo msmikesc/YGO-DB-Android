@@ -2,27 +2,32 @@ package ygodb.commonLibrary.utility;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.SQLException;
-import java.util.*;
-
 import javafx.util.Pair;
 import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.bean.Rarity;
+import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.DatabaseHashMap;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+
 public class Util {
 	
-	public static String defaultColorVariant = "-1";
+	public static final String DEFAULT_COLOR_VARIANT = "-1";
 	
 	private static KeyUpdateMap setNameMap = null;
 	private static HashMap<String, String> rarityMap = null;
@@ -74,7 +79,7 @@ public class Util {
 		return setNameMap;
 	}
 
-	public static HashMap<String, String> getRarityMapInstance() {
+	public static Map<String, String> getRarityMapInstance() {
 		if (rarityMap == null) {
 			rarityMap = new HashMap<>();
 
@@ -96,7 +101,7 @@ public class Util {
 		return rarityMap;
 	}
 
-	public static HashMap<String, String> getSetNumberMapInstance() {
+	public static Map<String, String> getSetNumberMapInstance() {
 		if (setNumberMap == null) {
 			setNumberMap = new HashMap<>();
 
@@ -113,7 +118,7 @@ public class Util {
 		return setNumberMap;
 	}
 
-	public static HashMap<Integer, Integer> getPasscodeMapInstance() {
+	public static Map<Integer, Integer> getPasscodeMapInstance() {
 		if (passcodeMap == null) {
 			passcodeMap = new HashMap<>();
 
@@ -128,7 +133,7 @@ public class Util {
 		return passcodeMap;
 	}
 
-	public static HashMap<String, String> getCardNameMapInstance() {
+	public static Map<String, String> getCardNameMapInstance() {
 		if (cardNameMap == null) {
 			cardNameMap = new HashMap<>();
 
@@ -165,7 +170,7 @@ public class Util {
 			cardNameMap.put("hundred-eyes dragon","Hundred Eyes Dragon");
 			cardNameMap.put("necrolancer the timelord","Necrolancer the Time-lord");
 			cardNameMap.put("sephylon,the Ultimate Time Lord","Sephylon, the Ultimate Timelord");
-			cardNameMap.put("winged dragon	Guardian of the Fortress #1","Winged Dragon, Guardian of the Fortress #1");
+			cardNameMap.put("winged dragon,Guardian of the Fortress #1","Winged Dragon, Guardian of the Fortress #1");
 			cardNameMap.put("blackwing  armed wing","Blackwing Armed Wing");
 			cardNameMap.put("b. skull dragon","Black Skull Dragon");
 
@@ -256,7 +261,7 @@ public class Util {
 	}
 
 	public static String checkForTranslatedRarity(String rarity) {
-		HashMap<String, String> instance = getRarityMapInstance();
+		Map<String, String> instance = getRarityMapInstance();
 
 		String newRarity = instance.get(rarity);
 
@@ -268,7 +273,7 @@ public class Util {
 	}
 
 	public static String checkForTranslatedSetNumber(String setNumber) {
-		HashMap<String, String> instance = getSetNumberMapInstance();
+		Map<String, String> instance = getSetNumberMapInstance();
 
 		String newSetNumber = instance.get(setNumber);
 
@@ -282,7 +287,7 @@ public class Util {
 
 
 	public static String checkForTranslatedCardName(String cardName) {
-		HashMap<String, String> instance = getCardNameMapInstance();
+		Map<String, String> instance = getCardNameMapInstance();
 
 		String newName = instance.get(cardName.toLowerCase(Locale.ROOT));
 
@@ -294,7 +299,7 @@ public class Util {
 	}
 
 	public static int checkForTranslatedPasscode(int passcode) {
-		HashMap<Integer, Integer> instance = getPasscodeMapInstance();
+		Map<Integer, Integer> instance = getPasscodeMapInstance();
 
 		Integer newPasscode = instance.get(passcode);
 
@@ -311,7 +316,7 @@ public class Util {
 		
 		card.folderName = folder;
 		card.cardName = name;
-		card.quantity = Integer.valueOf(quantity);
+		card.quantity = Integer.parseInt(quantity);
 		card.setCode = setCode;
 		card.condition = condition;
 		card.editionPrinting = printing;
@@ -325,7 +330,7 @@ public class Util {
 		card.rarityUnsure = setIdentified.rarityUnsure;
 		card.passcode = passcode;
 
-		card.UUID = UUID.randomUUID().toString();
+		card.uuid = UUID.randomUUID().toString();
 		
 		return card;
 	}
@@ -352,18 +357,18 @@ public class Util {
 		ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
 
 		for (SetMetaData setData : list) {
-			int countCardsinList = db.getCountDistinctCardsInSet(setData.set_name);
+			int countCardsinList = db.getCountDistinctCardsInSet(setData.setName);
 
-			if (countCardsinList != setData.num_of_cards) {
-				System.out.println("Issue for " + setData.set_name + " metadata:" + setData.num_of_cards + " count:"
+			if (countCardsinList != setData.numOfCards) {
+				System.out.println("Issue for " + setData.setName + " metadata:" + setData.numOfCards + " count:"
 						+ countCardsinList);
 			}
 		}
 
-		HashMap<String, SetMetaData> SetMetaDataMap = new HashMap<String, SetMetaData>();
+		HashMap<String, SetMetaData> setMetaDataHashMap = new HashMap<>();
 
 		for (SetMetaData s : list) {
-			SetMetaDataMap.put(s.set_name, s);
+			setMetaDataHashMap.put(s.setName, s);
 		}
 
 		ArrayList<String> setNames = db.getDistinctSetNames();
@@ -374,7 +379,7 @@ public class Util {
 				continue;
 			}
 			
-			SetMetaData meta = SetMetaDataMap.get(setName);
+			SetMetaData meta = setMetaDataHashMap.get(setName);
 
 			if (meta == null) {
 				System.out.println("Issue for " + setName + " no metadata");
@@ -383,8 +388,8 @@ public class Util {
 
 			int cardsInSet = db.getCountDistinctCardsInSet(setName);
 
-			if (cardsInSet != meta.num_of_cards) {
-				System.out.println("Issue for " + setName + " metadata:" + meta.num_of_cards + " count:" + cardsInSet);
+			if (cardsInSet != meta.numOfCards) {
+				System.out.println("Issue for " + setName + " metadata:" + meta.numOfCards + " count:" + cardsInSet);
 			}
 
 		}
@@ -415,9 +420,9 @@ public class Util {
 	public static CardSet findRarity(String priceBought, String dateBought, String folderName, String condition,
 			String editionPrinting, String setNumber, String setName, String cardName, SQLiteConnection db) throws SQLException {
 
-		ArrayList<CardSet> setRarities = DatabaseHashMap.getRaritiesOfCardInSetFromHashMap(setNumber, db);
+		List<CardSet> setRarities = DatabaseHashMap.getRaritiesOfCardInSetFromHashMap(setNumber, db);
 
-		if (setRarities.size() == 0) {
+		if (setRarities.isEmpty()) {
 			// try removing color code
 
 			String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
@@ -439,7 +444,7 @@ public class Util {
 		}
 
 		// if we haven't found any at all give up
-		if (setRarities.size() == 0) {
+		if (setRarities.isEmpty()) {
 			System.out.println("Unable to find anything for " + setNumber);
 			CardSet setIdentified = new CardSet();
 
@@ -461,31 +466,22 @@ public class Util {
 				String name = setRarities.get(i).setRarity;
 				if (name.equals((Rarity.StarlightRare.toString())) || name.equals((Rarity.UltimateRare.toString()))
 						|| name.equals((Rarity.CollectorsRare.toString()))) {
+					CardSet match;
 					if (i == 0) {
-						CardSet match = setRarities.get(1);
-
-						match.rarityUnsure = 0;
-
-						System.out
-								.println("Took a guess that " + setNumber + ":" + cardName + " is:" + match.setRarity);
-
-						return match;
+						match = setRarities.get(1);
 					}
-					if (i == 1) {
-						CardSet match = setRarities.get(0);
-
-						match.rarityUnsure = 0;
-
-						System.out
-								.println("Took a guess that " + setNumber + ":" + cardName + " is:" + match.setRarity);
-
-						return match;
+					else{
+						match = setRarities.get(0);
 					}
+					match.rarityUnsure = 0;
+					System.out
+							.println("Took a guess that " + setNumber + ":" + cardName + " is:" + match.setRarity);
+					return match;
 				}
 			}
 		}
 
-		// try closest price
+		// try the closest price
 		BigDecimal priceBoughtDec = new BigDecimal(priceBought);
 		BigDecimal distance = new BigDecimal(setRarities.get(0).setPrice).subtract(priceBoughtDec).abs();
 		int idx = 0;
@@ -612,8 +608,7 @@ public class Util {
 
 	public static String getStringOrNull(JsonNode current, String id) {
 		try {
-			String value = current.get(id).asText().trim();
-			return value;
+			return current.get(id).asText().trim();
 		} catch (Exception e) {
 			return null;
 		}
@@ -621,11 +616,24 @@ public class Util {
 
 	public static Integer getIntOrNegativeOne(JsonNode current, String id) {
 		try {
-			int value = current.get(id).asInt();
-			return value;
+			return current.get(id).asInt();
 		} catch (Exception e) {
 			return -1;
 		}
 	}
 
+	public static String getApiResponseFromURL(URL url) throws IOException {
+		String inline = "";
+		InputStream inputStreamFromURL = url.openStream();
+
+		ByteArrayOutputStream result = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
+			result.write(buffer, 0, length);
+		}
+
+		inline = result.toString(StandardCharsets.UTF_8.name());
+		inputStreamFromURL.close();
+		return inline;
+	}
 }

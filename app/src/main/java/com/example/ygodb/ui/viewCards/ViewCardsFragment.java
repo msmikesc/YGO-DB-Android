@@ -77,16 +77,16 @@ public class ViewCardsFragment extends Fragment {
             });
         }
 
-        viewCardsViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    viewCardsViewModel.setDbRefreshIndicatorFalse();
-                    layout.scrollToPositionWithOffset(0, 0);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
+        viewCardsViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), new Observer<>() {
+			@Override
+			public void onChanged(Boolean aBoolean) {
+				if (aBoolean) {
+					viewCardsViewModel.setDbRefreshIndicatorFalse();
+					layout.scrollToPositionWithOffset(0, 0);
+					adapter.notifyDataSetChanged();
+				}
+			}
+		});
 
         return root;
     }

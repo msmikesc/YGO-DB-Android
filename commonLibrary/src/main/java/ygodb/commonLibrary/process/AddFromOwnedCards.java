@@ -32,13 +32,13 @@ public class AddFromOwnedCards {
 					// add it
 					System.out.println("No gamePlayCard found for " + card.cardName + ":" + card.gamePlayCardUUID);
 
-					GamePlayCard GPC = new GamePlayCard();
+					GamePlayCard gamePlayCard1 = new GamePlayCard();
 
-					GPC.cardName = card.cardName;
-					GPC.cardType = "unknown";
-					GPC.gamePlayCardUUID = card.gamePlayCardUUID;
+					gamePlayCard1.cardName = card.cardName;
+					gamePlayCard1.cardType = "unknown";
+					gamePlayCard1.gamePlayCardUUID = card.gamePlayCardUUID;
 
-					db.replaceIntoGamePlayCard(GPC);
+					db.replaceIntoGamePlayCard(gamePlayCard1);
 
 				}
 			}
@@ -46,7 +46,7 @@ public class AddFromOwnedCards {
 			ArrayList<CardSet> sets = db.getRaritiesOfCardInSetByGamePlayCardUUID(card.gamePlayCardUUID, card.setName
 			);
 
-			if (sets.size() == 0) {
+			if (sets.isEmpty()) {
 				// add it
 				System.out.println("No rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":" + card.setName);
 				db.replaceIntoCardSetWithSoftPriceUpdate(card.setNumber, card.setRarity, card.setName, card.gamePlayCardUUID, null,

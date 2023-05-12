@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.csv.CSVRecord;
 
@@ -34,7 +34,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 		Iterator<CSVRecord> it = CsvConnection.getIteratorSkipFirstLine(
 				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\all-folders.csv", StandardCharsets.UTF_16LE);
 
-		HashMap<String, ArrayList<OwnedCard>> databaseList = DatabaseHashMap.getOwnedInstance(db);
+		Map<String, ArrayList<OwnedCard>> databaseList = DatabaseHashMap.getOwnedInstance(db);
 
 		while (it.hasNext()) {
 
@@ -51,7 +51,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 			String priceBought = Util.normalizePrice(current.get("Price Bought"));
 			String dateBought = current.get("Date Bought").trim();
 
-			String colorCode = Util.defaultColorVariant;
+			String colorCode = Util.DEFAULT_COLOR_VARIANT;
 
 			if (printing.equals("Foil")) {
 				printing = "1st Edition";
@@ -111,7 +111,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 									+ card.dateBought);
 						}
 
-						if (list.size() == 0) {
+						if (list.isEmpty()) {
 							databaseList.remove(key);
 						}
 						break;

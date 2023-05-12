@@ -49,13 +49,13 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 				System.out.println("Unknown metaData for set: " + newSetName);
 				continue;
 			} else {
-				card.setCode = metaData.get(0).set_code;
+				card.setCode = metaData.get(0).setCode;
 			}
 
 			card.rarityUnsure = 0;
 
 			try{
-				db.UpdateOwnedCardByUUID(card);
+				db.updateOwnedCardByUUID(card);
 				count++;
 			}
 			catch(Exception e) {

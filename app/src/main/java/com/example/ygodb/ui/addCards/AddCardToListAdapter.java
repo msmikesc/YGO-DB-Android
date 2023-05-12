@@ -23,18 +23,18 @@ import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.utility.Util;
 
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdapter.ItemViewHolder> {
-    private final ArrayList<OwnedCard> addingOwnedCards;
+    private final List<OwnedCard> addingOwnedCards;
 
     private final AddCardsViewModel addCardsViewModel;
 
     private Drawable firstDrawable;
     private Drawable firstDrawableSmall;
 
-    public AddCardToListAdapter(ArrayList<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel) {
+    public AddCardToListAdapter(List<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel) {
         this.addingOwnedCards = ownedCards;
         this.addCardsViewModel = addCardsViewModel;
 
@@ -156,7 +156,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
             viewHolder.cardSetCodeDropdown.setVisibility(View.VISIBLE);
             viewHolder.setCode.setVisibility(View.INVISIBLE);
 
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>
                     (viewHolder.itemView.getContext(),
                             R.layout.spinner_text_red, setNumbers);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -207,7 +207,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
             viewHolder.cardRarityDropdown.setVisibility(View.VISIBLE);
             viewHolder.cardRarity.setVisibility(View.INVISIBLE);
 
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>
                     (viewHolder.itemView.getContext(),
                             R.layout.spinner_text, rarities);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

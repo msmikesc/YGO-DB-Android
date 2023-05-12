@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -22,8 +23,8 @@ import ygodb.commonLibrary.utility.Util;
 
 public class CsvConnection {
 
-	public static Iterator<CSVRecord> getIterator(String Filename, Charset charset) throws IOException {
-		File f = new File(Filename);
+	public static Iterator<CSVRecord> getIterator(String filename, Charset charset) throws IOException {
+		File f = new File(filename);
 
 		BufferedReader fr = new BufferedReader(new FileReader(f, charset));
 
@@ -31,9 +32,7 @@ public class CsvConnection {
 
 		CSVParser parser = CSVFormat.DEFAULT.withHeader().parse(fr);
 
-		Iterator<CSVRecord> it = parser.iterator();
-
-		return it;
+		return parser.iterator();
 	}
 
 	public static CSVParser getParser(InputStream input, Charset charset) throws IOException {
@@ -42,9 +41,7 @@ public class CsvConnection {
 
 		skipByteOrderMark(fr);
 
-		CSVParser parser = CSVFormat.DEFAULT.withHeader().parse(fr);
-
-		return parser;
+		return CSVFormat.DEFAULT.withHeader().parse(fr);
 	}
 
 	private static void skipByteOrderMark(Reader reader) throws IOException {
@@ -57,8 +54,8 @@ public class CsvConnection {
 		}
 	}
 
-	public static Iterator<CSVRecord> getIteratorSkipFirstLine(String Filename, Charset charset) throws IOException {
-		File f = new File(Filename);
+	public static Iterator<CSVRecord> getIteratorSkipFirstLine(String filename, Charset charset) throws IOException {
+		File f = new File(filename);
 
 		FileReader fr = new FileReader(f, charset);
 
@@ -68,9 +65,7 @@ public class CsvConnection {
 
 		CSVParser parser = CSVFormat.DEFAULT.withHeader().parse(s);
 
-		Iterator<CSVRecord> it = parser.iterator();
-
-		return it;
+		return parser.iterator();
 	}
 
 	public static CSVPrinter getExportOutputFile(String filename) {
@@ -175,13 +170,13 @@ public class CsvConnection {
 		String priceBought = Util.normalizePrice(getStringOrNull(current,"Price Bought"));
 		String dateBought = getStringOrNull(current,"Date Bought");
 		
-		String colorCode = Util.defaultColorVariant;
+		String colorCode = Util.DEFAULT_COLOR_VARIANT;
 		
 		String priceLow = Util.normalizePrice(getStringOrNull(current,"LOW"));
 		String priceMid = Util.normalizePrice(getStringOrNull(current,"MID"));
 		String priceMarket = Util.normalizePrice(getStringOrNull(current,"MARKET"));
 
-		if (printing.equals("Foil")) {
+		if ("Foil".equals(printing)) {
 			printing = "1st Edition";
 		}
 
@@ -189,10 +184,10 @@ public class CsvConnection {
 		setName = Util.checkForTranslatedSetName(setName);
 		setNumber = Util.checkForTranslatedSetNumber(setNumber);
 
-		ArrayList<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(setNumber,
+		List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(setNumber,
 				priceBought, dateBought, folder, condition, printing, db);
 
-		if (ownedRarities.size() == 0) {
+		if (ownedRarities.isEmpty()) {
 			// try removing color code
 
 			String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
@@ -201,7 +196,7 @@ public class CsvConnection {
 			ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(newSetNumber, priceBought,
 					dateBought, folder, condition, printing, db);
 
-			if (ownedRarities.size() > 0) {
+			if (!ownedRarities.isEmpty()) {
 				setNumber = newSetNumber;
 				colorCode = newColorCode;
 			}
@@ -233,7 +228,7 @@ public class CsvConnection {
 				OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
 						dateBought, setIdentified, passcode);
 				
-				card.UUID = existingCard.UUID;
+				card.uuid = existingCard.uuid;
 				
 				return card;
 			}
@@ -253,11 +248,9 @@ public class CsvConnection {
 		else{
 			passcode = gpc.passcode;
 		}
-		
-		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-				dateBought, setIdentified, passcode);
 
-		return card;
+		return Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
+				dateBought, setIdentified, passcode);
 	}
 
 	public static OwnedCard getOwnedCardFromExportedCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
@@ -278,13 +271,13 @@ public class CsvConnection {
 		String gamePlayCardUUID = getStringOrNull(current, "gamePlayCardUUID");
 		int passcode = getIntOrNegativeOne(current, "passcode");
 		
-		String UUID = getStringOrNull(current,"UUID");
+		String uuid = getStringOrNull(current,"UUID");
 
 		name = Util.checkForTranslatedCardName(name);
 		rarity = Util.checkForTranslatedRarity(rarity);
 		passcode = Util.checkForTranslatedPasscode(passcode);
 
-		if (printing.equals("Foil")) {
+		if (("Foil").equals(printing)) {
 			printing = "1st Edition";
 		}
 
@@ -305,7 +298,7 @@ public class CsvConnection {
 		}
 
 		CardSet setIdentified = new CardSet();
-		setIdentified.rarityUnsure = Integer.valueOf(rarityUnsure);
+		setIdentified.rarityUnsure = Integer.parseInt(rarityUnsure);
 		setIdentified.colorVariant = rarityColorVariant;
 		setIdentified.setRarity = rarity;
 		setIdentified.setName = setName;
@@ -315,7 +308,7 @@ public class CsvConnection {
 		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
 				dateBought, setIdentified, passcode);
 		
-		card.UUID = UUID;
+		card.uuid = uuid;
 
 		return card;
 	}
@@ -329,7 +322,7 @@ public class CsvConnection {
 		String price = getStringOrNull(current,"PRICE").replace("$", "");
 		String quantity = getStringOrNull(current,"QUANTITY");
 		
-		String colorVariant = Util.defaultColorVariant;
+		String colorVariant = Util.DEFAULT_COLOR_VARIANT;
 
 		String[] nameAndSet = items.split("\n");
 
@@ -346,6 +339,11 @@ public class CsvConnection {
 		if (name.contains("(Duel Terminal)")) {
 			name = name.replace("(Duel Terminal)", "").trim();
 		}
+
+		if (name.contains("(Secret Rare)")) {
+			name = name.replace("(Secret Rare)", "").trim();
+		}
+		//TODO generic rarity removal
 		
 		if (name.contains("(Red)")) {
 			name = name.replace("(Red)", "").trim();
@@ -405,7 +403,7 @@ public class CsvConnection {
 			System.out.println("Unknown setCode for card name and set: " + name + ":" + setName);
 			setIdentified = new CardSet();
 			setIdentified.rarityUnsure = 1;
-			setIdentified.colorVariant = Util.defaultColorVariant;
+			setIdentified.colorVariant = Util.DEFAULT_COLOR_VARIANT;
 			setIdentified.setName = setName;
 			setIdentified.setNumber = null;
 			setIdentified.gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
@@ -422,7 +420,7 @@ public class CsvConnection {
 		if (metaData.size() != 1) {
 			System.out.println("Unknown metaData for set: " + setName);
 		} else {
-			setCode = metaData.get(0).set_code;
+			setCode = metaData.get(0).setCode;
 		}
 
 		String priceBought = Util.normalizePrice(price);
@@ -438,18 +436,15 @@ public class CsvConnection {
 			passcode = gpc.passcode;
 		}
 
-		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
+		return Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
 				dateBought, setIdentified, passcode);
-
-		return card;
 	}
 
 	public static Integer getIntOrNegativeOne(CSVRecord current, String recordName) {
 		try {
-			Integer returnVal = Integer.parseInt(current.get(recordName));
-			return returnVal;
+			return Integer.parseInt(current.get(recordName));
 		} catch (Exception e) {
-			return Integer.valueOf(-1);
+			return -1;
 		}
 	}
 
@@ -482,31 +477,31 @@ public class CsvConnection {
 		String def = getStringOrNull(current, "Defense");
 		String archetype = getStringOrNull(current, "Archetype");
 
-		GamePlayCard GPC = new GamePlayCard();
+		GamePlayCard gamePlayCard = new GamePlayCard();
 
 		name = Util.checkForTranslatedCardName(name);
 		passcode = Util.checkForTranslatedPasscode(passcode);
 
-		GPC.cardName = name;
-		GPC.cardType = type;
-		GPC.archetype = archetype;
-		GPC.passcode = passcode;
+		gamePlayCard.cardName = name;
+		gamePlayCard.cardType = type;
+		gamePlayCard.archetype = archetype;
+		gamePlayCard.passcode = passcode;
 
-		Pair<String, String> UUIDAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
 
-		GPC.gamePlayCardUUID = UUIDAndName.getKey();
-		GPC.cardName = UUIDAndName.getValue();
+		gamePlayCard.gamePlayCardUUID = uuidAndName.getKey();
+		gamePlayCard.cardName = uuidAndName.getValue();
 
-		GPC.desc = lore;
-		GPC.attribute = attribute;
-		GPC.race = race;
-		GPC.linkval = linkValue;
-		GPC.scale = pendScale;
-		GPC.level = level;
-		GPC.atk = atk;
-		GPC.def = def;
+		gamePlayCard.desc = lore;
+		gamePlayCard.attribute = attribute;
+		gamePlayCard.race = race;
+		gamePlayCard.linkval = linkValue;
+		gamePlayCard.scale = pendScale;
+		gamePlayCard.level = level;
+		gamePlayCard.atk = atk;
+		gamePlayCard.def = def;
 
-		db.replaceIntoGamePlayCard(GPC);
+		db.replaceIntoGamePlayCard(gamePlayCard);
 	}
 
 	public static void insertCardSetFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
@@ -532,10 +527,10 @@ public class CsvConnection {
 		setName = Util.checkForTranslatedSetName(setName);
 		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
 
-		Pair<String, String> UUIDAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
 
-		String gamePlayCardUUID = UUIDAndName.getKey();
-		name = UUIDAndName.getValue();
+		String gamePlayCardUUID = uuidAndName.getKey();
+		name = uuidAndName.getValue();
 
 		db.replaceIntoCardSetWithSoftPriceUpdate(cardNumber, rarity, setName, gamePlayCardUUID, null, name);
 	}
@@ -544,10 +539,10 @@ public class CsvConnection {
 		// p.printRecord("Folder Name","Quantity","Card Name","Set Code","Set
 		// Name","Card Number","Condition","Printing","Price Bought","Date
 		// Bought","Rarity","Rarity Color Variant", "Rarity Unsure","gamePlayCardUUID");
-		// UUID
+		// UUID, passcode
 		p.printRecord(current.folderName, current.quantity, current.cardName, current.setCode, current.setName,
 				current.setNumber, current.condition, current.editionPrinting, current.priceBought, current.dateBought,
-				current.setRarity, current.colorVariant, current.rarityUnsure, current.gamePlayCardUUID, current.UUID, current.passcode);
+				current.setRarity, current.colorVariant, current.rarityUnsure, current.gamePlayCardUUID, current.uuid, current.passcode);
 
 	}
 	
@@ -563,7 +558,7 @@ public class CsvConnection {
 		
 		String outputSetNumber = current.setNumber;
 
-		if (!current.colorVariant.equalsIgnoreCase(Util.defaultColorVariant)
+		if (!current.colorVariant.equalsIgnoreCase(Util.DEFAULT_COLOR_VARIANT)
 				&& !AnalyzeCompareToDragonShieldCSV.setColorVariantUnsupportedDragonShield.contains(current.setName)) {
 			outputSetNumber += current.colorVariant;
 		}

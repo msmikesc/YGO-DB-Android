@@ -13,7 +13,7 @@ import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SummaryCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class ViewCardSummarySortButtonOnClickListener implements View.OnClickListener {
 
@@ -49,25 +49,19 @@ class ViewCardSummarySortButtonOnClickListener implements View.OnClickListener {
 
                 String sortOrder = viewCardsViewModel.getSortOrder();
 
-                if (!sortOption.equals(menuItem.getTitle())) {
+                if (!sortOption.contentEquals(menuItem.getTitle())) {
                     sortOption = (String) menuItem.getTitle();
 
-                    if(sortOption.equals("Date Bought")){
-                        sortOrder = "maxDate desc, cardName asc";
-                    }
-                    else if(sortOption.equals("Card Name")){
-                        sortOrder = "cardName asc, dateBought desc";
-                    }
-                    else if(sortOption.equals("Quantity")){
-                        sortOrder = "totalQuantity desc, cardName asc";
-                    }
-                    else if(sortOption.equals("Price")){
-                        sortOrder = "avgPrice desc, cardName asc";
+                    switch (sortOption) {
+                        case "Date Bought" -> sortOrder = "maxDate desc, cardName asc";
+                        case "Card Name" -> sortOrder = "cardName asc, dateBought desc";
+                        case "Quantity" -> sortOrder = "totalQuantity desc, cardName asc";
+                        case "Price" -> sortOrder = "avgPrice desc, cardName asc";
                     }
                     viewCardsViewModel.setSortOption(sortOption);
                     viewCardsViewModel.setSortOrder(sortOrder);
 
-                    ArrayList<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
+                    List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
 
                     String finalSortOrder = sortOrder;
                     AsyncTask.execute(new Runnable() {
@@ -75,7 +69,7 @@ class ViewCardSummarySortButtonOnClickListener implements View.OnClickListener {
                         public void run() {
                             try {
                                 cardsList.clear();
-                                ArrayList<OwnedCard> moreCards =
+                                List<OwnedCard> moreCards =
                                         viewCardsViewModel.loadMoreData(finalSortOrder,
                                                 ViewCardsSummaryViewModel.LOADING_LIMIT,
                                                 0, viewCardsViewModel.getCardNameSearch());

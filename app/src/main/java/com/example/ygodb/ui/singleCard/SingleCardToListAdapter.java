@@ -7,35 +7,33 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
-import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.addCards.AddCardsViewModel;
 import com.example.ygodb.ui.sellCards.SellCardsViewModel;
+import ygodb.commonLibrary.bean.OwnedCard;
 
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToListAdapter.ItemViewHolder> {
-    private ArrayList<OwnedCard> ownedCards;
+    private List<OwnedCard> ownedCards;
 
     private final AddCardsViewModel addCardsViewModel;
     private final SellCardsViewModel sellCardsViewModel;
 
-    public SingleCardToListAdapter(ArrayList<OwnedCard> ownedCards,
+    public SingleCardToListAdapter(List<OwnedCard> ownedCards,
            AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel) {
         this.ownedCards = ownedCards;
         this.addCardsViewModel = addCardsViewModel;
         this.sellCardsViewModel = sellCardsViewModel;
     }
 
-    public void setOwnedCards(ArrayList<OwnedCard> ownedCards) {
+    public void setOwnedCards(List<OwnedCard> ownedCards) {
         this.ownedCards = ownedCards;
     }
 
@@ -101,21 +99,17 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
                 }
                 else{
                     setRarityText = current.colorVariant.toUpperCase(Locale.ROOT) + " " + setRarityText;
-                    switch(current.colorVariant.toUpperCase(Locale.ROOT)){
-                        case "R":
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson));
-                            break;
-                        case "G":
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen));
-                            break;
-                        case "B":
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue));
-                            break;
-                        case "P":
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet));
-                            break;
-                        default:
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
+                    switch (current.colorVariant.toUpperCase(Locale.ROOT)) {
+                        case "R" ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson));
+                        case "G" ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen));
+                        case "B" ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue));
+                        case "P" ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet));
+                        default ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
                     }
                 }
             }

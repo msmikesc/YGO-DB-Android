@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
 import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
@@ -24,13 +26,13 @@ public class AnalyzePrintedOnce {
 
 		HashMap<String, AnalyzePrintedOnceData> h = db.getCardsOnlyPrintedOnce();
 
-		ArrayList<AnalyzePrintedOnceData> array = new ArrayList<AnalyzePrintedOnceData>(h.values());
+		ArrayList<AnalyzePrintedOnceData> array = new ArrayList<>(h.values());
 
 		printOutput(array);
 
 	}
 
-	public void printOutput(ArrayList<AnalyzePrintedOnceData> array) throws IOException {
+	public void printOutput(List<AnalyzePrintedOnceData> array) throws IOException {
 		Collections.sort(array);
 
 		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\Analyze-PrintedOnce.csv";

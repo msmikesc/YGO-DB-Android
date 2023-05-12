@@ -28,9 +28,9 @@ public class AssignUUID {
 		ArrayList<OwnedCard> cards = db.getAllOwnedCards();
 		
 		for(OwnedCard card: cards) {
-			if(card.UUID == null) {
+			if(card.uuid == null) {
 				UUID id = UUID.randomUUID();
-				card.UUID = id.toString();
+				card.uuid = id.toString();
 				db.upsertOwnedCardBatch(card);
 				
 			}

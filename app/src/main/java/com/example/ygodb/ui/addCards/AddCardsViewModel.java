@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class AddCardsViewModel extends ViewModel {
@@ -187,7 +188,7 @@ public class AddCardsViewModel extends ViewModel {
 
     }
 
-    public String getAPIPriceFromRarity(String rarity, ArrayList<CardSet> mainSetCardSets,
+    public String getAPIPriceFromRarity(String rarity, List<CardSet> mainSetCardSets,
                                         String cardName, String setName, String gamePlayCardUUID, String setNumber){
 
         if(mainSetCardSets == null){
@@ -207,10 +208,10 @@ public class AddCardsViewModel extends ViewModel {
             assumedRarity = rarities[0].trim();
         }
 
-        for(int i = 0; i < mainSetCardSets.size(); i++){
-            if(mainSetCardSets.get(i).setRarity.equalsIgnoreCase(assumedRarity) &&
-                    mainSetCardSets.get(i).setNumber.equalsIgnoreCase(setNumber)){
-                return mainSetCardSets.get(i).setPrice;
+        for (CardSet mainSetCardSet : mainSetCardSets) {
+            if (mainSetCardSet.setRarity.equalsIgnoreCase(assumedRarity) &&
+                    mainSetCardSet.setNumber.equalsIgnoreCase(setNumber)) {
+                return mainSetCardSet.setPrice;
             }
         }
 

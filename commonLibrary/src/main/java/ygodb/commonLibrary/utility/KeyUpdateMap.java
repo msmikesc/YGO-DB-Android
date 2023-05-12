@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class KeyUpdateMap {
@@ -36,15 +34,11 @@ public class KeyUpdateMap {
 
         CSVParser parser = CsvConnection.getParser(input, StandardCharsets.UTF_16LE);
 
-        Iterator<CSVRecord> it = parser.iterator();
+        for (CSVRecord current : parser) {
 
-        while (it.hasNext()) {
+            String key = CsvConnection.getStringOrNull(current, "Key");
 
-            CSVRecord current = it.next();
-
-            String key = CsvConnection.getStringOrNull(current,"Key");
-
-            String value = CsvConnection.getStringOrNull(current,"Value");
+            String value = CsvConnection.getStringOrNull(current, "Value");
 
             addMapping(key, value);
         }

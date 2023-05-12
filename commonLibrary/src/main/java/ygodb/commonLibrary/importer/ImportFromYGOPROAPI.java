@@ -1,15 +1,13 @@
 package ygodb.commonLibrary.importer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +29,7 @@ public class ImportFromYGOPROAPI {
 
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardinfo.php?cardset=";
 
-		String apiURL = setAPI + URLEncoder.encode(setName);
+		String apiURL = setAPI + URLEncoder.encode(setName, StandardCharsets.UTF_8.name());
 
 		try {
 
@@ -50,32 +48,22 @@ public class ImportFromYGOPROAPI {
 				throw new RuntimeException("HttpResponseCode: " + responsecode);
 			} else {
 
-				String inline = "";
-				InputStream inputStreamFromURL = url.openStream();
-
-				ByteArrayOutputStream result = new ByteArrayOutputStream();
-				byte[] buffer = new byte[1024];
-				for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
-					result.write(buffer, 0, length);
-				}
-				inline = result.toString(StandardCharsets.UTF_8);
+				String inline = Util.getApiResponseFromURL(url);
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
 				System.out.println("Finished reading from API");
 
-				inline = null;
-
 				JsonNode cards = jsonNode.get("data");
 
-				Iterator<JsonNode> keyset = cards.iterator();
+				Iterator<JsonNode> keySet = cards.iterator();
 
 				ArrayList<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
 
-				while (keyset.hasNext()) {
+				while (keySet.hasNext()) {
 
-					JsonNode current = keyset.next();
+					JsonNode current = keySet.next();
 
 					GamePlayCard inserted = insertGameplayCardFromYGOPRO(current, ownedCardsToCheck, db);
 
@@ -100,7 +88,7 @@ public class ImportFromYGOPROAPI {
 		}
 	}
 
-	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, ArrayList<OwnedCard> ownedCardsToCheck, SQLiteConnection db) throws SQLException {
+	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck, SQLiteConnection db) throws SQLException {
 
 		String name = Util.getStringOrNull(current, "name");
 		String type = Util.getStringOrNull(current, "type");
@@ -115,40 +103,40 @@ public class ImportFromYGOPROAPI {
 		String def = Util.getStringOrNull(current, "def");
 		String archetype = Util.getStringOrNull(current, "archetype");
 
-		GamePlayCard GPC = new GamePlayCard();
+		GamePlayCard gamePlayCard = new GamePlayCard();
 
 		name = Util.checkForTranslatedCardName(name);
 		passcode = Util.checkForTranslatedPasscode(passcode);
 
-		GPC.cardName = name;
-		GPC.cardType = type;
-		GPC.archetype = archetype;
-		GPC.passcode = passcode;
+		gamePlayCard.cardName = name;
+		gamePlayCard.cardType = type;
+		gamePlayCard.archetype = archetype;
+		gamePlayCard.passcode = passcode;
 
-		Pair<String, String> UUIDAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
 
-		GPC.gamePlayCardUUID = UUIDAndName.getKey();
-		GPC.cardName = UUIDAndName.getValue();
+		gamePlayCard.gamePlayCardUUID = uuidAndName.getKey();
+		gamePlayCard.cardName = uuidAndName.getValue();
 
-		GPC.desc = desc;
-		GPC.attribute = attribute;
-		GPC.race = race;
-		GPC.linkval = linkval;
-		GPC.scale = scale;
-		GPC.level = level;
-		GPC.atk = atk;
-		GPC.def = def;
+		gamePlayCard.desc = desc;
+		gamePlayCard.attribute = attribute;
+		gamePlayCard.race = race;
+		gamePlayCard.linkval = linkval;
+		gamePlayCard.scale = scale;
+		gamePlayCard.level = level;
+		gamePlayCard.atk = atk;
+		gamePlayCard.def = def;
 
-		db.replaceIntoGamePlayCard(GPC);
+		db.replaceIntoGamePlayCard(gamePlayCard);
 
 		for(OwnedCard currentOwnedCard : ownedCardsToCheck){
-			if(currentOwnedCard.gamePlayCardUUID.equals(GPC.gamePlayCardUUID)){
+			if(currentOwnedCard.gamePlayCardUUID.equals(gamePlayCard.gamePlayCardUUID)){
 				currentOwnedCard.passcode = passcode;
-				db.UpdateOwnedCardByUUID(currentOwnedCard);
+				db.updateOwnedCardByUUID(currentOwnedCard);
 			}
 		}
 
-		return GPC;
+		return gamePlayCard;
 	}
 
 	public static void insertCardSetsForOneCard(Iterator<JsonNode> setIterator, String name, String gamePlayCardUUID, SQLiteConnection db)
@@ -158,29 +146,27 @@ public class ImportFromYGOPROAPI {
 
 			JsonNode currentSet = setIterator.next();
 
-			String set_code = null;
-			String set_name = null;
-			String set_rarity = null;
-			String set_price = null;
+			String setCode = null;
+			String setName = null;
+			String setRarity = null;
+			String setPrice = null;
 
 			try {
-				set_code = Util.getStringOrNull(currentSet,"set_code");
-				set_name = Util.getStringOrNull(currentSet,"set_name");
-				set_rarity = Util.getStringOrNull(currentSet,"set_rarity");
-				set_price = Util.getStringOrNull(currentSet,"set_price");
+				setCode = Util.getStringOrNull(currentSet,"set_code");
+				setName = Util.getStringOrNull(currentSet,"set_name");
+				setRarity = Util.getStringOrNull(currentSet,"set_rarity");
+				setPrice = Util.getStringOrNull(currentSet,"set_price");
 			} catch (Exception e) {
 				System.out.println("issue found on " + name);
 				continue;
 			}
 
-			//set_price = Util.getAdjustedPriceFromRarity(set_rarity, set_price);
-
 			name = Util.checkForTranslatedCardName(name);
-			set_rarity = Util.checkForTranslatedRarity(set_rarity);
-			set_name = Util.checkForTranslatedSetName(set_name);
-			set_code = Util.checkForTranslatedSetNumber(set_code);
+			setRarity = Util.checkForTranslatedRarity(setRarity);
+			setName = Util.checkForTranslatedSetName(setName);
+			setCode = Util.checkForTranslatedSetNumber(setCode);
 
-			db.replaceIntoCardSetWithSoftPriceUpdate(set_code, set_rarity, set_name, gamePlayCardUUID, set_price, name);
+			db.replaceIntoCardSetWithSoftPriceUpdate(setCode, setRarity, setName, gamePlayCardUUID, setPrice, name);
 
 		}
 	}
@@ -198,56 +184,41 @@ public class ImportFromYGOPROAPI {
 			conn.connect();
 
 			// Getting the response code
-			int responsecode = conn.getResponseCode();
+			int responseCode = conn.getResponseCode();
 
-			if (responsecode != 200) {
-				throw new RuntimeException("HttpResponseCode: " + responsecode);
+			if (responseCode != 200) {
+				throw new RuntimeException("HttpResponseCode: " + responseCode);
 			} else {
 
-				String inline = "";
-				Scanner scanner = new Scanner(url.openStream());
-
-				// Write all the JSON data into a string using a scanner
-				while (scanner.hasNext()) {
-					inline += scanner.nextLine();
-				}
-
-				// Close the scanner
-				scanner.close();
+				String inline = Util.getApiResponseFromURL(url);
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
-
-				inline = null;
 
 				ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
 				ArrayList<String> dbSetNames = new ArrayList<>();
 
 				for(SetMetaData current : list) {
-					dbSetNames.add(current.set_name);
+					dbSetNames.add(current.setName);
 				}
 
-				Iterator<JsonNode> keyset = jsonNode.iterator();
+				for (JsonNode set : jsonNode) {
+					String currentSetName = Util.getStringOrNull(set, "set_name");
+					String setCode = Util.getStringOrNull(set, "set_code");
+					int numOfCards = Util.getIntOrNegativeOne(set, "num_of_cards");
+					String tcgDate = Util.getStringOrNull(set, "tcg_date");
 
-				while (keyset.hasNext()) {
-					JsonNode set = keyset.next();
+					String newSetName = Util.checkForTranslatedSetName(currentSetName);
 
-					String set_name = Util.getStringOrNull(set, "set_name");
-					String set_code = Util.getStringOrNull(set, "set_code");
-					int num_of_cards = Util.getIntOrNegativeOne(set, "num_of_cards");
-					String tcg_date = Util.getStringOrNull(set, "tcg_date");
-					
-					String newSetName = Util.checkForTranslatedSetName(set_name);
-
-					if(!dbSetNames.contains(newSetName)) {
-						System.out.println("Missing Set: "+ newSetName);
+					if (!dbSetNames.contains(newSetName)) {
+						System.out.println("Missing Set: " + newSetName);
 					}
 
 					if (!specificSet) {
-						db.replaceIntoCardSetMetaData(newSetName, set_code, num_of_cards, tcg_date);
+						db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
 					}
-					if (specificSet && set_name.equalsIgnoreCase(setName)) {
-						db.replaceIntoCardSetMetaData(newSetName, set_code, num_of_cards, tcg_date);
+					if (specificSet && currentSetName.equalsIgnoreCase(setName)) {
+						db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
 					}
 				}
 

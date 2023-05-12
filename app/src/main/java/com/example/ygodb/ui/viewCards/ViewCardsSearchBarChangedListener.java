@@ -11,7 +11,7 @@ import com.example.ygodb.abs.TextChangedListener;
 import ygodb.commonLibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singleCard.SingleCardToListAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class ViewCardsSearchBarChangedListener extends TextChangedListener<EditText> {
     private final ViewCardsViewModel viewCardsViewModel;
@@ -42,7 +42,7 @@ class ViewCardsSearchBarChangedListener extends TextChangedListener<EditText> {
             @Override
             public void run() {
                 try {
-                    ArrayList<OwnedCard> newList = viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
+                    List<OwnedCard> newList = viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
                             ViewCardsViewModel.LOADING_LIMIT, 0, cardNameSearch);
 
                     handler.post(new Runnable() {

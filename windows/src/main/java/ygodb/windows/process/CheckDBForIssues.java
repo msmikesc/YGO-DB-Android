@@ -10,7 +10,7 @@ import ygodb.windows.connection.WindowsUtil;
 
 public class CheckDBForIssues {
 
-	public static void main(String[] args) throws SQLException, IOException {
+	public static void main(String[] args) throws SQLException {
 		CheckDBForIssues mainObj = new CheckDBForIssues();
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
@@ -20,7 +20,7 @@ public class CheckDBForIssues {
 		System.out.println("Analyze complete");
 	}
 
-	public void run(SQLiteConnection db) throws SQLException, IOException {
+	public void run(SQLiteConnection db) throws SQLException {
 
 		ArrayList<String> setsList = db.getDistinctSetNames();
 

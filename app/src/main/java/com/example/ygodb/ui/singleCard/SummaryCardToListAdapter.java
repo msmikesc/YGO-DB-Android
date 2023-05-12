@@ -15,17 +15,17 @@ import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonLibrary.bean.OwnedCard;
 
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardToListAdapter.ItemViewHolder> {
-    ArrayList<OwnedCard> ownedCards;
+    List<OwnedCard> ownedCards;
 
-    public SummaryCardToListAdapter(ArrayList<OwnedCard> ownedCards) {
+    public SummaryCardToListAdapter(List<OwnedCard> ownedCards) {
         this.ownedCards = ownedCards;
     }
 
-    public void setOwnedCards(ArrayList<OwnedCard> ownedCards) {
+    public void setOwnedCards(List<OwnedCard> ownedCards) {
         this.ownedCards = ownedCards;
     }
 

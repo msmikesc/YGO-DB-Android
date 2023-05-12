@@ -30,7 +30,7 @@ public class ReformatFromTCGPlayerForPurchase {
 		Iterator<CSVRecord> it = CsvConnection.getIterator(
 				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\TCGPlayer.csv", StandardCharsets.UTF_16LE);
 		
-		HashMap<String, OwnedCard> map = new HashMap<String, OwnedCard>();
+		HashMap<String, OwnedCard> map = new HashMap<>();
 
 		while (it.hasNext()) {
 

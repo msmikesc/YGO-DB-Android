@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class SellCardsViewModel extends ViewModel {
@@ -48,7 +49,7 @@ public class SellCardsViewModel extends ViewModel {
             return;
         }
 
-        String key = current.UUID;
+        String key = current.uuid;
 
         Integer position = keyToPosition.get(key);
 
@@ -79,7 +80,7 @@ public class SellCardsViewModel extends ViewModel {
             sellingCard.setCode = current.setCode;
             sellingCard.setNumber = current.setNumber;
             sellingCard.colorVariant = current.colorVariant;
-            sellingCard.UUID = current.UUID;
+            sellingCard.uuid = current.uuid;
             sellingCard.passcode = current.passcode;
 
             sellingCard.priceBought = current.priceBought;
@@ -162,7 +163,7 @@ public class SellCardsViewModel extends ViewModel {
 
     }
 
-    public String getAPIPriceFromRarity(String rarity, ArrayList<CardSet> mainSetCardSets,
+    public String getAPIPriceFromRarity(String rarity, List<CardSet> mainSetCardSets,
                                         String cardName, String setName, String gamePlayCardUUID, String setNumber){
 
         if(mainSetCardSets == null){
@@ -182,10 +183,10 @@ public class SellCardsViewModel extends ViewModel {
             assumedRarity = rarities[0].trim();
         }
 
-        for(int i = 0; i < mainSetCardSets.size(); i++){
-            if(mainSetCardSets.get(i).setRarity.equalsIgnoreCase(assumedRarity) &&
-                    mainSetCardSets.get(i).setNumber.equalsIgnoreCase(setNumber)){
-                return mainSetCardSets.get(i).setPrice;
+        for (CardSet mainSetCardSet : mainSetCardSets) {
+            if (mainSetCardSet.setRarity.equalsIgnoreCase(assumedRarity) &&
+                    mainSetCardSet.setNumber.equalsIgnoreCase(setNumber)) {
+                return mainSetCardSet.setPrice;
             }
         }
 
@@ -195,7 +196,7 @@ public class SellCardsViewModel extends ViewModel {
 
     public void removeNewFromOwnedCard(OwnedCard current){
 
-        String key = current.UUID;
+        String key = current.uuid;
 
         Integer position = keyToPosition.get(key);
         OwnedCard newCard = null;

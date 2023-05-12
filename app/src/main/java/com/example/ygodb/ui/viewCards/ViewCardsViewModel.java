@@ -1,19 +1,16 @@
 package com.example.ygodb.ui.viewCards;
 
-import static java.lang.Thread.sleep;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.ygodb.abs.AndroidUtil;
-
 import ygodb.commonLibrary.bean.OwnedCard;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewCardsViewModel extends ViewModel {
 
-    private ArrayList<OwnedCard> cardsList;
+    private List<OwnedCard> cardsList;
 
     public static final int LOADING_LIMIT = 100;
 
@@ -27,7 +24,7 @@ public class ViewCardsViewModel extends ViewModel {
         cardsList = new ArrayList<>();
     }
 
-    private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<Boolean>(false);
+    private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<>(false);
 
     public MutableLiveData<Boolean> getDbRefreshIndicator() {
         return dbRefreshIndicator;
@@ -44,14 +41,13 @@ public class ViewCardsViewModel extends ViewModel {
         this.dbRefreshIndicator.postValue(true);
     }
 
-    public ArrayList<OwnedCard> getCardsList(){
+    public List<OwnedCard> getCardsList(){
         return cardsList;
     }
 
-    public ArrayList<OwnedCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch) {
-        ArrayList<OwnedCard> newList = AndroidUtil.getDBInstance().queryOwnedCards(orderBy,
+    public List<OwnedCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch) {
+        return AndroidUtil.getDBInstance().queryOwnedCards(orderBy,
                 limit, offset, cardNameSearch);
-        return newList;
     }
 
     public String getSortOrder() {
@@ -83,7 +79,7 @@ public class ViewCardsViewModel extends ViewModel {
         this.cardNameSearch = cardNameSearch;
     }
 
-    public void setCardsList(ArrayList<OwnedCard> cardsList) {
+    public void setCardsList(List<OwnedCard> cardsList) {
         this.cardsList = cardsList;
     }
 

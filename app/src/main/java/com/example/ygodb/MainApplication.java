@@ -5,6 +5,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Environment;
 
 import com.example.ygodb.abs.AndroidUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,7 +39,7 @@ public class MainApplication extends Application {
         File finalLogFile = logFile;
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
-            public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+            public void uncaughtException(@NotNull Thread paramThread, @NotNull Throwable paramThrowable) {
                 //Catch your exception
                 FileOutputStream fos = null;
                 try {
@@ -53,7 +54,7 @@ public class MainApplication extends Application {
 
                     paramThrowable.printStackTrace(ps);
                     ps.close();
-                } catch (FileNotFoundException e) {
+                } catch (FileNotFoundException ignored) {
 
                 }
 

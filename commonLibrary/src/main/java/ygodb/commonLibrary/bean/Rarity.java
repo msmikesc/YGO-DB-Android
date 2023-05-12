@@ -46,7 +46,8 @@ public enum Rarity {
 	Rarity(String s) {
 		name = s;
 	}
-	
+
+	@Override
 	public String toString() {
 		return name;
 	}

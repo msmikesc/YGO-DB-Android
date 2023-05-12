@@ -21,7 +21,7 @@ public class OwnedCardNameComparator implements Comparator<OwnedCard> {
             return val;
         }
 
-        val = val = ownedCard.setNumber.compareTo(t1.setNumber);
+        val = ownedCard.setNumber.compareTo(t1.setNumber);
 
         return val;
     }

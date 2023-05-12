@@ -5,12 +5,8 @@ import org.apache.commons.csv.CSVRecord;
 import ygodb.commonLibrary.connection.CsvConnection;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,21 +37,17 @@ public class QuadKeyUpdateMap {
 
         CSVParser parser = CsvConnection.getParser(input, StandardCharsets.UTF_16LE);
 
-        Iterator<CSVRecord> it = parser.iterator();
+        for (CSVRecord current : parser) {
 
-        while (it.hasNext()) {
+            String name = CsvConnection.getStringOrNull(current, "Card Name Key");
+            String cardNumber = CsvConnection.getStringOrNull(current, "Card Number Key");
+            String rarity = CsvConnection.getStringOrNull(current, "Rarity Key");
+            String setName = CsvConnection.getStringOrNull(current, "Set Name Key");
 
-            CSVRecord current = it.next();
-
-            String name = CsvConnection.getStringOrNull(current,"Card Name Key");
-            String cardNumber = CsvConnection.getStringOrNull(current,"Card Number Key");
-            String rarity = CsvConnection.getStringOrNull(current,"Rarity Key");
-            String setName = CsvConnection.getStringOrNull(current,"Set Name Key");
-
-            String nameValue = CsvConnection.getStringOrNull(current,"Card Name Value");
-            String cardNumberValue = CsvConnection.getStringOrNull(current,"Card Number Value");
-            String rarityValue = CsvConnection.getStringOrNull(current,"Rarity Value");
-            String setNameValue = CsvConnection.getStringOrNull(current,"Set Name Value");
+            String nameValue = CsvConnection.getStringOrNull(current, "Card Name Value");
+            String cardNumberValue = CsvConnection.getStringOrNull(current, "Card Number Value");
+            String rarityValue = CsvConnection.getStringOrNull(current, "Rarity Value");
+            String setNameValue = CsvConnection.getStringOrNull(current, "Set Name Value");
 
             String key = String.join(delimiter, name, cardNumber, rarity, setName);
             List<String> values = List.of(nameValue, cardNumberValue, rarityValue, setNameValue);
