@@ -33,6 +33,8 @@ public interface SQLiteConnection {
 
     String getGamePlayCardUUIDFromTitle(String title) throws SQLException;
 
+    String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException;
+
     ArrayList<OwnedCard> getNumberOfOwnedCardsByGamePlayCardUUID(String name) throws SQLException;
 
     ArrayList<OwnedCard> getAllOwnedCards() throws SQLException;

@@ -113,10 +113,14 @@ public class ImportFromYGOPROAPI {
 		gamePlayCard.archetype = archetype;
 		gamePlayCard.passcode = passcode;
 
-		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+		gamePlayCard.gamePlayCardUUID = db.getGamePlayCardUUIDFromPasscode(passcode);
 
-		gamePlayCard.gamePlayCardUUID = uuidAndName.getKey();
-		gamePlayCard.cardName = uuidAndName.getValue();
+		if(gamePlayCard.gamePlayCardUUID == null) {
+			Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+
+			gamePlayCard.gamePlayCardUUID = uuidAndName.getKey();
+			gamePlayCard.cardName = uuidAndName.getValue();
+		}
 
 		gamePlayCard.desc = desc;
 		gamePlayCard.attribute = attribute;

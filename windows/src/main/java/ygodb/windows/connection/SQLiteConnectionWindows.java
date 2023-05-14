@@ -298,6 +298,36 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		String setQuery = "Select * from gamePlayCard where passcode = ?";
+
+		PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
+		statementSetQuery.setInt(1, passcode);
+
+		ResultSet rarities = statementSetQuery.executeQuery();
+
+		ArrayList<String> idsFound = new ArrayList<>();
+
+		while (rarities.next()) {
+
+			idsFound.add(rarities.getString(Const.gamePlayCardUUID));
+
+		}
+
+		statementSetQuery.close();
+		rarities.close();
+
+		if (idsFound.size() == 1) {
+			return idsFound.get(0);
+		}
+
+		return null;
+	}
+
+	@Override
 	public ArrayList<OwnedCard> getNumberOfOwnedCardsByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 
 		Connection connection = this.getInstance();

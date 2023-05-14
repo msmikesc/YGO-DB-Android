@@ -424,6 +424,36 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException {
+
+		SQLiteDatabase connection = this.getInstance();
+
+		String setQuery = "Select * from gamePlayCard where passcode = ?";
+
+		String[] params = new String[]{String.valueOf(passcode)};
+
+		Cursor rs = connection.rawQuery(setQuery, params);
+
+		ArrayList<String> idsFound = new ArrayList<>();
+
+		String[] col = rs.getColumnNames();
+
+		while (rs.moveToNext()) {
+
+			idsFound.add(rs.getString(getColumn(col,Const.gamePlayCardUUID)));
+
+		}
+
+		rs.close();
+
+		if (idsFound.size() == 1) {
+			return idsFound.get(0);
+		}
+
+		return null;
+	}
+
+	@Override
 	public ArrayList<OwnedCard> getNumberOfOwnedCardsByGamePlayCardUUID(String name) {
 
 		SQLiteDatabase connection = this.getInstance();
