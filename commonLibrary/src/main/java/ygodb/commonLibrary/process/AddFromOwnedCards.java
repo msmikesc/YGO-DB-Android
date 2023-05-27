@@ -7,6 +7,7 @@ import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.constant.Const;
 
 public class AddFromOwnedCards {
 
@@ -22,7 +23,7 @@ public class AddFromOwnedCards {
 
 			if (gamePlayCard == null) {
 				// check for skill card
-				String newCardName = card.cardName + " (Skill Card)";
+				String newCardName = card.cardName + Const.SKILL_CARD_NAME_APPEND;
 
 				gamePlayCard = db.getGamePlayCardByUUID(card.gamePlayCardUUID);
 

@@ -97,7 +97,7 @@ public class AnalyzeCardsToSell {
 				
 				for(OwnedCard card: cardMap.get(cardName)) {
 					
-					//p.printRecord("Quantity", "Card Name", "Card Type", "Rarity", "Set Name", "Set Code", "Price Bought");
+					//p.printRecord(Const.quantityCSV, Const.cardNameCSV, Const.cardTypeCSV, Const.rarityCSV, Const.setNameCSV, Const.setCodeCSV, Const.priceBoughtCSV);
 					
 					p.printRecord(card.quantity, card.cardName, card.setRarity, card.setName, card.setCode, card.priceBought);
 				}

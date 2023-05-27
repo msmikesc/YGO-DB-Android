@@ -7,6 +7,7 @@ import org.apache.commons.csv.CSVPrinter;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.constant.Const;
 
 public class ExportUnSyncedForUpload {
 
@@ -33,14 +34,14 @@ public class ExportUnSyncedForUpload {
 
 		for (OwnedCard current : list) {
 
-			if ((!isOnlyUnsyncedCards) || current.folderName.equals("UnSynced Folder")) {
+			if ((!isOnlyUnsyncedCards) || current.folderName.equals(Const.FOLDER_UNSYNCED)) {
 				CsvConnection.writeUploadCardToCSV(p, current);
 
 				quantityCount += current.quantity;
 
-				if (current.folderName.equals("UnSynced Folder")) {
+				if (current.folderName.equals(Const.FOLDER_UNSYNCED)) {
 					
-					current.folderName = "Sync Folder";
+					current.folderName = Const.FOLDER_SYNC;
 					
 					db.updateOwnedCardByUUID(current);
 				}

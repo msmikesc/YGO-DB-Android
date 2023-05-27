@@ -7,6 +7,7 @@ import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.Rarity;
+import ygodb.commonLibrary.constant.Const;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class AddCardsViewModel extends ViewModel {
             }
 
             if(current.priceBought == null){
-                current.priceBought = "0.00";
+                current.priceBought = Const.ZERO_PRICE_STRING;
             }
 
             OwnedCard existingRecord = AndroidUtil.getDBInstance().getExistingOwnedCardByObject(current);
@@ -56,11 +57,11 @@ public class AddCardsViewModel extends ViewModel {
 
     public void invertAllEditions(){
         for(OwnedCard o : cardsList){
-            if(o.editionPrinting.equals("1st Edition")){
-                o.editionPrinting = "Unlimited";
+            if(o.editionPrinting.equals(Const.CARD_PRINTING_FIRST_EDITION)){
+                o.editionPrinting = Const.CARD_PRINTING_UNLIMITED;
             }
             else{
-                o.editionPrinting = "1st Edition";
+                o.editionPrinting = Const.CARD_PRINTING_FIRST_EDITION;
             }
         }
     }
@@ -101,7 +102,7 @@ public class AddCardsViewModel extends ViewModel {
             newCard.quantity = 1;
             newCard.rarityUnsure= 0;
             newCard.setCode = current.setCode;
-            newCard.folderName = "UnSynced Folder";
+            newCard.folderName = Const.FOLDER_UNSYNCED;
             newCard.setNumber = current.setNumber;
             newCard.colorVariant = "-1";
             newCard.mainSetCardSets = current.mainSetCardSets;
@@ -121,10 +122,10 @@ public class AddCardsViewModel extends ViewModel {
             if(current.editionPrinting == null || current.editionPrinting.equals("")){
                 //assume ots unlimited, everything else 1st
                 if(newCard.setName.contains("OTS")){
-                    newCard.editionPrinting = "Unlimited";
+                    newCard.editionPrinting = Const.CARD_PRINTING_UNLIMITED;
                 }
                 else{
-                    newCard.editionPrinting = "1st Edition";
+                    newCard.editionPrinting = Const.CARD_PRINTING_FIRST_EDITION;
                 }
 
             }
@@ -159,7 +160,7 @@ public class AddCardsViewModel extends ViewModel {
 
     public void setAllPricesZero(){
         for(OwnedCard current: cardsList){
-            current.priceBought = "0.00";
+            current.priceBought = Const.ZERO_PRICE_STRING;
         }
     }
 

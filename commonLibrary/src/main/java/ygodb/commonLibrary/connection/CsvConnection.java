@@ -19,6 +19,7 @@ import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
+import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
 
 public class CsvConnection {
@@ -74,9 +75,11 @@ public class CsvConnection {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
 			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
 
-			p.printRecord("Folder Name", "Quantity", "Card Name", "Set Code", "Set Name", "Card Number", "Condition",
-					"Printing", "Price Bought", "Date Bought", "Rarity", "Rarity Color Variant", "Rarity Unsure",
-					"gamePlayCardUUID", "UUID", "passcode");
+			p.printRecord(Const.FOLDER_NAME_CSV, Const.QUANTITY_CSV, Const.CARD_NAME_CSV, Const.SET_CODE_CSV, Const.SET_NAME_CSV,
+					Const.CARD_NUMBER_CSV, Const.CONDITION_CSV,
+					Const.PRINTING_CSV, Const.PRICE_BOUGHT_CSV, Const.DATE_BOUGHT_CSV, Const.RARITY_CSV,
+					Const.RARITY_COLOR_VARIANT_CSV, Const.RARITY_UNSURE_CSV,
+					Const.GAME_PLAY_CARD_UUID_CSV, Const.UUID_CSV, Const.PASSCODE_CSV);
 
 			return p;
 
@@ -93,9 +96,11 @@ public class CsvConnection {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
 			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
 
-			p.printRecord("Folder Name", "Quantity", "Trade Quantity", "Card Name", "Set Code", "Set Name",
-					"Card Number", "Condition", "Printing", "Language", "Price Bought", "Date Bought", "LOW", "MID",
-					"MARKET");
+			p.printRecord(Const.FOLDER_NAME_CSV, Const.QUANTITY_CSV, Const.TRADE_QUANTITY_CSV,
+					Const.CARD_NAME_CSV, Const.SET_CODE_CSV, Const.SET_NAME_CSV,
+					Const.CARD_NUMBER_CSV, Const.CONDITION_CSV, Const.PRINTING_CSV,
+					Const.LANGUAGE_CSV, Const.PRICE_BOUGHT_CSV, Const.DATE_BOUGHT_CSV,
+					Const.LOW_CSV, Const.MID_CSV, Const.MARKET_CSV);
 
 			return p;
 
@@ -112,7 +117,8 @@ public class CsvConnection {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
 			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
 
-			p.printRecord("Quantity", "Card Name","Card Type", "Rarities","Set Name","Set Code", "TCGPlayer Mass Buy 3", "TCGPlayer Mass Buy 1");
+			p.printRecord(Const.QUANTITY_CSV, Const.CARD_NAME_CSV, Const.CARD_TYPE_CSV, Const.RARITIES_CSV,
+					Const.SET_NAME_CSV,Const.SET_CODE_CSV, Const.TCGPLAYER_MASS_BUY_3_CSV, Const.TCGPLAYER_MASS_BUY_1_CSV);
 
 			return p;
 
@@ -129,7 +135,7 @@ public class CsvConnection {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
 			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
 
-			p.printRecord("Quantity", "Card Name", "Rarity", "Set Name", "Set Code", "Price Bought");
+			p.printRecord(Const.QUANTITY_CSV, Const.CARD_NAME_CSV, Const.RARITY_CSV, Const.SET_NAME_CSV, Const.SET_CODE_CSV, Const.PRICE_BOUGHT_CSV);
 
 			return p;
 
@@ -146,7 +152,8 @@ public class CsvConnection {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
 			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
 
-			p.printRecord("gamePlayCardUUID", "Card Name","Card Type", "Rarities","Set Names","Set Codes", "Release Date", "Archetype");
+			p.printRecord(Const.GAME_PLAY_CARD_UUID_CSV, Const.CARD_NAME_CSV,Const.CARD_TYPE_CSV, Const.RARITIES_CSV,
+					Const.SET_NAMES_CSV,Const.SET_CODES_CSV, Const.RELEASE_DATE_CSV, Const.ARCHETYPE_CSV);
 
 			return p;
 
@@ -159,25 +166,25 @@ public class CsvConnection {
 
 	public static OwnedCard getOwnedCardFromDragonShieldCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
-		String folder = getStringOrNull(current,"Folder Name");
-		String name = getStringOrNull(current,"Card Name");
-		String quantity = getStringOrNull(current,"Quantity");
-		String setCode = getStringOrNull(current,"Set Code");
-		String setNumber = getStringOrNull(current,"Card Number");
-		String setName = getStringOrNull(current,"Set Name");
-		String condition = getStringOrNull(current,"Condition");
-		String printing = getStringOrNull(current,"Printing");
-		String priceBought = Util.normalizePrice(getStringOrNull(current,"Price Bought"));
-		String dateBought = getStringOrNull(current,"Date Bought");
+		String folder = getStringOrNull(current,Const.FOLDER_NAME_CSV);
+		String name = getStringOrNull(current,Const.CARD_NAME_CSV);
+		String quantity = getStringOrNull(current,Const.QUANTITY_CSV);
+		String setCode = getStringOrNull(current,Const.SET_CODE_CSV);
+		String setNumber = getStringOrNull(current,Const.CARD_NUMBER_CSV);
+		String setName = getStringOrNull(current,Const.SET_NAME_CSV);
+		String condition = getStringOrNull(current,Const.CONDITION_CSV);
+		String printing = getStringOrNull(current,Const.PRINTING_CSV);
+		String priceBought = Util.normalizePrice(getStringOrNull(current,Const.PRICE_BOUGHT_CSV));
+		String dateBought = getStringOrNull(current,Const.DATE_BOUGHT_CSV);
 		
-		String colorCode = Util.DEFAULT_COLOR_VARIANT;
+		String colorCode = Const.DEFAULT_COLOR_VARIANT;
 		
-		String priceLow = Util.normalizePrice(getStringOrNull(current,"LOW"));
-		String priceMid = Util.normalizePrice(getStringOrNull(current,"MID"));
-		String priceMarket = Util.normalizePrice(getStringOrNull(current,"MARKET"));
+		String priceLow = Util.normalizePrice(getStringOrNull(current,Const.LOW_CSV));
+		String priceMid = Util.normalizePrice(getStringOrNull(current,Const.MID_CSV));
+		String priceMarket = Util.normalizePrice(getStringOrNull(current,Const.MARKET_CSV));
 
-		if ("Foil".equals(printing)) {
-			printing = "1st Edition";
+		if (Const.CARD_PRINTING_FOIL.equals(printing)) {
+			printing = Const.CARD_PRINTING_FIRST_EDITION;
 		}
 
 		name = Util.checkForTranslatedCardName(name);
@@ -255,30 +262,30 @@ public class CsvConnection {
 
 	public static OwnedCard getOwnedCardFromExportedCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
-		String folder = getStringOrNull(current,"Folder Name");
-		String name = getStringOrNull(current,"Card Name");
-		String quantity = getStringOrNull(current,"Quantity");
-		String setCode = getStringOrNull(current,"Set Code");
-		String setNumber = getStringOrNull(current,"Card Number");
-		String setName = getStringOrNull(current,"Set Name");
-		String condition = getStringOrNull(current,"Condition");
-		String printing = getStringOrNull(current,"Printing");
-		String priceBought = Util.normalizePrice(getStringOrNull(current,"Price Bought"));
-		String dateBought = getStringOrNull(current,"Date Bought");
-		String rarity = getStringOrNull(current,"Rarity");
-		String rarityColorVariant = getStringOrNull(current,"Rarity Color Variant");
-		String rarityUnsure = getStringOrNull(current,"Rarity Unsure");
-		String gamePlayCardUUID = getStringOrNull(current, "gamePlayCardUUID");
-		int passcode = getIntOrNegativeOne(current, "passcode");
+		String folder = getStringOrNull(current,Const.FOLDER_NAME_CSV);
+		String name = getStringOrNull(current,Const.CARD_NAME_CSV);
+		String quantity = getStringOrNull(current,Const.QUANTITY_CSV);
+		String setCode = getStringOrNull(current,Const.SET_CODE_CSV);
+		String setNumber = getStringOrNull(current,Const.CARD_NUMBER_CSV);
+		String setName = getStringOrNull(current,Const.SET_NAME_CSV);
+		String condition = getStringOrNull(current,Const.CONDITION_CSV);
+		String printing = getStringOrNull(current,Const.PRINTING_CSV);
+		String priceBought = Util.normalizePrice(getStringOrNull(current,Const.PRICE_BOUGHT_CSV));
+		String dateBought = getStringOrNull(current,Const.DATE_BOUGHT_CSV);
+		String rarity = getStringOrNull(current,Const.RARITY_CSV);
+		String rarityColorVariant = getStringOrNull(current,Const.RARITY_COLOR_VARIANT_CSV);
+		String rarityUnsure = getStringOrNull(current,Const.RARITY_UNSURE_CSV);
+		String gamePlayCardUUID = getStringOrNull(current, Const.GAME_PLAY_CARD_UUID_CSV);
+		int passcode = getIntOrNegativeOne(current, Const.PASSCODE_CSV);
 		
-		String uuid = getStringOrNull(current,"UUID");
+		String uuid = getStringOrNull(current,Const.UUID_CSV);
 
 		name = Util.checkForTranslatedCardName(name);
 		rarity = Util.checkForTranslatedRarity(rarity);
 		passcode = Util.checkForTranslatedPasscode(passcode);
 
-		if (("Foil").equals(printing)) {
-			printing = "1st Edition";
+		if ((Const.CARD_PRINTING_FOIL).equals(printing)) {
+			printing = Const.CARD_PRINTING_FIRST_EDITION;
 		}
 
 
@@ -315,14 +322,14 @@ public class CsvConnection {
 	
 	public static OwnedCard getOwnedCardFromTCGPlayerCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
-		String folder = "UnSynced Folder";
+		String folder = Const.FOLDER_UNSYNCED;
 
-		String items = getStringOrNull(current,"ITEMS");
-		String details = getStringOrNull(current,"DETAILS");
-		String price = getStringOrNull(current,"PRICE").replace("$", "");
-		String quantity = getStringOrNull(current,"QUANTITY");
+		String items = getStringOrNull(current,Const.TCGPLAYER_ITEMS_CSV);
+		String details = getStringOrNull(current,Const.TCGPLAYER_DETAILS_CSV);
+		String price = getStringOrNull(current,Const.TCGPLAYER_PRICE_CSV).replace("$", "");
+		String quantity = getStringOrNull(current,Const.TCGPLAYER_QUANTITY_CSV);
 		
-		String colorVariant = Util.DEFAULT_COLOR_VARIANT;
+		String colorVariant = Const.DEFAULT_COLOR_VARIANT;
 
 		String[] nameAndSet = items.split("\n");
 
@@ -383,18 +390,21 @@ public class CsvConnection {
 		rarity = Util.checkForTranslatedRarity(rarity);
 		setName = Util.checkForTranslatedSetName(setName);
 
-		String printing = "Limited";
+		String printing = Const.CARD_PRINTING_LIMITED;
 
-		if (rarityConditionPrinting[1].contains("1st Edition")) {
-			printing = "1st Edition";
+		if (rarityConditionPrinting[1].contains(Const.CARD_PRINTING_FIRST_EDITION)) {
+			printing = Const.CARD_PRINTING_FIRST_EDITION;
 		}
-		if (rarityConditionPrinting[1].contains("Unlimited")) {
-			printing = "Unlimited";
+		if (rarityConditionPrinting[1].contains(Const.CARD_PRINTING_UNLIMITED)) {
+			printing = Const.CARD_PRINTING_UNLIMITED;
 		}
 
-		String condition = rarityConditionPrinting[1].replace("Unlimited", "").replace("Limited", "")
-				.replace("1st Edition", "").replace("Condition:", "").replaceAll("\\s", "")
-				.replace("LightlyPlayed", "LightPlayed").replace("ModeratelyPlayed", "Played")
+		String condition = rarityConditionPrinting[1].replace(Const.CARD_PRINTING_UNLIMITED, "")
+				.replace(Const.CARD_PRINTING_LIMITED, "")
+				.replace(Const.CARD_PRINTING_FIRST_EDITION, "").replace("Condition:", "")
+				.replaceAll("\\s", "")
+				.replace("LightlyPlayed", "LightPlayed")
+				.replace("ModeratelyPlayed", "Played")
 				.replace("HeavilyPlayed", "Poor").replace("Damaged", "Poor");
 
 		CardSet setIdentified = db.getFirstCardSetForCardInSet(name, setName);
@@ -403,7 +413,7 @@ public class CsvConnection {
 			System.out.println("Unknown setCode for card name and set: " + name + ":" + setName);
 			setIdentified = new CardSet();
 			setIdentified.rarityUnsure = 1;
-			setIdentified.colorVariant = Util.DEFAULT_COLOR_VARIANT;
+			setIdentified.colorVariant = Const.DEFAULT_COLOR_VARIANT;
 			setIdentified.setName = setName;
 			setIdentified.setNumber = null;
 			setIdentified.gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
@@ -464,18 +474,18 @@ public class CsvConnection {
 
 	public static void insertGamePlayCardFromCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
-		String name = getStringOrNull(current, "Card Name");
-		String type = getStringOrNull(current, "Card Type");
-		Integer passcode = getIntOrNegativeOne(current, "Passcode");
-		String lore = getStringOrNull(current, "Card Text");
-		String attribute = getStringOrNull(current, "Attribute");
-		String race = getStringOrNull(current, "Race");
-		String linkValue = getStringOrNull(current, "Link Value");
-		String pendScale = getStringOrNull(current, "Pendulum Scale");
-		String level = getStringOrNull(current, "Level/Rank");
-		String atk = getStringOrNull(current, "Attack");
-		String def = getStringOrNull(current, "Defense");
-		String archetype = getStringOrNull(current, "Archetype");
+		String name = getStringOrNull(current, Const.CARD_NAME_CSV);
+		String type = getStringOrNull(current, Const.CARD_TYPE_CSV);
+		Integer passcode = getIntOrNegativeOne(current, Const.PASSCODE_CSV);
+		String lore = getStringOrNull(current, Const.CARD_TEXT_CSV);
+		String attribute = getStringOrNull(current, Const.ATTRIBUTE_CSV);
+		String race = getStringOrNull(current, Const.RACE_CSV);
+		String linkValue = getStringOrNull(current, Const.LINK_VALUE_CSV);
+		String pendScale = getStringOrNull(current, Const.PENDULUM_SCALE_CSV);
+		String level = getStringOrNull(current, Const.LEVEL_RANK_CSV);
+		String atk = getStringOrNull(current, Const.ATTACK_CSV);
+		String def = getStringOrNull(current, Const.DEFENSE_CSV);
+		String archetype = getStringOrNull(current, Const.ARCHETYPE_CSV);
 
 		GamePlayCard gamePlayCard = new GamePlayCard();
 
@@ -506,14 +516,14 @@ public class CsvConnection {
 
 	public static void insertCardSetFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
 
-		String name = getStringOrNull(current,"Name");
-		String cardNumber = getStringOrNull(current,"Card number");
-		String rarity = getStringOrNull(current,"Rarity");
+		String name = getStringOrNull(current,Const.CARD_NAME_CSV);
+		String cardNumber = getStringOrNull(current,Const.CARD_NUMBER_CSV);
+		String rarity = getStringOrNull(current,Const.RARITY_CSV);
 
 		String setName = null;
 
 		try {
-			setName = getStringOrNull(current,"Set Name");
+			setName = getStringOrNull(current,Const.SET_NAME_CSV);
 
 			if(setName == null){
 				setName = defaultSetName;
@@ -536,9 +546,9 @@ public class CsvConnection {
 	}
 
 	public static void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
-		// p.printRecord("Folder Name","Quantity","Card Name","Set Code","Set
-		// Name","Card Number","Condition","Printing","Price Bought","Date
-		// Bought","Rarity","Rarity Color Variant", "Rarity Unsure","gamePlayCardUUID");
+		// p.printRecord(Const.folderNameCSV,Const.quantityCSV,Const.cardNameCSV,Const.setCodeCSV,"Set
+		// Name",Const.cardNumberCSV,Const.conditionCSV,Const.printingCSV,Const.priceBoughtCSV,"Date
+		// Bought",Const.rarityCSV,Const.rarityColorVariantCSV, Const.rarityUnsureCSV,Const.gamePlayCardUUIDCSV);
 		// UUID, passcode
 		p.printRecord(current.folderName, current.quantity, current.cardName, current.setCode, current.setName,
 				current.setNumber, current.condition, current.editionPrinting, current.priceBought, current.dateBought,
@@ -552,13 +562,13 @@ public class CsvConnection {
 		
 		String printing = current.editionPrinting;
 		
-		if(printing.equals("1st Edition")) {
-			printing = "Foil";
+		if(printing.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
+			printing = Const.CARD_PRINTING_FOIL;
 		}
 		
 		String outputSetNumber = current.setNumber;
 
-		if (!current.colorVariant.equalsIgnoreCase(Util.DEFAULT_COLOR_VARIANT)
+		if (!current.colorVariant.equalsIgnoreCase(Const.DEFAULT_COLOR_VARIANT)
 				&& !AnalyzeCompareToDragonShieldCSV.setColorVariantUnsupportedDragonShield.contains(current.setName)) {
 			outputSetNumber += current.colorVariant;
 		}

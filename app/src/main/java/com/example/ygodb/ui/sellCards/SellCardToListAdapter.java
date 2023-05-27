@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
 
 import java.io.InputStream;
@@ -226,7 +227,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         }
         else{
             viewHolder.cardPrice.setText("$");
-            viewHolder.cardPriceTextBox.setText("0.00");
+            viewHolder.cardPriceTextBox.setText(Const.ZERO_PRICE_STRING);
         }
 
         viewHolder.cardPriceTextBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
 
 import java.io.InputStream;
@@ -79,11 +80,11 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
     public void onFirstButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
 
         if(current.editionPrinting!= null && current.editionPrinting.contains("1st")){
-            current.editionPrinting = "Unlimited";
+            current.editionPrinting = Const.CARD_PRINTING_UNLIMITED;
             viewHolder.firstEdition.setImageDrawable(null);
         }
         else{
-            current.editionPrinting = "1st Edition";
+            current.editionPrinting = Const.CARD_PRINTING_FIRST_EDITION;
             viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }
 
@@ -250,7 +251,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         }
         else{
             viewHolder.cardPrice.setText("$");
-            viewHolder.cardPriceTextBox.setText("0.00");
+            viewHolder.cardPriceTextBox.setText(Const.ZERO_PRICE_STRING);
         }
 
         viewHolder.cardPriceTextBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {

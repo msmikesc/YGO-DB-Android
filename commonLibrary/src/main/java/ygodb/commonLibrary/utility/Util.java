@@ -9,6 +9,7 @@ import ygodb.commonLibrary.bean.Rarity;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.DatabaseHashMap;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.constant.Const;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,9 +27,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Util {
-	
-	public static final String DEFAULT_COLOR_VARIANT = "-1";
-	
 	private static KeyUpdateMap setNameMap = null;
 	private static HashMap<String, String> rarityMap = null;
 	private static HashMap<String, String> setNumberMap = null;
@@ -593,9 +591,9 @@ public class Util {
 		String gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
 		// try skill card
 		if (gamePlayCardUUID == null) {
-			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name + " (Skill Card)");
+			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name + Const.SKILL_CARD_NAME_APPEND);
 			if (gamePlayCardUUID != null) {
-				name = name + " (Skill Card)";
+				name = name + Const.SKILL_CARD_NAME_APPEND;
 			}
 		}
 

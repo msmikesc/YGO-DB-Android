@@ -21,6 +21,7 @@ import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.constant.Const;
 
 public class AnalyzeCardsInSet {
 
@@ -97,7 +98,7 @@ public class AnalyzeCardsInSet {
 			String massbuy = "";
 
 			if (s.quantity < 3) {
-				if (s.cardType.equals("Skill Card")) {
+				if (s.cardType.equals(Const.CARD_TYPE_SKILL)) {
 					if (s.quantity < 1) {
 						massbuy = (1) + " " + s.cardName;
 					} else {

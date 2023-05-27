@@ -1,5 +1,7 @@
 package ygodb.commonLibrary.bean;
 
+import ygodb.commonLibrary.constant.Const;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	public String getAveragePrice(){
 		if(cardPriceAverage == null){
-			return "0.00";
+			return Const.ZERO_PRICE_STRING;
 		}
 
 		return cardPriceAverage.toString();
@@ -249,7 +251,7 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 		}
 
 		if(lowestPrice == null){
-			return new BigDecimal("0.00");
+			return new BigDecimal(Const.ZERO_PRICE_STRING);
 		}
 		return lowestPrice;
 

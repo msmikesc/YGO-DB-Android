@@ -7,6 +7,7 @@ import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.Rarity;
+import ygodb.commonLibrary.constant.Const;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public class SellCardsViewModel extends ViewModel {
 
             if(current.editionPrinting == null || current.editionPrinting.equals("")){
                 //assume unlimited
-                sellingCard.editionPrinting = "Unlimited";
+                sellingCard.editionPrinting = Const.CARD_PRINTING_UNLIMITED;
             }
             else{
                 sellingCard.editionPrinting = current.editionPrinting;
@@ -134,7 +135,7 @@ public class SellCardsViewModel extends ViewModel {
 
     public void setAllPricesZero(){
         for(OwnedCard current: cardsList){
-            current.priceSold = "0.00";
+            current.priceSold = Const.ZERO_PRICE_STRING;
         }
     }
 

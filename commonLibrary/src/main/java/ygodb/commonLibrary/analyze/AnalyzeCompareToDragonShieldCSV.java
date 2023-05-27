@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.connection.CsvConnection;
 import ygodb.commonLibrary.connection.DatabaseHashMap;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
 
 public class AnalyzeCompareToDragonShieldCSV {
@@ -40,21 +40,21 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 			CSVRecord current = it.next();
 
-			String folder = current.get("Folder Name").trim();
-			String name = current.get("Card Name").trim();
-			String quantity = current.get("Quantity").trim();
-			String setCode = current.get("Set Code").trim();
-			String setNumber = current.get("Card Number").trim();
-			String setName = current.get("Set Name").trim();
-			String condition = current.get("Condition").trim();
-			String printing = current.get("Printing").trim();
-			String priceBought = Util.normalizePrice(current.get("Price Bought"));
-			String dateBought = current.get("Date Bought").trim();
+			String folder = current.get(Const.FOLDER_NAME_CSV).trim();
+			String name = current.get(Const.CARD_NAME_CSV).trim();
+			String quantity = current.get(Const.QUANTITY_CSV).trim();
+			String setCode = current.get(Const.SET_CODE_CSV).trim();
+			String setNumber = current.get(Const.CARD_NUMBER_CSV).trim();
+			String setName = current.get(Const.SET_NAME_CSV).trim();
+			String condition = current.get(Const.CONDITION_CSV).trim();
+			String printing = current.get(Const.PRINTING_CSV).trim();
+			String priceBought = Util.normalizePrice(current.get(Const.PRICE_BOUGHT_CSV));
+			String dateBought = current.get(Const.DATE_BOUGHT_CSV).trim();
 
-			String colorCode = Util.DEFAULT_COLOR_VARIANT;
+			String colorCode = Const.DEFAULT_COLOR_VARIANT;
 
-			if (printing.equals("Foil")) {
-				printing = "1st Edition";
+			if (printing.equals(Const.CARD_PRINTING_FOIL)) {
+				printing = Const.CARD_PRINTING_FIRST_EDITION;
 			}
 
 			String key = setNumber + Util.normalizePrice(priceBought) + dateBought + folder + condition + printing;
@@ -130,7 +130,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 		for (ArrayList<OwnedCard> rarityList : databaseList.values()) {
 			for (OwnedCard card : rarityList) {
 
-				if (!card.folderName.equals("Manual Folder")) {
+				if (!card.folderName.equals(Const.FOLDER_MANUAL)) {
 					System.out.println(
 							"Card in DB but not in CSV: " + card.cardName + " " + card.setNumber + " " + card.setRarity
 									+ " " + card.colorVariant + " " + card.priceBought + " " + card.dateBought);

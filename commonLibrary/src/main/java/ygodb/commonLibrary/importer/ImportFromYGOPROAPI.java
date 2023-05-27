@@ -17,6 +17,7 @@ import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
 
 import java.sql.SQLException;
@@ -55,7 +56,7 @@ public class ImportFromYGOPROAPI {
 
 				System.out.println("Finished reading from API");
 
-				JsonNode cards = jsonNode.get("data");
+				JsonNode cards = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
 				Iterator<JsonNode> keySet = cards.iterator();
 
@@ -69,7 +70,7 @@ public class ImportFromYGOPROAPI {
 
 					JsonNode sets = null;
 					Iterator<JsonNode> setIterator = null;
-					sets = current.get("card_sets");
+					sets = current.get(Const.YGOPRO_CARD_SETS);
 
 
 					if (sets != null) {
@@ -90,18 +91,18 @@ public class ImportFromYGOPROAPI {
 
 	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck, SQLiteConnection db) throws SQLException {
 
-		String name = Util.getStringOrNull(current, "name");
-		String type = Util.getStringOrNull(current, "type");
-		Integer passcode = Util.getIntOrNegativeOne(current, "id");// passcode
-		String desc = Util.getStringOrNull(current, "desc");
-		String attribute = Util.getStringOrNull(current, "attribute");
-		String race = Util.getStringOrNull(current, "race");
-		String linkval = Util.getStringOrNull(current, "linkval");
-		String level = Util.getStringOrNull(current, "level");
-		String scale = Util.getStringOrNull(current, "scale");
-		String atk = Util.getStringOrNull(current, "atk");
-		String def = Util.getStringOrNull(current, "def");
-		String archetype = Util.getStringOrNull(current, "archetype");
+		String name = Util.getStringOrNull(current, Const.YGOPRO_CARD_NAME);
+		String type = Util.getStringOrNull(current, Const.YGOPRO_CARD_TYPE);
+		Integer passcode = Util.getIntOrNegativeOne(current, Const.YGOPRO_CARD_PASSCODE);
+		String desc = Util.getStringOrNull(current, Const.YGOPRO_CARD_TEXT);
+		String attribute = Util.getStringOrNull(current, Const.YGOPRO_ATTRIBUTE);
+		String race = Util.getStringOrNull(current, Const.YGOPRO_RACE);
+		String linkval = Util.getStringOrNull(current, Const.YGOPRO_LINK_VALUE);
+		String level = Util.getStringOrNull(current, Const.YGOPRO_LEVEL_RANK);
+		String scale = Util.getStringOrNull(current, Const.YGOPRO_PENDULUM_SCALE);
+		String atk = Util.getStringOrNull(current, Const.YGOPRO_ATTACK);
+		String def = Util.getStringOrNull(current, Const.YGOPRO_DEFENSE);
+		String archetype = Util.getStringOrNull(current, Const.YGOPRO_ARCHETYPE);
 
 		GamePlayCard gamePlayCard = new GamePlayCard();
 
@@ -156,10 +157,10 @@ public class ImportFromYGOPROAPI {
 			String setPrice = null;
 
 			try {
-				setCode = Util.getStringOrNull(currentSet,"set_code");
-				setName = Util.getStringOrNull(currentSet,"set_name");
-				setRarity = Util.getStringOrNull(currentSet,"set_rarity");
-				setPrice = Util.getStringOrNull(currentSet,"set_price");
+				setCode = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_CODE);
+				setName = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_NAME);
+				setRarity = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_RARITY);
+				setPrice = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_PRICE);
 			} catch (Exception e) {
 				System.out.println("issue found on " + name);
 				continue;
@@ -207,10 +208,10 @@ public class ImportFromYGOPROAPI {
 				}
 
 				for (JsonNode set : jsonNode) {
-					String currentSetName = Util.getStringOrNull(set, "set_name");
-					String setCode = Util.getStringOrNull(set, "set_code");
-					int numOfCards = Util.getIntOrNegativeOne(set, "num_of_cards");
-					String tcgDate = Util.getStringOrNull(set, "tcg_date");
+					String currentSetName = Util.getStringOrNull(set, Const.YGOPRO_SET_NAME);
+					String setCode = Util.getStringOrNull(set, Const.YGOPRO_SET_CODE);
+					int numOfCards = Util.getIntOrNegativeOne(set, Const.YGOPRO_TOTAL_CARDS_IN_SET);
+					String tcgDate = Util.getStringOrNull(set, Const.YGOPRO_TCG_RELEASE_DATE);
 
 					String newSetName = Util.checkForTranslatedSetName(currentSetName);
 
