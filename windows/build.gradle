@@ -1,5 +1,10 @@
 plugins {
     id 'java-library'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 java {
@@ -11,4 +16,7 @@ dependencies {
     implementation project(path: ':commonLibrary')
     implementation 'org.xerial:sqlite-jdbc:3.41.2.1'
     implementation "org.apache.commons:commons-csv:1.9.0"
+    implementation "org.apache.commons:commons-csv:1.9.0"
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
 }

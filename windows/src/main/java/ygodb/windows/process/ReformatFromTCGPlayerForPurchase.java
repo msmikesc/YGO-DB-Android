@@ -10,9 +10,9 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.connection.CsvConnection;
+import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.windows.connection.WindowsUtil;
+import ygodb.windows.utility.WindowsUtil;
 
 public class ReformatFromTCGPlayerForPurchase {
 

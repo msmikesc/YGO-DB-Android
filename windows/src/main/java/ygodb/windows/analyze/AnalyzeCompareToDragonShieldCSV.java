@@ -1,34 +1,32 @@
-package ygodb.commonLibrary.analyze;
+package ygodb.windows.analyze;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.connection.CsvConnection;
+import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.DatabaseHashMap;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
+import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzeCompareToDragonShieldCSV {
 
-	public static final List<String> setColorVariantUnsupportedDragonShield = List.of("Legendary Duelists: Season 2");
-
-	/*
 	public static void main(String[] args) throws SQLException, IOException {
 		AnalyzeCompareToDragonShieldCSV mainObj = new AnalyzeCompareToDragonShieldCSV();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+		mainObj.run(db);
+		db.closeInstance();
 		System.out.println("Analyze Complete");
-	}*/
+	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
@@ -82,7 +80,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 				OwnedCard card = list.get(0);
 
 				if (!colorCode.equalsIgnoreCase(list.get(0).colorVariant)
-						&& !setColorVariantUnsupportedDragonShield.contains(card.setName)) {
+						&& !Const.setColorVariantUnsupportedDragonShield.contains(card.setName)) {
 					System.out.println(
 							"Color Code Mismatch on: " + card.cardName + " " + card.setNumber + " " + card.setRarity
 									+ " " + card.colorVariant + " " + card.priceBought + " " + card.dateBought);

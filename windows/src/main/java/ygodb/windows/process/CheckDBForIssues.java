@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.utility.Util;
-import ygodb.windows.connection.WindowsUtil;
+import ygodb.windows.utility.WindowsUtil;
 
 public class CheckDBForIssues {
 

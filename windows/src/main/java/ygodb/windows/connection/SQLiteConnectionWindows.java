@@ -1095,8 +1095,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		statementGamePlayCard.close();
 	}
 
-
-
 	@Override
 	public void updateOwnedCardByUUID(OwnedCard card) throws SQLException {
 

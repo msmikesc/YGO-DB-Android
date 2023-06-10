@@ -5,8 +5,7 @@ import java.util.ArrayList;
 
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.utility.Util;
-import ygodb.windows.connection.WindowsUtil;
+import ygodb.windows.utility.WindowsUtil;
 
 public class UpdateSetNames {
 
@@ -38,7 +37,7 @@ public class UpdateSetNames {
 				continue;
 			}
 			
-			String newSetName = Util.checkForTranslatedSetName(setName);
+			String newSetName = WindowsUtil.checkForTranslatedSetName(setName);
 			
 			if(!newSetName.equals(setName)) {
 				System.out.println("Updating " + setName + " to " + newSetName);

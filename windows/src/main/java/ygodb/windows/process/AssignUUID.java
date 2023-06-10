@@ -8,7 +8,7 @@ import java.util.UUID;
 import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.windows.connection.WindowsUtil;
+import ygodb.windows.utility.WindowsUtil;
 
 public class AssignUUID {
 

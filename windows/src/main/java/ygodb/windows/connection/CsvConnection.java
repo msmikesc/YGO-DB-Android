@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.connection;
+package ygodb.windows.connection;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -14,13 +14,15 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import javafx.util.Pair;
-import ygodb.commonLibrary.analyze.AnalyzeCompareToDragonShieldCSV;
 import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.bean.SetMetaData;
+import ygodb.commonLibrary.connection.DatabaseHashMap;
+import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
+import ygodb.windows.utility.WindowsUtil;
 
 public class CsvConnection {
 
@@ -183,9 +185,9 @@ public class CsvConnection {
 			printing = Const.CARD_PRINTING_FIRST_EDITION;
 		}
 
-		name = Util.checkForTranslatedCardName(name);
-		setName = Util.checkForTranslatedSetName(setName);
-		setNumber = Util.checkForTranslatedSetNumber(setNumber);
+		name = WindowsUtil.checkForTranslatedCardName(name);
+		setName = WindowsUtil.checkForTranslatedSetName(setName);
+		setNumber = WindowsUtil.checkForTranslatedSetNumber(setNumber);
 
 		List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(setNumber,
 				priceBought, dateBought, folder, condition, printing, db);
@@ -276,9 +278,9 @@ public class CsvConnection {
 		
 		String uuid = getStringOrNull(current,Const.UUID_CSV);
 
-		name = Util.checkForTranslatedCardName(name);
-		rarity = Util.checkForTranslatedRarity(rarity);
-		passcode = Util.checkForTranslatedPasscode(passcode);
+		name = WindowsUtil.checkForTranslatedCardName(name);
+		rarity = WindowsUtil.checkForTranslatedRarity(rarity);
+		passcode = WindowsUtil.checkForTranslatedPasscode(passcode);
 
 		if ((Const.CARD_PRINTING_FOIL).equals(printing)) {
 			printing = Const.CARD_PRINTING_FIRST_EDITION;
@@ -382,9 +384,9 @@ public class CsvConnection {
 
 		String rarity = rarityConditionPrinting[0].replace("Rarity:", "").trim();
 
-		name = Util.checkForTranslatedCardName(name);
-		rarity = Util.checkForTranslatedRarity(rarity);
-		setName = Util.checkForTranslatedSetName(setName);
+		name = WindowsUtil.checkForTranslatedCardName(name);
+		rarity = WindowsUtil.checkForTranslatedRarity(rarity);
+		setName = WindowsUtil.checkForTranslatedSetName(setName);
 
 		String printing = Const.CARD_PRINTING_LIMITED;
 
@@ -485,8 +487,8 @@ public class CsvConnection {
 
 		GamePlayCard gamePlayCard = new GamePlayCard();
 
-		name = Util.checkForTranslatedCardName(name);
-		passcode = Util.checkForTranslatedPasscode(passcode);
+		name = WindowsUtil.checkForTranslatedCardName(name);
+		passcode = WindowsUtil.checkForTranslatedPasscode(passcode);
 
 		gamePlayCard.cardName = name;
 		gamePlayCard.cardType = type;
@@ -528,10 +530,10 @@ public class CsvConnection {
 			setName = defaultSetName;
 		}
 
-		name = Util.checkForTranslatedCardName(name);
-		rarity = Util.checkForTranslatedRarity(rarity);
-		setName = Util.checkForTranslatedSetName(setName);
-		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
+		name = WindowsUtil.checkForTranslatedCardName(name);
+		rarity = WindowsUtil.checkForTranslatedRarity(rarity);
+		setName = WindowsUtil.checkForTranslatedSetName(setName);
+		cardNumber = WindowsUtil.checkForTranslatedSetNumber(cardNumber);
 
 		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
 
@@ -577,7 +579,7 @@ public class CsvConnection {
 		String outputSetNumber = current.setNumber;
 
 		if (!current.colorVariant.equalsIgnoreCase(Const.DEFAULT_COLOR_VARIANT)
-				&& !AnalyzeCompareToDragonShieldCSV.setColorVariantUnsupportedDragonShield.contains(current.setName)) {
+				&& !Const.setColorVariantUnsupportedDragonShield.contains(current.setName)) {
 			outputSetNumber += current.colorVariant;
 		}
 

@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.analyze;
+package ygodb.windows.analyze;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -10,19 +10,22 @@ import java.util.Map;
 import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.connection.CsvConnection;
+import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzeCardsToSell {
 	
 	BigDecimal minPrice = new BigDecimal("2.00");
 
-	/*
+
 	public static void main(String[] args) throws SQLException, IOException {
 		AnalyzeCardsToSell mainObj = new AnalyzeCardsToSell();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-	}*/
+
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+		mainObj.run(db);
+		db.closeInstance();
+	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 

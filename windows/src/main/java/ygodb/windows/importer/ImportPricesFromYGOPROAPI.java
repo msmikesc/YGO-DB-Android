@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.importer;
+package ygodb.windows.importer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,10 +16,21 @@ import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
+import ygodb.windows.utility.WindowsUtil;
 
 public class ImportPricesFromYGOPROAPI {
 	
 	HashMap<String, List<String>> NameUpdateMap = new HashMap<>();
+
+	public static void main(String[] args) throws SQLException, IOException {
+		ImportPricesFromYGOPROAPI mainObj = new ImportPricesFromYGOPROAPI();
+
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+
+		mainObj.run(db);
+		db.closeInstance();
+		System.out.println("Import Finished");
+	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
@@ -108,12 +119,12 @@ public class ImportPricesFromYGOPROAPI {
 				continue;
 			}
 
-			name = Util.checkForTranslatedCardName(name);
-			setRarity = Util.checkForTranslatedRarity(setRarity);
-			setName = Util.checkForTranslatedSetName(setName);
-			setCode = Util.checkForTranslatedSetNumber(setCode);
+			name = WindowsUtil.checkForTranslatedCardName(name);
+			setRarity = WindowsUtil.checkForTranslatedRarity(setRarity);
+			setName = WindowsUtil.checkForTranslatedSetName(setName);
+			setCode = WindowsUtil.checkForTranslatedSetNumber(setCode);
 
-			List<String> translatedList = Util.checkForTranslatedQuadKey(name, setCode, setRarity, setName);
+			List<String> translatedList = WindowsUtil.checkForTranslatedQuadKey(name, setCode, setRarity, setName);
 			name = translatedList.get(0);
 			setCode = translatedList.get(1);
 			setRarity = translatedList.get(2);

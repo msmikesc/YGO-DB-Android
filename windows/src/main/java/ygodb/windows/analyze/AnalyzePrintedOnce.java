@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.analyze;
+package ygodb.windows.analyze;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,17 +10,18 @@ import java.util.List;
 import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
-import ygodb.commonLibrary.connection.CsvConnection;
+import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzePrintedOnce {
 
-	/*
 	public static void main(String[] args) throws SQLException, IOException {
 		AnalyzePrintedOnce mainObj = new AnalyzePrintedOnce();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-	}*/
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+		mainObj.run(db);
+		db.closeInstance();
+	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 

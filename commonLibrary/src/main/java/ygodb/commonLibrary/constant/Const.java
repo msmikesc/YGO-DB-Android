@@ -1,5 +1,7 @@
 package ygodb.commonLibrary.constant;
 
+import java.util.List;
+
 public class Const {
 
     public static final String ZERO_PRICE_STRING= "0.00";
@@ -121,4 +123,5 @@ public class Const {
     public static final String YGOPRO_TCG_RELEASE_DATE = "tcg_date";
 
     public static final String DEFAULT_COLOR_VARIANT = "-1";
+	public static final List<String> setColorVariantUnsupportedDragonShield = List.of("Legendary Duelists: Season 2");
 }

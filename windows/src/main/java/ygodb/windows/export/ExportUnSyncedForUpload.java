@@ -1,22 +1,23 @@
-package ygodb.commonLibrary.export;
+package ygodb.windows.export;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.apache.commons.csv.CSVPrinter;
 import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.connection.CsvConnection;
+import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
+import ygodb.windows.utility.WindowsUtil;
 
 public class ExportUnSyncedForUpload {
 
-	/*
 	public static void main(String[] args) throws SQLException, IOException {
 		ExportUnSyncedForUpload mainObj = new ExportUnSyncedForUpload();
-		mainObj.run();
-		SQLiteConnection.closeInstance();
-	}*/
+		SQLiteConnection db = WindowsUtil.getDBInstance();
+		mainObj.run(db);
+		db.closeInstance();
+	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
