@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonLibrary.bean.OwnedCard;
@@ -19,8 +20,10 @@ public class ImportFromTCGPlayer {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		Iterator<CSVRecord> it = CsvConnection.getIterator(
+		CSVParser parser = CsvConnection.getParser(
 				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\TCGPlayer.csv", StandardCharsets.UTF_16LE);
+		
+		Iterator<CSVRecord> it = parser.iterator();
 
 		HashMap<String, OwnedCard> map = new HashMap<>();
 
@@ -67,6 +70,8 @@ public class ImportFromTCGPlayer {
 		for (OwnedCard card : map.values()) {
 			db.upsertOwnedCardBatch(card);
 		}
+
+		parser.close();
 
 		db.closeInstance();
 

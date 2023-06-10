@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonLibrary.bean.OwnedCard;
@@ -31,8 +32,10 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		Iterator<CSVRecord> it = CsvConnection.getIteratorSkipFirstLine(
+		CSVParser parser = CsvConnection.getParserSkipFirstLine(
 				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\all-folders.csv", StandardCharsets.UTF_16LE);
+
+		Iterator<CSVRecord> it = parser.iterator();
 
 		Map<String, ArrayList<OwnedCard>> databaseList = DatabaseHashMap.getOwnedInstance(db);
 
@@ -126,6 +129,8 @@ public class AnalyzeCompareToDragonShieldCSV {
 			}
 
 		}
+
+		parser.close();
 
 		for (ArrayList<OwnedCard> rarityList : databaseList.values()) {
 			for (OwnedCard card : rarityList) {

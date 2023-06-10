@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Iterator;
 
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import ygodb.commonLibrary.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
@@ -17,7 +18,9 @@ public class ImportCardSetFromCSV {
 
 		String fileNameString = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\" + csvFileName + ".csv";
 
-		Iterator<CSVRecord> it = CsvConnection.getIterator(fileNameString, StandardCharsets.UTF_16LE);
+		CSVParser parser = CsvConnection.getParser(fileNameString, StandardCharsets.UTF_16LE);
+
+		Iterator<CSVRecord> it = parser.iterator();
 
 		while (it.hasNext()) {
 
@@ -26,6 +29,8 @@ public class ImportCardSetFromCSV {
 			CsvConnection.insertCardSetFromCSV(current, csvFileName, db);
 
 		}
+
+		parser.close();
 
 	}
 

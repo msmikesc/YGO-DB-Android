@@ -5,7 +5,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,16 +24,14 @@ import ygodb.commonLibrary.utility.Util;
 
 public class CsvConnection {
 
-	public static Iterator<CSVRecord> getIterator(String filename, Charset charset) throws IOException {
+	public static CSVParser getParser(String filename, Charset charset) throws IOException {
 		File f = new File(filename);
 
 		BufferedReader fr = new BufferedReader(new FileReader(f, charset));
 
 		skipByteOrderMark(fr);
 
-		CSVParser parser = CSVFormat.DEFAULT.withHeader().parse(fr);
-
-		return parser.iterator();
+		return CSVFormat.DEFAULT.withHeader().parse(fr);
 	}
 
 	public static CSVParser getParser(InputStream input, Charset charset) throws IOException {
@@ -56,7 +53,7 @@ public class CsvConnection {
 		}
 	}
 
-	public static Iterator<CSVRecord> getIteratorSkipFirstLine(String filename, Charset charset) throws IOException {
+	public static CSVParser getParserSkipFirstLine(String filename, Charset charset) throws IOException {
 		File f = new File(filename);
 
 		FileReader fr = new FileReader(f, charset);
@@ -65,9 +62,7 @@ public class CsvConnection {
 
 		s.readLine();
 
-		CSVParser parser = CSVFormat.DEFAULT.withHeader().parse(s);
-
-		return parser.iterator();
+		return CSVFormat.DEFAULT.withHeader().parse(s);
 	}
 
 	public static CSVPrinter getExportOutputFile(String filename) {

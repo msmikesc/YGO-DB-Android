@@ -3,6 +3,8 @@ package ygodb.commonLibrary.importer;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import ygodb.commonLibrary.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
@@ -17,7 +19,9 @@ public class ImportGamePlayCardFromCSV {
 
 		String fileNameString = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\" + csvFileName + ".csv";
 
-		Iterator<CSVRecord> it = CsvConnection.getIterator(fileNameString, StandardCharsets.UTF_16LE);
+		CSVParser parser = CsvConnection.getParser(fileNameString, StandardCharsets.UTF_16LE);
+
+		Iterator<CSVRecord> it = parser.iterator();
 
 		while (it.hasNext()) {
 
@@ -25,6 +29,8 @@ public class ImportGamePlayCardFromCSV {
 
 			CsvConnection.insertGamePlayCardFromCSV(current, db);
 		}
+
+		parser.close();
 
 	}
 }

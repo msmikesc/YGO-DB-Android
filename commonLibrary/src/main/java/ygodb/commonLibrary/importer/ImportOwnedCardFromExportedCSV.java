@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonLibrary.bean.OwnedCard;
@@ -26,9 +27,11 @@ public class ImportOwnedCardFromExportedCSV {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		Iterator<CSVRecord> it = CsvConnection.getIterator(
+		CSVParser parser = CsvConnection.getParser(
 				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\rarity-unsure-export.csv",
 				StandardCharsets.UTF_16LE);
+
+		Iterator<CSVRecord> it = parser.iterator();
 		
 		int count = 0;
 
@@ -63,6 +66,8 @@ public class ImportOwnedCardFromExportedCSV {
 				db.upsertOwnedCardBatch(card);
 			}
 		}
+
+		parser.close();
 
 		db.closeInstance();
 		

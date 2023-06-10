@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonLibrary.bean.OwnedCard;
@@ -26,8 +27,10 @@ public class ImportFromDragonShield {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		Iterator<CSVRecord> it = CsvConnection.getIteratorSkipFirstLine(
+		CSVParser parser = CsvConnection.getParserSkipFirstLine(
 				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\all-folders.csv", StandardCharsets.UTF_16LE);
+
+		Iterator<CSVRecord> it = parser.iterator();
 
 		int count = 0;
 
@@ -60,6 +63,8 @@ public class ImportFromDragonShield {
 				db.upsertOwnedCardBatch(card);
 			}
 		}
+
+		parser.close();
 
 		db.closeInstance();
 
