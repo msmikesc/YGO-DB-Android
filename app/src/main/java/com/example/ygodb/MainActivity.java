@@ -89,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
-                    viewCardSetViewModel.setNamesDropdownList = new String[setNamesArrayList.size()];
-                    setNamesArrayList.toArray(viewCardSetViewModel.setNamesDropdownList);
+                    viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

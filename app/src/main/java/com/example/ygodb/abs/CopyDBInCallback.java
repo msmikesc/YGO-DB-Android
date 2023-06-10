@@ -101,14 +101,13 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
                             new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
                     ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
-                    viewCardSetViewModel.setNamesDropdownList = new String[setNamesArrayList.size()];
-                    setNamesArrayList.toArray(viewCardSetViewModel.setNamesDropdownList);
+                    viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
+
+                    viewCardSetViewModel.refreshViewDBUpdate();
 
                     ViewCardsViewModel viewCardsViewModel =
                             new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
                     viewCardsViewModel.refreshViewDBUpdate();
-
-                    viewCardSetViewModel.refreshViewDBUpdate();
 
                     ViewCardsSummaryViewModel viewCardsSummaryViewModel =
                             new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);

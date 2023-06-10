@@ -28,7 +28,7 @@ public class ViewCardSetViewModel extends ViewModel {
 
     private boolean isCardNameMode = true;
 
-    public String[] setNamesDropdownList = new String[0];
+    private List<String> setNamesDropdownList = new ArrayList<>();
 
     public ViewCardSetViewModel() {
         currentComparator = new OwnedCardQuantityComparator();
@@ -193,8 +193,13 @@ public class ViewCardSetViewModel extends ViewModel {
         this.setNameSearch = setNameSearch;
     }
 
-    public String[] getSetNamesDropdownList() {
+    public List<String> getSetNamesDropdownList() {
         return setNamesDropdownList;
+    }
+
+    public void updateSetNamesDropdownList(List<String> input) {
+        setNamesDropdownList.clear();
+        setNamesDropdownList.addAll(input);
     }
 
     public Comparator<OwnedCard> getCurrentComparator() {

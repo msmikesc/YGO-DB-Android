@@ -604,6 +604,19 @@ public class Util {
 		return new Pair<>(gamePlayCardUUID, name);
 	}
 
+	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(String name, SQLiteConnection db) throws SQLException {
+		String gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
+		// try skill card
+		if (gamePlayCardUUID == null) {
+			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name + Const.SKILL_CARD_NAME_APPEND);
+			if (gamePlayCardUUID != null) {
+				name = name + Const.SKILL_CARD_NAME_APPEND;
+			}
+		}
+
+		return new Pair<>(gamePlayCardUUID, name);
+	}
+
 	public static String getStringOrNull(JsonNode current, String id) {
 		try {
 			return current.get(id).asText().trim();

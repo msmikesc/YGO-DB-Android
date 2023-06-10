@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -537,10 +538,22 @@ public class CsvConnection {
 		setName = Util.checkForTranslatedSetName(setName);
 		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
 
-		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
 
 		String gamePlayCardUUID = uuidAndName.getKey();
 		name = uuidAndName.getValue();
+
+		if(gamePlayCardUUID == null){
+			gamePlayCardUUID = UUID.randomUUID().toString();
+
+			GamePlayCard newGPC = new GamePlayCard();
+
+			newGPC.cardName = name;
+			newGPC.gamePlayCardUUID = gamePlayCardUUID;
+			newGPC.archetype = Const.ARCHETYPE_AUTOGENERATE;
+			db.replaceIntoGamePlayCard(newGPC);
+
+		}
 
 		db.replaceIntoCardSetWithSoftPriceUpdate(cardNumber, rarity, setName, gamePlayCardUUID, null, name);
 	}
