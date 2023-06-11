@@ -7,6 +7,7 @@ import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class FixMissingGamePlayCardFromCardSets {
@@ -18,7 +19,7 @@ public class FixMissingGamePlayCardFromCardSets {
 
 		mainObj.run(db);
 		db.closeInstance();
-		System.out.println("Analyze complete");
+		YGOLogger.info("Analyze complete");
 	}
 
 	public void run(SQLiteConnection db) throws SQLException {
@@ -38,7 +39,7 @@ public class FixMissingGamePlayCardFromCardSets {
 				ArrayList<CardSet> cardSets = db.getAllCardSetsOfCardByGamePlayCardUUIDAndSet(gamePlayCardUUID, setName);
 				
 				if(titles == null || titles.isEmpty()) {
-					System.out.println("0 gameplaycard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).cardName);
+					YGOLogger.info("0 gameplaycard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).cardName);
 					
 					GamePlayCard current = new GamePlayCard();
 					

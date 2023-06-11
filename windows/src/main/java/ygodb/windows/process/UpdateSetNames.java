@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class UpdateSetNames {
@@ -16,7 +17,7 @@ public class UpdateSetNames {
 
 		mainObj.run(db);
 		db.closeInstance();
-		System.out.println("Process complete");
+		YGOLogger.info("Process complete");
 	}
 
 	public void run(SQLiteConnection db) throws SQLException {
@@ -40,7 +41,7 @@ public class UpdateSetNames {
 			String newSetName = WindowsUtil.checkForTranslatedSetName(setName);
 			
 			if(!newSetName.equals(setName)) {
-				System.out.println("Updating " + setName + " to " + newSetName);
+				YGOLogger.info("Updating " + setName + " to " + newSetName);
 				db.updateSetName(setName, newSetName);
 			}
 		}

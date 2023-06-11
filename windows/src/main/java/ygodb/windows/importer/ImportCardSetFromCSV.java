@@ -3,10 +3,10 @@ package ygodb.windows.importer;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.Iterator;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
@@ -20,7 +20,7 @@ public class ImportCardSetFromCSV {
 
 		mainObj.run(db);
 		db.closeInstance();
-		System.out.println("Import Complete");
+		YGOLogger.info("Import Complete");
 	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {

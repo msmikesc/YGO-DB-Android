@@ -22,9 +22,15 @@ import ygodb.commonLibrary.connection.DatabaseHashMap;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class CsvConnection {
+
+	private static CSVFormat format = CSVFormat.DEFAULT.builder()
+			.setHeader()
+			.setSkipHeaderRecord(true)
+			.build();
 
 	public static CSVParser getParser(String filename, Charset charset) throws IOException {
 		File f = new File(filename);
@@ -33,7 +39,7 @@ public class CsvConnection {
 
 		skipByteOrderMark(fr);
 
-		return CSVFormat.DEFAULT.withHeader().parse(fr);
+		return format.parse(fr);
 	}
 
 	public static CSVParser getParser(InputStream input, Charset charset) throws IOException {
@@ -42,7 +48,7 @@ public class CsvConnection {
 
 		skipByteOrderMark(fr);
 
-		return CSVFormat.DEFAULT.withHeader().parse(fr);
+		return format.parse(fr);
 	}
 
 	private static void skipByteOrderMark(Reader reader) throws IOException {
@@ -64,7 +70,7 @@ public class CsvConnection {
 
 		s.readLine();
 
-		return CSVFormat.DEFAULT.withHeader().parse(s);
+		return format.parse(s);
 	}
 
 	public static CSVPrinter getExportOutputFile(String filename) {
@@ -224,7 +230,7 @@ public class CsvConnection {
 				GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
 
 				if(gpc == null){
-					System.out.println("Unknown gamePlayCard for " + name);
+					YGOLogger.error("Unknown gamePlayCard for " + name);
 				}
 				else{
 					passcode = gpc.passcode;
@@ -248,7 +254,7 @@ public class CsvConnection {
 		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
 
 		if(gpc == null){
-			System.out.println("Unknown gamePlayCard for " + name);
+			YGOLogger.error("Unknown gamePlayCard for " + name);
 		}
 		else{
 			passcode = gpc.passcode;
@@ -296,7 +302,7 @@ public class CsvConnection {
 			GamePlayCard gpc = db.getGamePlayCardByUUID(gamePlayCardUUID);
 
 			if (gpc == null) {
-				System.out.println("Unknown gamePlayCard for " + name);
+				YGOLogger.error("Unknown gamePlayCard for " + name);
 			} else {
 				passcode = gpc.passcode;
 			}
@@ -333,7 +339,7 @@ public class CsvConnection {
 
 		// possible sold by line
 		if (nameAndSet.length < 2 || nameAndSet.length > 3) {
-			System.out.println("Unknown format: " + items);
+			YGOLogger.error("Unknown format: " + items);
 			return null;
 		}
 
@@ -378,7 +384,7 @@ public class CsvConnection {
 		String[] rarityConditionPrinting = details.split("\n");
 
 		if (rarityConditionPrinting.length != 2) {
-			System.out.println("Unknown format: " + details);
+			YGOLogger.error("Unknown format: " + details);
 			return null;
 		}
 
@@ -408,7 +414,7 @@ public class CsvConnection {
 		CardSet setIdentified = db.getFirstCardSetForCardInSet(name, setName);
 
 		if (setIdentified == null) {
-			System.out.println("Unknown setCode for card name and set: " + name + ":" + setName);
+			YGOLogger.error("Unknown setCode for card name and set: " + name + ":" + setName);
 			setIdentified = new CardSet();
 			setIdentified.rarityUnsure = 1;
 			setIdentified.colorVariant = Const.DEFAULT_COLOR_VARIANT;
@@ -426,7 +432,7 @@ public class CsvConnection {
 		ArrayList<SetMetaData> metaData = db.getSetMetaDataFromSetName(setName);
 
 		if (metaData.size() != 1) {
-			System.out.println("Unknown metaData for set: " + setName);
+			YGOLogger.error("Unknown metaData for set: " + setName);
 		} else {
 			setCode = metaData.get(0).setCode;
 		}
@@ -438,7 +444,7 @@ public class CsvConnection {
 		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
 
 		if(gpc == null){
-			System.out.println("Unknown gamePlayCard for " + name);
+			YGOLogger.error("Unknown gamePlayCard for " + name);
 		}
 		else{
 			passcode = gpc.passcode;

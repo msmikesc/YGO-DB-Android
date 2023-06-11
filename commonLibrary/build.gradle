@@ -19,5 +19,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
     implementation 'org.openjfx:javafx-controls:16'
     implementation 'org.openjfx:javafx-fxml:16'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'ch.qos.logback:logback-classic:1.4.7'
     testImplementation 'junit:junit:4.13.2'
+
 }

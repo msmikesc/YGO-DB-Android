@@ -19,6 +19,7 @@ import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.sql.SQLException;
@@ -35,7 +36,7 @@ public class ImportFromYGOPROAPI {
 
 		mainObj.run(db, setName);
 		db.closeInstance();
-		System.out.println("Import Finished");
+		YGOLogger.info("Import Finished");
 	}
 
 	public void run(SQLiteConnection db, String setName) throws SQLException, IOException {
@@ -68,7 +69,7 @@ public class ImportFromYGOPROAPI {
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
-				System.out.println("Finished reading from API");
+				YGOLogger.info("Finished reading from API");
 
 				JsonNode cards = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
@@ -176,7 +177,7 @@ public class ImportFromYGOPROAPI {
 				setRarity = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_RARITY);
 				setPrice = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_PRICE);
 			} catch (Exception e) {
-				System.out.println("issue found on " + name);
+				YGOLogger.error("issue found on " + name);
 				continue;
 			}
 
@@ -230,7 +231,7 @@ public class ImportFromYGOPROAPI {
 					String newSetName = WindowsUtil.checkForTranslatedSetName(currentSetName);
 
 					if (!dbSetNames.contains(newSetName)) {
-						System.out.println("Missing Set: " + newSetName);
+						YGOLogger.info("Missing Set: " + newSetName);
 					}
 
 					if (!specificSet) {

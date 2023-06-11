@@ -16,6 +16,7 @@ import ygodb.commonLibrary.bean.CardSet;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
 import ygodb.commonLibrary.utility.Util;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class ImportPricesFromYGOPROAPI {
@@ -29,7 +30,7 @@ public class ImportPricesFromYGOPROAPI {
 
 		mainObj.run(db);
 		db.closeInstance();
-		System.out.println("Import Finished");
+		YGOLogger.info("Import Finished");
 	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
@@ -56,7 +57,7 @@ public class ImportPricesFromYGOPROAPI {
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
-				System.out.println("Finished reading from API");
+				YGOLogger.info("Finished reading from API");
 
 				JsonNode cards = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
@@ -80,10 +81,10 @@ public class ImportPricesFromYGOPROAPI {
 				List<String> namesList = new ArrayList<>(NameUpdateMap.keySet());
 
 				for (String setName : namesList) {
-					System.out.println("Possibly need to handle set name issue count: " + NameUpdateMap.get(setName).size() + " " + setName);
+					YGOLogger.info("Possibly need to handle set name issue count: " + NameUpdateMap.get(setName).size() + " " + setName);
 
 					for (int j = 0; j < NameUpdateMap.get(setName).size(); j++) {
-						System.out.println(NameUpdateMap.get(setName).get(j));
+						YGOLogger.debug(NameUpdateMap.get(setName).get(j));
 					}
 
 				}
@@ -115,7 +116,7 @@ public class ImportPricesFromYGOPROAPI {
 				//set_edition = Util.getStringOrNull(currentSet,"set_edition");
 				//set_url = Util.getStringOrNull(currentSet,"set_url");
 			} catch (Exception e) {
-				System.out.println("issue found on " + name);
+				YGOLogger.info("issue found on " + name);
 				continue;
 			}
 
@@ -156,7 +157,7 @@ public class ImportPricesFromYGOPROAPI {
 				}
 				
 				if(updated != 1) {
-					System.out.println("\"" +setCode +"\",\""+name + "\",\"" + setRarity + "\",\"" + setName + "\"," + setPrice +","+ updated + " rows updated");
+					YGOLogger.info("\"" +setCode +"\",\""+name + "\",\"" + setRarity + "\",\"" + setName + "\"," + setPrice +","+ updated + " rows updated");
 				}
 			}
 		}

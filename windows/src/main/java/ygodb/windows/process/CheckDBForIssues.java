@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.utility.Util;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class CheckDBForIssues {
@@ -16,7 +17,7 @@ public class CheckDBForIssues {
 
 		mainObj.run(db);
 		db.closeInstance();
-		System.out.println("Analyze complete");
+		YGOLogger.info("Analyze complete");
 	}
 
 	public void run(SQLiteConnection db) throws SQLException {

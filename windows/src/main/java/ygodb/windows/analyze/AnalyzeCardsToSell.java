@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
@@ -96,7 +97,7 @@ public class AnalyzeCardsToSell {
 			}
 
 			if (foundHighPrice) {
-				System.out.println(cardName + ":" + count);
+				YGOLogger.info(cardName + ":" + count);
 				
 				for(OwnedCard card: cardMap.get(cardName)) {
 					

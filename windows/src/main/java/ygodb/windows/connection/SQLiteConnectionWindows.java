@@ -16,6 +16,7 @@ import ygodb.commonLibrary.bean.SetMetaData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.utility.Util;
 import ygodb.commonLibrary.constant.Const;
+import ygodb.commonLibrary.utility.YGOLogger;
 
 public class SQLiteConnectionWindows implements SQLiteConnection {
 
@@ -1300,7 +1301,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			statementSetInsert.execute();
 			statementSetInsert.close();
 		} catch (Exception e) {
-			System.out.println("Unable to update cardSets for " + original);
+			YGOLogger.error("Unable to update cardSets for " + original);
 		}
 
 		try {
@@ -1314,7 +1315,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			statementSetInsert.execute();
 			statementSetInsert.close();
 		} catch (Exception e) {
-			System.out.println("Unable to update ownedCards for " + original);
+			YGOLogger.error("Unable to update ownedCards for " + original);
 		}
 
 		try {
@@ -1328,7 +1329,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			statementSetInsert.execute();
 			statementSetInsert.close();
 		} catch (Exception e) {
-			System.out.println("Unable to update set data for " + original);
+			YGOLogger.error("Unable to update set data for " + original);
 		}
 	}
 

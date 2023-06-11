@@ -8,6 +8,7 @@ import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
+import ygodb.commonLibrary.utility.YGOLogger;
 
 public class AddFromOwnedCards {
 
@@ -31,13 +32,14 @@ public class AddFromOwnedCards {
 					card.cardName = newCardName;
 				} else {
 					// add it
-					System.out.println("No gamePlayCard found for " + card.cardName + ":" + card.gamePlayCardUUID);
+					YGOLogger.info("No gamePlayCard found for " + card.cardName + ":" + card.gamePlayCardUUID);
 
 					GamePlayCard gamePlayCard1 = new GamePlayCard();
 
 					gamePlayCard1.cardName = card.cardName;
-					gamePlayCard1.cardType = "unknown";
 					gamePlayCard1.gamePlayCardUUID = card.gamePlayCardUUID;
+					gamePlayCard1.archetype = Const.ARCHETYPE_AUTOGENERATE;
+					gamePlayCard1.passcode = card.passcode;
 
 					db.replaceIntoGamePlayCard(gamePlayCard1);
 
@@ -49,7 +51,7 @@ public class AddFromOwnedCards {
 
 			if (sets.isEmpty()) {
 				// add it
-				System.out.println("No rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":" + card.setName);
+				YGOLogger.info("No rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":" + card.setName);
 				db.replaceIntoCardSetWithSoftPriceUpdate(card.setNumber, card.setRarity, card.setName, card.gamePlayCardUUID, null,
 						card.cardName);
 			} else {
@@ -65,7 +67,7 @@ public class AddFromOwnedCards {
 
 				if (!match) {
 					// add it
-					System.out.println("No matching rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":"
+					YGOLogger.info("No matching rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":"
 							+ card.setName);
 					db.replaceIntoCardSetWithSoftPriceUpdate(card.setNumber, card.setRarity, card.setName, card.gamePlayCardUUID, null,
 							card.cardName);

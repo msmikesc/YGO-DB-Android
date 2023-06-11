@@ -76,7 +76,7 @@ public class Util {
 			int countCardsinList = db.getCountDistinctCardsInSet(setData.setName);
 
 			if (countCardsinList != setData.numOfCards) {
-				System.out.println("Issue for " + setData.setName + " metadata:" + setData.numOfCards + " count:"
+				YGOLogger.info("Issue for " + setData.setName + " metadata:" + setData.numOfCards + " count:"
 						+ countCardsinList);
 			}
 		}
@@ -98,14 +98,14 @@ public class Util {
 			SetMetaData meta = setMetaDataHashMap.get(setName);
 
 			if (meta == null) {
-				System.out.println("Issue for " + setName + " no metadata");
+				YGOLogger.info("Issue for " + setName + " no metadata");
 				continue;
 			}
 
 			int cardsInSet = db.getCountDistinctCardsInSet(setName);
 
 			if (cardsInSet != meta.numOfCards) {
-				System.out.println("Issue for " + setName + " metadata:" + meta.numOfCards + " count:" + cardsInSet);
+				YGOLogger.info("Issue for " + setName + " metadata:" + meta.numOfCards + " count:" + cardsInSet);
 			}
 
 		}
@@ -124,7 +124,7 @@ public class Util {
 			price = new BigDecimal(input.replace(",", ""));
 		}
 		catch(Exception e) {
-			System.out.println("Invalid price input:" + input);
+			YGOLogger.info("Invalid price input:" + input);
 			price = new BigDecimal("0");
 		}
 
@@ -161,7 +161,7 @@ public class Util {
 
 		// if we haven't found any at all give up
 		if (setRarities.isEmpty()) {
-			System.out.println("Unable to find anything for " + setNumber);
+			YGOLogger.info("Unable to find anything for " + setNumber);
 			CardSet setIdentified = new CardSet();
 
 			setIdentified.setName = setName;
@@ -212,7 +212,7 @@ public class Util {
 		CardSet rValue = setRarities.get(idx);
 		rValue.rarityUnsure = 1;
 
-		System.out.println("Took a guess that " + setNumber + ":" + cardName + " is:" + rValue.setRarity);
+		YGOLogger.info("Took a guess that " + setNumber + ":" + cardName + " is:" + rValue.setRarity);
 
 		return rValue;
 
@@ -224,7 +224,7 @@ public class Util {
 			String title = db.getCardTitleFromGamePlayCardUUID(i);
 
 			if(title == null) {
-				System.out.println("Not exactly 1 gameplaycard found for ID " + i);
+				YGOLogger.info("Not exactly 1 gameplaycard found for ID " + i);
 			}
 
 		}
@@ -255,7 +255,7 @@ public class Util {
 					numIndex++;
 				}
 			} catch (Exception e) {
-				System.out.println("Issue found with " + setName + ": " + lastFullString + " and " + currentCode);
+				YGOLogger.info("Issue found with " + setName + ": " + lastFullString + " and " + currentCode);
 				lastFullString = currentCode;
 				continue;
 			}
@@ -271,7 +271,7 @@ public class Util {
 			try {
 				identifiedNumber = Integer.valueOf(identifiedNumString);
 			} catch (Exception e) {
-				System.out.println("Issue found with " + setName + ": " + lastFullString + " and " + currentCode);
+				YGOLogger.info("Issue found with " + setName + ": " + lastFullString + " and " + currentCode);
 				lastPrefix = identifiedPrefix;
 				lastLang = identifiedLang;
 				lastNum = -1;
@@ -289,7 +289,7 @@ public class Util {
 
 			if (!(lastNum == identifiedNumber || lastNum == (identifiedNumber - 1))) {
 				// issue found
-				System.out.println("Issue found with " + setName + ": " + lastFullString + " and " + currentCode);
+				YGOLogger.info("Issue found with " + setName + ": " + lastFullString + " and " + currentCode);
 				lastPrefix = identifiedPrefix;
 				lastLang = identifiedLang;
 				lastNum = identifiedNumber;

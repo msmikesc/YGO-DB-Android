@@ -8,6 +8,7 @@ import java.util.UUID;
 import ygodb.commonLibrary.bean.GamePlayCard;
 import ygodb.commonLibrary.bean.OwnedCard;
 import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class AssignUUID {
@@ -20,7 +21,7 @@ public class AssignUUID {
 
 		mainObj.run(db);
 		db.closeInstance();
-		System.out.println("Process Finished");
+		YGOLogger.info("Process Finished");
 	}
 
 	public void run(SQLiteConnection db) throws SQLException {

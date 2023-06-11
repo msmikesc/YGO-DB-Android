@@ -10,6 +10,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.DatabaseHashMap;
 import ygodb.commonLibrary.connection.SQLiteConnection;
@@ -24,7 +25,7 @@ public class ImportOwnedCardFromExportedCSV {
 
 		mainObj.run(db);
 		db.closeInstance();
-		System.out.println("Import Complete");
+		YGOLogger.info("Import Complete");
 	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
@@ -73,7 +74,7 @@ public class ImportOwnedCardFromExportedCSV {
 
 		db.closeInstance();
 		
-		System.out.println("Imported " + count + " cards");
+		YGOLogger.info("Imported " + count + " cards");
 
 	}
 

@@ -10,6 +10,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
@@ -58,7 +59,7 @@ public class ReformatFromTCGPlayerForPurchase {
 		parser.close();
 
 		for (OwnedCard card : map.values()) {
-			System.out.println(card.quantity + " " + card.cardName);
+			YGOLogger.info(card.quantity + " " + card.cardName);
 		}
 
 	}

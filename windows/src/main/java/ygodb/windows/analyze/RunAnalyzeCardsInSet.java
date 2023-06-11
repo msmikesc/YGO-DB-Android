@@ -14,6 +14,7 @@ import ygodb.commonLibrary.analyze.AnalyzeCardsInSet;
 import ygodb.commonLibrary.bean.AnalyzeData;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 import ygodb.windows.connection.CsvConnection;
 
@@ -30,7 +31,7 @@ public class RunAnalyzeCardsInSet {
 
 	public static void run(AnalyzeCardsInSet mainObj, SQLiteConnection db) throws SQLException, IOException {
 
-		System.out.print("Set Name or Code: ");
+		YGOLogger.info("Set Name or Code: ");
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -77,12 +78,12 @@ public class RunAnalyzeCardsInSet {
 
 			if (!printedSeparator && s.quantity >= 3) {
 				printedSeparator = true;
-				System.out.println();
-				System.out.println("----");
-				System.out.println();
+				YGOLogger.info("");
+				YGOLogger.info("----");
+				YGOLogger.info("");
 			}
 
-			System.out.println(s.quantity + ":" + s.cardName + " " + s.getStringOfRarities());
+			YGOLogger.info(s.quantity + ":" + s.cardName + " " + s.getStringOfRarities());
 
 			String massbuy = "";
 

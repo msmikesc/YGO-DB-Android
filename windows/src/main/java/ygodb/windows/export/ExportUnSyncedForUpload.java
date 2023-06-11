@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import org.apache.commons.csv.CSVPrinter;
 import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.constant.Const;
@@ -50,9 +51,9 @@ public class ExportUnSyncedForUpload {
 			}
 		}
 
-		System.out.println("Exported cards: " + quantityCount);
+		YGOLogger.info("Exported cards: " + quantityCount);
 
-		System.out.println("Total cards: " + db.getCountQuantity() + " + "
+		YGOLogger.info("Total cards: " + db.getCountQuantity() + " + "
 				+ db.getCountQuantityManual() + " Manual");
 
 		p.flush();
