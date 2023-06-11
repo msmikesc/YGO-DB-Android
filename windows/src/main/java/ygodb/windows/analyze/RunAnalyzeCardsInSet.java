@@ -88,7 +88,7 @@ public class RunAnalyzeCardsInSet {
 			String massbuy = "";
 
 			if (s.quantity < 3) {
-				if (s.cardType.equals(Const.CARD_TYPE_SKILL)) {
+				if (Const.CARD_TYPE_SKILL.equals(s.cardType)) {
 					if (s.quantity < 1) {
 						massbuy = (1) + " " + s.cardName;
 					} else {
