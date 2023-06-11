@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.apache.commons.csv.CSVPrinter;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.constant.Const;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.windows.utility.WindowsUtil;
 
 public class ExportUnSyncedForUpload {
@@ -22,10 +22,6 @@ public class ExportUnSyncedForUpload {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		boolean isOnlyUnsyncedCards = true;
-
-		// isOnlyUnsyncedCards = false;
-
 		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\all-upload.csv";
 
 		ArrayList<OwnedCard> list = db.getAllOwnedCards();
@@ -36,7 +32,7 @@ public class ExportUnSyncedForUpload {
 
 		for (OwnedCard current : list) {
 
-			if ((!isOnlyUnsyncedCards) || current.folderName.equals(Const.FOLDER_UNSYNCED)) {
+			if (current.folderName.equals(Const.FOLDER_UNSYNCED)) {
 				CsvConnection.writeUploadCardToCSV(p, current);
 
 				quantityCount += current.quantity;

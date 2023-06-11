@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.connection;
+package ygodb.commonlibrary.connection;
 
 import java.io.BufferedReader;
 import java.io.File;

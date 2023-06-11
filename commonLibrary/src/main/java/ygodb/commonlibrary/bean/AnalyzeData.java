@@ -1,6 +1,6 @@
-package ygodb.commonLibrary.bean;
+package ygodb.commonlibrary.bean;
 
-import ygodb.commonLibrary.constant.Const;
+import ygodb.commonlibrary.constant.Const;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

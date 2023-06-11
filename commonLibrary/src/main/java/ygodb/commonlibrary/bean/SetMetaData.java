@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.bean;
+package ygodb.commonlibrary.bean;
 
 public class SetMetaData {
 	public String setName;

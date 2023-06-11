@@ -1,15 +1,15 @@
-package ygodb.commonLibrary.utility;
+package ygodb.commonlibrary.utility;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.util.Pair;
-import ygodb.commonLibrary.bean.CardSet;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.bean.Rarity;
-import ygodb.commonLibrary.bean.SetMetaData;
-import ygodb.commonLibrary.connection.DatabaseHashMap;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.constant.Const;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.Rarity;
+import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

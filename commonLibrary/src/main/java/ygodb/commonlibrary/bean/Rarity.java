@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.bean;
+package ygodb.commonlibrary.bean;
 
 public enum Rarity {
 

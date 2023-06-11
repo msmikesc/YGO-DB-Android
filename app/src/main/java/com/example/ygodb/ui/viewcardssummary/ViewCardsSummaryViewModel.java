@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ygodb.abs.AndroidUtil;
 
-import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,10 +7,10 @@ import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ygodb.R;
-import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singlecard.SummaryCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;
 import java.util.concurrent.Executors;

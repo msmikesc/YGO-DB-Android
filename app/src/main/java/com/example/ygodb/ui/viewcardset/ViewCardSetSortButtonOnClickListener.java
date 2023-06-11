@@ -13,8 +13,8 @@ import com.example.ygodb.abs.OwnedCardSetNumberComparator;
 import com.example.ygodb.ui.addcards.AddCardsFragment;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.Comparator;
 import java.util.List;

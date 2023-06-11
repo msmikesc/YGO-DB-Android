@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.analyze;
+package ygodb.commonlibrary.analyze;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import ygodb.commonLibrary.bean.AnalyzeData;
-import ygodb.commonLibrary.bean.CardSet;
-import ygodb.commonLibrary.bean.GamePlayCard;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.bean.SetMetaData;
-import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.bean.AnalyzeData;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.GamePlayCard;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.SQLiteConnection;
 
 public class AnalyzeCardsInSet {
 

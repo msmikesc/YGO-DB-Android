@@ -3,11 +3,11 @@ package ygodb.windows.process;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ygodb.commonLibrary.bean.CardSet;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.bean.SetMetaData;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class UpdateOwnedCardsWithoutSetNumberBySetName {

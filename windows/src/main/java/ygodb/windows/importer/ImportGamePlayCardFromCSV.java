@@ -5,9 +5,9 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
-import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.sql.SQLException;

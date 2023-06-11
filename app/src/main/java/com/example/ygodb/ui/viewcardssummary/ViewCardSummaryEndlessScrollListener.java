@@ -4,9 +4,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.abs.EndlessScrollListener;
-import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singlecard.SummaryCardToListAdapter;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;
 import java.util.concurrent.Executors;

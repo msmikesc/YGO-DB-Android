@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.csv.CSVPrinter;
-import ygodb.commonLibrary.analyze.AnalyzeCardsInSet;
-import ygodb.commonLibrary.bean.AnalyzeData;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.constant.Const;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
+import ygodb.commonlibrary.bean.AnalyzeData;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 import ygodb.windows.connection.CsvConnection;
 

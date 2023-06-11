@@ -1,8 +1,10 @@
-package ygodb.commonLibrary.constant;
+package ygodb.commonlibrary.constant;
 
 import java.util.List;
 
 public class Const {
+
+    private Const (){}
 
     public static final String ZERO_PRICE_STRING= "0.00";
     public static final String CARD_PRINTING_FIRST_EDITION = "1st Edition";

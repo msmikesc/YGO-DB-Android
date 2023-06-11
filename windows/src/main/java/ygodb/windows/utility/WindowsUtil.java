@@ -1,6 +1,6 @@
 package ygodb.windows.utility;
 
-import ygodb.commonLibrary.utility.Util;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.windows.connection.SQLiteConnectionWindows;
 
 import java.io.IOException;

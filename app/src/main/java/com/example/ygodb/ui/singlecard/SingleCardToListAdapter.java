@@ -14,7 +14,7 @@ import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
-import ygodb.commonLibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.io.InputStream;
 import java.util.List;

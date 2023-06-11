@@ -1,15 +1,15 @@
-package ygodb.commonLibrary.connection;
+package ygodb.commonlibrary.connection;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
-import ygodb.commonLibrary.bean.CardSet;
-import ygodb.commonLibrary.bean.GamePlayCard;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.bean.SetMetaData;
+import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.GamePlayCard;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetMetaData;
 
 public interface SQLiteConnection {
 

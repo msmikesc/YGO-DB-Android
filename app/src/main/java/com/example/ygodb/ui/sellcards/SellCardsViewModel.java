@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ygodb.abs.AndroidUtil;
 
-import ygodb.commonLibrary.bean.CardSet;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.bean.Rarity;
-import ygodb.commonLibrary.constant.Const;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.Rarity;
+import ygodb.commonlibrary.constant.Const;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

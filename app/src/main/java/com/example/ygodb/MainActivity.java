@@ -27,7 +27,7 @@ import com.example.ygodb.databinding.ActivityMainBinding;
 
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.google.android.material.navigation.NavigationView;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;

@@ -1,15 +1,17 @@
-package ygodb.commonLibrary.connection;
+package ygodb.commonlibrary.connection;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ygodb.commonLibrary.bean.CardSet;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.utility.Util;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.utility.Util;
 
 public class DatabaseHashMap {
+
+	private DatabaseHashMap(){}
 
 	private static Map<String, ArrayList<CardSet>> allCardRarities = null;
 

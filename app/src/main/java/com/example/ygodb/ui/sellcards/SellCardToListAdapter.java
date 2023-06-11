@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.constant.Const;
-import ygodb.commonLibrary.utility.Util;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.InputStream;
 import java.util.List;

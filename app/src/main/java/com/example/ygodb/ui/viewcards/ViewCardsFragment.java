@@ -17,7 +17,7 @@ import com.example.ygodb.abs.EndlessScrollListener;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.concurrent.Executors;
 

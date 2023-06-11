@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import ygodb.commonLibrary.bean.GamePlayCard;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.GamePlayCard;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class AssignUUID {

@@ -1,4 +1,4 @@
-package ygodb.commonLibrary.bean;
+package ygodb.commonlibrary.bean;
 
 import java.util.List;
 

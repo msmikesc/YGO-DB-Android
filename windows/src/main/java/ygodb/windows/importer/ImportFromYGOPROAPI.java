@@ -13,13 +13,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.util.Pair;
-import ygodb.commonLibrary.bean.GamePlayCard;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.bean.SetMetaData;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.constant.Const;
-import ygodb.commonLibrary.utility.Util;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.GamePlayCard;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.sql.SQLException;

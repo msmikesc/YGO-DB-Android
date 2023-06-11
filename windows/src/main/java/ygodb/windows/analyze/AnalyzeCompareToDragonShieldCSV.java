@@ -10,13 +10,13 @@ import java.util.Map;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
-import ygodb.commonLibrary.connection.DatabaseHashMap;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.constant.Const;
-import ygodb.commonLibrary.utility.Util;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzeCompareToDragonShieldCSV {
@@ -47,7 +47,6 @@ public class AnalyzeCompareToDragonShieldCSV {
 			String quantity = current.get(Const.QUANTITY_CSV).trim();
 			String setCode = current.get(Const.SET_CODE_CSV).trim();
 			String setNumber = current.get(Const.CARD_NUMBER_CSV).trim();
-			String setName = current.get(Const.SET_NAME_CSV).trim();
 			String condition = current.get(Const.CONDITION_CSV).trim();
 			String printing = current.get(Const.PRINTING_CSV).trim();
 			String priceBought = Util.normalizePrice(current.get(Const.PRICE_BOUGHT_CSV));

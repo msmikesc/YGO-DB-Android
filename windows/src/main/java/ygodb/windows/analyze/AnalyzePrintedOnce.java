@@ -9,9 +9,9 @@ import java.util.List;
 
 import org.apache.commons.csv.CSVPrinter;
 
-import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
+import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.windows.connection.CsvConnection;
-import ygodb.commonLibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzePrintedOnce {

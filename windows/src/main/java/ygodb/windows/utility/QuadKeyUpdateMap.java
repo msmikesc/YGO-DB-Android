@@ -2,7 +2,7 @@ package ygodb.windows.utility;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 
 import java.io.*;

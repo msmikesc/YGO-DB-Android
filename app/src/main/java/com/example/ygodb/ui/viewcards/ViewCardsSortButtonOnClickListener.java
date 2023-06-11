@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;
 import java.util.concurrent.Executors;

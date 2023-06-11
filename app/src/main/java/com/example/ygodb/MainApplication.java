@@ -5,7 +5,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Environment;
 
 import com.example.ygodb.abs.AndroidUtil;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.File;
 import java.io.FileNotFoundException;

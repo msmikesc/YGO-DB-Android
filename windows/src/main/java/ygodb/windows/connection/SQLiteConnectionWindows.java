@@ -8,15 +8,15 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.*;
 
-import ygodb.commonLibrary.bean.AnalyzePrintedOnceData;
-import ygodb.commonLibrary.bean.CardSet;
-import ygodb.commonLibrary.bean.GamePlayCard;
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.bean.SetMetaData;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.utility.Util;
-import ygodb.commonLibrary.constant.Const;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.GamePlayCard;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.Util;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 public class SQLiteConnectionWindows implements SQLiteConnection {
 

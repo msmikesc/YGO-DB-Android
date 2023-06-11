@@ -9,12 +9,12 @@ import java.util.List;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import ygodb.commonLibrary.bean.OwnedCard;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
-import ygodb.commonLibrary.connection.DatabaseHashMap;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.utility.Util;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.windows.utility.WindowsUtil;
 
 public class ImportFromDragonShield {

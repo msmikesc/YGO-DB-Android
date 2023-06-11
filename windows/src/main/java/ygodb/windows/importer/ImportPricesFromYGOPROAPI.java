@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import ygodb.commonLibrary.bean.CardSet;
-import ygodb.commonLibrary.connection.SQLiteConnection;
-import ygodb.commonLibrary.constant.Const;
-import ygodb.commonLibrary.utility.Util;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 public class ImportPricesFromYGOPROAPI {

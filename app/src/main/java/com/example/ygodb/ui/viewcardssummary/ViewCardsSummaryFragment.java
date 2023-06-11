@@ -16,7 +16,7 @@ import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.FragmentViewcardsSummaryBinding;
 import com.example.ygodb.ui.singlecard.SummaryCardToListAdapter;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
-import ygodb.commonLibrary.utility.YGOLogger;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.concurrent.Executors;
 
