@@ -100,7 +100,7 @@ public class ImportFromYGOPROAPI {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			YGOLogger.logException(e);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class ImportFromYGOPROAPI {
 					if (!specificSet) {
 						db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
 					}
-					if (specificSet && currentSetName.equalsIgnoreCase(setName)) {
+					if (specificSet && setName.equalsIgnoreCase(currentSetName)) {
 						db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
 					}
 				}
@@ -245,7 +245,7 @@ public class ImportFromYGOPROAPI {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			YGOLogger.logException(e);
 		}
 
 	}

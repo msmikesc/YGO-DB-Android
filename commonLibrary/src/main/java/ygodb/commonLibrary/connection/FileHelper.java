@@ -19,6 +19,9 @@ import java.nio.channels.FileChannel;
  *
  */
 public class FileHelper {
+
+    private FileHelper(){}
+
     /**
      * Creates the specified <i><b>toFile</b></i> that is a byte for byte a copy
      * of <i><b>fromFile</b></i>. If <i><b>toFile</b></i> already existed, then
@@ -46,10 +49,8 @@ public class FileHelper {
         finally {
             try {
                 if (toFile != null) {
-                    try {
+                    try (toFile) {
                         toFile.flush();
-                    } finally {
-                        toFile.close();
                     }
                 }
             } finally {
@@ -114,13 +115,9 @@ public class FileHelper {
         try {
             fromChannel.transferTo(0, fromChannel.size(), toChannel);
         } finally {
-            try {
+            try (toChannel) {
                 if (fromChannel != null) {
                     fromChannel.close();
-                }
-            } finally {
-                if (toChannel != null) {
-                    toChannel.close();
                 }
             }
         }

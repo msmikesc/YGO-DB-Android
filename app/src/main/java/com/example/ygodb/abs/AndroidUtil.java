@@ -12,6 +12,8 @@ import com.example.ygodb.impl.SQLiteConnectionAndroid;
 
 public class AndroidUtil {
 
+    private AndroidUtil(){}
+
     private static Context appContext = null;
 
     private static AppCompatActivity owner = null;
@@ -46,14 +48,11 @@ public class AndroidUtil {
     public static String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = getAppContext().getContentResolver()
-                    .query(uri, null, null, null, null);
-            try {
+            try (Cursor cursor = getAppContext().getContentResolver()
+                    .query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
-            } finally {
-                cursor.close();
             }
         }
         if (result == null) {

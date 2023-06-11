@@ -5,7 +5,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Environment;
 
 import com.example.ygodb.abs.AndroidUtil;
-import org.jetbrains.annotations.NotNull;
+import ygodb.commonLibrary.utility.YGOLogger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,35 +32,32 @@ public class MainApplication extends Application {
                     logFile.createNewFile();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                YGOLogger.logException(e);
             }
         }
 
         File finalLogFile = logFile;
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(@NotNull Thread paramThread, @NotNull Throwable paramThrowable) {
-                //Catch your exception
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(finalLogFile, true);
-                    PrintStream ps = new PrintStream(fos);
+        Thread.setDefaultUncaughtExceptionHandler((paramThread, paramThrowable) -> {
+            //Catch your exception
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(finalLogFile, true);
+                PrintStream ps = new PrintStream(fos);
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-                    String currentDateandTime = sdf.format(new Date());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+                String currentDateAndTime = sdf.format(new Date());
 
-                    ps.println("--------------------------");
-                    ps.println(currentDateandTime);
+                ps.println("--------------------------");
+                ps.println(currentDateAndTime);
 
-                    paramThrowable.printStackTrace(ps);
-                    ps.close();
-                } catch (FileNotFoundException ignored) {
+                paramThrowable.printStackTrace(ps);
+                ps.close();
+            } catch (FileNotFoundException ignored) {
 
-                }
-
-                // Without System.exit() this will not work.
-                System.exit(2);
             }
+
+            // Without System.exit() this will not work.
+            System.exit(2);
         });
 
         AndroidUtil.getDBInstance();

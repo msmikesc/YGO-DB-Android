@@ -76,10 +76,10 @@ public class AnalyzeCardsToSell {
 		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\Analyze-" + "Sell.csv";
 
 		CSVPrinter p = CsvConnection.getSellFile(filename);
+		for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
 
-		for (String cardName : countMap.keySet()) {
-
-			Integer count = countMap.get(cardName);
+			String cardName = entry.getKey();
+			Integer count = entry.getValue();
 
 			if (count <= 3) {
 				continue;
@@ -98,18 +98,16 @@ public class AnalyzeCardsToSell {
 
 			if (foundHighPrice) {
 				YGOLogger.info(cardName + ":" + count);
-				
-				for(OwnedCard card: cardMap.get(cardName)) {
-					
-					//p.printRecord(Const.quantityCSV, Const.cardNameCSV, Const.cardTypeCSV, Const.rarityCSV, Const.setNameCSV, Const.setCodeCSV, Const.priceBoughtCSV);
-					
+
+				for (OwnedCard card : cardMap.get(cardName)) {
+
 					p.printRecord(card.quantity, card.cardName, card.setRarity, card.setName, card.setCode, card.priceBought);
 				}
-				
+
 			}
 
 		}
-		
+
 		p.flush();
 		p.close();
 	}

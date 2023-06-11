@@ -26,6 +26,8 @@ import java.util.UUID;
 
 public class Util {
 
+	private Util(){}
+
 	public static OwnedCard formOwnedCard(String folder, String name, String quantity, String setCode, String condition,
 			String printing, String priceBought, String dateBought, CardSet setIdentified, int passcode) {
 		OwnedCard card = new OwnedCard();
@@ -133,8 +135,8 @@ public class Util {
 		return price.toString();
 	}
 
-	public static CardSet findRarity(String priceBought, String dateBought, String folderName, String condition,
-			String editionPrinting, String setNumber, String setName, String cardName, SQLiteConnection db) throws SQLException {
+	public static CardSet findRarity(String priceBought,
+									 String setNumber, String setName, String cardName, SQLiteConnection db) throws SQLException {
 
 		List<CardSet> setRarities = DatabaseHashMap.getRaritiesOfCardInSetFromHashMap(setNumber, db);
 
@@ -190,8 +192,7 @@ public class Util {
 						match = setRarities.get(0);
 					}
 					match.rarityUnsure = 0;
-					System.out
-							.println("Took a guess that " + setNumber + ":" + cardName + " is:" + match.setRarity);
+					YGOLogger.info("Took a guess that " + setNumber + ":" + cardName + " is:" + match.setRarity);
 					return match;
 				}
 			}

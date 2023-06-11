@@ -91,7 +91,7 @@ public class ImportPricesFromYGOPROAPI {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			YGOLogger.logException(e);
 		}
 	}
 

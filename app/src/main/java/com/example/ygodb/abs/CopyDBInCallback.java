@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -12,15 +11,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ygodb.MainActivity;
-import com.example.ygodb.ui.viewCardSet.ViewCardSetViewModel;
-import com.example.ygodb.ui.viewCards.ViewCardsViewModel;
-import com.example.ygodb.ui.viewCardsSummary.ViewCardsSummaryViewModel;
+import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
+import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
+import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> {
     private final MainActivity activity;
@@ -35,98 +36,85 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
         DrawerLayout view = activity.getBinding().getRoot();
 
         if (result == null) {
-            Snackbar.make(view, "Error: Result Null", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Error: Result Null", BaseTransientBottomBar.LENGTH_LONG).show();
             return;
         }
 
         Intent contentChosen = result.getData();
 
         if (contentChosen == null) {
-            Snackbar.make(view, "Error: Intent Null", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Error: Intent Null", BaseTransientBottomBar.LENGTH_LONG).show();
             return;
         }
 
         Uri chosenURI = contentChosen.getData();
 
         if (chosenURI == null) {
-            Snackbar.make(view, "Error: URI Null", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Error: URI Null", BaseTransientBottomBar.LENGTH_LONG).show();
             return;
         }
 
         String fileName = AndroidUtil.getFileName(chosenURI);
 
         if (fileName == null) {
-            Snackbar.make(view, "Error: Filename Null", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Error: Filename Null", BaseTransientBottomBar.LENGTH_LONG).show();
             return;
         }
 
         if (!fileName.equals("YGO-DB.db")) {
-            Snackbar.make(view, "Error: Filename wrong", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Error: Filename wrong", BaseTransientBottomBar.LENGTH_LONG).show();
             return;
         }
 
-        InputStream file = null;
+        InputStream fileInputStream = null;
 
         try {
-            file = activity.getContentResolver().openInputStream(chosenURI);
+            fileInputStream = activity.getContentResolver().openInputStream(chosenURI);
         } catch (FileNotFoundException e) {
-            Snackbar.make(view, "Error: Exception " + e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
             return;
         }
 
-        if (file == null) {
-            Snackbar.make(view, "Error: InputStream Null", Snackbar.LENGTH_LONG).show();
+        if (fileInputStream == null) {
+            Snackbar.make(view, "Error: InputStream Null", BaseTransientBottomBar.LENGTH_LONG).show();
             return;
         }
 
 
-        InputStream finalFile = file;
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AndroidUtil.getDBInstance().copyDataBaseFromURI(finalFile);
+        InputStream finalFile = fileInputStream;
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                AndroidUtil.getDBInstance().copyDataBaseFromURI(finalFile);
 
-                    finalFile.close();
+                finalFile.close();
 
-                    SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
-                    SharedPreferences.Editor editor = prefs.edit();
+                SharedPreferences.Editor editor = prefs.edit();
 
-                    editor.putString("pref_db_location", chosenURI.toString());
+                editor.putString("pref_db_location", chosenURI.toString());
 
-                    editor.apply();
+                editor.apply();
 
-                    ViewCardSetViewModel viewCardSetViewModel =
-                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
+                ViewCardSetViewModel viewCardSetViewModel =
+                        new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
-                    ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
-                    viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
+                ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+                viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
 
-                    viewCardSetViewModel.refreshViewDBUpdate();
+                viewCardSetViewModel.refreshViewDBUpdate();
 
-                    ViewCardsViewModel viewCardsViewModel =
-                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
-                    viewCardsViewModel.refreshViewDBUpdate();
+                ViewCardsViewModel viewCardsViewModel =
+                        new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
+                viewCardsViewModel.refreshViewDBUpdate();
 
-                    ViewCardsSummaryViewModel viewCardsSummaryViewModel =
-                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
-                    viewCardsSummaryViewModel.refreshViewDBUpdate();
+                ViewCardsSummaryViewModel viewCardsSummaryViewModel =
+                        new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
+                viewCardsSummaryViewModel.refreshViewDBUpdate();
 
-                    view.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Snackbar.make(view, "DB Imported", Snackbar.LENGTH_LONG).show();
-                        }
-                    });
-                } catch (IOException e) {
-                    view.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Snackbar.make(view, "Error: Exception " + e.getMessage(), Snackbar.LENGTH_LONG).show();
-                        }
-                    });
-                }
+                view.post(() -> Snackbar.make(view, "DB Imported", BaseTransientBottomBar.LENGTH_LONG).show());
+            } catch (IOException e) {
+                view.post(() -> Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show());
             }
         });
 

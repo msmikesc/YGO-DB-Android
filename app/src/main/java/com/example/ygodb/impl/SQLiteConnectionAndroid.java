@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import ygodb.commonLibrary.connection.FileHelper;
 import ygodb.commonLibrary.connection.SQLiteConnection;
 import ygodb.commonLibrary.utility.Util;
 import ygodb.commonLibrary.constant.Const;
+import ygodb.commonLibrary.utility.YGOLogger;
 
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
 
@@ -66,8 +68,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				 */
 				this.copyDataBaseFromAppResources();
 			} catch (IOException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
+				YGOLogger.logException(e);
+				throw new UncheckedIOException(e);
 			}
 		}
 		//else if (instance.upgradeDatabase) {

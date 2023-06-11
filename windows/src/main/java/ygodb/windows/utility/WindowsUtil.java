@@ -5,12 +5,15 @@ import ygodb.windows.connection.SQLiteConnectionWindows;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class WindowsUtil {
+
+    private WindowsUtil(){}
 
     private static SQLiteConnectionWindows dbInstance = null;
 
@@ -40,7 +43,7 @@ public class WindowsUtil {
 
                 quadKeyUpdateMap = new QuadKeyUpdateMap(inputStream, "|");
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new UncheckedIOException(e);
             }
 
         }
@@ -64,7 +67,7 @@ public class WindowsUtil {
 
                 setNameMap = new KeyUpdateMap(inputStream);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new UncheckedIOException(e);
             }
 
         }
@@ -188,6 +191,10 @@ public class WindowsUtil {
 
     public static String checkForTranslatedSetName(String setName) {
 
+        if(setName == null){
+            return null;
+        }
+
         if(setName.contains("The Lost Art Promotion")) {
             setName = "The Lost Art Promotion";
         }
@@ -280,6 +287,11 @@ public class WindowsUtil {
 
 
     public static String checkForTranslatedCardName(String cardName) {
+
+        if(cardName == null){
+            return null;
+        }
+
         Map<String, String> instance = getCardNameMapInstance();
 
         String newName = instance.get(cardName.toLowerCase(Locale.ROOT));

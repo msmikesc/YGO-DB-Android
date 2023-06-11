@@ -2,6 +2,7 @@ package ygodb.windows.utility;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import ygodb.commonLibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 
 import java.io.*;
@@ -48,6 +49,12 @@ public class QuadKeyUpdateMap {
             String cardNumberValue = CsvConnection.getStringOrNull(current, "Card Number Value");
             String rarityValue = CsvConnection.getStringOrNull(current, "Rarity Value");
             String setNameValue = CsvConnection.getStringOrNull(current, "Set Name Value");
+
+            if(nameValue == null || cardNumberValue == null || rarityValue == null || setNameValue == null){
+                YGOLogger.error("missing value in quad csv:" + nameValue +":"
+                        + cardNumberValue +":"+ rarityValue +":"+ setNameValue);
+                continue;
+            }
 
             String key = String.join(delimiter, name, cardNumber, rarity, setName);
             List<String> values = List.of(nameValue, cardNumberValue, rarityValue, setNameValue);

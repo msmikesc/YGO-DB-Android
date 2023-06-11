@@ -3,7 +3,6 @@ package com.example.ygodb;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,16 +25,18 @@ import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.ActivityMainBinding;
 
 
-import com.example.ygodb.ui.viewCardSet.ViewCardSetViewModel;
+import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.google.android.material.navigation.NavigationView;
+import ygodb.commonLibrary.utility.YGOLogger;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static ActivityResultLauncher<Intent> copyDBInIntent = null;
+    private ActivityResultLauncher<Intent> copyDBInIntent = null;
 
-    private static ActivityResultLauncher<Intent> copyDBOutIntent = null;
+    private ActivityResultLauncher<Intent> copyDBOutIntent = null;
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
@@ -84,15 +85,12 @@ public class MainActivity extends AppCompatActivity {
         ViewCardSetViewModel viewCardSetViewModel =
                 new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
-                    viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+                viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
+            } catch (Exception e) {
+                YGOLogger.logException(e);
             }
         });
 

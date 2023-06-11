@@ -59,7 +59,7 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 				count++;
 			}
 			catch(Exception e) {
-				e.printStackTrace();
+				YGOLogger.logException(e);
 			}
 				
 
