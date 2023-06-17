@@ -10,10 +10,10 @@ import java.util.Locale;
 
 public class ReadCSVRecord {
 
-	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+	private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
-	private CSVRecord csvRecord;
-	private Date readTime;
+	private final CSVRecord csvRecord;
+	private final Date readTime;
 
 	public ReadCSVRecord(CSVRecord csvRecord, Date readTime) {
 		this.csvRecord = csvRecord;

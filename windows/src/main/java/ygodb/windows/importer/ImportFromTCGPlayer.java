@@ -44,8 +44,8 @@ public class ImportFromTCGPlayer {
 	public boolean run(SQLiteConnection db) throws SQLException, IOException {
 
 		String filename = "TCGPlayer.csv";
-		String resourcePath = "import/" + filename;
-		String tempResourcePath = "import/temp" + filename;
+		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
+		String tempResourcePath = Const.CSV_IMPORT_FOLDER + "temp" + filename;
 		File inputFile = new File(resourcePath);
 		HashMap<String, OwnedCard> map = new HashMap<>();
 		List<ReadCSVRecord> readCSVRecords = new ArrayList<>();

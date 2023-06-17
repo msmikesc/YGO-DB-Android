@@ -58,6 +58,9 @@ public class Const {
 
 
     //CSV keys
+    public static final String CSV_IMPORT_FOLDER = "csv/import/";
+    public static final String CSV_EXPORT_FOLDER = "csv/export/";
+    public static final String CSV_ANALYZE_FOLDER = "csv/analyze/";
     public static final String FOLDER_NAME_CSV = "Folder Name";
     public static final String QUANTITY_CSV = "Quantity";
     public static final String CARD_NAME_CSV = "Card Name";
