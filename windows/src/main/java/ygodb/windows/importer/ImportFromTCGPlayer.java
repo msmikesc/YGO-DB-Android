@@ -24,7 +24,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class ImportFromTCGPlayer {
@@ -34,10 +33,9 @@ public class ImportFromTCGPlayer {
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
-		if(mainObj.run(db)) {
+		if (mainObj.run(db)) {
 			YGOLogger.info("Import Complete");
-		}
-		else{
+		} else {
 			YGOLogger.info("Import Failed");
 		}
 		db.closeInstance();
@@ -46,99 +44,74 @@ public class ImportFromTCGPlayer {
 	public boolean run(SQLiteConnection db) throws SQLException, IOException {
 
 		String filename = "TCGPlayer.csv";
-
 		String resourcePath = "import/" + filename;
-
 		String tempResourcePath = "import/temp" + filename;
-
 		File inputFile = new File(resourcePath);
+		HashMap<String, OwnedCard> map = new HashMap<>();
+		List<ReadCSVRecord> readCSVRecords = new ArrayList<>();
+		int importedCardQuantity = 0;
 
-		boolean fileIsNotLocked = inputFile.renameTo(inputFile);
-
-		if(!fileIsNotLocked){
-			YGOLogger.error("Unable to acquire exclusive access to input file");
+		CSVParser parser = getCSVFileWithWriteAccess(inputFile);
+		if (parser == null) {
 			return false;
 		}
 
-		InputStream fileStream = new FileInputStream(inputFile);
-
-		CSVParser parser = CsvConnection.getParser(fileStream, StandardCharsets.UTF_16LE);
-		
-		Iterator<CSVRecord> it = parser.iterator();
-
-		HashMap<String, OwnedCard> map = new HashMap<>();
-
-		int count = 0;
-
-		List<ReadCSVRecord> readCSVRecords = new ArrayList<>();
-
-		while (it.hasNext()) {
-
-			CSVRecord current = it.next();
+		for (CSVRecord current : parser) {
 
 			String importTime = CsvConnection.getStringOrNull(current, Const.TCGPLAYER_IMPORT_TIME);
 
-			if(importTime != null){
+			if (importTime != null) {
 				//card is already imported
 				ReadCSVRecord currentRead;
 				try {
 					currentRead = new ReadCSVRecord(current, importTime);
 				} catch (ParseException e) {
-					YGOLogger.error("ParseException reading imported time:" + importTime +":" + e.getLocalizedMessage());
+					YGOLogger.error("ParseException reading imported time:" + importTime + ":" + e.getLocalizedMessage());
 					currentRead = new ReadCSVRecord(current, new Date());
 				}
 				readCSVRecords.add(currentRead);
-
-				continue;
-			}
-			else{
+			} else {
 				readCSVRecords.add(new ReadCSVRecord(current, new Date()));
+				importedCardQuantity += addCSVRecordToImportMap(db, map, current);
 			}
 
-			OwnedCard card = CsvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
-
-			if (card != null) {
-
-				count += card.quantity;
-
-				String key = card.setNumber + Util.normalizePrice(card.priceBought) + card.dateBought + card.folderName
-						+ card.condition + card.editionPrinting;
-
-				if (map.containsKey(key)) {
-					map.get(key).quantity += card.quantity;
-				} else {
-
-					List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(
-							card.setNumber, card.priceBought, card.dateBought, card.folderName, card.condition,
-							card.editionPrinting, db);
-
-					for (OwnedCard existingCard : ownedRarities) {
-						if (Util.doesCardExactlyMatchWithColor(card.folderName, card.cardName, card.setCode,
-								card.setNumber, card.condition, card.editionPrinting, card.priceBought, card.dateBought,
-								card.colorVariant, existingCard)) {
-							card.quantity += existingCard.quantity;
-							card.uuid = existingCard.uuid;
-							card.gamePlayCardUUID = existingCard.gamePlayCardUUID;
-							break;
-						}
-					}
-
-					map.put(key, card);
-				}
-
-			}
-			else{
-				YGOLogger.error("Failed to import card" + current.toString());
-			}
 		}
 
 		parser.close();
 
+		overwriteInputFileWithUpdates(tempResourcePath, inputFile, readCSVRecords);
+
+		for (OwnedCard card : map.values()) {
+			db.upsertOwnedCardBatch(card);
+		}
+
+		db.closeInstance();
+
+		YGOLogger.info("Imported " + importedCardQuantity + " cards");
+		YGOLogger.info("Total cards: " + db.getCountQuantity() + " + " + db.getCountQuantityManual() + " Manual");
+
+		return true;
+	}
+
+	private static CSVParser getCSVFileWithWriteAccess(File inputFile) throws IOException {
+		boolean fileIsNotLocked = inputFile.renameTo(inputFile);
+
+		if (!fileIsNotLocked) {
+			YGOLogger.error("Unable to acquire exclusive access to input file");
+			return null;
+		}
+
+		InputStream fileStream = new FileInputStream(inputFile);
+
+		return CsvConnection.getParser(fileStream, StandardCharsets.UTF_16LE);
+	}
+
+	private static void overwriteInputFileWithUpdates(String tempResourcePath, File inputFile, List<ReadCSVRecord> readCSVRecords) throws IOException {
 		File tempFile = new File(tempResourcePath);
 
 		CSVPrinter outfile = CsvConnection.getTCGPlayerOutputFile(tempFile.getPath());
 
-		for(ReadCSVRecord current : readCSVRecords){
+		for (ReadCSVRecord current : readCSVRecords) {
 			CsvConnection.writeTCGPlayerRecordToCSV(outfile, current);
 		}
 
@@ -154,21 +127,48 @@ public class ImportFromTCGPlayer {
 				YGOLogger.error("Failed to rename temp file");
 			}
 
-
 		} catch (Exception e) {
 			YGOLogger.error("Failed to replace TCGPlayer.csv with temp file:" + e.getLocalizedMessage());
 		}
+	}
 
-		for (OwnedCard card : map.values()) {
-			db.upsertOwnedCardBatch(card);
+	private static int addCSVRecordToImportMap(SQLiteConnection db, HashMap<String, OwnedCard> map, CSVRecord current) throws SQLException {
+
+		OwnedCard card = CsvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
+
+		if (card != null) {
+
+			String key = card.setNumber + Util.normalizePrice(card.priceBought) + card.dateBought + card.folderName
+					+ card.condition + card.editionPrinting;
+
+			int currentRowQuantity = card.quantity;
+
+			if (map.containsKey(key)) {
+				map.get(key).quantity += card.quantity;
+			} else {
+
+				List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(
+						card.setNumber, card.priceBought, card.dateBought, card.folderName, card.condition,
+						card.editionPrinting, db);
+
+				for (OwnedCard existingCard : ownedRarities) {
+					if (Util.doesCardExactlyMatchWithColor(card.folderName, card.cardName, card.setCode,
+							card.setNumber, card.condition, card.editionPrinting, card.priceBought, card.dateBought,
+							card.colorVariant, existingCard)) {
+						card.quantity += existingCard.quantity;
+						card.uuid = existingCard.uuid;
+						card.gamePlayCardUUID = existingCard.gamePlayCardUUID;
+						break;
+					}
+				}
+
+				map.put(key, card);
+			}
+			return currentRowQuantity;
+		} else {
+			YGOLogger.error("Failed to import card" + current.toString());
+			return 0;
 		}
-
-		db.closeInstance();
-
-		YGOLogger.info("Imported " + count + " cards");
-		YGOLogger.info("Total cards: "+db.getCountQuantity() + " + " + db.getCountQuantityManual() + " Manual");
-
-		return true;
 	}
 
 }
