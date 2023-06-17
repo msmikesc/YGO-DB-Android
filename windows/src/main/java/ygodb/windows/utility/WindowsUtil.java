@@ -39,7 +39,7 @@ public class WindowsUtil {
             try {
                 String filename = "quadUpdateMapping.csv";
 
-                InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
+                InputStream inputStream = WindowsUtil.class.getResourceAsStream("/" + filename);
 
                 quadKeyUpdateMap = new QuadKeyUpdateMap(inputStream, "|");
             } catch (IOException e) {

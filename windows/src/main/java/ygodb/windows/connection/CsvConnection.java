@@ -17,6 +17,7 @@ import javafx.util.Pair;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.ReadCSVRecord;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -86,6 +87,24 @@ public class CsvConnection {
 					Const.PRINTING_CSV, Const.PRICE_BOUGHT_CSV, Const.DATE_BOUGHT_CSV, Const.RARITY_CSV,
 					Const.RARITY_COLOR_VARIANT_CSV, Const.RARITY_UNSURE_CSV,
 					Const.GAME_PLAY_CARD_UUID_CSV, Const.UUID_CSV, Const.PASSCODE_CSV);
+
+			return p;
+
+		} catch (IOException e) {
+			YGOLogger.logException(e);
+			throw new UncheckedIOException(e);
+		}
+
+	}
+
+	public static CSVPrinter getTCGPlayerOutputFile(String filename) {
+
+		try {
+			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
+			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
+
+			p.printRecord(Const.TCGPLAYER_ITEMS_CSV, Const.TCGPLAYER_DETAILS_CSV, Const.TCGPLAYER_PRICE_CSV,
+					Const.TCGPLAYER_QUANTITY_CSV, Const.TCGPLAYER_IMPORT_TIME);
 
 			return p;
 
@@ -330,8 +349,9 @@ public class CsvConnection {
 		String details = getStringOrNull(current,Const.TCGPLAYER_DETAILS_CSV);
 		String price = getStringOrNull(current,Const.TCGPLAYER_PRICE_CSV);
 		String quantity = getStringOrNull(current,Const.TCGPLAYER_QUANTITY_CSV);
+		String importTime = getStringOrNull(current,Const.TCGPLAYER_IMPORT_TIME);
 
-		if(items == null || details == null || price == null || quantity == null){
+		if(items == null || details == null || price == null || quantity == null || importTime != null){
 			return null;
 		}
 
@@ -568,6 +588,15 @@ public class CsvConnection {
 		p.printRecord(current.folderName, current.quantity, current.cardName, current.setCode, current.setName,
 				current.setNumber, current.condition, current.editionPrinting, current.priceBought, current.dateBought,
 				current.setRarity, current.colorVariant, current.rarityUnsure, current.gamePlayCardUUID, current.uuid, current.passcode);
+
+	}
+
+	public static void writeTCGPlayerRecordToCSV(CSVPrinter p, ReadCSVRecord current) throws IOException {
+		p.printRecord(getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_ITEMS_CSV),
+				getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_DETAILS_CSV),
+				getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_PRICE_CSV),
+				getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_QUANTITY_CSV),
+				current.getReadTime());
 
 	}
 	

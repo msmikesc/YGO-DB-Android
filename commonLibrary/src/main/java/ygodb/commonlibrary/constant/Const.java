@@ -91,6 +91,7 @@ public class Const {
     public static final String TCGPLAYER_DETAILS_CSV = "DETAILS";
     public static final String TCGPLAYER_PRICE_CSV = "PRICE";
     public static final String TCGPLAYER_QUANTITY_CSV = "QUANTITY";
+    public static final String TCGPLAYER_IMPORT_TIME = "Import Time";
     public static final String CARD_TEXT_CSV = "Card Text";
     public static final String ATTRIBUTE_CSV = "Attribute";
     public static final String RACE_CSV = "Race";
