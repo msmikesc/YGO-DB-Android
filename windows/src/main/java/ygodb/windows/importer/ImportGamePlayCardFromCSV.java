@@ -7,7 +7,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.windows.connection.CsvConnection;
+import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
 

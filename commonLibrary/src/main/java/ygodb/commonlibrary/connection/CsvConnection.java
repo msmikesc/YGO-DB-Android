@@ -1,11 +1,15 @@
-package ygodb.windows.connection;
+package ygodb.commonlibrary.connection;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.commons.csv.CSVFormat;
@@ -19,14 +23,13 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.ReadCSVRecord;
 import ygodb.commonlibrary.bean.SetMetaData;
-import ygodb.commonlibrary.connection.DatabaseHashMap;
-import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.windows.utility.WindowsUtil;
 
 public class CsvConnection {
+
+	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
 	private CsvConnection(){}
 
@@ -38,11 +41,9 @@ public class CsvConnection {
 	public static CSVParser getParser(String filename, Charset charset) throws IOException {
 		File f = new File(filename);
 
-		BufferedReader fr = new BufferedReader(new FileReader(f, charset));
+		InputStream fileStream = new FileInputStream(f);
 
-		skipByteOrderMark(fr);
-
-		return format.parse(fr);
+		return getParser(fileStream, charset);
 	}
 
 	public static CSVParser getParser(InputStream input, Charset charset) throws IOException {
@@ -57,9 +58,9 @@ public class CsvConnection {
 	private static void skipByteOrderMark(Reader reader) throws IOException {
 		reader.mark(1);
 		char[] possibleBOM = new char[1];
-		reader.read(possibleBOM);
+		int amountRead = reader.read(possibleBOM);
 
-		if (possibleBOM[0] != '\ufeff') {
+		if (amountRead != 1 || possibleBOM[0] != '\ufeff') {
 			reader.reset();
 		}
 	}
@@ -67,13 +68,18 @@ public class CsvConnection {
 	public static CSVParser getParserSkipFirstLine(String filename, Charset charset) throws IOException {
 		File f = new File(filename);
 
-		FileReader fr = new FileReader(f, charset);
+		InputStream fileStream = new FileInputStream(f);
 
-		BufferedReader s = new BufferedReader(fr);
+		return getParserSkipFirstLine(fileStream, charset);
+	}
 
-		s.readLine();
+	public static CSVParser getParserSkipFirstLine(InputStream input, Charset charset) throws IOException {
 
-		return format.parse(s);
+		BufferedReader fr = new BufferedReader(new InputStreamReader(input, charset));
+
+		fr.readLine();
+
+		return format.parse(fr);
 	}
 
 	public static CSVPrinter getExportOutputFile(String filename) {
@@ -208,9 +214,9 @@ public class CsvConnection {
 			printing = Const.CARD_PRINTING_FIRST_EDITION;
 		}
 
-		name = WindowsUtil.checkForTranslatedCardName(name);
-		setName = WindowsUtil.checkForTranslatedSetName(setName);
-		setNumber = WindowsUtil.checkForTranslatedSetNumber(setNumber);
+		name = Util.checkForTranslatedCardName(name);
+		setName = Util.checkForTranslatedSetName(setName);
+		setNumber = Util.checkForTranslatedSetNumber(setNumber);
 
 		List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(setNumber,
 				priceBought, dateBought, folder, condition, printing, db);
@@ -301,9 +307,9 @@ public class CsvConnection {
 		
 		String uuid = getStringOrNull(current,Const.UUID_CSV);
 
-		name = WindowsUtil.checkForTranslatedCardName(name);
-		rarity = WindowsUtil.checkForTranslatedRarity(rarity);
-		passcode = WindowsUtil.checkForTranslatedPasscode(passcode);
+		name = Util.checkForTranslatedCardName(name);
+		rarity = Util.checkForTranslatedRarity(rarity);
+		passcode = Util.checkForTranslatedPasscode(passcode);
 
 		if ((Const.CARD_PRINTING_FOIL).equals(printing)) {
 			printing = Const.CARD_PRINTING_FIRST_EDITION;
@@ -414,9 +420,9 @@ public class CsvConnection {
 
 		String rarity = rarityConditionPrinting[0].replace("Rarity:", "").trim();
 
-		name = WindowsUtil.checkForTranslatedCardName(name);
-		rarity = WindowsUtil.checkForTranslatedRarity(rarity);
-		setName = WindowsUtil.checkForTranslatedSetName(setName);
+		name = Util.checkForTranslatedCardName(name);
+		rarity = Util.checkForTranslatedRarity(rarity);
+		setName = Util.checkForTranslatedSetName(setName);
 
 		String printing = Const.CARD_PRINTING_LIMITED;
 
@@ -462,7 +468,8 @@ public class CsvConnection {
 		}
 
 		String priceBought = Util.normalizePrice(price);
-		String dateBought = java.time.LocalDate.now().toString();
+
+		String dateBought = dateFormat.format(new Date());
 
 		int passcode = -1;
 		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
@@ -516,8 +523,8 @@ public class CsvConnection {
 
 		GamePlayCard gamePlayCard = new GamePlayCard();
 
-		name = WindowsUtil.checkForTranslatedCardName(name);
-		passcode = WindowsUtil.checkForTranslatedPasscode(passcode);
+		name = Util.checkForTranslatedCardName(name);
+		passcode = Util.checkForTranslatedPasscode(passcode);
 
 		gamePlayCard.cardName = name;
 		gamePlayCard.cardType = type;
@@ -559,10 +566,10 @@ public class CsvConnection {
 			setName = defaultSetName;
 		}
 
-		name = WindowsUtil.checkForTranslatedCardName(name);
-		rarity = WindowsUtil.checkForTranslatedRarity(rarity);
-		setName = WindowsUtil.checkForTranslatedSetName(setName);
-		cardNumber = WindowsUtil.checkForTranslatedSetNumber(cardNumber);
+		name = Util.checkForTranslatedCardName(name);
+		rarity = Util.checkForTranslatedRarity(rarity);
+		setName = Util.checkForTranslatedSetName(setName);
+		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
 
 		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
 

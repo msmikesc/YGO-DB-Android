@@ -10,7 +10,7 @@ import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.windows.connection.CsvConnection;
+import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.io.File;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
@@ -38,7 +39,7 @@ public class UpdateSetNames {
 				continue;
 			}
 			
-			String newSetName = WindowsUtil.checkForTranslatedSetName(setName);
+			String newSetName = Util.checkForTranslatedSetName(setName);
 			
 			if(!newSetName.equals(setName)) {
 				YGOLogger.info("Updating " + setName + " to " + newSetName);

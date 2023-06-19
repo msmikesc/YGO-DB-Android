@@ -1,8 +1,8 @@
-package ygodb.windows.utility;
+package ygodb.commonlibrary.utility;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import ygodb.windows.connection.CsvConnection;
+import ygodb.commonlibrary.connection.CsvConnection;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -7,6 +7,7 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
@@ -29,7 +30,7 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 
 		for (OwnedCard card : cards) {
 			
-			String newSetName = WindowsUtil.checkForTranslatedSetName(card.setName);
+			String newSetName = Util.checkForTranslatedSetName(card.setName);
 				
 			card.setName = newSetName;
 

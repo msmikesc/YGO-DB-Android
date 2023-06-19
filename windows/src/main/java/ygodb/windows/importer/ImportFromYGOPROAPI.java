@@ -121,8 +121,8 @@ public class ImportFromYGOPROAPI {
 
 		GamePlayCard gamePlayCard = new GamePlayCard();
 
-		name = WindowsUtil.checkForTranslatedCardName(name);
-		passcode = WindowsUtil.checkForTranslatedPasscode(passcode);
+		name = Util.checkForTranslatedCardName(name);
+		passcode = Util.checkForTranslatedPasscode(passcode);
 
 		gamePlayCard.cardName = name;
 		gamePlayCard.cardType = type;
@@ -181,10 +181,10 @@ public class ImportFromYGOPROAPI {
 				continue;
 			}
 
-			name = WindowsUtil.checkForTranslatedCardName(name);
-			setRarity = WindowsUtil.checkForTranslatedRarity(setRarity);
-			setName = WindowsUtil.checkForTranslatedSetName(setName);
-			setCode = WindowsUtil.checkForTranslatedSetNumber(setCode);
+			name = Util.checkForTranslatedCardName(name);
+			setRarity = Util.checkForTranslatedRarity(setRarity);
+			setName = Util.checkForTranslatedSetName(setName);
+			setCode = Util.checkForTranslatedSetNumber(setCode);
 
 			db.replaceIntoCardSetWithSoftPriceUpdate(setCode, setRarity, setName, gamePlayCardUUID, setPrice, name);
 
@@ -228,7 +228,7 @@ public class ImportFromYGOPROAPI {
 					int numOfCards = Util.getIntOrNegativeOne(set, Const.YGOPRO_TOTAL_CARDS_IN_SET);
 					String tcgDate = Util.getStringOrNull(set, Const.YGOPRO_TCG_RELEASE_DATE);
 
-					String newSetName = WindowsUtil.checkForTranslatedSetName(currentSetName);
+					String newSetName = Util.checkForTranslatedSetName(currentSetName);
 
 					if (!dbSetNames.contains(newSetName)) {
 						YGOLogger.info("Missing Set: " + newSetName);

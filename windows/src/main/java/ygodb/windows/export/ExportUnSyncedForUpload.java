@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.apache.commons.csv.CSVPrinter;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.windows.connection.CsvConnection;
+import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.windows.utility.WindowsUtil;

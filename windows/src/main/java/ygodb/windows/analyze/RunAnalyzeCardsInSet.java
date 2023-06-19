@@ -16,7 +16,7 @@ import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
-import ygodb.windows.connection.CsvConnection;
+import ygodb.commonlibrary.connection.CsvConnection;
 
 public class RunAnalyzeCardsInSet {
 

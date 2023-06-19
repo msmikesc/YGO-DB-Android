@@ -11,7 +11,7 @@ import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonlibrary.constant.Const;
-import ygodb.windows.connection.CsvConnection;
+import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
 

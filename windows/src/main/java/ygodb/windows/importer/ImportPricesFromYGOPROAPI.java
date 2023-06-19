@@ -120,12 +120,12 @@ public class ImportPricesFromYGOPROAPI {
 				continue;
 			}
 
-			name = WindowsUtil.checkForTranslatedCardName(name);
-			setRarity = WindowsUtil.checkForTranslatedRarity(setRarity);
-			setName = WindowsUtil.checkForTranslatedSetName(setName);
-			setCode = WindowsUtil.checkForTranslatedSetNumber(setCode);
+			name = Util.checkForTranslatedCardName(name);
+			setRarity = Util.checkForTranslatedRarity(setRarity);
+			setName = Util.checkForTranslatedSetName(setName);
+			setCode = Util.checkForTranslatedSetNumber(setCode);
 
-			List<String> translatedList = WindowsUtil.checkForTranslatedQuadKey(name, setCode, setRarity, setName);
+			List<String> translatedList = Util.checkForTranslatedQuadKey(name, setCode, setRarity, setName);
 			name = translatedList.get(0);
 			setCode = translatedList.get(1);
 			setRarity = translatedList.get(2);
