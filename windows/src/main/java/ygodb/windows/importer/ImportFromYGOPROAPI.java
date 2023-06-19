@@ -34,12 +34,16 @@ public class ImportFromYGOPROAPI {
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
-		mainObj.run(db, setName);
+		boolean successful = mainObj.run(db, setName);
+		if (!successful) {
+			YGOLogger.info("Import Failed");
+		} else {
+			YGOLogger.info("Import Finished");
+		}
 		db.closeInstance();
-		YGOLogger.info("Import Finished");
 	}
 
-	public void run(SQLiteConnection db, String setName) throws SQLException, IOException {
+	public boolean run(SQLiteConnection db, String setName) throws SQLException, IOException {
 
 		setName = setName.trim();
 
@@ -49,7 +53,11 @@ public class ImportFromYGOPROAPI {
 
 		try {
 
-			updateDBWithSetsFromAPI(setName, db);
+			boolean setsSuccessful = updateDBWithSetsFromAPI(setName, db);
+
+			if (!setsSuccessful) {
+				YGOLogger.error("updateDBWithSetsFromAPI was not successful");
+			}
 
 			URL url = new URL(apiURL);
 
@@ -58,10 +66,11 @@ public class ImportFromYGOPROAPI {
 			conn.connect();
 
 			// Getting the response code
-			int responsecode = conn.getResponseCode();
+			int responseCode = conn.getResponseCode();
 
-			if (responsecode != 200) {
-				throw new RuntimeException("HttpResponseCode: " + responsecode);
+			if (responseCode != 200) {
+				YGOLogger.error("HttpResponseCode: " + responseCode);
+				return false;
 			} else {
 
 				String inline = Util.getApiResponseFromURL(url);
@@ -102,6 +111,7 @@ public class ImportFromYGOPROAPI {
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 		}
+		return true;
 	}
 
 	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck, SQLiteConnection db) throws SQLException {
@@ -112,7 +122,7 @@ public class ImportFromYGOPROAPI {
 		String desc = Util.getStringOrNull(current, Const.YGOPRO_CARD_TEXT);
 		String attribute = Util.getStringOrNull(current, Const.YGOPRO_ATTRIBUTE);
 		String race = Util.getStringOrNull(current, Const.YGOPRO_RACE);
-		String linkval = Util.getStringOrNull(current, Const.YGOPRO_LINK_VALUE);
+		String linkValue = Util.getStringOrNull(current, Const.YGOPRO_LINK_VALUE);
 		String level = Util.getStringOrNull(current, Const.YGOPRO_LEVEL_RANK);
 		String scale = Util.getStringOrNull(current, Const.YGOPRO_PENDULUM_SCALE);
 		String atk = Util.getStringOrNull(current, Const.YGOPRO_ATTACK);
@@ -131,7 +141,7 @@ public class ImportFromYGOPROAPI {
 
 		gamePlayCard.gamePlayCardUUID = db.getGamePlayCardUUIDFromPasscode(passcode);
 
-		if(gamePlayCard.gamePlayCardUUID == null) {
+		if (gamePlayCard.gamePlayCardUUID == null) {
 			Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
 
 			gamePlayCard.gamePlayCardUUID = uuidAndName.getKey();
@@ -141,7 +151,7 @@ public class ImportFromYGOPROAPI {
 		gamePlayCard.desc = desc;
 		gamePlayCard.attribute = attribute;
 		gamePlayCard.race = race;
-		gamePlayCard.linkval = linkval;
+		gamePlayCard.linkval = linkValue;
 		gamePlayCard.scale = scale;
 		gamePlayCard.level = level;
 		gamePlayCard.atk = atk;
@@ -149,8 +159,8 @@ public class ImportFromYGOPROAPI {
 
 		db.replaceIntoGamePlayCard(gamePlayCard);
 
-		for(OwnedCard currentOwnedCard : ownedCardsToCheck){
-			if(currentOwnedCard.gamePlayCardUUID.equals(gamePlayCard.gamePlayCardUUID)){
+		for (OwnedCard currentOwnedCard : ownedCardsToCheck) {
+			if (currentOwnedCard.gamePlayCardUUID.equals(gamePlayCard.gamePlayCardUUID)) {
 				currentOwnedCard.passcode = passcode;
 				db.updateOwnedCardByUUID(currentOwnedCard);
 			}
@@ -162,7 +172,7 @@ public class ImportFromYGOPROAPI {
 	public static void insertCardSetsForOneCard(Iterator<JsonNode> setIterator, String name, String gamePlayCardUUID, SQLiteConnection db)
 			throws SQLException {
 
-		while(setIterator.hasNext()) {
+		while (setIterator.hasNext()) {
 
 			JsonNode currentSet = setIterator.next();
 
@@ -172,10 +182,10 @@ public class ImportFromYGOPROAPI {
 			String setPrice = null;
 
 			try {
-				setCode = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_CODE);
-				setName = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_NAME);
-				setRarity = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_RARITY);
-				setPrice = Util.getStringOrNull(currentSet,Const.YGOPRO_SET_PRICE);
+				setCode = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_CODE);
+				setName = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_NAME);
+				setRarity = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_RARITY);
+				setPrice = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_PRICE);
 			} catch (Exception e) {
 				YGOLogger.error("issue found on " + name);
 				continue;
@@ -191,10 +201,8 @@ public class ImportFromYGOPROAPI {
 		}
 	}
 
-	public static void updateDBWithSetsFromAPI(String setName, SQLiteConnection db) {
+	public static boolean updateDBWithSetsFromAPI(String inputSetName, SQLiteConnection db) {
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardsets.php";
-
-		boolean specificSet = setName != null && !setName.isBlank();
 
 		try {
 			URL url = new URL(setAPI);
@@ -207,9 +215,9 @@ public class ImportFromYGOPROAPI {
 			int responseCode = conn.getResponseCode();
 
 			if (responseCode != 200) {
-				throw new RuntimeException("HttpResponseCode: " + responseCode);
+				YGOLogger.error("HttpResponseCode: " + responseCode);
+				return false;
 			} else {
-
 				String inline = Util.getApiResponseFromURL(url);
 
 				ObjectMapper objectMapper = new ObjectMapper();
@@ -218,28 +226,12 @@ public class ImportFromYGOPROAPI {
 				ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
 				ArrayList<String> dbSetNames = new ArrayList<>();
 
-				for(SetMetaData current : list) {
+				for (SetMetaData current : list) {
 					dbSetNames.add(current.setName);
 				}
 
-				for (JsonNode set : jsonNode) {
-					String currentSetName = Util.getStringOrNull(set, Const.YGOPRO_SET_NAME);
-					String setCode = Util.getStringOrNull(set, Const.YGOPRO_SET_CODE);
-					int numOfCards = Util.getIntOrNegativeOne(set, Const.YGOPRO_TOTAL_CARDS_IN_SET);
-					String tcgDate = Util.getStringOrNull(set, Const.YGOPRO_TCG_RELEASE_DATE);
-
-					String newSetName = Util.checkForTranslatedSetName(currentSetName);
-
-					if (!dbSetNames.contains(newSetName)) {
-						YGOLogger.info("Missing Set: " + newSetName);
-					}
-
-					if (!specificSet) {
-						db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
-					}
-					if (specificSet && setName.equalsIgnoreCase(currentSetName)) {
-						db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
-					}
+				for (JsonNode setNode : jsonNode) {
+					handleSingleSetNode(inputSetName, db, dbSetNames, setNode);
 				}
 
 			}
@@ -247,6 +239,29 @@ public class ImportFromYGOPROAPI {
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 		}
+		return true;
+	}
 
+	private static void handleSingleSetNode(String inputSetName, SQLiteConnection db,
+											List<String> dbSetNames, JsonNode setNode) throws SQLException {
+
+		boolean isSpecificSet = inputSetName != null && !inputSetName.isBlank();
+		String currentSetName = Util.getStringOrNull(setNode, Const.YGOPRO_SET_NAME);
+		String setCode = Util.getStringOrNull(setNode, Const.YGOPRO_SET_CODE);
+		int numOfCards = Util.getIntOrNegativeOne(setNode, Const.YGOPRO_TOTAL_CARDS_IN_SET);
+		String tcgDate = Util.getStringOrNull(setNode, Const.YGOPRO_TCG_RELEASE_DATE);
+
+		String newSetName = Util.checkForTranslatedSetName(currentSetName);
+
+		if (!dbSetNames.contains(newSetName)) {
+			YGOLogger.info("Missing Set: " + newSetName);
+		}
+
+		if (!isSpecificSet) {
+			db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
+		}
+		if (isSpecificSet && inputSetName.equalsIgnoreCase(currentSetName)) {
+			db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
+		}
 	}
 }
