@@ -10,6 +10,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
@@ -30,9 +31,10 @@ public class ImportOwnedCardFromExportedCSV {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		CSVParser parser = CsvConnection.getParser(
-				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\rarity-unsure-export.csv",
-				StandardCharsets.UTF_16LE);
+		String filename = "all-export.csv";
+		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
+
+		CSVParser parser = CsvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
 
 		Iterator<CSVRecord> it = parser.iterator();
 		

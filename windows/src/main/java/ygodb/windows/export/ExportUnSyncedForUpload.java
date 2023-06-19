@@ -22,11 +22,12 @@ public class ExportUnSyncedForUpload {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\all-upload.csv";
+		String filename = "all-upload.csv";
+		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
 		ArrayList<OwnedCard> list = db.getAllOwnedCards();
 
-		CSVPrinter p = CsvConnection.getExportUploadFile(filename);
+		CSVPrinter p = CsvConnection.getExportUploadFile(resourcePath);
 
 		int quantityCount = 0;
 

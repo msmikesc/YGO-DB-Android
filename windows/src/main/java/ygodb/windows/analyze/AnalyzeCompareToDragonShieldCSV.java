@@ -31,8 +31,10 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		CSVParser parser = CsvConnection.getParserSkipFirstLine(
-				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\all-folders.csv", StandardCharsets.UTF_16LE);
+		String filename = "all-folders.csv";
+		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
+
+		CSVParser parser = CsvConnection.getParserSkipFirstLine(resourcePath, StandardCharsets.UTF_16LE);
 
 		Iterator<CSVRecord> it = parser.iterator();
 

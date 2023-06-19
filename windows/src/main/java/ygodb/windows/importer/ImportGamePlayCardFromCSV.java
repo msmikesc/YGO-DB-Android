@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -25,12 +26,11 @@ public class ImportGamePlayCardFromCSV {
 	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
-		
-		String csvFileName = "gamePlayCards";
 
-		String fileNameString = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\" + csvFileName + ".csv";
+		String filename = "gamePlayCards.csv";
+		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
 
-		CSVParser parser = CsvConnection.getParser(fileNameString, StandardCharsets.UTF_16LE);
+		CSVParser parser = CsvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
 
 		for (CSVRecord current : parser) {
 			CsvConnection.insertGamePlayCardFromCSV(current, db);

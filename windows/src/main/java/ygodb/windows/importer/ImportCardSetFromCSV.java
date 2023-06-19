@@ -1,11 +1,18 @@
 package ygodb.windows.importer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.ReadCSVRecord;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -25,14 +32,13 @@ public class ImportCardSetFromCSV {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		String csvFileName = "cardsets";
+		String filename = "cardsets.csv";
+		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
 
-		String fileNameString = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\" + csvFileName + ".csv";
-
-		CSVParser parser = CsvConnection.getParser(fileNameString, StandardCharsets.UTF_16LE);
+		CSVParser parser = CsvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
 
 		for (CSVRecord current : parser) {
-			CsvConnection.insertCardSetFromCSV(current, csvFileName, db);
+			CsvConnection.insertCardSetFromCSV(current, filename, db);
 		}
 
 		parser.close();

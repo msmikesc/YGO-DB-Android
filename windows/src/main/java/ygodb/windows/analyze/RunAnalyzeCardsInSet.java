@@ -42,7 +42,7 @@ public class RunAnalyzeCardsInSet {
 			setName = "HAC1;BLVO;SDFC;MAMA;SGX2;SDCB;MP22;TAMA;POTE;"
 					+ "LDS3;LED9;DIFO;GFP2;SDAZ;SGX1;BACH;GRCR;BROL;"
 					+ "MGED;BODE;LED8;SDCS;MP21;DAMA;KICO;EGO1;EGS1;"
-					+ "LIOV;ANGU;GEIM;SBCB;SDCH;PHHY;DABL;AMDE;PHHY;MAZE";
+					+ "LIOV;ANGU;GEIM;SBCB;SDCH;PHHY;DABL;AMDE;PHHY;MAZE;CYAC;WISU";
 			finalFileName = "Combined";
 		}
 
@@ -63,14 +63,10 @@ public class RunAnalyzeCardsInSet {
 	public static void printOutput(List<AnalyzeData> array, String setName) throws IOException {
 		Collections.sort(array);
 
-		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\Analyze-"
-				+ setName.replaceAll("[\\s\\\\/:*?\"<>|]", "") + ".csv";
+		String filename = "Analyze-" + setName.replaceAll("[\\s\\\\/:*?\"<>|]", "") + ".csv";
+		String resourcePath = Const.CSV_ANALYZE_FOLDER + filename;
 
-		CSVPrinter p = CsvConnection.getAnalyzeOutputFile(filename);
-
-		if(p == null){
-			return;
-		}
+		CSVPrinter p = CsvConnection.getAnalyzeOutputFile(resourcePath);
 
 		boolean printedSeparator = false;
 

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import org.apache.commons.csv.CSVPrinter;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -20,12 +21,13 @@ public class ExportRarityUnsureToCSV {
 	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
-		
-		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\rarity-unsure-export.csv";
+
+		String filename = "rarity-unsure-export.csv";
+		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 		
 		ArrayList<OwnedCard> list = db.getRarityUnsureOwnedCards();
 		
-		CSVPrinter p = CsvConnection.getExportOutputFile(filename);
+		CSVPrinter p = CsvConnection.getExportOutputFile(resourcePath);
 
 		int quantityCount = 0;
 		

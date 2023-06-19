@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -73,9 +74,10 @@ public class AnalyzeCardsToSell {
 	public void printOutput(Map<String, ArrayList<String>> priceMap, Map<String, Integer> countMap, Map<String, ArrayList<OwnedCard>> cardMap)
 			throws IOException {
 
-		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\Analyze-" + "Sell.csv";
+		String filename = "Analyze-Sell.csv";
+		String resourcePath = Const.CSV_ANALYZE_FOLDER + filename;
 
-		CSVPrinter p = CsvConnection.getSellFile(filename);
+		CSVPrinter p = CsvConnection.getSellFile(resourcePath);
 		for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
 
 			String cardName = entry.getKey();

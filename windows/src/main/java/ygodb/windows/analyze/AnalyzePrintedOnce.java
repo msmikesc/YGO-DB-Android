@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.csv.CSVPrinter;
 
 import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.windows.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
@@ -36,9 +37,10 @@ public class AnalyzePrintedOnce {
 	public void printOutput(List<AnalyzePrintedOnceData> array) throws IOException {
 		Collections.sort(array);
 
-		String filename = "C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\Analyze-PrintedOnce.csv";
+		String filename = "Analyze-PrintedOnce.csv";
+		String resourcePath = Const.CSV_ANALYZE_FOLDER + filename;
 
-		CSVPrinter p = CsvConnection.getAnalyzePrintedOnceOutputFile(filename);
+		CSVPrinter p = CsvConnection.getAnalyzePrintedOnceOutputFile(resourcePath);
 
 		for (AnalyzePrintedOnceData s : array) {
 			p.printRecord(s.gamePlayCardUUID, s.cardName, s.cardType, s.getStringOfRarities(), s.getStringOfSetNames(),
