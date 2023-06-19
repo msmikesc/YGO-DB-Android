@@ -21,7 +21,7 @@ import ygodb.windows.utility.WindowsUtil;
 
 public class ImportPricesFromYGOPROAPI {
 	
-	HashMap<String, List<String>> NameUpdateMap = new HashMap<>();
+	HashMap<String, List<String>> nameUpdateMap = new HashMap<>();
 
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportPricesFromYGOPROAPI mainObj = new ImportPricesFromYGOPROAPI();
@@ -46,10 +46,10 @@ public class ImportPricesFromYGOPROAPI {
 			conn.connect();
 
 			// Getting the response code
-			int responsecode = conn.getResponseCode();
+			int responseCode = conn.getResponseCode();
 
-			if (responsecode != 200) {
-				throw new RuntimeException("HttpResponseCode: " + responsecode);
+			if (responseCode != 200) {
+				throw new RuntimeException("HttpResponseCode: " + responseCode);
 			} else {
 
 				String inline = Util.getApiResponseFromURL(url);
@@ -66,25 +66,25 @@ public class ImportPricesFromYGOPROAPI {
 					String name = Util.getStringOrNull(current, Const.YGOPRO_CARD_NAME);
 
 					JsonNode sets = null;
-					Iterator<JsonNode> setIteraor = null;
+					Iterator<JsonNode> setIterator = null;
 
 					sets = current.get(Const.YGOPRO_CARD_SETS);
 
 
 					if (sets != null) {
-						setIteraor = sets.iterator();
-						insertCardSetsForOneCard(setIteraor, name, db);
+						setIterator = sets.iterator();
+						insertCardSetsForOneCard(setIterator, name, db);
 					}
 
 				}
 				
-				List<String> namesList = new ArrayList<>(NameUpdateMap.keySet());
+				List<String> namesList = new ArrayList<>(nameUpdateMap.keySet());
 
 				for (String setName : namesList) {
-					YGOLogger.info("Possibly need to handle set name issue count: " + NameUpdateMap.get(setName).size() + " " + setName);
+					YGOLogger.info("Possibly need to handle set name issue count: " + nameUpdateMap.get(setName).size() + " " + setName);
 
-					for (int j = 0; j < NameUpdateMap.get(setName).size(); j++) {
-						YGOLogger.debug(NameUpdateMap.get(setName).get(j));
+					for (int j = 0; j < nameUpdateMap.get(setName).size(); j++) {
+						YGOLogger.debug(nameUpdateMap.get(setName).get(j));
 					}
 
 				}
@@ -150,7 +150,7 @@ public class ImportPricesFromYGOPROAPI {
 					}
 					else {
 
-						List<String> setNamesList = NameUpdateMap.computeIfAbsent(setName, k -> new ArrayList<>());
+						List<String> setNamesList = nameUpdateMap.computeIfAbsent(setName, k -> new ArrayList<>());
 
 						setNamesList.add(name +" "+ setCode);
 					}
