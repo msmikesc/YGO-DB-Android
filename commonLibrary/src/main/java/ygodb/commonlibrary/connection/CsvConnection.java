@@ -29,8 +29,6 @@ import ygodb.commonlibrary.utility.YGOLogger;
 
 public class CsvConnection {
 
-	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
 	private CsvConnection(){}
 
 	private static final CSVFormat format = CSVFormat.DEFAULT.builder()
@@ -468,6 +466,8 @@ public class CsvConnection {
 		}
 
 		String priceBought = Util.normalizePrice(price);
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
 		String dateBought = dateFormat.format(new Date());
 

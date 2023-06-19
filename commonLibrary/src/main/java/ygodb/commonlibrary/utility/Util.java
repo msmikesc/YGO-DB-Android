@@ -30,9 +30,9 @@ import java.util.UUID;
 public class Util {
 
 	private static KeyUpdateMap setNameMap = null;
-	private static HashMap<String, String> rarityMap = null;
-	private static HashMap<String, String> setNumberMap = null;
-	private static HashMap<String, String> cardNameMap = null;
+	private static KeyUpdateMap cardNameMap = null;
+	private static KeyUpdateMap rarityMap = null;
+	private static KeyUpdateMap setNumberMap = null;
 	private static HashMap<Integer, Integer> passcodeMap = null;
 	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
 
@@ -85,11 +85,11 @@ public class Util {
 		ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
 
 		for (SetMetaData setData : list) {
-			int countCardsinList = db.getCountDistinctCardsInSet(setData.setName);
+			int countCardsInList = db.getCountDistinctCardsInSet(setData.setName);
 
-			if (countCardsinList != setData.numOfCards) {
+			if (countCardsInList != setData.numOfCards) {
 				YGOLogger.info("Issue for " + setData.setName + " metadata:" + setData.numOfCards + " count:"
-						+ countCardsinList);
+						+ countCardsInList);
 			}
 		}
 
@@ -110,16 +110,15 @@ public class Util {
 			SetMetaData meta = setMetaDataHashMap.get(setName);
 
 			if (meta == null) {
-				YGOLogger.info("Issue for " + setName + " no metadata");
-				continue;
+				YGOLogger.error("Issue for " + setName + " no metadata");
 			}
+			else {
+				int cardsInSet = db.getCountDistinctCardsInSet(setName);
 
-			int cardsInSet = db.getCountDistinctCardsInSet(setName);
-
-			if (cardsInSet != meta.numOfCards) {
-				YGOLogger.info("Issue for " + setName + " metadata:" + meta.numOfCards + " count:" + cardsInSet);
+				if (cardsInSet != meta.numOfCards) {
+					YGOLogger.info("Issue for " + setName + " metadata:" + meta.numOfCards + " count:" + cardsInSet);
+				}
 			}
-
 		}
 
 	}
@@ -154,12 +153,12 @@ public class Util {
 			// try removing color code
 
 			String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
-			String colorcode = setNumber.substring(setNumber.length() - 1);
+			String colorCode = setNumber.substring(setNumber.length() - 1);
 
 			setRarities = DatabaseHashMap.getRaritiesOfCardInSetFromHashMap(newSetNumber, db);
 
 			for (CardSet c : setRarities) {
-				c.colorVariant = colorcode;
+				c.colorVariant = colorCode;
 			}
 		}
 
@@ -213,10 +212,10 @@ public class Util {
 		BigDecimal distance = new BigDecimal(setRarities.get(0).setPrice).subtract(priceBoughtDec).abs();
 		int idx = 0;
 		for (int c = 1; c < setRarities.size(); c++) {
-			BigDecimal cdistance = new BigDecimal(setRarities.get(c).setPrice).subtract(priceBoughtDec).abs();
-			if (cdistance.compareTo(distance) <= 0) {
+			BigDecimal cDistance = new BigDecimal(setRarities.get(c).setPrice).subtract(priceBoughtDec).abs();
+			if (cDistance.compareTo(distance) <= 0) {
 				idx = c;
-				distance = cdistance;
+				distance = cDistance;
 			}
 		}
 
@@ -235,7 +234,7 @@ public class Util {
 			String title = db.getCardTitleFromGamePlayCardUUID(i);
 
 			if(title == null) {
-				YGOLogger.info("Not exactly 1 gameplaycard found for ID " + i);
+				YGOLogger.info("Not exactly 1 gamePlayCard found for ID " + i);
 			}
 
 		}
@@ -292,8 +291,6 @@ public class Util {
 
 			// check for changed set id
 			if (!identifiedPrefix.equals(lastPrefix) || !identifiedLang.equals(lastLang)) {
-				lastPrefix = identifiedPrefix;
-				lastLang = identifiedLang;
 				lastNum = identifiedNumber;
 				lastFullString = currentCode;
 			}
@@ -306,13 +303,11 @@ public class Util {
 				lastNum = identifiedNumber;
 				lastFullString = currentCode;
 				continue;
-			} else {
-				lastPrefix = identifiedPrefix;
-				lastLang = identifiedLang;
-				lastNum = identifiedNumber;
-				lastFullString = currentCode;
 			}
-
+			lastPrefix = identifiedPrefix;
+			lastLang = identifiedLang;
+			lastNum = identifiedNumber;
+			lastFullString = currentCode;
 		}
 	}
 
@@ -419,40 +414,33 @@ public class Util {
 		return setNameMap;
 	}
 
-	public static Map<String, String> getRarityMapInstance() {
+	public static KeyUpdateMap getRarityMapInstance() {
 		if (rarityMap == null) {
-			rarityMap = new HashMap<>();
+			try {
+				String filename = "rarityUpdateMapping.csv";
 
-			rarityMap.put("Collectors Rare", "Collector's Rare");
-			rarityMap.put("URPR", "Ultra Rare (Pharaoh's Rare)");
-			rarityMap.put("Super Short Print", "Short Print");
-			rarityMap.put("SSP", "Short Print");
-			rarityMap.put("Duel Terminal Technology Common", "Duel Terminal Normal Parallel Rare");
-			rarityMap.put("Secret Pharaohâ€™s Rare", "Secret Rare (Pharaoh's Rare)");
-			rarityMap.put("Ultra Pharaohâ€™s Rare", "Ultra Rare (Pharaoh's Rare)");
-			rarityMap.put("Duel Terminal Technology Ultra Rare", "Duel Terminal Ultra Parallel Rare");
-			rarityMap.put("Ultra Pharaoh’s Rare", "Ultra Rare (Pharaoh's Rare)");
-			rarityMap.put("Secret Pharaoh’s Rare", "Secret Rare (Pharaoh's Rare)");
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
 
-			//rarityMap.put("", "");
-
+				rarityMap = new KeyUpdateMap(inputStream);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
 		}
 
 		return rarityMap;
 	}
 
-	public static Map<String, String> getSetNumberMapInstance() {
+	public static KeyUpdateMap getSetNumberMapInstance() {
 		if (setNumberMap == null) {
-			setNumberMap = new HashMap<>();
+			try {
+				String filename = "setNumberUpdateMapping.csv";
 
-			setNumberMap.put("GTP2-EN176", "GFP2-EN176");
-			setNumberMap.put("SSD-E001", "SDD-E001");
-			setNumberMap.put("SSD-E002", "SDD-E002");
-			setNumberMap.put("SSD-E003", "SDD-E003");
-			setNumberMap.put("OTPT-EN001", "OPTP-EN001");
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
 
-			//setNumberMap.put("", "");
-
+				setNumberMap = new KeyUpdateMap(inputStream);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
 		}
 
 		return setNumberMap;
@@ -473,49 +461,17 @@ public class Util {
 		return passcodeMap;
 	}
 
-	public static Map<String, String> getCardNameMapInstance() {
+	public static KeyUpdateMap getCardNameMapInstance() {
 		if (cardNameMap == null) {
-			cardNameMap = new HashMap<>();
+			try {
+				String filename = "cardNameUpdateMapping.csv";
 
-			cardNameMap.put("after genocide","After the Struggle");
-			cardNameMap.put("amazon archer" ,"Amazoness Archer");
-			cardNameMap.put("armityle the chaos phantom","Armityle the Chaos Phantasm");
-			cardNameMap.put("big core" ,"B.E.S. Big Core");
-			cardNameMap.put("cliff the trap remover","Dark Scorpion - Cliff the Trap Remover");
-			cardNameMap.put("dark assassin","Dark Assailant");
-			cardNameMap.put("dark trap hole","Darkfall");
-			cardNameMap.put("forbidden graveyard","Silent Graveyard");
-			cardNameMap.put("frog the jam","Slime Toad");
-			cardNameMap.put("harpie's brother","Sky Scout");
-			cardNameMap.put("hidden book of spell","Hidden Spellbook");
-			cardNameMap.put("judgment of the pharaoh","Judgment of Pharaoh");
-			cardNameMap.put("kinetic soldier","Cipher Soldier");
-			cardNameMap.put("marie the fallen one","Darklord Marie");
-			cardNameMap.put("metaphysical regeneration","Supernatural Regeneration");
-			cardNameMap.put("null and void","Muko");
-			cardNameMap.put("nurse reficule the fallen one","Darklord Nurse Reficule");
-			cardNameMap.put("oscillo hero #2","Wattkid");
-			cardNameMap.put("pigeonholing books of spell","Spellbook Organization");
-			cardNameMap.put("red-eyes b. chick","Black Dragon's Chick");
-			cardNameMap.put("red-eyes b. dragon","Red-Eyes Black Dragon");
-			cardNameMap.put("red-moon baby","Vampire Baby");
-			cardNameMap.put("trial of hell","Trial of Nightmare");
-			cardNameMap.put("d. d. assailant","D.D. Assailant");
-			cardNameMap.put("d. d. borderline","D.D. Borderline");
-			cardNameMap.put("d. d. designator","D.D. Designator");
-			cardNameMap.put("d. d. scout plane","D.D. Scout Plane");
-			cardNameMap.put("d. d. trainer","D.D. Trainer");
-			cardNameMap.put("d. d. warrior lady","D.D. Warrior Lady");
-			cardNameMap.put("gradius's option","Gradius' Option");
-			cardNameMap.put("hundred-eyes dragon","Hundred Eyes Dragon");
-			cardNameMap.put("necrolancer the timelord","Necrolancer the Time-lord");
-			cardNameMap.put("sephylon,the Ultimate Time Lord","Sephylon, the Ultimate Timelord");
-			cardNameMap.put("winged dragon,Guardian of the Fortress #1","Winged Dragon, Guardian of the Fortress #1");
-			cardNameMap.put("blackwing  armed wing","Blackwing Armed Wing");
-			cardNameMap.put("b. skull dragon","Black Skull Dragon");
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
 
-			//cardNameMap.put("", "");
-
+				cardNameMap = new KeyUpdateMap(inputStream);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
 		}
 
 		return cardNameMap;
@@ -604,9 +560,9 @@ public class Util {
 	}
 
 	public static String checkForTranslatedRarity(String rarity) {
-		Map<String, String> instance = getRarityMapInstance();
+		KeyUpdateMap instance = getRarityMapInstance();
 
-		String newRarity = instance.get(rarity);
+		String newRarity = instance.getValue(rarity);
 
 		if(newRarity == null) {
 			return rarity;
@@ -616,9 +572,9 @@ public class Util {
 	}
 
 	public static String checkForTranslatedSetNumber(String setNumber) {
-		Map<String, String> instance = getSetNumberMapInstance();
+		KeyUpdateMap instance = getSetNumberMapInstance();
 
-		String newSetNumber = instance.get(setNumber);
+		String newSetNumber = instance.getValue(setNumber);
 
 		if(newSetNumber == null) {
 			return setNumber;
@@ -633,9 +589,9 @@ public class Util {
 			return null;
 		}
 
-		Map<String, String> instance = getCardNameMapInstance();
+		KeyUpdateMap instance = getCardNameMapInstance();
 
-		String newName = instance.get(cardName.toLowerCase(Locale.ROOT));
+		String newName = instance.getValue(cardName.toLowerCase(Locale.ROOT));
 
 		if(newName == null) {
 			return cardName;
