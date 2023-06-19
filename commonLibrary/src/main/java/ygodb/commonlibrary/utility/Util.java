@@ -359,16 +359,29 @@ public class Util {
 
 	public static String getApiResponseFromURL(URL url) throws IOException {
 		String inline = "";
-		InputStream inputStreamFromURL = url.openStream();
+		InputStream inputStreamFromURL = null;
+		try {
+			inputStreamFromURL = url.openStream();
 
-		ByteArrayOutputStream result = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
-		for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
-			result.write(buffer, 0, length);
+			ByteArrayOutputStream result = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
+				result.write(buffer, 0, length);
+			}
+			inline = result.toString(StandardCharsets.UTF_8.name());
+		} catch (Exception e) {
+			YGOLogger.logException(e);
+			throw e;
+		} finally {
+			if (inputStreamFromURL != null) {
+				try {
+					inputStreamFromURL.close();
+				} catch (IOException e) {
+					YGOLogger.logException(e);
+				}
+			}
 		}
 
-		inline = result.toString(StandardCharsets.UTF_8.name());
-		inputStreamFromURL.close();
 		return inline;
 	}
 
