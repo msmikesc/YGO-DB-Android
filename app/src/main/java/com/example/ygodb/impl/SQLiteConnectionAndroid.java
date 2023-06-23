@@ -225,24 +225,23 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String setQuery = SQLConst.GET_ALL_CARD_RARITIES;
 
-		Cursor rs = connection.rawQuery(setQuery, null);
+		try (Cursor rs = connection.rawQuery(setQuery, null)) {
 
-		HashMap<String, ArrayList<CardSet>> results = new HashMap<>();
+			HashMap<String, ArrayList<CardSet>> results = new HashMap<>();
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		while (rs.moveToNext()) {
-			CardSet set = new CardSet();
-			getAllCardSetFieldsFromRS(rs, col, set);
+			while (rs.moveToNext()) {
+				CardSet set = new CardSet();
+				getAllCardSetFieldsFromRS(rs, col, set);
 
-			ArrayList<CardSet> currentList = results.computeIfAbsent(set.setNumber, k -> new ArrayList<>());
+				ArrayList<CardSet> currentList = results.computeIfAbsent(set.setNumber, k -> new ArrayList<>());
 
-			currentList.add(set);
-			
+				currentList.add(set);
+			}
+
+			return results;
 		}
-		rs.close();
-
-		return results;
 	}
 
 	private void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
@@ -274,23 +273,22 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] params = new String[]{gamePlayCardUUID};
 
-		Cursor rs = connection.rawQuery(setQuery, params);
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		ArrayList<CardSet> results = new ArrayList<>();
+			ArrayList<CardSet> results = new ArrayList<>();
 
-		while (rs.moveToNext ()) {
-			CardSet set = new CardSet();
-			getAllCardSetFieldsFromRS(rs, col, set);
-			set.cardType = rs.getString(getColumn(col,Const.TYPE));
+			while (rs.moveToNext()) {
+				CardSet set = new CardSet();
+				getAllCardSetFieldsFromRS(rs, col, set);
+				set.cardType = rs.getString(getColumn(col, Const.TYPE));
 
-			results.add(set);
+				results.add(set);
+			}
+
+			return results;
 		}
-
-		rs.close();
-
-		return results;
 	}
 
 	@Override
@@ -302,24 +300,22 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] params = new String[]{gamePlayCardUUID, setName};
 
-		Cursor rs = connection.rawQuery(setQuery, params);
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
 
-		ArrayList<CardSet> results = new ArrayList<>();
+			ArrayList<CardSet> results = new ArrayList<>();
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		while (rs.moveToNext()) {
-			CardSet set = new CardSet();
-			getAllCardSetFieldsFromRS(rs, col, set);
-			set.cardType = rs.getString(getColumn(col,Const.TYPE));
+			while (rs.moveToNext()) {
+				CardSet set = new CardSet();
+				getAllCardSetFieldsFromRS(rs, col, set);
+				set.cardType = rs.getString(getColumn(col, Const.TYPE));
 
-			results.add(set);
-			
+				results.add(set);
+			}
+
+			return results;
 		}
-
-		rs.close();
-
-		return results;
 	}
 
 	@Override
@@ -338,34 +334,33 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String groupBy = "cardNameCol, setNumberCol, setRarityCol";
 
-		Cursor rs = connection.query("cardSets a left outer join ownedCards b " +
+		try (Cursor rs = connection.query("cardSets a left outer join ownedCards b " +
 						"on a.gamePlayCardUUID = b.gamePlayCardUUID and b.cardName = a.cardName " +
 						"and a.setNumber = b.setNumber and a.setRarity = b.setRarity " +
 						"left outer join setData c on a.setName = c.setName " +
 						"left outer join gamePlayCard d on a.gamePlayCardUUID = d.gamePlayCardUUID",
-				columns, selection,selectionArgs, groupBy,null, orderBy, null);
+				columns, selection, selectionArgs, groupBy, null, orderBy, null)) {
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		while (rs.moveToNext()) {
-			OwnedCard current = new OwnedCard();
-			current.gamePlayCardUUID = rs.getString(getColumn(col,Const.GAME_PLAY_CARD_UUID));
-			current.cardName = rs.getString(getColumn(col,"cardNameCol"));
-			current.setNumber = rs.getString(getColumn(col,"setNumberCol"));
-			current.setCode = rs.getString(getColumn(col,Const.SET_CODE));
-			current.setName = rs.getString(getColumn(col,Const.SET_NAME));
-			current.setRarity = rs.getString(getColumn(col,"setRarityCol"));
-			current.priceBought = Util.normalizePrice(rs.getString(getColumn(col,Const.SET_PRICE)));
-			current.quantity = rs.getInt(getColumn(col,Const.QUANTITY));
-			current.dateBought = rs.getString(getColumn(col,"maxDate"));
-			current.passcode = rs.getInt(getColumn(col,Const.PASSCODE));
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				current.gamePlayCardUUID = rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID));
+				current.cardName = rs.getString(getColumn(col, "cardNameCol"));
+				current.setNumber = rs.getString(getColumn(col, "setNumberCol"));
+				current.setCode = rs.getString(getColumn(col, Const.SET_CODE));
+				current.setName = rs.getString(getColumn(col, Const.SET_NAME));
+				current.setRarity = rs.getString(getColumn(col, "setRarityCol"));
+				current.priceBought = Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE)));
+				current.quantity = rs.getInt(getColumn(col, Const.QUANTITY));
+				current.dateBought = rs.getString(getColumn(col, "maxDate"));
+				current.passcode = rs.getInt(getColumn(col, Const.PASSCODE));
 
-			results.add(current);
+				results.add(current);
+			}
+
+			return results;
 		}
-
-		rs.close();
-
-		return results;
 	}
 
 	@Override
@@ -377,24 +372,22 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] params = new String[]{gamePlayCardUUID};
 
-		Cursor rs = connection.rawQuery(setQuery, params);
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
 
-		ArrayList<String> titlesFound = new ArrayList<>();
+			ArrayList<String> titlesFound = new ArrayList<>();
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				titlesFound.add(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_NAME)));
+			}
 
-			titlesFound.add(rs.getString(getColumn(col,Const.GAME_PLAY_CARD_NAME)));
-			
+			if (titlesFound.size() == 1) {
+				return titlesFound.get(0);
+			}
+
+			return null;
 		}
-		rs.close();
-
-		if (titlesFound.size() == 1) {
-			return titlesFound.get(0);
-		}
-
-		return null;
 	}
 
 	@Override
@@ -411,25 +404,22 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] params = new String[]{title};
 
-		Cursor rs = connection.rawQuery(setQuery, params);
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
 
-		ArrayList<String> idsFound = new ArrayList<>();
+			ArrayList<String> idsFound = new ArrayList<>();
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				idsFound.add(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
+			}
 
-			idsFound.add(rs.getString(getColumn(col,Const.GAME_PLAY_CARD_UUID)));
+			if (idsFound.size() == 1) {
+				return idsFound.get(0);
+			}
 
+			return null;
 		}
-
-		rs.close();
-
-		if (idsFound.size() == 1) {
-			return idsFound.get(0);
-		}
-
-		return null;
 	}
 
 	@Override
@@ -441,28 +431,24 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] params = new String[]{String.valueOf(passcode)};
 
-		Cursor rs = connection.rawQuery(setQuery, params);
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
 
-		ArrayList<String> idsFound = new ArrayList<>();
+			ArrayList<String> idsFound = new ArrayList<>();
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				idsFound.add(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
+			}
 
-			idsFound.add(rs.getString(getColumn(col,Const.GAME_PLAY_CARD_UUID)));
+			if (idsFound.size() == 1) {
+				return idsFound.get(0);
+			} else if (idsFound.size() > 1) {
+				YGOLogger.error("More than 1 GamePlayCard found for passcode:" + passcode);
+			}
 
+			return null;
 		}
-
-		rs.close();
-
-		if (idsFound.size() == 1) {
-			return idsFound.get(0);
-		}
-		else if (idsFound.size() > 1){
-			YGOLogger.error("More than 1 GamePlayCard found for passcode:" + passcode);
-		}
-
-		return null;
 	}
 
 	@Override
@@ -474,28 +460,23 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] params = new String[]{name};
 
-		Cursor rs = connection.rawQuery(setQuery, params);
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
 
-		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				current.gamePlayCardUUID = rs.getString(5);
+				current.quantity = rs.getInt(0);
+				current.cardName = rs.getString(1);
+				current.setName = rs.getString(2);
+				current.dateBought = rs.getString(3);
+				current.priceBought = rs.getString(4);
+				cardsInSetList.add(current);
+			}
 
-			OwnedCard current = new OwnedCard();
-
-			current.gamePlayCardUUID = rs.getString(5);
-			current.quantity = rs.getInt(0);
-			current.cardName = rs.getString(1);
-			current.setName = rs.getString(2);
-			current.dateBought = rs.getString(3);
-			current.priceBought = rs.getString(4);
-
-			cardsInSetList.add(current);
-
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -504,25 +485,20 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS;
 
-		Cursor rs = connection.rawQuery(setQuery, null);
+		try (Cursor rs = connection.rawQuery(setQuery, null)) {
 
-		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, col, current);
+				cardsInSetList.add(current);
+			}
 
-			OwnedCard current = new OwnedCard();
-
-			getAllOwnedCardFieldsFromRS(rs, col, current);
-
-			cardsInSetList.add(current);
-			
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -550,25 +526,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String[] selectionArgs = new String[]{query.gamePlayCardUUID, query.folderName, query.setNumber, query.setRarity,
 				query.colorVariant, query.condition, query.editionPrinting, query.dateBought, query.priceBought};
 
-		Cursor rs = connection.query("ownedCards", columns, selection,selectionArgs,
-				null,null,null, null);
+		try (Cursor rs = connection.query("ownedCards", columns, selection, selectionArgs,
+				null, null, null, null)) {
 
-		String[] col = rs.getColumnNames();
+			String[] col = rs.getColumnNames();
 
-		rs.moveToNext();
+			if (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, col, current);
+				return current;
+			}
 
-		if(rs.isAfterLast()){
-			rs.close();
 			return null;
 		}
-
-		OwnedCard current = new OwnedCard();
-
-		getAllOwnedCardFieldsFromRS(rs, col, current);
-
-		rs.close();
-
-		return current;
 	}
 
 	@Override
@@ -582,31 +552,25 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String selection = null;
 		String[] selectionArgs = null;
 
-		if(cardNameSearch != null && !cardNameSearch.equals("")){
+		if (cardNameSearch != null && !cardNameSearch.equals("")) {
 			selection = "upper(cardName) like upper(?)";
-			selectionArgs = new String[]{"%"+cardNameSearch+"%"};
+			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
 		}
 
-		Cursor rs = connection.query("ownedCards", columns, selection,selectionArgs,
-				null,null,orderBy, offset + "," + limit);
+		try (Cursor rs = connection.query("ownedCards", columns, selection, selectionArgs,
+				null, null, orderBy, offset + "," + limit)) {
 
-		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			String[] col = rs.getColumnNames();
 
-		String[] col = rs.getColumnNames();
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, col, current);
+				cardsInSetList.add(current);
+			}
 
-		while (rs.moveToNext()) {
-
-			OwnedCard current = new OwnedCard();
-
-			getAllOwnedCardFieldsFromRS(rs, col, current);
-
-			cardsInSetList.add(current);
-
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	private void getAllOwnedCardFieldsFromRS(Cursor rs, String[] col, OwnedCard current) {
@@ -643,36 +607,31 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String selection = null;
 		String[] selectionArgs = null;
 
-		if(cardNameSearch != null && !cardNameSearch.equals("")){
+		if (cardNameSearch != null && !cardNameSearch.equals("")) {
 			selection = "upper(cardName) like upper(?)";
-			selectionArgs = new String[]{"%"+cardNameSearch+"%"};
+			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
 		}
 
-		Cursor rs = connection.query("ownedCards", columns, selection,selectionArgs,
-				Const.CARD_NAME,null,orderBy, offset + "," + limit);
+		try (Cursor rs = connection.query("ownedCards", columns, selection, selectionArgs,
+				Const.CARD_NAME, null, orderBy, offset + "," + limit)) {
 
-		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				current.gamePlayCardUUID = rs.getString(0);
+				current.quantity = rs.getInt(1);
+				current.cardName = rs.getString(2);
+				current.setName = rs.getString(3);
+				current.dateBought = rs.getString(4);
+				current.priceBought = rs.getString(5);
+				current.setRarity = rs.getString(6);
+				current.passcode = rs.getInt(7);
+				cardsInSetList.add(current);
+			}
 
-			OwnedCard current = new OwnedCard();
-
-			current.gamePlayCardUUID = rs.getString(0);
-			current.quantity = rs.getInt(1);
-			current.cardName = rs.getString(2);
-			current.setName = rs.getString(3);
-			current.dateBought = rs.getString(4);
-			current.priceBought = rs.getString(5);
-			current.setRarity = rs.getString(6);
-			current.passcode = rs.getInt(7);
-
-			cardsInSetList.add(current);
-
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -681,24 +640,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_SET_NUMBER;
 
-		Cursor rs = connection.rawQuery(setQuery, null);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(setQuery, null)) {
+			String[] col = rs.getColumnNames();
 
-		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, col, current);
+				cardsInSetList.add(current);
+			}
 
-			OwnedCard current = new OwnedCard();
-
-			getAllOwnedCardFieldsFromRS(rs, col, current);
-
-			cardsInSetList.add(current);
-			
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -707,24 +661,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE;
 
-		Cursor rs = connection.rawQuery(setQuery, null);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(setQuery, null)) {
+			String[] col = rs.getColumnNames();
 
-		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, col, current);
+				cardsInSetList.add(current);
+			}
 
-			OwnedCard current = new OwnedCard();
-
-			getAllOwnedCardFieldsFromRS(rs, col, current);
-
-			cardsInSetList.add(current);
-
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -733,29 +682,22 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
 
-		Cursor rs = connection.rawQuery(setQuery, null);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(setQuery, null)) {
+			String[] col = rs.getColumnNames();
 
-		HashMap<String, ArrayList<OwnedCard>> ownedCards = new HashMap<>();
+			HashMap<String, ArrayList<OwnedCard>> ownedCards = new HashMap<>();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, col, current);
+				String key = current.setNumber + current.priceBought + current.dateBought + current.folderName
+						+ current.condition + current.editionPrinting;
+				ArrayList<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
+				currentList.add(current);
+			}
 
-			OwnedCard current = new OwnedCard();
-
-			getAllOwnedCardFieldsFromRS(rs, col, current);
-
-			String key = current.setNumber + current.priceBought + current.dateBought + current.folderName
-					+ current.condition + current.editionPrinting;
-
-			ArrayList<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
-
-			currentList.add(current);
-			
+			return ownedCards;
 		}
-
-		rs.close();
-
-		return ownedCards;
 	}
 
 	@Override
@@ -764,24 +706,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String setQuery = SQLConst.GET_RARITY_UNSURE_OWNED_CARDS;
 
-		Cursor rs = connection.rawQuery(setQuery, null);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(setQuery, null)) {
+			String[] col = rs.getColumnNames();
 
-		ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, col, current);
+				cardsInSetList.add(current);
+			}
 
-			OwnedCard current = new OwnedCard();
-
-			getAllOwnedCardFieldsFromRS(rs, col, current);
-
-			cardsInSetList.add(current);
-			
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -791,19 +728,15 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setQuery = SQLConst.GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME;
 
 		String[] params = new String[]{setName};
-		Cursor rs = connection.rawQuery(setQuery, params);
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
+			ArrayList<String> cardsInSetList = new ArrayList<>();
 
-		ArrayList<String> cardsInSetList = new ArrayList<>();
+			while (rs.moveToNext()) {
+				cardsInSetList.add(rs.getString(0));
+			}
 
-		while (rs.moveToNext()) {
-
-			cardsInSetList.add(rs.getString(0));
-			
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -813,25 +746,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setQuery = SQLConst.GET_DISTINCT_CARD_NAMES_AND_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME;
 
 		String[] params = new String[]{setName};
-		Cursor rs = connection.rawQuery(setQuery, params);
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
+			ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
 
-		ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
+			String[] col = rs.getColumnNames();
 
-		String[] col = rs.getColumnNames();
+			while (rs.moveToNext()) {
+				GamePlayCard current = new GamePlayCard();
+				getAllGamePlayCardFieldsFromRS(rs, col, current);
+				cardsInSetList.add(current);
+			}
 
-		while (rs.moveToNext()) {
-
-			GamePlayCard current = new GamePlayCard();
-
-			getAllGamePlayCardFieldsFromRS(rs, col, current);
-
-			cardsInSetList.add(current);
-
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -840,24 +767,20 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String setQuery = SQLConst.GET_DISTINCT_CARD_NAMES_AND_IDS_BY_ARCHETYPE;
 
-		String[] params = new String[]{archetype, "%"+archetype+"%"};
-		Cursor rs = connection.rawQuery(setQuery, params);
+		String[] params = new String[]{archetype, "%" + archetype + "%"};
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
+			ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
 
-		ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
+			String[] col = rs.getColumnNames();
 
-		String[] col = rs.getColumnNames();
+			while (rs.moveToNext()) {
+				GamePlayCard current = new GamePlayCard();
+				getAllGamePlayCardFieldsFromRS(rs, col, current);
+				cardsInSetList.add(current);
+			}
 
-		while (rs.moveToNext()) {
-
-			GamePlayCard current = new GamePlayCard();
-
-			getAllGamePlayCardFieldsFromRS(rs, col, current);
-
-			cardsInSetList.add(current);
+			return cardsInSetList;
 		}
-		rs.close();
-
-		return cardsInSetList;
 	}
 
 	@Override
@@ -867,329 +790,281 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setQuery = SQLConst.GET_SORTED_CARDS_IN_SET_BY_NAME;
 
 		String[] params = new String[]{setName};
-		Cursor rs = connection.rawQuery(setQuery, params);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
+			String[] col = rs.getColumnNames();
 
-		ArrayList<String> cardsInSetList = new ArrayList<>();
+			ArrayList<String> cardsInSetList = new ArrayList<>();
 
-		while (rs.moveToNext()) {
-			cardsInSetList.add(rs.getString(getColumn(col,Const.SET_NUMBER)));
-			
+			while (rs.moveToNext()) {
+				cardsInSetList.add(rs.getString(getColumn(col, Const.SET_NUMBER)));
+			}
+
+			Collections.sort(cardsInSetList);
+			return cardsInSetList;
 		}
-
-		rs.close();
-
-		Collections.sort(cardsInSetList);
-		return cardsInSetList;
 	}
 
 	@Override
 	public ArrayList<String> getDistinctSetNames() {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_DISTINCT_SET_NAMES;
 
-		Cursor rs = connection.rawQuery(query, null);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(query, null)) {
+			String[] col = rs.getColumnNames();
 
-		ArrayList<String> setsList = new ArrayList<>();
+			ArrayList<String> setsList = new ArrayList<>();
 
-		while (rs.moveToNext()) {
-			setsList.add(rs.getString(getColumn(col,Const.SET_NAME)));
-			
+			while (rs.moveToNext()) {
+				setsList.add(rs.getString(getColumn(col, Const.SET_NAME)));
+			}
+
+			return setsList;
 		}
-
-		rs.close();
-
-		return setsList;
 	}
 
 	@Override
 	public ArrayList<String> getDistinctSetAndArchetypeNames() {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_DISTINCT_SET_AND_ARCHETYPE_NAMES;
 
-		Cursor rs = connection.rawQuery(query, null);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(query, null)) {
+			String[] col = rs.getColumnNames();
 
-		ArrayList<String> setsList = new ArrayList<>();
+			ArrayList<String> setsList = new ArrayList<>();
 
-		while (rs.moveToNext()) {
-			setsList.add(rs.getString(getColumn(col,Const.SET_NAME)));
+			while (rs.moveToNext()) {
+				setsList.add(rs.getString(getColumn(col, Const.SET_NAME)));
+			}
 
+			return setsList;
 		}
-
-		rs.close();
-
-		return setsList;
 	}
 
 	@Override
 	public int getCountDistinctCardsInSet(String setName) {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_COUNT_DISTINCT_CARDS_IN_SET;
 
 		String[] params = new String[]{setName};
-		Cursor rs = connection.rawQuery(query, params);
+		try (Cursor rs = connection.rawQuery(query, params)) {
+			int results = -1;
 
-		int results = -1;
+			while (rs.moveToNext()) {
+				results = rs.getInt(0);
+			}
 
-		while (rs.moveToNext()) {
-			results = rs.getInt(0);
-			
+			return results;
 		}
-
-		rs.close();
-
-		return results;
 	}
 
 	@Override
 	public int getCountQuantity() {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_COUNT_QUANTITY;
 
-		Cursor rs = connection.rawQuery(query, null);
+		try (Cursor rs = connection.rawQuery(query, null)) {
+			int results = -1;
 
-		int results = -1;
+			while (rs.moveToNext()) {
+				results = rs.getInt(0);
+			}
 
-		while (rs.moveToNext()) {
-			results = rs.getInt(0);
+			return results;
 		}
-
-		rs.close();
-
-		return results;
 	}
 
 	@Override
 	public int getCountQuantityManual() {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_COUNT_QUANTITY_MANUAL;
 
-		Cursor rs = connection.rawQuery(query, null);
+		try (Cursor rs = connection.rawQuery(query, null)) {
+			int results = -1;
 
-		int results = -1;
+			while (rs.moveToNext()) {
+				results = rs.getInt(0);
+			}
 
-		while (rs.moveToNext()) {
-			results = rs.getInt(0);
-			
+			return results;
 		}
-
-		rs.close();
-
-		return results;
 	}
 
 	@Override
 	public CardSet getFirstCardSetForCardInSet(String cardName, String setName) {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_FIRST_CARD_SET_FOR_CARD_IN_SET;
 
 		String[] params = new String[]{setName, cardName};
-		Cursor rs = connection.rawQuery(query, params);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(query, params)) {
+			String[] col = rs.getColumnNames();
 
-		CardSet set = null;
+			CardSet set = null;
 
-		if (rs.moveToNext()) {
-			set = new CardSet();
-			getAllCardSetFieldsFromRS(rs, col, set);
+			if (rs.moveToNext()) {
+				set = new CardSet();
+				getAllCardSetFieldsFromRS(rs, col, set);
+			}
+
+			return set;
 		}
-
-		rs.close();
-
-		return set;
 	}
 
 	@Override
-	public List<CardSet> getCardSetsForValues(String setNumber, String rarity, String setName) throws SQLException {
+	public List<CardSet> getCardSetsForValues(String setNumber, String rarity, String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_CARD_SETS_FOR_VALUES;
 
 		String[] params = new String[]{setName, setNumber, rarity};
-		Cursor rs = connection.rawQuery(setQuery, params);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
+			String[] col = rs.getColumnNames();
 
-		ArrayList<CardSet> results = new ArrayList<>();
+			List<CardSet> results = new ArrayList<>();
 
-		while (rs.moveToNext()) {
-			CardSet set = new CardSet();
-			getAllCardSetFieldsFromRS(rs, col, set);
-			results.add(set);
+			while (rs.moveToNext()) {
+				CardSet set = new CardSet();
+				getAllCardSetFieldsFromRS(rs, col, set);
+				results.add(set);
+			}
+
+			return results;
 		}
-
-		rs.close();
-
-		return results;
 	}
 
 	@Override
 	public ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName) {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_SET_META_DATA_FROM_SET_NAME;
 
 		String[] params = new String[]{setName};
-		Cursor rs = connection.rawQuery(query, params);
+		try (Cursor rs = connection.rawQuery(query, params)) {
+			ArrayList<SetMetaData> setsList = new ArrayList<>();
 
-		ArrayList<SetMetaData> setsList = new ArrayList<>();
+			while (rs.moveToNext()) {
+				SetMetaData current = new SetMetaData();
+				current.setName = rs.getString(0);
+				current.setCode = rs.getString(1);
+				current.numOfCards = rs.getInt(2);
+				current.tcgDate = rs.getString(3);
 
-		while (rs.moveToNext()) {
+				setsList.add(current);
+			}
 
-			SetMetaData current = new SetMetaData();
-			current.setName = rs.getString(0);
-			current.setCode = rs.getString(1);
-			current.numOfCards = rs.getInt(2);
-			current.tcgDate = rs.getString(3);
-
-			setsList.add(current);
-			
+			return setsList;
 		}
-
-		rs.close();
-
-		return setsList;
 	}
 
 	@Override
 	public ArrayList<SetMetaData> getSetMetaDataFromSetCode(String setCode) {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_SET_META_DATA_FROM_SET_CODE;
 
 		String[] params = new String[]{setCode};
-		Cursor rs = connection.rawQuery(query, params);
+		try (Cursor rs = connection.rawQuery(query, params)) {
+			ArrayList<SetMetaData> setsList = new ArrayList<>();
 
-		ArrayList<SetMetaData> setsList = new ArrayList<>();
+			while (rs.moveToNext()) {
+				SetMetaData current = new SetMetaData();
+				current.setName = rs.getString(0);
+				current.setCode = rs.getString(1);
+				current.numOfCards = rs.getInt(2);
+				current.tcgDate = rs.getString(3);
 
-		while (rs.moveToNext()) {
+				setsList.add(current);
+			}
 
-			SetMetaData current = new SetMetaData();
-			current.setName = rs.getString(0);
-			current.setCode = rs.getString(1);
-			current.numOfCards = rs.getInt(2);
-			current.tcgDate = rs.getString(3);
-
-			setsList.add(current);
-			
+			return setsList;
 		}
-
-		rs.close();
-
-		return setsList;
 	}
 
 	@Override
 	public ArrayList<SetMetaData> getAllSetMetaDataFromSetData() {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_ALL_SET_META_DATA_FROM_SET_DATA;
 
-		Cursor rs = connection.rawQuery(query, null);
+		try (Cursor rs = connection.rawQuery(query, null)) {
+			ArrayList<SetMetaData> setsList = new ArrayList<>();
 
-		ArrayList<SetMetaData> setsList = new ArrayList<>();
+			while (rs.moveToNext()) {
+				SetMetaData current = new SetMetaData();
+				current.setName = rs.getString(0);
+				current.setCode = rs.getString(1);
+				current.numOfCards = rs.getInt(2);
+				current.tcgDate = rs.getString(3);
 
-		while (rs.moveToNext()) {
+				setsList.add(current);
+			}
 
-			SetMetaData current = new SetMetaData();
-			current.setName = rs.getString(0);
-			current.setCode = rs.getString(1);
-			current.numOfCards = rs.getInt(2);
-			current.tcgDate = rs.getString(3);
-
-			setsList.add(current);
-			
+			return setsList;
 		}
-
-		rs.close();
-
-		return setsList;
 	}
 
 	@Override
 	public HashMap<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_CARDS_ONLY_PRINTED_ONCE;
 
-		Cursor rs = connection.rawQuery(query, null);
-		String[] col = rs.getColumnNames();
+		try (Cursor rs = connection.rawQuery(query, null)) {
+			String[] col = rs.getColumnNames();
 
-		HashMap<String, AnalyzePrintedOnceData> setsList = new HashMap<>();
+			HashMap<String, AnalyzePrintedOnceData> setsList = new HashMap<>();
 
-		while (rs.moveToNext()) {
+			while (rs.moveToNext()) {
+				String gamePlayCardUUID = rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID));
+				String cardName = rs.getString(getColumn(col, Const.CARD_NAME));
+				String type = rs.getString(getColumn(col, Const.TYPE));
+				String setNumber = rs.getString(getColumn(col, Const.SET_NUMBER));
+				String setRarity = rs.getString(getColumn(col, Const.SET_RARITY));
+				String setName = rs.getString(getColumn(col, Const.SET_NAME));
+				String releaseDate = rs.getString(getColumn(col, Const.RELEASE_DATE));
+				String archetype = rs.getString(getColumn(col, Const.ARCHETYPE));
 
-			String gamePlayCardUUID = rs.getString(getColumn(col,Const.GAME_PLAY_CARD_UUID));
+				AnalyzePrintedOnceData current = setsList.get(cardName);
 
-			String cardName = rs.getString(getColumn(col,Const.CARD_NAME));
-			String type = rs.getString(getColumn(col,Const.TYPE));
-			String setNumber = rs.getString(getColumn(col,Const.SET_NUMBER));
-			String setRarity = rs.getString(getColumn(col,Const.SET_RARITY));
-			String setName = rs.getString(getColumn(col,Const.SET_NAME));
-			String releaseDate = rs.getString(getColumn(col,Const.RELEASE_DATE));
-			String archetype = rs.getString(getColumn(col,Const.ARCHETYPE));
+				if (current == null) {
+					current = new AnalyzePrintedOnceData();
+					current.gamePlayCardUUID = gamePlayCardUUID;
+					current.cardName = cardName;
+					current.cardType = type;
+					current.releaseDate = releaseDate;
+					current.archetype = archetype;
+				}
 
+				current.setNumber.add(setNumber);
+				current.setRarities.add(setRarity);
+				current.setName.add(setName);
 
-			AnalyzePrintedOnceData current = setsList.get(cardName);
-
-			if(current == null) {
-				current = new AnalyzePrintedOnceData();
-				current.gamePlayCardUUID = gamePlayCardUUID;
-				current.cardName = cardName;
-				current.cardType = type;
-				current.releaseDate = releaseDate;
-				current.archetype = archetype;
+				setsList.put(cardName, current);
 			}
 
-
-			current.setNumber.add(setNumber);
-			current.setRarities.add(setRarity);
-			current.setName.add(setName);
-
-			setsList.put(cardName,current);
-			
+			return setsList;
 		}
-
-		rs.close();
-
-		return setsList;
 	}
 
 	@Override
 	public void replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String cardSets = SQLConst.REPLACE_INTO_CARD_SET_META_DATA;
 
-		SQLiteStatement statementInsertSets = connection.compileStatement(cardSets);
+		try (SQLiteStatement statementInsertSets = connection.compileStatement(cardSets)) {
+			statementInsertSets.bindString(1, setName);
+			statementInsertSets.bindString(2, setCode);
+			statementInsertSets.bindLong(3, numOfCards);
+			statementInsertSets.bindString(4, tcgDate);
 
-		statementInsertSets.bindString(1, setName);
-		statementInsertSets.bindString(2, setCode);
-		statementInsertSets.bindLong(3, numOfCards);
-		statementInsertSets.bindString(4, tcgDate);
-
-		statementInsertSets.execute();
-
-		statementInsertSets.close();
-
+			statementInsertSets.execute();
+		}
 	}
 
 	public void setStringOrNull(SQLiteStatement p, int index, String s) {
@@ -1213,22 +1088,21 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		SQLiteDatabase connection = this.getInstance();
 
 		String gamePlayCard = SQLConst.GET_GAME_PLAY_CARD_BY_UUID;
-
 		String[] params = new String[]{gamePlayCardUUID};
-		Cursor rs = connection.rawQuery(gamePlayCard, params);
-		String[] col = rs.getColumnNames();
 
-		GamePlayCard current = new GamePlayCard();
-		
-		if(!rs.moveToNext()) {
-			return null;
+		try (Cursor rs = connection.rawQuery(gamePlayCard, params)) {
+			String[] col = rs.getColumnNames();
+
+			GamePlayCard current = new GamePlayCard();
+
+			if (!rs.moveToNext()) {
+				return null;
+			}
+
+			getAllGamePlayCardFieldsFromRS(rs, col, current);
+
+			return current;
 		}
-
-		getAllGamePlayCardFieldsFromRS(rs, col, current);
-
-		rs.close();
-
-		return current;
 	}
 
 	private void getAllGamePlayCardFieldsFromRS(Cursor rs, String[] col, GamePlayCard current) {
@@ -1259,30 +1133,27 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String gamePlayCard = SQLConst.REPLACE_INTO_GAME_PLAY_CARD;
 
-		SQLiteStatement statement = connection.compileStatement(gamePlayCard);
+		try (SQLiteStatement statement = connection.compileStatement(gamePlayCard)) {
+			setStringOrNull(statement, 1, input.gamePlayCardUUID);
+			setStringOrNull(statement, 2, input.cardName);
+			setStringOrNull(statement, 3, input.cardType);
+			setIntegerOrNull(statement, 4, input.passcode);
+			setStringOrNull(statement, 5, input.desc);
+			setStringOrNull(statement, 6, input.attribute);
+			setStringOrNull(statement, 7, input.race);
+			setStringOrNull(statement, 8, input.linkval);
+			setStringOrNull(statement, 9, input.level);
+			setStringOrNull(statement, 10, input.scale);
+			setStringOrNull(statement, 11, input.atk);
+			setStringOrNull(statement, 12, input.def);
+			setStringOrNull(statement, 13, input.archetype);
 
-		setStringOrNull(statement, 1, input.gamePlayCardUUID);
-		setStringOrNull(statement, 2, input.cardName);
-		setStringOrNull(statement, 3, input.cardType);
-		setIntegerOrNull(statement, 4, input.passcode);
-		setStringOrNull(statement, 5, input.desc);
-		setStringOrNull(statement, 6, input.attribute);
-		setStringOrNull(statement, 7, input.race);
-		setStringOrNull(statement, 8, input.linkval);
-		setStringOrNull(statement, 9, input.level);
-		setStringOrNull(statement, 10, input.scale);
-		setStringOrNull(statement, 11, input.atk);
-		setStringOrNull(statement, 12, input.def);
-		setStringOrNull(statement, 13, input.archetype);
-
-		statement.execute();
-
-		statement.close();
+			statement.execute();
+		}
 	}
 
 	@Override
 	public void updateOwnedCardByUUID(OwnedCard card) {
-		
 		String gamePlayCardUUID = card.gamePlayCardUUID;
 		String folder = card.folderName;
 		String name = card.cardName;
@@ -1298,7 +1169,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setName = card.setName;
 		String setRarity = card.setRarity;
 		int passcode = card.passcode;
-		
 		String uuid = card.uuid;
 
 		SQLiteDatabase connection = this.getInstance();
@@ -1315,29 +1185,26 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String ownedInsert = SQLConst.UPDATE_OWNED_CARD_BY_UUID;
 
-		SQLiteStatement statement = connection.compileStatement(ownedInsert);
+		try (SQLiteStatement statement = connection.compileStatement(ownedInsert)) {
+			setStringOrNull(statement, 1, gamePlayCardUUID);
+			setStringOrNull(statement, 2, folder);
+			setStringOrNull(statement, 3, name);
+			setIntegerOrNull(statement, 4, quantity);
+			setStringOrNull(statement, 5, setCode);
+			setStringOrNull(statement, 6, setNumber);
+			setStringOrNull(statement, 7, setName);
+			setStringOrNull(statement, 8, setRarity);
+			setStringOrNull(statement, 9, colorVariant);
+			setStringOrNull(statement, 10, condition);
+			setStringOrNull(statement, 11, printing);
+			setStringOrNull(statement, 12, dateBought);
+			setStringOrNull(statement, 13, normalizedPrice);
+			setIntegerOrNull(statement, 14, rarityUnsure);
+			setIntegerOrNull(statement, 15, passcode);
+			setStringOrNull(statement, 16, uuid);
 
-		setStringOrNull(statement,1, gamePlayCardUUID);
-		setStringOrNull(statement,2, folder);
-		setStringOrNull(statement,3, name);
-		setIntegerOrNull(statement,4, quantity);
-		setStringOrNull(statement,5, setCode);
-		setStringOrNull(statement,6, setNumber);
-		setStringOrNull(statement,7, setName);
-		setStringOrNull(statement,8, setRarity);
-		setStringOrNull(statement,9, colorVariant);
-		setStringOrNull(statement,10, condition);
-		setStringOrNull(statement,11, printing);
-		setStringOrNull(statement,12, dateBought);
-		setStringOrNull(statement,13, normalizedPrice);
-		setIntegerOrNull(statement,14, rarityUnsure);
-		
-		setIntegerOrNull(statement,15, passcode);
-		setStringOrNull(statement,16, uuid);
-		
-		statement.execute();
-		statement.close();
-
+			statement.execute();
+		}
 	}
 
 	@Override
@@ -1353,48 +1220,49 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		// If the quantity reaches 0, remove the entry from the ownedCards table
 		if (newQuantity == 0) {
 			String ownedDelete = SQLConst.DELETE_FROM_OWNED_CARDS_WHERE_UUID;
-			SQLiteStatement statement = connection.compileStatement(ownedDelete);
-			setStringOrNull(statement,1, card.uuid);
-			statement.execute();
-			statement.close();
-		}
-		else{
+
+			try (SQLiteStatement statement = connection.compileStatement(ownedDelete)) {
+				setStringOrNull(statement, 1, card.uuid);
+				statement.execute();
+			}
+		} else {
 			// Update the ownedCards table
 			String ownedInsert = SQLConst.UPDATE_OWNED_CARDS_SET_QUANTITY_WHERE_UUID;
-			SQLiteStatement statement = connection.compileStatement(ownedInsert);
-			setIntegerOrNull(statement,1, newQuantity);
-			setStringOrNull(statement,2, card.uuid);
-			statement.execute();
-			statement.close();
+
+			try (SQLiteStatement statement = connection.compileStatement(ownedInsert)) {
+				setIntegerOrNull(statement, 1, newQuantity);
+				setStringOrNull(statement, 2, card.uuid);
+				statement.execute();
+			}
 		}
 
 		// Insert a corresponding entry into the soldCards table
 		String soldInsert = SQLConst.INSERT_INTO_SOLD_CARDS;
-		SQLiteStatement statement = connection.compileStatement(soldInsert);
-		setStringOrNull(statement,1, card.gamePlayCardUUID);
-		setStringOrNull(statement,2, card.cardName);
-		setIntegerOrNull(statement,3, quantity);
-		setStringOrNull(statement,4, card.setCode);
-		setStringOrNull(statement,5, card.setNumber);
-		setStringOrNull(statement,6, card.setName);
-		setStringOrNull(statement,7, card.setRarity);
-		setStringOrNull(statement,8, card.colorVariant);
-		setStringOrNull(statement,9, card.condition);
-		setStringOrNull(statement,10, card.editionPrinting);
-		setStringOrNull(statement,11, card.dateBought);
-		setStringOrNull(statement,12, card.priceBought);
-		setStringOrNull(statement,13, sdf.format(new Date()));
-		setStringOrNull(statement,14, priceSold);
-		setStringOrNull(statement,15, card.uuid);
-		setStringOrNull(statement,16, card.creationDate);
-		setIntegerOrNull(statement,17, card.passcode);
-		statement.execute();
-		statement.close();
+
+		try (SQLiteStatement statement = connection.compileStatement(soldInsert)) {
+			setStringOrNull(statement, 1, card.gamePlayCardUUID);
+			setStringOrNull(statement, 2, card.cardName);
+			setIntegerOrNull(statement, 3, quantity);
+			setStringOrNull(statement, 4, card.setCode);
+			setStringOrNull(statement, 5, card.setNumber);
+			setStringOrNull(statement, 6, card.setName);
+			setStringOrNull(statement, 7, card.setRarity);
+			setStringOrNull(statement, 8, card.colorVariant);
+			setStringOrNull(statement, 9, card.condition);
+			setStringOrNull(statement, 10, card.editionPrinting);
+			setStringOrNull(statement, 11, card.dateBought);
+			setStringOrNull(statement, 12, card.priceBought);
+			setStringOrNull(statement, 13, sdf.format(new Date()));
+			setStringOrNull(statement, 14, priceSold);
+			setStringOrNull(statement, 15, card.uuid);
+			setStringOrNull(statement, 16, card.creationDate);
+			setIntegerOrNull(statement, 17, card.passcode);
+			statement.execute();
+		}
 	}
-	
+
 	@Override
 	public void upsertOwnedCardBatch(OwnedCard card) {
-		
 		String gamePlayCardUUID = card.gamePlayCardUUID;
 		String folder = card.folderName;
 		String name = card.cardName;
@@ -1409,11 +1277,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setNumber = card.setNumber;
 		String setName = card.setName;
 		String setRarity = card.setRarity;
-		
 		String uuid = card.uuid;
 		int passcode = card.passcode;
 
-		if(uuid == null || uuid.equals("")) {
+		if (uuid == null || uuid.equals("")) {
 			uuid = java.util.UUID.randomUUID().toString();
 		}
 
@@ -1431,112 +1298,94 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String ownedInsert = SQLConst.UPSERT_OWNED_CARD_BATCH;
 
-		SQLiteStatement batchUpsertOwnedCard = connection.compileStatement(ownedInsert);
+		try (SQLiteStatement batchUpsertOwnedCard = connection.compileStatement(ownedInsert)) {
+			setStringOrNull(batchUpsertOwnedCard, 1, gamePlayCardUUID);
+			setStringOrNull(batchUpsertOwnedCard, 2, folder);
+			setStringOrNull(batchUpsertOwnedCard, 3, name);
+			setIntegerOrNull(batchUpsertOwnedCard, 4, quantity);
+			setStringOrNull(batchUpsertOwnedCard, 5, setCode);
+			setStringOrNull(batchUpsertOwnedCard, 6, setNumber);
+			setStringOrNull(batchUpsertOwnedCard, 7, setName);
+			setStringOrNull(batchUpsertOwnedCard, 8, setRarity);
+			setStringOrNull(batchUpsertOwnedCard, 9, colorVariant);
+			setStringOrNull(batchUpsertOwnedCard, 10, condition);
+			setStringOrNull(batchUpsertOwnedCard, 11, printing);
+			setStringOrNull(batchUpsertOwnedCard, 12, dateBought);
+			setStringOrNull(batchUpsertOwnedCard, 13, normalizedPrice);
+			setIntegerOrNull(batchUpsertOwnedCard, 14, rarityUnsure);
+			setStringOrNull(batchUpsertOwnedCard, 15, uuid);
+			setIntegerOrNull(batchUpsertOwnedCard, 16, passcode);
+			// conflict fields
+			setIntegerOrNull(batchUpsertOwnedCard, 17, quantity);
+			setIntegerOrNull(batchUpsertOwnedCard, 18, rarityUnsure);
+			setStringOrNull(batchUpsertOwnedCard, 19, setRarity);
+			setStringOrNull(batchUpsertOwnedCard, 20, colorVariant);
+			setStringOrNull(batchUpsertOwnedCard, 21, uuid);
 
-		setStringOrNull(batchUpsertOwnedCard,1, gamePlayCardUUID);
-		setStringOrNull(batchUpsertOwnedCard, 2, folder);
-		setStringOrNull(batchUpsertOwnedCard,3, name);
-		setIntegerOrNull(batchUpsertOwnedCard,4, quantity);
-		setStringOrNull(batchUpsertOwnedCard,5, setCode);
-		setStringOrNull(batchUpsertOwnedCard,6, setNumber);
-		setStringOrNull(batchUpsertOwnedCard,7, setName);
-		setStringOrNull(batchUpsertOwnedCard,8, setRarity);
-		setStringOrNull(batchUpsertOwnedCard,9, colorVariant);
-		setStringOrNull(batchUpsertOwnedCard,10, condition);
-		setStringOrNull(batchUpsertOwnedCard,11, printing);
-		setStringOrNull(batchUpsertOwnedCard,12, dateBought);
-		setStringOrNull(batchUpsertOwnedCard,13, normalizedPrice);
-		setIntegerOrNull(batchUpsertOwnedCard,14, rarityUnsure);
-		
-		setStringOrNull(batchUpsertOwnedCard,15, uuid);
-		setIntegerOrNull(batchUpsertOwnedCard, 16, passcode);
-		
-		//conflict fields
-		
-		setIntegerOrNull(batchUpsertOwnedCard,17, quantity);
-		setIntegerOrNull(batchUpsertOwnedCard,18, rarityUnsure);
-		setStringOrNull(batchUpsertOwnedCard,19, setRarity);
-		setStringOrNull(batchUpsertOwnedCard,20, colorVariant);
-		
-		setStringOrNull(batchUpsertOwnedCard,21, uuid);
-
-		batchUpsertOwnedCard.execute();
+			batchUpsertOwnedCard.execute();
+		}
 	}
 
 	@Override
 	public void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
 													  String cardName) throws SQLException {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String setInsert = SQLConst.REPLACE_INTO_CARD_SET_WITH_SOFT_PRICE_UPDATE;
 
-		SQLiteStatement statementSetInsert = connection.compileStatement(setInsert);
+		try (SQLiteStatement statementSetInsert = connection.compileStatement(setInsert)) {
+			statementSetInsert.bindString(1, gamePlayCardUUID);
+			statementSetInsert.bindString(2, setNumber);
+			statementSetInsert.bindString(3, setName);
+			statementSetInsert.bindString(4, rarity);
+			statementSetInsert.bindString(5, cardName);
 
-		statementSetInsert.bindString(1, gamePlayCardUUID);
-		statementSetInsert.bindString(2, setNumber);
-		statementSetInsert.bindString(3, setName);
-		statementSetInsert.bindString(4, rarity);
-		statementSetInsert.bindString(5, cardName);
+			if (price != null && !Util.normalizePrice(price).equals(Util.normalizePrice("0"))) {
+				List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
 
-		if(price != null && !Util.normalizePrice(price).equals(Util.normalizePrice("0"))){
-
-			List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
-
-			if(!list.isEmpty() && list.get(0).setPrice != null) {
-				updateCardSetPriceWithSetName(setNumber, rarity, price, setName);
+				if (!list.isEmpty() && list.get(0).setPrice != null) {
+					updateCardSetPriceWithSetName(setNumber, rarity, price, setName);
+				}
 			}
-		}
 
-		statementSetInsert.execute();
-		statementSetInsert.close();
+			statementSetInsert.execute();
+		}
 	}
-	
+
 	@Override
 	public void updateSetName(String original, String newName) {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String setInsert = SQLConst.UPDATE_CARD_SETS_SET_NAME;
 
-		SQLiteStatement statementSetInsert = connection.compileStatement(setInsert);
-
-		try {
+		try (SQLiteStatement statementSetInsert = connection.compileStatement(setInsert)) {
 			statementSetInsert.bindString(1, newName);
 			statementSetInsert.bindString(2, original);
 
 			statementSetInsert.execute();
-			statementSetInsert.close();
 		} catch (Exception e) {
 			YGOLogger.error("Unable to update cardSets for " + original);
 		}
-		
+
 		setInsert = SQLConst.UPDATE_OWNED_CARDS_SET_NAME;
 
-		statementSetInsert = connection.compileStatement(setInsert);
-
-		try {
+		try (SQLiteStatement statementSetInsert = connection.compileStatement(setInsert)) {
 			statementSetInsert.bindString(1, newName);
 			statementSetInsert.bindString(2, original);
 
 			statementSetInsert.execute();
-			statementSetInsert.close();
 		} catch (Exception e) {
 			YGOLogger.error("Unable to update ownedCards for " + original);
 		}
 
 		setInsert = SQLConst.UPDATE_SET_DATA_SET_NAME;
 
-		statementSetInsert = connection.compileStatement(setInsert);
-
-		try {
+		try (SQLiteStatement statementSetInsert = connection.compileStatement(setInsert)) {
 			statementSetInsert.bindString(1, newName);
 			statementSetInsert.bindString(2, original);
 
 			statementSetInsert.execute();
-			statementSetInsert.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			YGOLogger.error("Unable to update set data for " + original);
 		}
 	}
@@ -1547,16 +1396,13 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY;
 
-		SQLiteStatement statement = connection.compileStatement(update);
+		try (SQLiteStatement statement = connection.compileStatement(update)) {
+			statement.bindString(1, price);
+			statement.bindString(2, setNumber);
+			statement.bindString(3, rarity);
 
-		statement.bindString(1, price);
-		statement.bindString(2, setNumber);
-		statement.bindString(3, rarity);
-
-		statement.execute();
-		statement.close();
-
-		return getUpdatedRowCount();
+			return statement.executeUpdateDelete();
+		}
 	}
 
 	@Override
@@ -1565,35 +1411,26 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME;
 
-		SQLiteStatement statement = connection.compileStatement(update);
+		try (SQLiteStatement statement = connection.compileStatement(update)) {
+			statement.bindString(1, price);
+			statement.bindString(2, setNumber);
+			statement.bindString(3, rarity);
+			statement.bindString(4, setName);
 
-		statement.bindString(1, price);
-		statement.bindString(2, setNumber);
-		statement.bindString(3, rarity);
-		statement.bindString(4, setName);
-
-		statement.execute();
-		statement.close();
-
-		return getUpdatedRowCount();
+			return statement.executeUpdateDelete();
+		}
 	}
 
 	@Override
 	public int getUpdatedRowCount() {
-
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_UPDATED_ROW_COUNT;
 
-		Cursor rs = connection.rawQuery(query,null);
-
-		rs.moveToNext();
-
-		int updated = rs.getInt(1);
-
-		rs.close();
-
-		return updated;
+		try (Cursor rs = connection.rawQuery(query, null)) {
+			rs.moveToNext();
+			return rs.getInt(1);
+		}
 	}
 
 	@Override
@@ -1602,14 +1439,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE;
 
-		SQLiteStatement statement = connection.compileStatement(update);
-
-		statement.bindString(1, price);
-		statement.bindString(2, setNumber);
-
-		statement.execute();
-		statement.close();
-
-		return getUpdatedRowCount();
+		try (SQLiteStatement statement = connection.compileStatement(update)) {
+			statement.bindString(1, price);
+			statement.bindString(2, setNumber);
+			return statement.executeUpdateDelete();
+		}
 	}
 }
