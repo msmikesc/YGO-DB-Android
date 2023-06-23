@@ -147,7 +147,7 @@ public class ImportFromTCGPlayer {
 				map.get(key).quantity += card.quantity;
 			} else {
 
-				List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(
+				List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(
 						card.setNumber, card.priceBought, card.dateBought, card.folderName, card.condition,
 						card.editionPrinting, db);
 

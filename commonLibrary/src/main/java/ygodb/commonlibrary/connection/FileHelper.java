@@ -126,10 +126,10 @@ public class FileHelper {
     /**
      * Parses a file containing sql statements into a String array that contains
      * only the sql statements. Comments and white spaces in the file are not
-     * parsed into the String array. Note the file must not contained malformed
-     * comments and all sql statements must end with a semi-colon ";" in order
+     * parsed into the String array. Note the file must not contain malformed
+     * comments and all sql statements must end with a semicolon ";" in order
      * for the file to be parsed correctly. The sql statements in the String
-     * array will not end with a semi-colon ";".
+     * array will not end with a semicolon ";".
      *
      * @param sqlFile
      *            - String containing the path for the file that contains sql
@@ -144,10 +144,10 @@ public class FileHelper {
     /**
      * Parses a file containing sql statements into a String array that contains
      * only the sql statements. Comments and white spaces in the file are not
-     * parsed into the String array. Note the file must not contained malformed
-     * comments and all sql statements must end with a semi-colon ";" in order
+     * parsed into the String array. Note the file must not contain malformed
+     * comments and all sql statements must end with a semicolon ";" in order
      * for the file to be parsed correctly. The sql statements in the String
-     * array will not end with a semi-colon ";".
+     * array will not end with a semicolon ";".
      *
      * @param sqlFile
      *            - InputStream for the file that contains sql statements.
@@ -161,10 +161,10 @@ public class FileHelper {
     /**
      * Parses a file containing sql statements into a String array that contains
      * only the sql statements. Comments and white spaces in the file are not
-     * parsed into the String array. Note the file must not contained malformed
-     * comments and all sql statements must end with a semi-colon ";" in order
+     * parsed into the String array. Note the file must not contain malformed
+     * comments and all sql statements must end with a semicolon ";" in order
      * for the file to be parsed correctly. The sql statements in the String
-     * array will not end with a semi-colon ";".
+     * array will not end with a semicolon ";".
      *
      * @param sqlFile
      *            - Reader for the file that contains sql statements.
@@ -178,10 +178,10 @@ public class FileHelper {
     /**
      * Parses a file containing sql statements into a String array that contains
      * only the sql statements. Comments and white spaces in the file are not
-     * parsed into the String array. Note the file must not contained malformed
-     * comments and all sql statements must end with a semi-colon ";" in order
+     * parsed into the String array. Note the file must not contain malformed
+     * comments and all sql statements must end with a semicolon ";" in order
      * for the file to be parsed correctly. The sql statements in the String
-     * array will not end with a semi-colon ";".
+     * array will not end with a semicolon ";".
      *
      * @param sqlFile
      *            - BufferedReader for the file that contains sql statements.

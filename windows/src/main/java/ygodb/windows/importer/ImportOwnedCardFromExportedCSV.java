@@ -46,7 +46,7 @@ public class ImportOwnedCardFromExportedCSV {
 
 			OwnedCard card = CsvConnection.getOwnedCardFromExportedCSV(current, db);
 			
-			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(card.setNumber, card.priceBought,
+			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(card.setNumber, card.priceBought,
 					card.dateBought, card.folderName, card.condition, card.editionPrinting, db);
 
 			for (OwnedCard existingCard : ownedRarities) {

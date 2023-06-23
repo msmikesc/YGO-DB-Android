@@ -28,8 +28,8 @@ public class MainApplication extends Application {
         if (isExternalStorageWritable()) {
             logFile = new File(getExternalFilesDir(null), "ygodblog.txt");
             try {
-                if(!logFile.exists()) {
-                    logFile.createNewFile();
+                if(!logFile.exists() && !logFile.createNewFile()) {
+                    YGOLogger.error("Unable to create log file");
                 }
             } catch (IOException e) {
                 YGOLogger.logException(e);

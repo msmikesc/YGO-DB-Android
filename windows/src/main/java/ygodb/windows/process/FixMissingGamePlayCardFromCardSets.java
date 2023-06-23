@@ -39,7 +39,7 @@ public class FixMissingGamePlayCardFromCardSets {
 				ArrayList<CardSet> cardSets = db.getAllCardSetsOfCardByGamePlayCardUUIDAndSet(gamePlayCardUUID, setName);
 				
 				if(titles == null || titles.isEmpty()) {
-					YGOLogger.info("0 gameplaycard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).cardName);
+					YGOLogger.info("0 gamePlayCard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).cardName);
 					
 					GamePlayCard current = new GamePlayCard();
 					

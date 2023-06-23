@@ -45,7 +45,7 @@ public class ImportFromDragonShield {
 
 			OwnedCard card = CsvConnection.getOwnedCardFromDragonShieldCSV(current, db);
 
-			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(
+			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(
 					card.setNumber, card.priceBought, card.dateBought, card.folderName, card.condition,
 					card.editionPrinting, db);
 

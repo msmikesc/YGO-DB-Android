@@ -216,7 +216,7 @@ public class CsvConnection {
 		setName = Util.checkForTranslatedSetName(setName);
 		setNumber = Util.checkForTranslatedSetNumber(setNumber);
 
-		List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(setNumber,
+		List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(setNumber,
 				priceBought, dateBought, folder, condition, printing, db);
 
 		if (ownedRarities.isEmpty()) {
@@ -225,7 +225,7 @@ public class CsvConnection {
 			String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
 			String newColorCode = setNumber.substring(setNumber.length() - 1);
 
-			ownedRarities = DatabaseHashMap.getExistingOwnedRaritesForCardFromHashMap(newSetNumber, priceBought,
+			ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(newSetNumber, priceBought,
 					dateBought, folder, condition, printing, db);
 
 			if (!ownedRarities.isEmpty()) {

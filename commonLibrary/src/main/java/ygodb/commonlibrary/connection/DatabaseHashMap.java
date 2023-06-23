@@ -51,8 +51,8 @@ public class DatabaseHashMap {
 		return list;
 	}
 
-	public static List<OwnedCard> getExistingOwnedRaritesForCardFromHashMap(String setNumber, String priceBought,
-																			String dateBought, String folderName, String condition, String editionPrinting, SQLiteConnection db) throws SQLException {
+	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(String setNumber, String priceBought,
+																			 String dateBought, String folderName, String condition, String editionPrinting, SQLiteConnection db) throws SQLException {
 		Map<String, ArrayList<OwnedCard>> data = DatabaseHashMap.getOwnedInstance(db);
 
 		String key = setNumber + Util.normalizePrice(priceBought) + dateBought + folderName + condition

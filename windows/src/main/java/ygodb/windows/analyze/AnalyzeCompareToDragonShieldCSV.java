@@ -75,7 +75,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 			}
 
 			if (list == null) {
-				YGOLogger.info("no match in DB found forkey : " + key);
+				YGOLogger.info("no match in DB found for key : " + key);
 			} else if (list.size() == 1) {
 				// exact 1 match
 
