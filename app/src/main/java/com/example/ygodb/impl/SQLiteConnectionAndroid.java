@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,9 +46,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
 	private boolean createDatabase = false;
-	private boolean upgradeDatabase  = false;
+	private boolean upgradeDatabase = false;
 
-	public SQLiteConnectionAndroid(){
+	public SQLiteConnectionAndroid() {
 		super(AndroidUtil.getAppContext(),
 				AndroidUtil.getAppContext().getFilesDir().getAbsolutePath() + "/" + SQLiteConnectionAndroid.DB_NAME,
 				null, 1);
@@ -72,9 +71,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				YGOLogger.logException(e);
 				throw new UncheckedIOException(e);
 			}
+		} else if (this.upgradeDatabase) {
+			//TODO implement anything needed here
 		}
-		//else if (instance.upgradeDatabase) {
-		//}
 
 	}
 
@@ -89,31 +88,17 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		 */
 		close();
 
-		/*
-		 * Open the database in the assets folder as the input stream.
-		 */
-		InputStream myInput = cont.getAssets().open(DB_FILE_PATH);
+		try (InputStream myInput = cont.getAssets().open(DB_FILE_PATH);
+			 OutputStream myOutput = new FileOutputStream(new File(cont.getFilesDir(), DB_NAME))) {
 
-		/*
-		 * Open the empty db in internal storage as the output stream.
-		 */
-		File output = new File(cont.getFilesDir(),DB_NAME);
-		try {
-			output.getParentFile().mkdirs();
-		}
-		catch(Exception e){
+			/*
+			 * Copy over the empty db in internal storage with the database in the
+			 * assets folder.
+			 */
+			FileHelper.copyFile(myInput, myOutput);
+		} catch (Exception e) {
 			throw new IOException(e);
 		}
-		OutputStream myOutput = new FileOutputStream(output);
-
-		/*
-		 * Copy over the empty db in internal storage with the database in the
-		 * assets folder.
-		 */
-		FileHelper.copyFile(myInput, myOutput);
-
-		myInput.close();
-		myOutput.close();
 
 		/*
 		 * Access the copied database so SQLiteHelper will cache it and mark it
@@ -123,8 +108,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	public void copyDataBaseFromURI(InputStream myInput) throws IOException {
-
-		if(myInput == null){
+		if (myInput == null) {
 			return;
 		}
 
@@ -133,22 +117,26 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		/*
 		 * Open the empty db in internal storage as the output stream.
 		 */
-		File output = new File(cont.getFilesDir(),DB_NAME);
+		File output = new File(cont.getFilesDir(), DB_NAME);
 		try {
-			output.getParentFile().mkdirs();
-		}
-		catch(Exception e){
+			File parent = output.getParentFile();
+
+			if (parent == null || (!parent.exists() && !parent.mkdirs())) {
+				YGOLogger.error("Unable to create folder in copyDataBaseFromURI");
+			}
+		} catch (Exception e) {
 			throw new IOException(e);
 		}
-		OutputStream myOutput = new FileOutputStream(output);
 
-		/*
-		 * Copy over the empty db in internal storage with the database in the
-		 * assets folder.
-		 */
-		FileHelper.copyFile(myInput, myOutput);
-
-		myOutput.close();
+		try (OutputStream myOutput = new FileOutputStream(output)) {
+			/*
+			 * Copy over the empty db in internal storage with the database in the
+			 * assets folder.
+			 */
+			FileHelper.copyFile(myInput, myOutput);
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
 
 		/*
 		 * Access the copied database so SQLiteHelper will cache it and mark it
@@ -159,7 +147,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	public void copyDataBaseToURI(OutputStream output) throws IOException {
 
-		if(output == null){
+		if (output == null) {
 			return;
 		}
 
@@ -168,7 +156,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		/*
 		 * Open the database in the internal folder as the input stream.
 		 */
-		File input = new File(cont.getFilesDir(),DB_NAME);
+		File input = new File(cont.getFilesDir(), DB_NAME);
 		InputStream myInput = new FileInputStream(input);
 
 
@@ -208,10 +196,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		connectionInstance = null;
 	}
-	
-	private int getColumn(String[] col, String columnName){
-		for(int i =0; i < col.length; i++){
-			if(col[i].equals(columnName)){
+
+	private int getColumn(String[] col, String columnName) {
+		for (int i = 0; i < col.length; i++) {
+			if (col[i].equals(columnName)) {
 				return i;
 			}
 		}
@@ -245,22 +233,22 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	private void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
-		set.gamePlayCardUUID = rs.getString(getColumn(col,Const.GAME_PLAY_CARD_UUID));
-		set.cardName = rs.getString(getColumn(col,Const.CARD_NAME));
-		set.setNumber = rs.getString(getColumn(col,Const.SET_NUMBER));
-		set.setName = rs.getString(getColumn(col,Const.SET_NAME));
-		set.setRarity = rs.getString(getColumn(col,Const.SET_RARITY));
-		set.setPrice = Util.normalizePrice(rs.getString(getColumn(col,Const.SET_PRICE)));
-		set.setPriceUpdateTime = rs.getString(getColumn(col,Const.SET_PRICE_UPDATE_TIME));
+		set.gamePlayCardUUID = rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID));
+		set.cardName = rs.getString(getColumn(col, Const.CARD_NAME));
+		set.setNumber = rs.getString(getColumn(col, Const.SET_NUMBER));
+		set.setName = rs.getString(getColumn(col, Const.SET_NAME));
+		set.setRarity = rs.getString(getColumn(col, Const.SET_RARITY));
+		set.setPrice = Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE)));
+		set.setPriceUpdateTime = rs.getString(getColumn(col, Const.SET_PRICE_UPDATE_TIME));
 	}
 
 	@Override
-	public ArrayList<CardSet> getAllCardSetsOfCardByGamePlayCardUUIDAndSet(String gamePlayCardUUID, String setName) throws SQLException {
+	public ArrayList<CardSet> getAllCardSetsOfCardByGamePlayCardUUIDAndSet(String gamePlayCardUUID, String setName) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException {
+	public ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -325,8 +313,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		ArrayList<OwnedCard> results = new ArrayList<>();
 
-		String[] columns = new String[]{"a.gamePlayCardUUID","a.cardName as cardNameCol","a.setNumber as setNumberCol","a.setName",
-				"a.setRarity as setRarityCol","a.setPrice","sum(b.quantity) as quantity",
+		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
+				"a.setRarity as setRarityCol", "a.setPrice", "sum(b.quantity) as quantity",
 				"MAX(b.dateBought) as maxDate, c.setCode", "d.passcode"};
 
 		String selection = "a.cardName like ?";
@@ -391,12 +379,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+	public ArrayList<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String getGamePlayCardUUIDFromTitle(String title) throws SQLException {
+	public String getGamePlayCardUUIDFromTitle(String title) {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -423,7 +411,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException {
+	public String getGamePlayCardUUIDFromPasscode(int passcode) {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -480,7 +468,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCards() throws SQLException {
+	public ArrayList<OwnedCard> getAllOwnedCards() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS;
@@ -505,9 +493,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public OwnedCard getExistingOwnedCardByObject(OwnedCard query) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID,Const.RARITY_UNSURE,Const.QUANTITY,Const.CARD_NAME,Const.SET_CODE,
-				Const.SET_NUMBER,Const.SET_NAME,Const.SET_RARITY,Const.SET_RARITY_COLOR_VARIANT,Const.FOLDER_NAME,Const.CONDITION,
-				Const.EDITION_PRINTING,Const.DATE_BOUGHT,Const.PRICE_BOUGHT,Const.CREATION_DATE,Const.MODIFICATION_DATE,
+		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID, Const.RARITY_UNSURE, Const.QUANTITY, Const.CARD_NAME, Const.SET_CODE,
+				Const.SET_NUMBER, Const.SET_NAME, Const.SET_RARITY, Const.SET_RARITY_COLOR_VARIANT, Const.FOLDER_NAME, Const.CONDITION,
+				Const.EDITION_PRINTING, Const.DATE_BOUGHT, Const.PRICE_BOUGHT, Const.CREATION_DATE, Const.MODIFICATION_DATE,
 				Const.UUID, Const.PASSCODE};
 
 		//PRIMARY KEY(Const.gamePlayCardUUID,Const.folderName,Const.setNumber,Const.setRarity,Const.setRarityColorVariant,
@@ -526,7 +514,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String[] selectionArgs = new String[]{query.gamePlayCardUUID, query.folderName, query.setNumber, query.setRarity,
 				query.colorVariant, query.condition, query.editionPrinting, query.dateBought, query.priceBought};
 
-		try (Cursor rs = connection.query("ownedCards", columns, selection, selectionArgs,
+		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE, columns, selection, selectionArgs,
 				null, null, null, null)) {
 
 			String[] col = rs.getColumnNames();
@@ -557,7 +545,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
 		}
 
-		try (Cursor rs = connection.query("ownedCards", columns, selection, selectionArgs,
+		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE, columns, selection, selectionArgs,
 				null, null, orderBy, offset + "," + limit)) {
 
 			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
@@ -574,23 +562,23 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	private void getAllOwnedCardFieldsFromRS(Cursor rs, String[] col, OwnedCard current) {
-		current.gamePlayCardUUID = rs.getString(getColumn(col,Const.GAME_PLAY_CARD_UUID));
-		current.quantity = rs.getInt(getColumn(col,Const.QUANTITY));
-		current.cardName = rs.getString(getColumn(col,Const.CARD_NAME));
-		current.setNumber = rs.getString(getColumn(col,Const.SET_NUMBER));
-		current.setName = rs.getString(getColumn(col,Const.SET_NAME));
-		current.setRarity = rs.getString(getColumn(col,Const.SET_RARITY));
-		current.colorVariant = rs.getString(getColumn(col,Const.SET_RARITY_COLOR_VARIANT));
-		current.editionPrinting = rs.getString(getColumn(col,Const.EDITION_PRINTING));
-		current.dateBought = rs.getString(getColumn(col,Const.DATE_BOUGHT));
-		current.priceBought = rs.getString(getColumn(col,Const.PRICE_BOUGHT));
-		current.uuid = rs.getString(getColumn(col,Const.UUID));
-		current.setCode = rs.getString(getColumn(col,Const.SET_CODE));
-		current.folderName = rs.getString(getColumn(col,Const.FOLDER_NAME));
-		current.rarityUnsure = rs.getInt(getColumn(col,Const.RARITY_UNSURE));
-		current.condition = rs.getString(getColumn(col,Const.CONDITION));
-		current.creationDate = rs.getString(getColumn(col,Const.CREATION_DATE));
-		current.modificationDate = rs.getString(getColumn(col,Const.MODIFICATION_DATE));
+		current.gamePlayCardUUID = rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID));
+		current.quantity = rs.getInt(getColumn(col, Const.QUANTITY));
+		current.cardName = rs.getString(getColumn(col, Const.CARD_NAME));
+		current.setNumber = rs.getString(getColumn(col, Const.SET_NUMBER));
+		current.setName = rs.getString(getColumn(col, Const.SET_NAME));
+		current.setRarity = rs.getString(getColumn(col, Const.SET_RARITY));
+		current.colorVariant = rs.getString(getColumn(col, Const.SET_RARITY_COLOR_VARIANT));
+		current.editionPrinting = rs.getString(getColumn(col, Const.EDITION_PRINTING));
+		current.dateBought = rs.getString(getColumn(col, Const.DATE_BOUGHT));
+		current.priceBought = rs.getString(getColumn(col, Const.PRICE_BOUGHT));
+		current.uuid = rs.getString(getColumn(col, Const.UUID));
+		current.setCode = rs.getString(getColumn(col, Const.SET_CODE));
+		current.folderName = rs.getString(getColumn(col, Const.FOLDER_NAME));
+		current.rarityUnsure = rs.getInt(getColumn(col, Const.RARITY_UNSURE));
+		current.condition = rs.getString(getColumn(col, Const.CONDITION));
+		current.creationDate = rs.getString(getColumn(col, Const.CREATION_DATE));
+		current.modificationDate = rs.getString(getColumn(col, Const.MODIFICATION_DATE));
 		current.passcode = rs.getInt(getColumn(col, Const.PASSCODE));
 
 	}
@@ -612,7 +600,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
 		}
 
-		try (Cursor rs = connection.query("ownedCards", columns, selection, selectionArgs,
+		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE, columns, selection, selectionArgs,
 				Const.CARD_NAME, null, orderBy, offset + "," + limit)) {
 
 			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
@@ -656,7 +644,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException {
+	public ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE;
@@ -1106,24 +1094,24 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	private void getAllGamePlayCardFieldsFromRS(Cursor rs, String[] col, GamePlayCard current) {
-		current.gamePlayCardUUID = rs.getString(getColumn(col,Const.GAME_PLAY_CARD_UUID));
-		current.cardName = rs.getString(getColumn(col,Const.GAME_PLAY_CARD_NAME));
-		current.cardType = rs.getString(getColumn(col,Const.TYPE));
-		current.passcode = rs.getInt(getColumn(col,Const.PASSCODE));
-		current.desc = rs.getString(getColumn(col,Const.GAME_PLAY_CARD_TEXT));
-		current.attribute = rs.getString(getColumn(col,Const.ATTRIBUTE));
-		current.race = rs.getString(getColumn(col,Const.RACE));
-		current.linkval = rs.getString(getColumn(col,Const.LINK_VALUE));
-		current.level = rs.getString(getColumn(col,Const.LEVEL_RANK));
-		current.scale = rs.getString(getColumn(col,Const.PENDULUM_SCALE));
-		current.atk = rs.getString(getColumn(col,Const.ATTACK));
-		current.def = rs.getString(getColumn(col,Const.DEFENSE));
-		current.archetype = rs.getString(getColumn(col,Const.ARCHETYPE));
+		current.gamePlayCardUUID = rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID));
+		current.cardName = rs.getString(getColumn(col, Const.GAME_PLAY_CARD_NAME));
+		current.cardType = rs.getString(getColumn(col, Const.TYPE));
+		current.passcode = rs.getInt(getColumn(col, Const.PASSCODE));
+		current.desc = rs.getString(getColumn(col, Const.GAME_PLAY_CARD_TEXT));
+		current.attribute = rs.getString(getColumn(col, Const.ATTRIBUTE));
+		current.race = rs.getString(getColumn(col, Const.RACE));
+		current.linkval = rs.getString(getColumn(col, Const.LINK_VALUE));
+		current.level = rs.getString(getColumn(col, Const.LEVEL_RANK));
+		current.scale = rs.getString(getColumn(col, Const.PENDULUM_SCALE));
+		current.atk = rs.getString(getColumn(col, Const.ATTACK));
+		current.def = rs.getString(getColumn(col, Const.DEFENSE));
+		current.archetype = rs.getString(getColumn(col, Const.ARCHETYPE));
 		current.modificationDate = rs.getString(getColumn(col, Const.MODIFICATION_DATE));
 	}
 
 	@Override
-	public List<GamePlayCard> getAllGamePlayCard() throws SQLException {
+	public List<GamePlayCard> getAllGamePlayCard() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -1328,7 +1316,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	@Override
 	public void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
-													  String cardName) throws SQLException {
+													  String cardName) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setInsert = SQLConst.REPLACE_INTO_CARD_SET_WITH_SOFT_PRICE_UPDATE;
@@ -1391,7 +1379,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String rarity, String price) throws SQLException {
+	public int updateCardSetPrice(String setNumber, String rarity, String price) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY;
@@ -1406,7 +1394,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName) throws SQLException {
+	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME;
@@ -1434,7 +1422,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String price) throws SQLException {
+	public int updateCardSetPrice(String setNumber, String price) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE;

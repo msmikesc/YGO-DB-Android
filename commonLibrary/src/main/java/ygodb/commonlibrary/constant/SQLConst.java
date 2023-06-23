@@ -4,6 +4,8 @@ public class SQLConst {
 
 	private SQLConst() {}
 
+	public static final String OWNED_CARDS_TABLE = "ownedCards";
+
 	public static final String GET_ALL_CARD_RARITIES =
 			"Select * from cardSets";
 	public static final String GET_ALL_CARD_SETS_OF_CARD_BY_GAME_PLAY_CARD_UUID_AND_SET =
