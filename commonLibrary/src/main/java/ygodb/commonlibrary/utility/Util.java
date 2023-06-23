@@ -604,9 +604,11 @@ public class Util {
 
 		KeyUpdateMap instance = getCardNameMapInstance();
 
-		String newName = instance.getValue(cardName.toLowerCase(Locale.ROOT));
+		String lowerCaseName = cardName.toLowerCase(Locale.ROOT);
 
-		if(newName == null) {
+		String newName = instance.getValue(lowerCaseName);
+
+		if(newName == null || newName.equals(lowerCaseName)) {
 			return cardName;
 		}
 

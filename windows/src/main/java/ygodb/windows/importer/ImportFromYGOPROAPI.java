@@ -28,7 +28,7 @@ public class ImportFromYGOPROAPI {
 
 	public static void main(String[] args) throws SQLException, IOException {
 
-		String setName = "Wild Survivors";
+		String setName = "Ghosts From the Past: The 2nd Haunting";
 
 		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();
 
@@ -196,6 +196,12 @@ public class ImportFromYGOPROAPI {
 			setName = Util.checkForTranslatedSetName(setName);
 			setCode = Util.checkForTranslatedSetNumber(setCode);
 
+			List<String> translatedList = Util.checkForTranslatedQuadKey(name, setCode, setRarity, setName);
+			name = translatedList.get(0);
+			setCode = translatedList.get(1);
+			setRarity = translatedList.get(2);
+			setName = translatedList.get(3);
+
 			db.replaceIntoCardSetWithSoftPriceUpdate(setCode, setRarity, setName, gamePlayCardUUID, setPrice, name);
 
 		}
@@ -253,15 +259,25 @@ public class ImportFromYGOPROAPI {
 
 		String newSetName = Util.checkForTranslatedSetName(currentSetName);
 
-		if (!dbSetNames.contains(newSetName)) {
+		if (!dbSetNames.contains(newSetName)
+				&& (newSetName == null || !newSetName.equalsIgnoreCase(inputSetName))
+				&& (!Const.IGNORED_MISSING_SETS.contains(newSetName))) {
 			YGOLogger.info("Missing Set: " + newSetName);
 		}
 
 		if (!isSpecificSet) {
-			db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
+			ArrayList<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
+
+			if (setMetaDataList.isEmpty()) {
+				db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
+			}
 		}
 		if (isSpecificSet && inputSetName.equalsIgnoreCase(currentSetName)) {
-			db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
+			ArrayList<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
+
+			if (setMetaDataList.isEmpty()) {
+				db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
+			}
 		}
 	}
 }

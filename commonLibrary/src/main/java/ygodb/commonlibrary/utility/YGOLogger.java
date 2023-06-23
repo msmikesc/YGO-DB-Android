@@ -28,7 +28,7 @@ public class YGOLogger {
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);
 
-		error(pw.toString());
+		error(sw.toString());
 
 	}
 

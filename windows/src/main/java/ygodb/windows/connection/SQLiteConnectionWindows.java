@@ -324,6 +324,9 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		if (idsFound.size() == 1) {
 			return idsFound.get(0);
 		}
+		else if (idsFound.size() > 1){
+			YGOLogger.error("More than 1 GamePlayCard found for passcode:" + passcode);
+		}
 
 		return null;
 	}

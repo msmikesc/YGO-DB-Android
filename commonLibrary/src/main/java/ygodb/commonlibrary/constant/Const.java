@@ -1,6 +1,8 @@
 package ygodb.commonlibrary.constant;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Const {
 
@@ -130,4 +132,9 @@ public class Const {
 
     public static final String DEFAULT_COLOR_VARIANT = "-1";
 	public static final List<String> setColorVariantUnsupportedDragonShield = List.of("Legendary Duelists: Season 2");
+
+    public static final Set<String> IGNORED_MISSING_SETS = new HashSet<>(
+            Set.of("Speed Duel: Trials of the Kingdom Sneak Peek participation cards",
+                    "Yu-Gi-Oh! 5D's Tag Force 5 promotional cards",
+                    "Yu-Gi-Oh! Advent Calendar"));
 }
