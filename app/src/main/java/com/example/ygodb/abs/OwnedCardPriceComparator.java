@@ -10,8 +10,8 @@ public class OwnedCardPriceComparator implements Comparator<OwnedCard> {
     @Override
     public int compare(OwnedCard ownedCard, OwnedCard t1) {
 
-        BigDecimal p1 = ownedCard.priceBought != null ? new BigDecimal(ownedCard.priceBought): new BigDecimal(0);
-        BigDecimal p2 = t1.priceBought != null ? new BigDecimal(t1.priceBought): new BigDecimal(0);
+        BigDecimal p1 = ownedCard.getPriceBought() != null ? new BigDecimal(ownedCard.getPriceBought()): new BigDecimal(0);
+        BigDecimal p2 = t1.getPriceBought() != null ? new BigDecimal(t1.getPriceBought()): new BigDecimal(0);
 
         int val = p2.compareTo(p1);
 
@@ -19,13 +19,13 @@ public class OwnedCardPriceComparator implements Comparator<OwnedCard> {
             return val;
         }
 
-        val = ownedCard.cardName.compareTo(t1.cardName);
+        val = ownedCard.getCardName().compareTo(t1.getCardName());
 
         if(val!=0){
             return val;
         }
 
-        val = ownedCard.quantity - t1.quantity;
+        val = ownedCard.getQuantity() - t1.getQuantity();
 
         return val;
     }

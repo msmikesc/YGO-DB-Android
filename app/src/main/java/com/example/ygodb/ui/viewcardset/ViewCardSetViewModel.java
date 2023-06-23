@@ -111,17 +111,17 @@ public class ViewCardSetViewModel extends ViewModel {
 
         for(AnalyzeData current: results){
             OwnedCard currentCard = new OwnedCard();
-            currentCard.cardName = current.cardName;
-            currentCard.setRarity = current.getStringOfMainRarities();
-            currentCard.gamePlayCardUUID = current.gamePlayCardUUID;
-            currentCard.setName = current.mainSetName;
-            currentCard.multiListSetNames = current.getStringOfSetNames();
-            currentCard.quantity = current.quantity;
-            currentCard.setNumber = current.getStringOfMainSetNumbers();
-            currentCard.priceBought = current.getAveragePrice();
-            currentCard.setCode = current.mainSetCode;
-            currentCard.mainSetCardSets = current.mainSetCardSets;
-            currentCard.passcode = current.passcode;
+            currentCard.setCardName(current.getCardName());
+            currentCard.setSetRarity(current.getStringOfMainRarities());
+            currentCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
+            currentCard.setSetName(current.getMainSetName());
+            currentCard.setMultiListSetNames(current.getStringOfSetNames());
+            currentCard.setQuantity(current.getQuantity());
+            currentCard.setSetNumber(current.getStringOfMainSetNumbers());
+            currentCard.setPriceBought(current.getAveragePrice());
+            currentCard.setSetCode(current.getMainSetCode());
+            currentCard.setMainSetCardSets(current.getMainSetCardSets());
+            currentCard.setPasscode(current.getPasscode());
             newList.add(currentCard);
         }
 
@@ -139,7 +139,7 @@ public class ViewCardSetViewModel extends ViewModel {
         ArrayList<OwnedCard> newList = new ArrayList<>();
         
         for(OwnedCard current: inputList){
-            if(filter == null ||filter.equals("") || current.cardName.toLowerCase(Locale.ROOT).contains(filter.toLowerCase(Locale.ROOT))){
+            if(filter == null ||filter.equals("") || current.getCardName().toLowerCase(Locale.ROOT).contains(filter.toLowerCase(Locale.ROOT))){
                 newList.add(current);
             }
         }

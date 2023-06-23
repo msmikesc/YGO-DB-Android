@@ -64,14 +64,14 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
     }
 
     public void onPlusButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
-        current.quantity++;
-        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
+        current.setQuantity(current.getQuantity() + 1);
+        viewHolder.cardQuantity.setText(String.valueOf(current.getQuantity()));
     }
 
     public void onMinusButtonClick(OwnedCard current) {
-        current.quantity--;
+        current.setQuantity(current.getQuantity() - 1);
 
-        if(current.quantity < 1){
+        if(current.getQuantity() < 1){
             addCardsViewModel.removeNewFromOwnedCard(current);
         }
 
@@ -80,16 +80,16 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
     public void onFirstButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
 
-        if(current.editionPrinting!= null && current.editionPrinting.contains("1st")){
-            current.editionPrinting = Const.CARD_PRINTING_UNLIMITED;
+        if(current.getEditionPrinting() != null && current.getEditionPrinting().contains("1st")){
+            current.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
             viewHolder.firstEdition.setImageDrawable(null);
         }
         else{
-            current.editionPrinting = Const.CARD_PRINTING_FIRST_EDITION;
+            current.setEditionPrinting(Const.CARD_PRINTING_FIRST_EDITION);
             viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }
 
-        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
+        viewHolder.cardQuantity.setText(String.valueOf(current.getQuantity()));
     }
 
     public void onUpdatePrice(CharSequence priceBox, OwnedCard current, int position) {
@@ -98,11 +98,11 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         try{
             newPrice = Util.normalizePrice(newPrice);
 
-            if(current.priceBought != null && current.priceBought.equals(newPrice)){
+            if(current.getPriceBought() != null && current.getPriceBought().equals(newPrice)){
                 return;
             }
 
-            current.priceBought = newPrice;
+            current.setPriceBought(newPrice);
         }
         catch (Exception e){
             //price typed in is junk
@@ -130,12 +130,12 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         ImageButton button3 = viewHolder.itemView.findViewById(R.id.firstButton);
         button3.setOnClickListener(view -> onFirstButtonClick(viewHolder, current));
 
-        viewHolder.title.setText(current.cardName);
+        viewHolder.title.setText(current.getCardName());
 
-        String[] setNumbers = current.setNumber.split(", ");
+        String[] setNumbers = current.getSetNumber().split(", ");
 
         if(setNumbers.length == 1){
-            viewHolder.setCode.setText(current.setNumber);
+            viewHolder.setCode.setText(current.getSetNumber());
             viewHolder.setCode.setVisibility(View.VISIBLE);
             viewHolder.cardSetCodeDropdown.setVisibility(View.INVISIBLE);
         }
@@ -152,7 +152,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
             viewHolder.cardSetCodeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    current.dropdownSelectedSetNumber = setNumbers[position];
+                    current.setDropdownSelectedSetNumber(setNumbers[position]);
                 }
 
                 @Override
@@ -161,32 +161,32 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
                 }
             });
 
-            if(current.dropdownSelectedSetNumber == null){
-                current.dropdownSelectedSetNumber = setNumbers[0];
+            if(current.getDropdownSelectedSetNumber() == null){
+                current.setDropdownSelectedSetNumber(setNumbers[0]);
             }
             else{
                 boolean done = false;
                 for(int i = 0; i < setNumbers.length; i++){
-                    if(current.dropdownSelectedSetNumber.equals(setNumbers[i])) {
+                    if(current.getDropdownSelectedSetNumber().equals(setNumbers[i])) {
                         viewHolder.cardSetCodeDropdown.setSelection(i);
                         done = true;
                         break;
                     }
                 }
                 if(!done){
-                    current.dropdownSelectedSetNumber = setNumbers[0];
+                    current.setDropdownSelectedSetNumber(setNumbers[0]);
                 }
             }
 
         }
 
-        viewHolder.setCode.setText(current.setNumber);
-        viewHolder.setName.setText(current.setName);
+        viewHolder.setCode.setText(current.getSetNumber());
+        viewHolder.setName.setText(current.getSetName());
 
-        String[] rarities = current.setRarity.split(", ");
+        String[] rarities = current.getSetRarity().split(", ");
 
         if(rarities.length == 1){
-            viewHolder.cardRarity.setText(current.setRarity);
+            viewHolder.cardRarity.setText(current.getSetRarity());
             viewHolder.cardRarity.setVisibility(View.VISIBLE);
             viewHolder.cardRarityDropdown.setVisibility(View.INVISIBLE);
         }
@@ -203,7 +203,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
             viewHolder.cardRarityDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    current.dropdownSelectedRarity = rarities[position];
+                    current.setDropdownSelectedRarity(rarities[position]);
                 }
 
                 @Override
@@ -212,26 +212,26 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
                 }
             });
 
-            if(current.dropdownSelectedRarity == null){
-                current.dropdownSelectedRarity = rarities[0];
+            if(current.getDropdownSelectedRarity() == null){
+                current.setDropdownSelectedRarity(rarities[0]);
             }
             else{
                 boolean done = false;
                 for(int i = 0; i < rarities.length; i++){
-                    if(current.dropdownSelectedRarity.equals(rarities[i])) {
+                    if(current.getDropdownSelectedRarity().equals(rarities[i])) {
                         viewHolder.cardRarityDropdown.setSelection(i);
                         done = true;
                         break;
                     }
                 }
                 if(!done){
-                    current.dropdownSelectedRarity = rarities[0];
+                    current.setDropdownSelectedRarity(rarities[0]);
                 }
             }
         }
 
-        if(current.priceBought != null) {
-            double price = Double.parseDouble(current.priceBought);
+        if(current.getPriceBought() != null) {
+            double price = Double.parseDouble(current.getPriceBought());
             viewHolder.cardPrice.setText("$");
             viewHolder.cardPriceTextBox.setText(String.format(Locale.ROOT, "%.2f", price));
         }
@@ -255,12 +255,12 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         });
 
 
-        viewHolder.cardDate.setText(current.dateBought);
-        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
+        viewHolder.cardDate.setText(current.getDateBought());
+        viewHolder.cardQuantity.setText(String.valueOf(current.getQuantity()));
 
         button3.setImageDrawable(firstDrawable);
 
-        if(current.editionPrinting.contains("1st")){
+        if(current.getEditionPrinting().contains("1st")){
             // set image to ImageView
             viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }
@@ -270,7 +270,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
         try {
             // get input stream
-            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.passcode+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+ current.getPasscode() + ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

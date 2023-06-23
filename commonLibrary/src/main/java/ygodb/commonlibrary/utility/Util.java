@@ -42,53 +42,53 @@ public class Util {
 			String printing, String priceBought, String dateBought, CardSet setIdentified, int passcode) {
 		OwnedCard card = new OwnedCard();
 		
-		card.folderName = folder;
-		card.cardName = name;
-		card.quantity = Integer.parseInt(quantity);
-		card.setCode = setCode;
-		card.condition = condition;
-		card.editionPrinting = printing;
-		card.priceBought = normalizePrice(priceBought);
-		card.dateBought = dateBought;
-		card.setRarity = setIdentified.setRarity;
-		card.gamePlayCardUUID = setIdentified.gamePlayCardUUID;
-		card.colorVariant = setIdentified.colorVariant;
-		card.setName = setIdentified.setName;
-		card.setNumber = setIdentified.setNumber;
-		card.rarityUnsure = setIdentified.rarityUnsure;
-		card.passcode = passcode;
+		card.setFolderName(folder);
+		card.setCardName(name);
+		card.setQuantity(Integer.parseInt(quantity));
+		card.setSetCode(setCode);
+		card.setCondition(condition);
+		card.setEditionPrinting(printing);
+		card.setPriceBought(normalizePrice(priceBought));
+		card.setDateBought(dateBought);
+		card.setSetRarity(setIdentified.getSetRarity());
+		card.setGamePlayCardUUID(setIdentified.getGamePlayCardUUID());
+		card.setColorVariant(setIdentified.getColorVariant());
+		card.setSetName(setIdentified.getSetName());
+		card.setSetNumber(setIdentified.getSetNumber());
+		card.setRarityUnsure(setIdentified.getRarityUnsure());
+		card.setPasscode(passcode);
 
-		card.uuid = UUID.randomUUID().toString();
+		card.setUuid(UUID.randomUUID().toString());
 		
 		return card;
 	}
 	
 	public static boolean doesCardExactlyMatch(String folder, String name, String setCode, String setNumber,
 			String condition, String printing, String priceBought, String dateBought, OwnedCard existingCard) {
-        return setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
-                && dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
-                && condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
-                && name.equals(existingCard.cardName) && setCode.equals(existingCard.setCode);
+        return setNumber.equals(existingCard.getSetNumber()) && priceBought.equals(existingCard.getPriceBought())
+                && dateBought.equals(existingCard.getDateBought()) && folder.equals(existingCard.getFolderName())
+                && condition.equals(existingCard.getCondition()) && printing.equals(existingCard.getEditionPrinting())
+                && name.equals(existingCard.getCardName()) && setCode.equals(existingCard.getSetCode());
     }
 	
 	public static boolean doesCardExactlyMatchWithColor(String folder, String name, String setCode, String setNumber,
 			String condition, String printing, String priceBought, String dateBought, String colorVariant,
 			OwnedCard existingCard) {
-        return setNumber.equals(existingCard.setNumber) && priceBought.equals(existingCard.priceBought)
-                && dateBought.equals(existingCard.dateBought) && folder.equals(existingCard.folderName)
-                && condition.equals(existingCard.condition) && printing.equals(existingCard.editionPrinting)
-                && name.equals(existingCard.cardName) && setCode.equals(existingCard.setCode)
-                && colorVariant.equals(existingCard.colorVariant);
+        return setNumber.equals(existingCard.getSetNumber()) && priceBought.equals(existingCard.getPriceBought())
+                && dateBought.equals(existingCard.getDateBought()) && folder.equals(existingCard.getFolderName())
+                && condition.equals(existingCard.getCondition()) && printing.equals(existingCard.getEditionPrinting())
+                && name.equals(existingCard.getCardName()) && setCode.equals(existingCard.getSetCode())
+                && colorVariant.equals(existingCard.getColorVariant());
     }
 
 	public static void checkSetCounts(SQLiteConnection db) throws SQLException {
 		ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
 
 		for (SetMetaData setData : list) {
-			int countCardsInList = db.getCountDistinctCardsInSet(setData.setName);
+			int countCardsInList = db.getCountDistinctCardsInSet(setData.getSetName());
 
-			if (countCardsInList != setData.numOfCards) {
-				YGOLogger.info("Issue for " + setData.setName + " metadata:" + setData.numOfCards + " count:"
+			if (countCardsInList != setData.getNumOfCards()) {
+				YGOLogger.info("Issue for " + setData.getSetName() + " metadata:" + setData.getNumOfCards() + " count:"
 						+ countCardsInList);
 			}
 		}
@@ -96,7 +96,7 @@ public class Util {
 		HashMap<String, SetMetaData> setMetaDataHashMap = new HashMap<>();
 
 		for (SetMetaData s : list) {
-			setMetaDataHashMap.put(s.setName, s);
+			setMetaDataHashMap.put(s.getSetName(), s);
 		}
 
 		ArrayList<String> setNames = db.getDistinctSetNames();
@@ -115,8 +115,8 @@ public class Util {
 			else {
 				int cardsInSet = db.getCountDistinctCardsInSet(setName);
 
-				if (cardsInSet != meta.numOfCards) {
-					YGOLogger.info("Issue for " + setName + " metadata:" + meta.numOfCards + " count:" + cardsInSet);
+				if (cardsInSet != meta.getNumOfCards()) {
+					YGOLogger.info("Issue for " + setName + " metadata:" + meta.getNumOfCards() + " count:" + cardsInSet);
 				}
 			}
 		}
@@ -158,14 +158,14 @@ public class Util {
 			setRarities = DatabaseHashMap.getRaritiesOfCardInSetFromHashMap(newSetNumber, db);
 
 			for (CardSet c : setRarities) {
-				c.colorVariant = colorCode;
+				c.setColorVariant(colorCode);
 			}
 		}
 
 		if (setRarities.size() == 1) {
 			CardSet match = setRarities.get(0);
 
-			match.rarityUnsure = 0;
+			match.setRarityUnsure(0);
 
 			return match;
 		}
@@ -175,14 +175,14 @@ public class Util {
 			YGOLogger.info("Unable to find anything for " + setNumber);
 			CardSet setIdentified = new CardSet();
 
-			setIdentified.setName = setName;
-			setIdentified.setNumber = setNumber;
-			setIdentified.setRarity = "Unknown";
-			setIdentified.colorVariant = "Unknown";
-			setIdentified.rarityUnsure = 1;
+			setIdentified.setSetName(setName);
+			setIdentified.setSetNumber(setNumber);
+			setIdentified.setSetRarity("Unknown");
+			setIdentified.setColorVariant("Unknown");
+			setIdentified.setRarityUnsure(1);
 
 			// check for name
-			setIdentified.gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(cardName);
+			setIdentified.setGamePlayCardUUID(db.getGamePlayCardUUIDFromTitle(cardName));
 
 			return setIdentified;
 		}
@@ -190,7 +190,7 @@ public class Util {
 		// assume NOT starlight, ultimate, or collectors
 		if (setRarities.size() == 2) {
 			for (int i = 0; i < 2; i++) {
-				String name = setRarities.get(i).setRarity;
+				String name = setRarities.get(i).getSetRarity();
 				if (name.equals((Rarity.StarlightRare.toString())) || name.equals((Rarity.UltimateRare.toString()))
 						|| name.equals((Rarity.CollectorsRare.toString()))) {
 					CardSet match;
@@ -200,8 +200,8 @@ public class Util {
 					else{
 						match = setRarities.get(0);
 					}
-					match.rarityUnsure = 0;
-					YGOLogger.info("Took a guess that " + setNumber + ":" + cardName + " is:" + match.setRarity);
+					match.setRarityUnsure(0);
+					YGOLogger.info("Took a guess that " + setNumber + ":" + cardName + " is:" + match.getSetRarity());
 					return match;
 				}
 			}
@@ -209,10 +209,10 @@ public class Util {
 
 		// try the closest price
 		BigDecimal priceBoughtDec = new BigDecimal(priceBought);
-		BigDecimal distance = new BigDecimal(setRarities.get(0).setPrice).subtract(priceBoughtDec).abs();
+		BigDecimal distance = new BigDecimal(setRarities.get(0).getSetPrice()).subtract(priceBoughtDec).abs();
 		int idx = 0;
 		for (int c = 1; c < setRarities.size(); c++) {
-			BigDecimal cDistance = new BigDecimal(setRarities.get(c).setPrice).subtract(priceBoughtDec).abs();
+			BigDecimal cDistance = new BigDecimal(setRarities.get(c).getSetPrice()).subtract(priceBoughtDec).abs();
 			if (cDistance.compareTo(distance) <= 0) {
 				idx = c;
 				distance = cDistance;
@@ -220,9 +220,9 @@ public class Util {
 		}
 
 		CardSet rValue = setRarities.get(idx);
-		rValue.rarityUnsure = 1;
+		rValue.setRarityUnsure(1);
 
-		YGOLogger.info("Took a guess that " + setNumber + ":" + cardName + " is:" + rValue.setRarity);
+		YGOLogger.info("Took a guess that " + setNumber + ":" + cardName + " is:" + rValue.getSetRarity());
 
 		return rValue;
 

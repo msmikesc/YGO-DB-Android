@@ -39,13 +39,13 @@ public class FixMissingGamePlayCardFromCardSets {
 				ArrayList<CardSet> cardSets = db.getAllCardSetsOfCardByGamePlayCardUUIDAndSet(gamePlayCardUUID, setName);
 				
 				if(titles == null || titles.isEmpty()) {
-					YGOLogger.info("0 gamePlayCard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).cardName);
+					YGOLogger.info("0 gamePlayCard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).getCardName());
 					
 					GamePlayCard current = new GamePlayCard();
 					
-					current.cardName = cardSets.get(0).cardName;
-					current.archetype = Const.ARCHETYPE_AUTOGENERATE;
-					current.gamePlayCardUUID = gamePlayCardUUID;
+					current.setCardName(cardSets.get(0).getCardName());
+					current.setArchetype(Const.ARCHETYPE_AUTOGENERATE);
+					current.setGamePlayCardUUID(gamePlayCardUUID);
 					
 					db.replaceIntoGamePlayCard(current);
 				}

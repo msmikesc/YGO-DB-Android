@@ -17,49 +17,49 @@ public class AddFromOwnedCards {
 
 		for (OwnedCard card : cards) {
 
-			card.cardName = card.cardName.trim();
-			card.setName = card.setName.trim();
+			card.setCardName(card.getCardName().trim());
+			card.setSetName(card.getSetName().trim());
 
-			GamePlayCard gamePlayCard = db.getGamePlayCardByUUID(card.gamePlayCardUUID);
+			GamePlayCard gamePlayCard = db.getGamePlayCardByUUID(card.getGamePlayCardUUID());
 
 			if (gamePlayCard == null) {
 				// check for skill card
-				String newCardName = card.cardName + Const.SKILL_CARD_NAME_APPEND;
+				String newCardName = card.getCardName() + Const.SKILL_CARD_NAME_APPEND;
 
-				gamePlayCard = db.getGamePlayCardByUUID(card.gamePlayCardUUID);
+				gamePlayCard = db.getGamePlayCardByUUID(card.getGamePlayCardUUID());
 
 				if (gamePlayCard != null) {
-					card.cardName = newCardName;
+					card.setCardName(newCardName);
 				} else {
 					// add it
-					YGOLogger.info("No gamePlayCard found for " + card.cardName + ":" + card.gamePlayCardUUID);
+					YGOLogger.info("No gamePlayCard found for " + card.getCardName() + ":" + card.getGamePlayCardUUID());
 
 					GamePlayCard gamePlayCard1 = new GamePlayCard();
 
-					gamePlayCard1.cardName = card.cardName;
-					gamePlayCard1.gamePlayCardUUID = card.gamePlayCardUUID;
-					gamePlayCard1.archetype = Const.ARCHETYPE_AUTOGENERATE;
-					gamePlayCard1.passcode = card.passcode;
+					gamePlayCard1.setCardName(card.getCardName());
+					gamePlayCard1.setGamePlayCardUUID(card.getGamePlayCardUUID());
+					gamePlayCard1.setArchetype(Const.ARCHETYPE_AUTOGENERATE);
+					gamePlayCard1.setPasscode(card.getPasscode());
 
 					db.replaceIntoGamePlayCard(gamePlayCard1);
 
 				}
 			}
 
-			ArrayList<CardSet> sets = db.getRaritiesOfCardInSetByGamePlayCardUUID(card.gamePlayCardUUID, card.setName
+			ArrayList<CardSet> sets = db.getRaritiesOfCardInSetByGamePlayCardUUID(card.getGamePlayCardUUID(), card.getSetName()
 			);
 
 			if (sets.isEmpty()) {
 				// add it
-				YGOLogger.info("No rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":" + card.setName);
-				db.replaceIntoCardSetWithSoftPriceUpdate(card.setNumber, card.setRarity, card.setName, card.gamePlayCardUUID, null,
-						card.cardName);
+				YGOLogger.info("No rarity entries found for " + card.getCardName() + ":" + card.getGamePlayCardUUID() + ":" + card.getSetName());
+				db.replaceIntoCardSetWithSoftPriceUpdate(card.getSetNumber(), card.getSetRarity(), card.getSetName(), card.getGamePlayCardUUID(), null,
+						card.getCardName());
 			} else {
 				boolean match = false;
 
 				for (CardSet set : sets) {
-					if (set.setRarity.equalsIgnoreCase(card.setRarity)
-							&& set.setNumber.equalsIgnoreCase(card.setNumber)) {
+					if (set.getSetRarity().equalsIgnoreCase(card.getSetRarity())
+							&& set.getSetNumber().equalsIgnoreCase(card.getSetNumber())) {
 						match = true;
 						break;
 					}
@@ -67,10 +67,10 @@ public class AddFromOwnedCards {
 
 				if (!match) {
 					// add it
-					YGOLogger.info("No matching rarity entries found for " + card.cardName + ":" + card.gamePlayCardUUID + ":"
-							+ card.setName);
-					db.replaceIntoCardSetWithSoftPriceUpdate(card.setNumber, card.setRarity, card.setName, card.gamePlayCardUUID, null,
-							card.cardName);
+					YGOLogger.info("No matching rarity entries found for " + card.getCardName() + ":" + card.getGamePlayCardUUID() + ":"
+							+ card.getSetName());
+					db.replaceIntoCardSetWithSoftPriceUpdate(card.getSetNumber(), card.getSetRarity(), card.getSetName(), card.getGamePlayCardUUID(), null,
+							card.getCardName());
 				}
 			}
 

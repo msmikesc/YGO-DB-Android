@@ -4,29 +4,229 @@ import java.util.List;
 
 public class OwnedCard {
 
-	public String gamePlayCardUUID;
-	public String folderName;
-	public String cardName;
-	public int quantity;
-	public String setCode;
-	public String setNumber;
-	public String setName;
-	public String setRarity;
-	public String colorVariant;
-	public int rarityUnsure;
-	public String condition;
-	public String editionPrinting;
-	public String dateBought;
-	public String priceBought;
-	public String creationDate;
-	public String modificationDate;
-	public String uuid;
-	public String multiListSetNames;
-	public String dropdownSelectedSetNumber;
-	public String dropdownSelectedRarity;
-	public List<CardSet> mainSetCardSets;
-	public int sellQuantity;
-	public String priceSold;
-	public String dateSold;
-	public int passcode;
+	private String gamePlayCardUUID;
+	private String folderName;
+	private String cardName;
+	private int quantity;
+	private String setCode;
+	private String setNumber;
+	private String setName;
+	private String setRarity;
+	private String colorVariant;
+	private int rarityUnsure;
+	private String condition;
+	private String editionPrinting;
+	private String dateBought;
+	private String priceBought;
+	private String creationDate;
+	private String modificationDate;
+	private String uuid;
+	private String multiListSetNames;
+	private String dropdownSelectedSetNumber;
+	private String dropdownSelectedRarity;
+	private List<CardSet> mainSetCardSets;
+	private int sellQuantity;
+	private String priceSold;
+	private String dateSold;
+	private int passcode;
+
+	public String getGamePlayCardUUID() {
+		return gamePlayCardUUID;
+	}
+
+	public void setGamePlayCardUUID(String gamePlayCardUUID) {
+		this.gamePlayCardUUID = gamePlayCardUUID;
+	}
+
+	public String getFolderName() {
+		return folderName;
+	}
+
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
+	}
+
+	public String getCardName() {
+		return cardName;
+	}
+
+	public void setCardName(String cardName) {
+		this.cardName = cardName;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getSetCode() {
+		return setCode;
+	}
+
+	public void setSetCode(String setCode) {
+		this.setCode = setCode;
+	}
+
+	public String getSetNumber() {
+		return setNumber;
+	}
+
+	public void setSetNumber(String setNumber) {
+		this.setNumber = setNumber;
+	}
+
+	public String getSetName() {
+		return setName;
+	}
+
+	public void setSetName(String setName) {
+		this.setName = setName;
+	}
+
+	public String getSetRarity() {
+		return setRarity;
+	}
+
+	public void setSetRarity(String setRarity) {
+		this.setRarity = setRarity;
+	}
+
+	public String getColorVariant() {
+		return colorVariant;
+	}
+
+	public void setColorVariant(String colorVariant) {
+		this.colorVariant = colorVariant;
+	}
+
+	public int getRarityUnsure() {
+		return rarityUnsure;
+	}
+
+	public void setRarityUnsure(int rarityUnsure) {
+		this.rarityUnsure = rarityUnsure;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public String getEditionPrinting() {
+		return editionPrinting;
+	}
+
+	public void setEditionPrinting(String editionPrinting) {
+		this.editionPrinting = editionPrinting;
+	}
+
+	public String getDateBought() {
+		return dateBought;
+	}
+
+	public void setDateBought(String dateBought) {
+		this.dateBought = dateBought;
+	}
+
+	public String getPriceBought() {
+		return priceBought;
+	}
+
+	public void setPriceBought(String priceBought) {
+		this.priceBought = priceBought;
+	}
+
+	public String getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public String getModificationDate() {
+		return modificationDate;
+	}
+
+	public void setModificationDate(String modificationDate) {
+		this.modificationDate = modificationDate;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getMultiListSetNames() {
+		return multiListSetNames;
+	}
+
+	public void setMultiListSetNames(String multiListSetNames) {
+		this.multiListSetNames = multiListSetNames;
+	}
+
+	public String getDropdownSelectedSetNumber() {
+		return dropdownSelectedSetNumber;
+	}
+
+	public void setDropdownSelectedSetNumber(String dropdownSelectedSetNumber) {
+		this.dropdownSelectedSetNumber = dropdownSelectedSetNumber;
+	}
+
+	public String getDropdownSelectedRarity() {
+		return dropdownSelectedRarity;
+	}
+
+	public void setDropdownSelectedRarity(String dropdownSelectedRarity) {
+		this.dropdownSelectedRarity = dropdownSelectedRarity;
+	}
+
+	public List<CardSet> getMainSetCardSets() {
+		return mainSetCardSets;
+	}
+
+	public void setMainSetCardSets(List<CardSet> mainSetCardSets) {
+		this.mainSetCardSets = mainSetCardSets;
+	}
+
+	public int getSellQuantity() {
+		return sellQuantity;
+	}
+
+	public void setSellQuantity(int sellQuantity) {
+		this.sellQuantity = sellQuantity;
+	}
+
+	public String getPriceSold() {
+		return priceSold;
+	}
+
+	public void setPriceSold(String priceSold) {
+		this.priceSold = priceSold;
+	}
+
+	public String getDateSold() {
+		return dateSold;
+	}
+
+	public void setDateSold(String dateSold) {
+		this.dateSold = dateSold;
+	}
+
+	public int getPasscode() {
+		return passcode;
+	}
+
+	public void setPasscode(int passcode) {
+		this.passcode = passcode;
+	}
 }

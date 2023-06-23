@@ -42,19 +42,19 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
 
         OwnedCard current = ownedCards.get(position);
 
-        viewHolder.title.setText(current.cardName);
-        viewHolder.setName.setText(current.setName);
-        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
-        if(current.priceBought != null) {
-            double price = Double.parseDouble(current.priceBought);
+        viewHolder.title.setText(current.getCardName());
+        viewHolder.setName.setText(current.getSetName());
+        viewHolder.cardQuantity.setText(String.valueOf(current.getQuantity()));
+        if(current.getPriceBought() != null) {
+            double price = Double.parseDouble(current.getPriceBought());
             viewHolder.cardPrice.setText("$" + String.format(Locale.ROOT,"%.2f", price));
         }
-        viewHolder.cardDate.setText(current.dateBought);
-        viewHolder.rarity.setText(current.setRarity);
+        viewHolder.cardDate.setText(current.getDateBought());
+        viewHolder.rarity.setText(current.getSetRarity());
 
         try {
             // get input stream
-            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.passcode+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+ current.getPasscode() + ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

@@ -99,7 +99,7 @@ public class ImportFromYGOPROAPI {
 
 					if (sets != null) {
 						setIterator = sets.iterator();
-						insertCardSetsForOneCard(setIterator, inserted.cardName, inserted.gamePlayCardUUID, db);
+						insertCardSetsForOneCard(setIterator, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
 					}
 
 				}
@@ -134,34 +134,34 @@ public class ImportFromYGOPROAPI {
 		name = Util.checkForTranslatedCardName(name);
 		passcode = Util.checkForTranslatedPasscode(passcode);
 
-		gamePlayCard.cardName = name;
-		gamePlayCard.cardType = type;
-		gamePlayCard.archetype = archetype;
-		gamePlayCard.passcode = passcode;
+		gamePlayCard.setCardName(name);
+		gamePlayCard.setCardType(type);
+		gamePlayCard.setArchetype(archetype);
+		gamePlayCard.setPasscode(passcode);
 
-		gamePlayCard.gamePlayCardUUID = db.getGamePlayCardUUIDFromPasscode(passcode);
+		gamePlayCard.setGamePlayCardUUID(db.getGamePlayCardUUIDFromPasscode(passcode));
 
-		if (gamePlayCard.gamePlayCardUUID == null) {
+		if (gamePlayCard.getGamePlayCardUUID() == null) {
 			Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
 
-			gamePlayCard.gamePlayCardUUID = uuidAndName.getKey();
-			gamePlayCard.cardName = uuidAndName.getValue();
+			gamePlayCard.setGamePlayCardUUID(uuidAndName.getKey());
+			gamePlayCard.setCardName(uuidAndName.getValue());
 		}
 
-		gamePlayCard.desc = desc;
-		gamePlayCard.attribute = attribute;
-		gamePlayCard.race = race;
-		gamePlayCard.linkval = linkValue;
-		gamePlayCard.scale = scale;
-		gamePlayCard.level = level;
-		gamePlayCard.atk = atk;
-		gamePlayCard.def = def;
+		gamePlayCard.setDesc(desc);
+		gamePlayCard.setAttribute(attribute);
+		gamePlayCard.setRace(race);
+		gamePlayCard.setLinkVal(linkValue);
+		gamePlayCard.setScale(scale);
+		gamePlayCard.setLevel(level);
+		gamePlayCard.setAtk(atk);
+		gamePlayCard.setDef(def);
 
 		db.replaceIntoGamePlayCard(gamePlayCard);
 
 		for (OwnedCard currentOwnedCard : ownedCardsToCheck) {
-			if (currentOwnedCard.gamePlayCardUUID.equals(gamePlayCard.gamePlayCardUUID)) {
-				currentOwnedCard.passcode = passcode;
+			if (currentOwnedCard.getGamePlayCardUUID().equals(gamePlayCard.getGamePlayCardUUID())) {
+				currentOwnedCard.setPasscode(passcode);
 				db.updateOwnedCardByUUID(currentOwnedCard);
 			}
 		}
@@ -233,7 +233,7 @@ public class ImportFromYGOPROAPI {
 				ArrayList<String> dbSetNames = new ArrayList<>();
 
 				for (SetMetaData current : list) {
-					dbSetNames.add(current.setName);
+					dbSetNames.add(current.getSetName());
 				}
 
 				for (JsonNode setNode : jsonNode) {

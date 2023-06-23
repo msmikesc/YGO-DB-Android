@@ -46,25 +46,25 @@ public class ImportFromDragonShield {
 			OwnedCard card = CsvConnection.getOwnedCardFromDragonShieldCSV(current, db);
 
 			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(
-					card.setNumber, card.priceBought, card.dateBought, card.folderName, card.condition,
-					card.editionPrinting, db);
+					card.getSetNumber(), card.getPriceBought(), card.getDateBought(), card.getFolderName(), card.getCondition(),
+					card.getEditionPrinting(), db);
 
 			for (OwnedCard existingCard : ownedRarities) {
-				if (Util.doesCardExactlyMatch(card.folderName, card.cardName, card.setCode, card.setNumber,
-						card.condition, card.editionPrinting, card.priceBought, card.dateBought, existingCard)) {
-					if (card.quantity == existingCard.quantity) {
+				if (Util.doesCardExactlyMatch(card.getFolderName(), card.getCardName(), card.getSetCode(), card.getSetNumber(),
+						card.getCondition(), card.getEditionPrinting(), card.getPriceBought(), card.getDateBought(), existingCard)) {
+					if (card.getQuantity() == existingCard.getQuantity()) {
 						// no changes, no need to update
 						card = null;
 					} else {
 						// something to update
-						card.uuid = existingCard.uuid;
+						card.setUuid(existingCard.getUuid());
 					}
 					break;
 				}
 			}
 
 			if (card != null) {
-				count += card.quantity;
+				count += card.getQuantity();
 				db.upsertOwnedCardBatch(card);
 			}
 		}

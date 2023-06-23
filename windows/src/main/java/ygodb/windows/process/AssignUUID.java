@@ -29,9 +29,9 @@ public class AssignUUID {
 		ArrayList<OwnedCard> cards = db.getAllOwnedCards();
 		
 		for(OwnedCard card: cards) {
-			if(card.uuid == null) {
+			if(card.getUuid() == null) {
 				UUID id = UUID.randomUUID();
-				card.uuid = id.toString();
+				card.setUuid(id.toString());
 				db.upsertOwnedCardBatch(card);
 				
 			}
@@ -40,9 +40,9 @@ public class AssignUUID {
 		List<GamePlayCard> gamePlayCards = db.getAllGamePlayCard();
 
 		for(GamePlayCard card: gamePlayCards) {
-			if(card.gamePlayCardUUID == null) {
+			if(card.getGamePlayCardUUID() == null) {
 				UUID id = UUID.randomUUID();
-				card.gamePlayCardUUID = id.toString();
+				card.setGamePlayCardUUID(id.toString());
 				db.replaceIntoGamePlayCard(card);
 
 			}

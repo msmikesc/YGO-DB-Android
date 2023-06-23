@@ -57,19 +57,19 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 
     public void onPlusButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
 
-        if(current.sellQuantity >= current.quantity){
-            current.sellQuantity = current.quantity;
+        if(current.getSellQuantity() >= current.getQuantity()){
+            current.setSellQuantity(current.getQuantity());
         }
         else {
-            current.sellQuantity++;
+            current.setSellQuantity(current.getSellQuantity() + 1);
         }
-        viewHolder.cardQuantity.setText(String.valueOf(current.sellQuantity));
+        viewHolder.cardQuantity.setText(String.valueOf(current.getSellQuantity()));
     }
 
     public void onMinusButtonClick(OwnedCard current) {
-        current.sellQuantity--;
+        current.setSellQuantity(current.getSellQuantity() - 1);
 
-        if(current.sellQuantity < 1){
+        if(current.getSellQuantity() < 1){
             sellCardsViewModel.removeNewFromOwnedCard(current);
         }
 
@@ -82,11 +82,11 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         try{
             newPrice = Util.normalizePrice(newPrice);
 
-            if(current.priceSold != null && current.priceSold.equals(newPrice)){
+            if(current.getPriceSold() != null && current.getPriceSold().equals(newPrice)){
                 return;
             }
 
-            current.priceSold = newPrice;
+            current.setPriceSold(newPrice);
         }
         catch (Exception e){
             //price typed in is junk
@@ -111,12 +111,12 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         ImageButton button2 = viewHolder.itemView.findViewById(R.id.minusButton);
         button2.setOnClickListener(view -> onMinusButtonClick(current));
 
-        viewHolder.title.setText(current.cardName);
+        viewHolder.title.setText(current.getCardName());
 
-        String[] setNumbers = current.setNumber.split(", ");
+        String[] setNumbers = current.getSetNumber().split(", ");
 
         if(setNumbers.length == 1){
-            viewHolder.setCode.setText(current.setNumber);
+            viewHolder.setCode.setText(current.getSetNumber());
             viewHolder.setCode.setVisibility(View.VISIBLE);
             viewHolder.cardSetCodeDropdown.setVisibility(View.INVISIBLE);
         }
@@ -133,7 +133,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
             viewHolder.cardSetCodeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    current.dropdownSelectedSetNumber = setNumbers[position];
+                    current.setDropdownSelectedSetNumber(setNumbers[position]);
                 }
 
                 @Override
@@ -142,32 +142,32 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
                 }
             });
 
-            if(current.dropdownSelectedSetNumber == null){
-                current.dropdownSelectedSetNumber = setNumbers[0];
+            if(current.getDropdownSelectedSetNumber() == null){
+                current.setDropdownSelectedSetNumber(setNumbers[0]);
             }
             else{
                 boolean done = false;
                 for(int i = 0; i < setNumbers.length; i++){
-                    if(current.dropdownSelectedSetNumber.equals(setNumbers[i])) {
+                    if(current.getDropdownSelectedSetNumber().equals(setNumbers[i])) {
                         viewHolder.cardSetCodeDropdown.setSelection(i);
                         done = true;
                         break;
                     }
                 }
                 if(!done){
-                    current.dropdownSelectedSetNumber = setNumbers[0];
+                    current.setDropdownSelectedSetNumber(setNumbers[0]);
                 }
             }
 
         }
 
-        viewHolder.setCode.setText(current.setNumber);
-        viewHolder.setName.setText(current.setName);
+        viewHolder.setCode.setText(current.getSetNumber());
+        viewHolder.setName.setText(current.getSetName());
 
-        String[] rarities = current.setRarity.split(", ");
+        String[] rarities = current.getSetRarity().split(", ");
 
         if(rarities.length == 1){
-            viewHolder.cardRarity.setText(current.setRarity);
+            viewHolder.cardRarity.setText(current.getSetRarity());
             viewHolder.cardRarity.setVisibility(View.VISIBLE);
             viewHolder.cardRarityDropdown.setVisibility(View.INVISIBLE);
         }
@@ -184,7 +184,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
             viewHolder.cardRarityDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    current.dropdownSelectedRarity = rarities[position];
+                    current.setDropdownSelectedRarity(rarities[position]);
                 }
 
                 @Override
@@ -193,26 +193,26 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
                 }
             });
 
-            if(current.dropdownSelectedRarity == null){
-                current.dropdownSelectedRarity = rarities[0];
+            if(current.getDropdownSelectedRarity() == null){
+                current.setDropdownSelectedRarity(rarities[0]);
             }
             else{
                 boolean done = false;
                 for(int i = 0; i < rarities.length; i++){
-                    if(current.dropdownSelectedRarity.equals(rarities[i])) {
+                    if(current.getDropdownSelectedRarity().equals(rarities[i])) {
                         viewHolder.cardRarityDropdown.setSelection(i);
                         done = true;
                         break;
                     }
                 }
                 if(!done){
-                    current.dropdownSelectedRarity = rarities[0];
+                    current.setDropdownSelectedRarity(rarities[0]);
                 }
             }
         }
 
-        if(current.priceSold != null) {
-            double price = Double.parseDouble(current.priceSold);
+        if(current.getPriceSold() != null) {
+            double price = Double.parseDouble(current.getPriceSold());
             viewHolder.cardPrice.setText("$");
             viewHolder.cardPriceTextBox.setText(String.format(Locale.ROOT,"%.2f", price));
         }
@@ -236,10 +236,10 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         });
 
 
-        viewHolder.cardDate.setText(current.dateBought);
-        viewHolder.cardQuantity.setText(String.valueOf(current.sellQuantity));
+        viewHolder.cardDate.setText(current.getDateBought());
+        viewHolder.cardQuantity.setText(String.valueOf(current.getSellQuantity()));
 
-        if(current.editionPrinting.contains("1st")){
+        if(current.getEditionPrinting().contains("1st")){
             // set image to ImageView
             viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }
@@ -249,7 +249,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 
         try {
             // get input stream
-            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.passcode+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+ current.getPasscode() + ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

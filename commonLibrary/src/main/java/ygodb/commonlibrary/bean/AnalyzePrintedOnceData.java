@@ -12,19 +12,19 @@ import java.util.Set;
 
 public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData> {
 
-	public String gamePlayCardUUID;
-	public String cardName;
-	public Set<String> setNumber;
-	public Set<String> setName;
-	public Set<String> setRarities;
-	public String cardType;
-	public String releaseDate;
-	public String archetype;
+	private String gamePlayCardUUID;
+	private String cardName;
+	private Set<String> setNumber;
+	private Set<String> setName;
+	private Set<String> setRarities;
+	private String cardType;
+	private String releaseDate;
+	private String archetype;
 
 	public AnalyzePrintedOnceData() {
-		setNumber = new HashSet<>();
-		setName = new HashSet<>();
-		setRarities = new HashSet<>();
+		setSetNumber(new HashSet<>());
+		setSetName(new HashSet<>());
+		setSetRarities(new HashSet<>());
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData
 		Date thisDate = null;
 		Date otherDate = null;
 		try {
-			thisDate = dateFormat.parse(this.releaseDate);
-			otherDate = dateFormat.parse(o.releaseDate);
+			thisDate = dateFormat.parse(this.getReleaseDate());
+			otherDate = dateFormat.parse(o.getReleaseDate());
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
@@ -61,12 +61,12 @@ public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData
 			return compare;
 		}
 
-		return cardName.compareTo(o.cardName);
+		return getCardName().compareTo(o.getCardName());
 	}
 
 	public String getStringOfSetNames() {
 
-		ArrayList<String> results = new ArrayList<>(setName);
+		ArrayList<String> results = new ArrayList<>(getSetName());
 
 		Collections.sort(results);
 
@@ -82,7 +82,7 @@ public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData
 	}
 
 	public String getStringOfSetNumbers() {
-		ArrayList<String> results = new ArrayList<>(setNumber);
+		ArrayList<String> results = new ArrayList<>(getSetNumber());
 
 		Collections.sort(results);
 
@@ -100,7 +100,7 @@ public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData
 	public String getStringOfRarities() {
 		HashSet<Rarity> enumList = new HashSet<>();
 
-		for (String s : setRarities) {
+		for (String s : getSetRarities()) {
 			Rarity rarityValue = Rarity.fromString(s);
 			enumList.add(rarityValue);
 		}
@@ -121,4 +121,67 @@ public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData
 
 	}
 
+	public String getGamePlayCardUUID() {
+		return gamePlayCardUUID;
+	}
+
+	public void setGamePlayCardUUID(String gamePlayCardUUID) {
+		this.gamePlayCardUUID = gamePlayCardUUID;
+	}
+
+	public String getCardName() {
+		return cardName;
+	}
+
+	public void setCardName(String cardName) {
+		this.cardName = cardName;
+	}
+
+	public Set<String> getSetNumber() {
+		return setNumber;
+	}
+
+	public void setSetNumber(Set<String> setNumber) {
+		this.setNumber = setNumber;
+	}
+
+	public Set<String> getSetName() {
+		return setName;
+	}
+
+	public void setSetName(Set<String> setName) {
+		this.setName = setName;
+	}
+
+	public Set<String> getSetRarities() {
+		return setRarities;
+	}
+
+	public void setSetRarities(Set<String> setRarities) {
+		this.setRarities = setRarities;
+	}
+
+	public String getCardType() {
+		return cardType;
+	}
+
+	public void setCardType(String cardType) {
+		this.cardType = cardType;
+	}
+
+	public String getReleaseDate() {
+		return releaseDate;
+	}
+
+	public void setReleaseDate(String releaseDate) {
+		this.releaseDate = releaseDate;
+	}
+
+	public String getArchetype() {
+		return archetype;
+	}
+
+	public void setArchetype(String archetype) {
+		this.archetype = archetype;
+	}
 }

@@ -138,26 +138,26 @@ public class ImportFromTCGPlayer {
 
 		if (card != null) {
 
-			String key = card.setNumber + Util.normalizePrice(card.priceBought) + card.dateBought + card.folderName
-					+ card.condition + card.editionPrinting;
+			String key = card.getSetNumber() + Util.normalizePrice(card.getPriceBought()) + card.getDateBought() + card.getFolderName()
+					+ card.getCondition() + card.getEditionPrinting();
 
-			int currentRowQuantity = card.quantity;
+			int currentRowQuantity = card.getQuantity();
 
 			if (map.containsKey(key)) {
-				map.get(key).quantity += card.quantity;
+				map.get(key).setQuantity(map.get(key).getQuantity() + card.getQuantity());
 			} else {
 
 				List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(
-						card.setNumber, card.priceBought, card.dateBought, card.folderName, card.condition,
-						card.editionPrinting, db);
+						card.getSetNumber(), card.getPriceBought(), card.getDateBought(), card.getFolderName(), card.getCondition(),
+						card.getEditionPrinting(), db);
 
 				for (OwnedCard existingCard : ownedRarities) {
-					if (Util.doesCardExactlyMatchWithColor(card.folderName, card.cardName, card.setCode,
-							card.setNumber, card.condition, card.editionPrinting, card.priceBought, card.dateBought,
-							card.colorVariant, existingCard)) {
-						card.quantity += existingCard.quantity;
-						card.uuid = existingCard.uuid;
-						card.gamePlayCardUUID = existingCard.gamePlayCardUUID;
+					if (Util.doesCardExactlyMatchWithColor(card.getFolderName(), card.getCardName(), card.getSetCode(),
+							card.getSetNumber(), card.getCondition(), card.getEditionPrinting(), card.getPriceBought(), card.getDateBought(),
+							card.getColorVariant(), existingCard)) {
+						card.setQuantity(card.getQuantity() + existingCard.getQuantity());
+						card.setUuid(existingCard.getUuid());
+						card.setGamePlayCardUUID(existingCard.getGamePlayCardUUID());
 						break;
 					}
 				}

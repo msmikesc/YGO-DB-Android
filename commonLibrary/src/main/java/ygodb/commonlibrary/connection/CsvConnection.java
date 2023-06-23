@@ -240,27 +240,27 @@ public class CsvConnection {
 				
 				CardSet setIdentified = new CardSet();
 				
-				setIdentified.colorVariant = existingCard.colorVariant;
-				setIdentified.setName = existingCard.setName;
-				setIdentified.setNumber = existingCard.setNumber;
-				setIdentified.gamePlayCardUUID = existingCard.gamePlayCardUUID;
-				setIdentified.setRarity = existingCard.setRarity;
-				setIdentified.rarityUnsure = existingCard.rarityUnsure;
+				setIdentified.setColorVariant(existingCard.getColorVariant());
+				setIdentified.setSetName(existingCard.getSetName());
+				setIdentified.setSetNumber(existingCard.getSetNumber());
+				setIdentified.setGamePlayCardUUID(existingCard.getGamePlayCardUUID());
+				setIdentified.setSetRarity(existingCard.getSetRarity());
+				setIdentified.setRarityUnsure(existingCard.getRarityUnsure());
 
 				int passcode = -1;
-				GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
+				GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.getGamePlayCardUUID());
 
 				if(gpc == null){
 					YGOLogger.error("Unknown gamePlayCard for " + name);
 				}
 				else{
-					passcode = gpc.passcode;
+					passcode = gpc.getPasscode();
 				}
 				
 				OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
 						dateBought, setIdentified, passcode);
 				
-				card.uuid = existingCard.uuid;
+				card.setUuid(existingCard.getUuid());
 				
 				return card;
 			}
@@ -269,16 +269,16 @@ public class CsvConnection {
 		CardSet setIdentified = Util.findRarity(priceBought, setNumber,
 				setName, name, db);
 		
-		setIdentified.colorVariant = colorCode;
+		setIdentified.setColorVariant(colorCode);
 
 		int passcode = -1;
-		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
+		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.getGamePlayCardUUID());
 
 		if(gpc == null){
 			YGOLogger.error("Unknown gamePlayCard for " + name);
 		}
 		else{
-			passcode = gpc.passcode;
+			passcode = gpc.getPasscode();
 		}
 
 		return Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
@@ -325,22 +325,22 @@ public class CsvConnection {
 			if (gpc == null) {
 				YGOLogger.error("Unknown gamePlayCard for " + name);
 			} else {
-				passcode = gpc.passcode;
+				passcode = gpc.getPasscode();
 			}
 		}
 
 		CardSet setIdentified = new CardSet();
-		setIdentified.rarityUnsure = rarityUnsure;
-		setIdentified.colorVariant = rarityColorVariant;
-		setIdentified.setRarity = rarity;
-		setIdentified.setName = setName;
-		setIdentified.setNumber = setNumber;
-		setIdentified.gamePlayCardUUID = gamePlayCardUUID;
+		setIdentified.setRarityUnsure(rarityUnsure);
+		setIdentified.setColorVariant(rarityColorVariant);
+		setIdentified.setSetRarity(rarity);
+		setIdentified.setSetName(setName);
+		setIdentified.setSetNumber(setNumber);
+		setIdentified.setGamePlayCardUUID(gamePlayCardUUID);
 		
 		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
 				dateBought, setIdentified, passcode);
 		
-		card.uuid = uuid;
+		card.setUuid(uuid);
 
 		return card;
 	}
@@ -444,16 +444,16 @@ public class CsvConnection {
 		if (setIdentified == null) {
 			YGOLogger.error("Unknown setCode for card name and set: " + name + ":" + setName);
 			setIdentified = new CardSet();
-			setIdentified.rarityUnsure = 1;
-			setIdentified.colorVariant = Const.DEFAULT_COLOR_VARIANT;
-			setIdentified.setName = setName;
-			setIdentified.setNumber = null;
-			setIdentified.gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
+			setIdentified.setRarityUnsure(1);
+			setIdentified.setColorVariant(Const.DEFAULT_COLOR_VARIANT);
+			setIdentified.setSetName(setName);
+			setIdentified.setSetNumber(null);
+			setIdentified.setGamePlayCardUUID(db.getGamePlayCardUUIDFromTitle(name));
 
 		}
 
-		setIdentified.setRarity = rarity;
-		setIdentified.colorVariant = colorVariant;
+		setIdentified.setSetRarity(rarity);
+		setIdentified.setColorVariant(colorVariant);
 		
 		String setCode = null;
 
@@ -462,7 +462,7 @@ public class CsvConnection {
 		if (metaData.size() != 1) {
 			YGOLogger.error("Unknown metaData for set: " + setName);
 		} else {
-			setCode = metaData.get(0).setCode;
+			setCode = metaData.get(0).getSetCode();
 		}
 
 		String priceBought = Util.normalizePrice(price);
@@ -472,13 +472,13 @@ public class CsvConnection {
 		String dateBought = dateFormat.format(new Date());
 
 		int passcode = -1;
-		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.gamePlayCardUUID);
+		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.getGamePlayCardUUID());
 
 		if(gpc == null){
 			YGOLogger.error("Unknown gamePlayCard for " + name);
 		}
 		else{
-			passcode = gpc.passcode;
+			passcode = gpc.getPasscode();
 		}
 
 		return Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
@@ -526,24 +526,24 @@ public class CsvConnection {
 		name = Util.checkForTranslatedCardName(name);
 		passcode = Util.checkForTranslatedPasscode(passcode);
 
-		gamePlayCard.cardName = name;
-		gamePlayCard.cardType = type;
-		gamePlayCard.archetype = archetype;
-		gamePlayCard.passcode = passcode;
+		gamePlayCard.setCardName(name);
+		gamePlayCard.setCardType(type);
+		gamePlayCard.setArchetype(archetype);
+		gamePlayCard.setPasscode(passcode);
 
 		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
 
-		gamePlayCard.gamePlayCardUUID = uuidAndName.getKey();
-		gamePlayCard.cardName = uuidAndName.getValue();
+		gamePlayCard.setGamePlayCardUUID(uuidAndName.getKey());
+		gamePlayCard.setCardName(uuidAndName.getValue());
 
-		gamePlayCard.desc = lore;
-		gamePlayCard.attribute = attribute;
-		gamePlayCard.race = race;
-		gamePlayCard.linkval = linkValue;
-		gamePlayCard.scale = pendScale;
-		gamePlayCard.level = level;
-		gamePlayCard.atk = atk;
-		gamePlayCard.def = def;
+		gamePlayCard.setDesc(lore);
+		gamePlayCard.setAttribute(attribute);
+		gamePlayCard.setRace(race);
+		gamePlayCard.setLinkVal(linkValue);
+		gamePlayCard.setScale(pendScale);
+		gamePlayCard.setLevel(level);
+		gamePlayCard.setAtk(atk);
+		gamePlayCard.setDef(def);
 
 		db.replaceIntoGamePlayCard(gamePlayCard);
 	}
@@ -581,9 +581,9 @@ public class CsvConnection {
 
 			GamePlayCard newGPC = new GamePlayCard();
 
-			newGPC.cardName = name;
-			newGPC.gamePlayCardUUID = gamePlayCardUUID;
-			newGPC.archetype = Const.ARCHETYPE_AUTOGENERATE;
+			newGPC.setCardName(name);
+			newGPC.setGamePlayCardUUID(gamePlayCardUUID);
+			newGPC.setArchetype(Const.ARCHETYPE_AUTOGENERATE);
 			db.replaceIntoGamePlayCard(newGPC);
 
 		}
@@ -592,9 +592,9 @@ public class CsvConnection {
 	}
 
 	public static void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
-		p.printRecord(current.folderName, current.quantity, current.cardName, current.setCode, current.setName,
-				current.setNumber, current.condition, current.editionPrinting, current.priceBought, current.dateBought,
-				current.setRarity, current.colorVariant, current.rarityUnsure, current.gamePlayCardUUID, current.uuid, current.passcode);
+		p.printRecord(current.getFolderName(), current.getQuantity(), current.getCardName(), current.getSetCode(), current.getSetName(),
+				current.getSetNumber(), current.getCondition(), current.getEditionPrinting(), current.getPriceBought(), current.getDateBought(),
+				current.getSetRarity(), current.getColorVariant(), current.getRarityUnsure(), current.getGamePlayCardUUID(), current.getUuid(), current.getPasscode());
 
 	}
 
@@ -608,21 +608,21 @@ public class CsvConnection {
 	}
 	
 	public static void writeUploadCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
-		String printing = current.editionPrinting;
+		String printing = current.getEditionPrinting();
 		
 		if(printing.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 			printing = Const.CARD_PRINTING_FOIL;
 		}
 		
-		String outputSetNumber = current.setNumber;
+		String outputSetNumber = current.getSetNumber();
 
-		if (!current.colorVariant.equalsIgnoreCase(Const.DEFAULT_COLOR_VARIANT)
-				&& !Const.setColorVariantUnsupportedDragonShield.contains(current.setName)) {
-			outputSetNumber += current.colorVariant;
+		if (!current.getColorVariant().equalsIgnoreCase(Const.DEFAULT_COLOR_VARIANT)
+				&& !Const.setColorVariantUnsupportedDragonShield.contains(current.getSetName())) {
+			outputSetNumber += current.getColorVariant();
 		}
 
-		p.printRecord(current.folderName, current.quantity,0, current.cardName, current.setCode, current.setName,
-				outputSetNumber, current.condition, printing, "English", current.priceBought, current.dateBought,
+		p.printRecord(current.getFolderName(), current.getQuantity(),0, current.getCardName(), current.getSetCode(), current.getSetName(),
+				outputSetNumber, current.getCondition(), printing, "English", current.getPriceBought(), current.getDateBought(),
 				0, 0, 0);
 
 	}

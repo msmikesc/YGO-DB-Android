@@ -33,14 +33,14 @@ public class ExportUnSyncedForUpload {
 
 		for (OwnedCard current : list) {
 
-			if (current.folderName.equals(Const.FOLDER_UNSYNCED)) {
+			if (current.getFolderName().equals(Const.FOLDER_UNSYNCED)) {
 				CsvConnection.writeUploadCardToCSV(p, current);
 
-				quantityCount += current.quantity;
+				quantityCount += current.getQuantity();
 
-				if (current.folderName.equals(Const.FOLDER_UNSYNCED)) {
+				if (current.getFolderName().equals(Const.FOLDER_UNSYNCED)) {
 					
-					current.folderName = Const.FOLDER_SYNC;
+					current.setFolderName(Const.FOLDER_SYNC);
 					
 					db.updateOwnedCardByUUID(current);
 				}

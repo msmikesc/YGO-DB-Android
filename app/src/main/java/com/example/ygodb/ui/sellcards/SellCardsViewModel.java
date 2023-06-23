@@ -32,7 +32,7 @@ public class SellCardsViewModel extends ViewModel {
     public void saveToDB(){
         for(OwnedCard current: cardsList){
 
-            AndroidUtil.getDBInstance().sellCards(current, current.sellQuantity, current.priceSold);
+            AndroidUtil.getDBInstance().sellCards(current, current.getSellQuantity(), current.getPriceSold());
 
         }
         keyToPosition.clear();
@@ -46,12 +46,12 @@ public class SellCardsViewModel extends ViewModel {
 
     public void addNewFromOwnedCard(OwnedCard current){
 
-        if(current.setNumber == null || current.setRarity == null ||
-                current.setName == null || current.cardName == null){
+        if(current.getSetNumber() == null || current.getSetRarity() == null ||
+                current.getSetName() == null || current.getCardName() == null){
             return;
         }
 
-        String key = current.uuid;
+        String key = current.getUuid();
 
         Integer position = keyToPosition.get(key);
 
@@ -62,51 +62,51 @@ public class SellCardsViewModel extends ViewModel {
         }
         if(sellingCard != null){
 
-            if(sellingCard.quantity > sellingCard.sellQuantity){
-                sellingCard.sellQuantity++;
+            if(sellingCard.getQuantity() > sellingCard.getSellQuantity()){
+                sellingCard.setSellQuantity(sellingCard.getSellQuantity() + 1);
             }
         }
         else{
             sellingCard = new OwnedCard();
             keyToPosition.put(key, cardsList.size());
             cardsList.add(sellingCard);
-            sellingCard.cardName = current.cardName;
-            sellingCard.dateBought = current.dateBought;
-            sellingCard.dateSold = sdf.format(new Date());
-            sellingCard.gamePlayCardUUID = current.gamePlayCardUUID;
-            sellingCard.setRarity = current.setRarity;
-            sellingCard.setName = current.setName;
-            sellingCard.quantity = current.quantity;
-            sellingCard.sellQuantity = 1;
-            sellingCard.rarityUnsure= 0;
-            sellingCard.setCode = current.setCode;
-            sellingCard.setNumber = current.setNumber;
-            sellingCard.colorVariant = current.colorVariant;
-            sellingCard.uuid = current.uuid;
-            sellingCard.passcode = current.passcode;
+            sellingCard.setCardName(current.getCardName());
+            sellingCard.setDateBought(current.getDateBought());
+            sellingCard.setDateSold(sdf.format(new Date()));
+            sellingCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
+            sellingCard.setSetRarity(current.getSetRarity());
+            sellingCard.setSetName(current.getSetName());
+            sellingCard.setQuantity(current.getQuantity());
+            sellingCard.setSellQuantity(1);
+            sellingCard.setRarityUnsure(0);
+            sellingCard.setSetCode(current.getSetCode());
+            sellingCard.setSetNumber(current.getSetNumber());
+            sellingCard.setColorVariant(current.getColorVariant());
+            sellingCard.setUuid(current.getUuid());
+            sellingCard.setPasscode(current.getPasscode());
 
-            sellingCard.priceBought = current.priceBought;
-            sellingCard.priceSold = getAPIPriceFromRarity(current.setRarity,
-                    current.mainSetCardSets, current.setName,
-                    current.gamePlayCardUUID, current.setNumber);
+            sellingCard.setPriceBought(current.getPriceBought());
+            sellingCard.setPriceSold(getAPIPriceFromRarity(current.getSetRarity(),
+                    current.getMainSetCardSets(), current.getSetName(),
+                    current.getGamePlayCardUUID(), current.getSetNumber()));
 
-            sellingCard.creationDate = current.creationDate;
+            sellingCard.setCreationDate(current.getCreationDate());
 
-            sellingCard.mainSetCardSets = current.mainSetCardSets;
+            sellingCard.setMainSetCardSets(current.getMainSetCardSets());
 
-            if(current.condition == null || current.condition.equals("")){
-                sellingCard.condition = "NearMint";
+            if(current.getCondition() == null || current.getCondition().equals("")){
+                sellingCard.setCondition("NearMint");
             }
             else{
-                sellingCard.condition = current.condition;
+                sellingCard.setCondition(current.getCondition());
             }
 
-            if(current.editionPrinting == null || current.editionPrinting.equals("")){
+            if(current.getEditionPrinting() == null || current.getEditionPrinting().equals("")){
                 //assume unlimited
-                sellingCard.editionPrinting = Const.CARD_PRINTING_UNLIMITED;
+                sellingCard.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
             }
             else{
-                sellingCard.editionPrinting = current.editionPrinting;
+                sellingCard.setEditionPrinting(current.getEditionPrinting());
             }
 
         }
@@ -116,27 +116,27 @@ public class SellCardsViewModel extends ViewModel {
     public void setAllPricesEstimate(){
         for(OwnedCard current: cardsList){
 
-            String rarity = (current.dropdownSelectedRarity == null) ? current.setRarity: current.dropdownSelectedRarity;
+            String rarity = (current.getDropdownSelectedRarity() == null) ? current.getSetRarity() : current.getDropdownSelectedRarity();
 
-            current.priceSold = getEstimatePriceFromRarity(rarity);
+            current.setPriceSold(getEstimatePriceFromRarity(rarity));
         }
     }
 
     public void setAllPricesAPI(){
         for(OwnedCard current: cardsList){
 
-            String rarity = (current.dropdownSelectedRarity == null) ? current.setRarity: current.dropdownSelectedRarity;
+            String rarity = (current.getDropdownSelectedRarity() == null) ? current.getSetRarity() : current.getDropdownSelectedRarity();
 
-            String setNumber = (current.dropdownSelectedSetNumber == null) ? current.setNumber: current.dropdownSelectedSetNumber;
+            String setNumber = (current.getDropdownSelectedSetNumber() == null) ? current.getSetNumber() : current.getDropdownSelectedSetNumber();
 
-            current.priceSold = getAPIPriceFromRarity(rarity, current.mainSetCardSets,
-                    current.setName, current.gamePlayCardUUID, setNumber);
+            current.setPriceSold(getAPIPriceFromRarity(rarity, current.getMainSetCardSets(),
+                    current.getSetName(), current.getGamePlayCardUUID(), setNumber));
         }
     }
 
     public void setAllPricesZero(){
         for(OwnedCard current: cardsList){
-            current.priceSold = Const.ZERO_PRICE_STRING;
+            current.setPriceSold(Const.ZERO_PRICE_STRING);
         }
     }
 
@@ -174,7 +174,7 @@ public class SellCardsViewModel extends ViewModel {
         }
 
         if(mainSetCardSets.size() == 1){
-            return mainSetCardSets.get(0).setPrice;
+            return mainSetCardSets.get(0).getSetPrice();
         }
 
         String[] rarities = rarity.split(", ");
@@ -186,9 +186,9 @@ public class SellCardsViewModel extends ViewModel {
         }
 
         for (CardSet mainSetCardSet : mainSetCardSets) {
-            if (mainSetCardSet.setRarity.equalsIgnoreCase(assumedRarity) &&
-                    mainSetCardSet.setNumber.equalsIgnoreCase(setNumber)) {
-                return mainSetCardSet.setPrice;
+            if (mainSetCardSet.getSetRarity().equalsIgnoreCase(assumedRarity) &&
+                    mainSetCardSet.getSetNumber().equalsIgnoreCase(setNumber)) {
+                return mainSetCardSet.getSetPrice();
             }
         }
 
@@ -198,7 +198,7 @@ public class SellCardsViewModel extends ViewModel {
 
     public void removeNewFromOwnedCard(OwnedCard current){
 
-        String key = current.uuid;
+        String key = current.getUuid();
 
         Integer position = keyToPosition.get(key);
         OwnedCard newCard = null;

@@ -72,37 +72,37 @@ public class RunAnalyzeCardsInSet {
 
 		for (AnalyzeData s : array) {
 
-			if (!printedSeparator && s.quantity >= 3) {
+			if (!printedSeparator && s.getQuantity() >= 3) {
 				printedSeparator = true;
 				YGOLogger.info("");
 				YGOLogger.info("----");
 				YGOLogger.info("");
 			}
 
-			YGOLogger.info(s.quantity + ":" + s.cardName + " " + s.getStringOfRarities());
+			YGOLogger.info(s.getQuantity() + ":" + s.getCardName() + " " + s.getStringOfRarities());
 
 			String massbuy = "";
 
-			if (s.quantity < 3) {
-				if (Const.CARD_TYPE_SKILL.equals(s.cardType)) {
-					if (s.quantity < 1) {
-						massbuy = (1) + " " + s.cardName;
+			if (s.getQuantity() < 3) {
+				if (Const.CARD_TYPE_SKILL.equals(s.getCardType())) {
+					if (s.getQuantity() < 1) {
+						massbuy = (1) + " " + s.getCardName();
 					} else {
 						massbuy = "";
 					}
 				} else {
 
-					massbuy = (3 - s.quantity) + " " + s.cardName;
+					massbuy = (3 - s.getQuantity()) + " " + s.getCardName();
 				}
 			}
 
 			String massbuy1 = "";
 
-			if (s.quantity < 1) {
-				massbuy1 = (1 - s.quantity) + " " + s.cardName;
+			if (s.getQuantity() < 1) {
+				massbuy1 = (1 - s.getQuantity()) + " " + s.getCardName();
 			}
 
-			p.printRecord(s.quantity, s.cardName, s.cardType, s.getStringOfRarities(), s.getStringOfSetNames(),
+			p.printRecord(s.getQuantity(), s.getCardName(), s.getCardType(), s.getStringOfRarities(), s.getStringOfSetNames(),
 					s.getStringOfSetNumbers(), massbuy, massbuy1);
 
 		}

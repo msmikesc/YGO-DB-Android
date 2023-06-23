@@ -30,19 +30,19 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 
 		for (OwnedCard card : cards) {
 			
-			String newSetName = Util.checkForTranslatedSetName(card.setName);
+			String newSetName = Util.checkForTranslatedSetName(card.getSetName());
 				
-			card.setName = newSetName;
+			card.setSetName(newSetName);
 
-			CardSet setIdentified = db.getFirstCardSetForCardInSet(card.cardName, newSetName);
+			CardSet setIdentified = db.getFirstCardSetForCardInSet(card.getCardName(), newSetName);
 
 			if (setIdentified == null) {
-				YGOLogger.info("Unknown setCode for card name and set: " + card.cardName + ":" + newSetName);
+				YGOLogger.info("Unknown setCode for card name and set: " + card.getCardName() + ":" + newSetName);
 				continue;
 			}
 
-			card.gamePlayCardUUID = setIdentified.gamePlayCardUUID;
-			card.setNumber = setIdentified.setNumber;
+			card.setGamePlayCardUUID(setIdentified.getGamePlayCardUUID());
+			card.setSetNumber(setIdentified.getSetNumber());
 
 			ArrayList<SetMetaData> metaData = db.getSetMetaDataFromSetName(newSetName);
 
@@ -50,10 +50,10 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 				YGOLogger.info("Unknown metaData for set: " + newSetName);
 				continue;
 			} else {
-				card.setCode = metaData.get(0).setCode;
+				card.setSetCode(metaData.get(0).getSetCode());
 			}
 
-			card.rarityUnsure = 0;
+			card.setRarityUnsure(0);
 
 			try{
 				db.updateOwnedCardByUUID(card);

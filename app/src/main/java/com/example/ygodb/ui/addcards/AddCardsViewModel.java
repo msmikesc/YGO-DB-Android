@@ -31,21 +31,21 @@ public class AddCardsViewModel extends ViewModel {
 
     public void saveToDB(){
         for(OwnedCard current: cardsList){
-            if(current.dropdownSelectedSetNumber != null && !current.dropdownSelectedSetNumber.equals("")){
-                current.setNumber = current.dropdownSelectedSetNumber;
+            if(current.getDropdownSelectedSetNumber() != null && !current.getDropdownSelectedSetNumber().equals("")){
+                current.setSetNumber(current.getDropdownSelectedSetNumber());
             }
-            if(current.dropdownSelectedRarity != null && !current.dropdownSelectedRarity.equals("")){
-                current.setRarity = current.dropdownSelectedRarity;
+            if(current.getDropdownSelectedRarity() != null && !current.getDropdownSelectedRarity().equals("")){
+                current.setSetRarity(current.getDropdownSelectedRarity());
             }
 
-            if(current.priceBought == null){
-                current.priceBought = Const.ZERO_PRICE_STRING;
+            if(current.getPriceBought() == null){
+                current.setPriceBought(Const.ZERO_PRICE_STRING);
             }
 
             OwnedCard existingRecord = AndroidUtil.getDBInstance().getExistingOwnedCardByObject(current);
 
             if(existingRecord != null){
-                existingRecord.quantity += current.quantity;
+                existingRecord.setQuantity(existingRecord.getQuantity() + current.getQuantity());
                 current = existingRecord;
             }
 
@@ -58,11 +58,11 @@ public class AddCardsViewModel extends ViewModel {
 
     public void invertAllEditions(){
         for(OwnedCard o : cardsList){
-            if(o.editionPrinting.equals(Const.CARD_PRINTING_FIRST_EDITION)){
-                o.editionPrinting = Const.CARD_PRINTING_UNLIMITED;
+            if(o.getEditionPrinting().equals(Const.CARD_PRINTING_FIRST_EDITION)){
+                o.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
             }
             else{
-                o.editionPrinting = Const.CARD_PRINTING_FIRST_EDITION;
+                o.setEditionPrinting(Const.CARD_PRINTING_FIRST_EDITION);
             }
         }
     }
@@ -74,12 +74,12 @@ public class AddCardsViewModel extends ViewModel {
 
     public void addNewFromOwnedCard(OwnedCard current){
 
-        if(current.setNumber == null || current.setRarity == null ||
-                current.setName == null || current.cardName == null){
+        if(current.getSetNumber() == null || current.getSetRarity() == null ||
+                current.getSetName() == null || current.getCardName() == null){
             return;
         }
 
-        String key = current.setNumber + current.setRarity;
+        String key = current.getSetNumber() + current.getSetRarity();
 
         Integer position = keyToPosition.get(key);
 
@@ -89,49 +89,49 @@ public class AddCardsViewModel extends ViewModel {
             newCard = cardsList.get(position);
         }
         if(newCard != null){
-            newCard.quantity++;
+            newCard.setQuantity(newCard.getQuantity() + 1);
         }
         else{
             newCard = new OwnedCard();
             keyToPosition.put(key, cardsList.size());
             cardsList.add(newCard);
-            newCard.cardName = current.cardName;
-            newCard.dateBought = sdf.format(new Date());
-            newCard.gamePlayCardUUID = current.gamePlayCardUUID;
-            newCard.setRarity = current.setRarity;
-            newCard.setName = current.setName;
-            newCard.quantity = 1;
-            newCard.rarityUnsure= 0;
-            newCard.setCode = current.setCode;
-            newCard.folderName = Const.FOLDER_UNSYNCED;
-            newCard.setNumber = current.setNumber;
-            newCard.colorVariant = "-1";
-            newCard.mainSetCardSets = current.mainSetCardSets;
-            newCard.passcode = current.passcode;
+            newCard.setCardName(current.getCardName());
+            newCard.setDateBought(sdf.format(new Date()));
+            newCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
+            newCard.setSetRarity(current.getSetRarity());
+            newCard.setSetName(current.getSetName());
+            newCard.setQuantity(1);
+            newCard.setRarityUnsure(0);
+            newCard.setSetCode(current.getSetCode());
+            newCard.setFolderName(Const.FOLDER_UNSYNCED);
+            newCard.setSetNumber(current.getSetNumber());
+            newCard.setColorVariant("-1");
+            newCard.setMainSetCardSets(current.getMainSetCardSets());
+            newCard.setPasscode(current.getPasscode());
 
-            newCard.priceBought = getAPIPriceFromRarity(current.setRarity,
-                    current.mainSetCardSets, current.setName,
-                    current.gamePlayCardUUID, current.setNumber);
+            newCard.setPriceBought(getAPIPriceFromRarity(current.getSetRarity(),
+                    current.getMainSetCardSets(), current.getSetName(),
+                    current.getGamePlayCardUUID(), current.getSetNumber()));
 
-            if(current.condition == null || current.condition.equals("")){
-                newCard.condition = "NearMint";
+            if(current.getCondition() == null || current.getCondition().equals("")){
+                newCard.setCondition("NearMint");
             }
             else{
-                newCard.condition = current.condition;
+                newCard.setCondition(current.getCondition());
             }
 
-            if(current.editionPrinting == null || current.editionPrinting.equals("")){
+            if(current.getEditionPrinting() == null || current.getEditionPrinting().equals("")){
                 //assume ots unlimited, everything else 1st
-                if(newCard.setName.contains("OTS")){
-                    newCard.editionPrinting = Const.CARD_PRINTING_UNLIMITED;
+                if(newCard.getSetName().contains("OTS")){
+                    newCard.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
                 }
                 else{
-                    newCard.editionPrinting = Const.CARD_PRINTING_FIRST_EDITION;
+                    newCard.setEditionPrinting(Const.CARD_PRINTING_FIRST_EDITION);
                 }
 
             }
             else{
-                newCard.editionPrinting = current.editionPrinting;
+                newCard.setEditionPrinting(current.getEditionPrinting());
             }
 
         }
@@ -141,27 +141,27 @@ public class AddCardsViewModel extends ViewModel {
     public void setAllPricesEstimate(){
         for(OwnedCard current: cardsList){
 
-            String rarity = (current.dropdownSelectedRarity == null) ? current.setRarity: current.dropdownSelectedRarity;
+            String rarity = (current.getDropdownSelectedRarity() == null) ? current.getSetRarity() : current.getDropdownSelectedRarity();
 
-            current.priceBought = getEstimatePriceFromRarity(rarity);
+            current.setPriceBought(getEstimatePriceFromRarity(rarity));
         }
     }
 
     public void setAllPricesAPI(){
         for(OwnedCard current: cardsList){
 
-            String rarity = (current.dropdownSelectedRarity == null) ? current.setRarity: current.dropdownSelectedRarity;
+            String rarity = (current.getDropdownSelectedRarity() == null) ? current.getSetRarity() : current.getDropdownSelectedRarity();
 
-            String setNumber = (current.dropdownSelectedSetNumber == null) ? current.setNumber: current.dropdownSelectedSetNumber;
+            String setNumber = (current.getDropdownSelectedSetNumber() == null) ? current.getSetNumber() : current.getDropdownSelectedSetNumber();
 
-            current.priceBought = getAPIPriceFromRarity(rarity, current.mainSetCardSets,
-                    current.setName, current.gamePlayCardUUID, setNumber);
+            current.setPriceBought(getAPIPriceFromRarity(rarity, current.getMainSetCardSets(),
+                    current.getSetName(), current.getGamePlayCardUUID(), setNumber));
         }
     }
 
     public void setAllPricesZero(){
         for(OwnedCard current: cardsList){
-            current.priceBought = Const.ZERO_PRICE_STRING;
+            current.setPriceBought(Const.ZERO_PRICE_STRING);
         }
     }
 
@@ -199,7 +199,7 @@ public class AddCardsViewModel extends ViewModel {
         }
 
         if(mainSetCardSets.size() == 1){
-            return mainSetCardSets.get(0).setPrice;
+            return mainSetCardSets.get(0).getSetPrice();
         }
 
         String[] rarities = rarity.split(", ");
@@ -211,9 +211,9 @@ public class AddCardsViewModel extends ViewModel {
         }
 
         for (CardSet mainSetCardSet : mainSetCardSets) {
-            if (mainSetCardSet.setRarity.equalsIgnoreCase(assumedRarity) &&
-                    mainSetCardSet.setNumber.equalsIgnoreCase(setNumber)) {
-                return mainSetCardSet.setPrice;
+            if (mainSetCardSet.getSetRarity().equalsIgnoreCase(assumedRarity) &&
+                    mainSetCardSet.getSetNumber().equalsIgnoreCase(setNumber)) {
+                return mainSetCardSet.getSetPrice();
             }
         }
 
@@ -223,7 +223,7 @@ public class AddCardsViewModel extends ViewModel {
 
     public void removeNewFromOwnedCard(OwnedCard current){
 
-        String key = current.setNumber + current.setRarity;
+        String key = current.getSetNumber() + current.getSetRarity();
 
         Integer position = keyToPosition.get(key);
         OwnedCard newCard = null;

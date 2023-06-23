@@ -81,17 +81,17 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 				OwnedCard card = list.get(0);
 
-				if (!colorCode.equalsIgnoreCase(list.get(0).colorVariant)
-						&& !Const.setColorVariantUnsupportedDragonShield.contains(card.setName)) {
+				if (!colorCode.equalsIgnoreCase(list.get(0).getColorVariant())
+						&& !Const.setColorVariantUnsupportedDragonShield.contains(card.getSetName())) {
 					YGOLogger.info(
-							"Color Code Mismatch on: " + card.cardName + " " + card.setNumber + " " + card.setRarity
-									+ " " + card.colorVariant + " " + card.priceBought + " " + card.dateBought);
+							"Color Code Mismatch on: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity()
+									+ " " + card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
 				}
 
-				if (card.quantity != Integer.parseInt(quantity)) {
+				if (card.getQuantity() != Integer.parseInt(quantity)) {
 					YGOLogger.info(
-							"Quantity Mismatch on: " + card.cardName + " " + card.setNumber + " " + card.setRarity + " "
-									+ card.colorVariant + " " + card.priceBought + " " + card.dateBought);
+							"Quantity Mismatch on: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity() + " "
+									+ card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
 				}
 
 				databaseList.remove(key);
@@ -108,10 +108,10 @@ public class AnalyzeCompareToDragonShieldCSV {
 						foundMatch = true;
 						list.remove(i);
 
-						if (card.quantity != Integer.parseInt(quantity)) {
-							YGOLogger.info("Quantity Mismatch on: " + card.cardName + " " + card.setNumber + " "
-									+ card.setRarity + " " + card.colorVariant + " " + card.priceBought + " "
-									+ card.dateBought);
+						if (card.getQuantity() != Integer.parseInt(quantity)) {
+							YGOLogger.info("Quantity Mismatch on: " + card.getCardName() + " " + card.getSetNumber() + " "
+									+ card.getSetRarity() + " " + card.getColorVariant() + " " + card.getPriceBought() + " "
+									+ card.getDateBought());
 						}
 
 						if (list.isEmpty()) {
@@ -135,10 +135,10 @@ public class AnalyzeCompareToDragonShieldCSV {
 		for (ArrayList<OwnedCard> rarityList : databaseList.values()) {
 			for (OwnedCard card : rarityList) {
 
-				if (!card.folderName.equals(Const.FOLDER_MANUAL)) {
+				if (!card.getFolderName().equals(Const.FOLDER_MANUAL)) {
 					YGOLogger.info(
-							"Card in DB but not in CSV: " + card.cardName + " " + card.setNumber + " " + card.setRarity
-									+ " " + card.colorVariant + " " + card.priceBought + " " + card.dateBought);
+							"Card in DB but not in CSV: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity()
+									+ " " + card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
 				}
 			}
 		}

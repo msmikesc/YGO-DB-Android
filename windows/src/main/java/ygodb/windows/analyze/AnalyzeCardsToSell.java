@@ -41,28 +41,28 @@ public class AnalyzeCardsToSell {
 		 
 		 for(OwnedCard card: cards) {
 			 
-			 ArrayList<String> priceList = priceMap.get(card.cardName);
+			 ArrayList<String> priceList = priceMap.get(card.getCardName());
 			 
-			 Integer count = countMap.get(card.cardName);
+			 Integer count = countMap.get(card.getCardName());
 
-			 ArrayList<OwnedCard> cardList = cardMap.computeIfAbsent(card.cardName, k -> new ArrayList<>());
+			 ArrayList<OwnedCard> cardList = cardMap.computeIfAbsent(card.getCardName(), k -> new ArrayList<>());
 
 			 cardList.add(card);
 			 
-			 if(priceMap.get(card.cardName) == null) {
+			 if(priceMap.get(card.getCardName()) == null) {
 				 priceList = new ArrayList<>();
-				 priceMap.put(card.cardName, priceList);
+				 priceMap.put(card.getCardName(), priceList);
 			 }
 			 
 			 if(count == null) {
 				 count = 0;
 			 }
 			 
-			 count += card.quantity;
-			 countMap.put(card.cardName, count);
+			 count += card.getQuantity();
+			 countMap.put(card.getCardName(), count);
 			 
-			 if(card.priceBought != null) {
-				 priceList.add(card.priceBought);
+			 if(card.getPriceBought() != null) {
+				 priceList.add(card.getPriceBought());
 			 }
 		 }
 		 
@@ -103,7 +103,7 @@ public class AnalyzeCardsToSell {
 
 				for (OwnedCard card : cardMap.get(cardName)) {
 
-					p.printRecord(card.quantity, card.cardName, card.setRarity, card.setName, card.setCode, card.priceBought);
+					p.printRecord(card.getQuantity(), card.getCardName(), card.getSetRarity(), card.getSetName(), card.getSetCode(), card.getPriceBought());
 				}
 
 			}

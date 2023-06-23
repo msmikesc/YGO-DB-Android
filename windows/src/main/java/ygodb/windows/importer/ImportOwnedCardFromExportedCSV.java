@@ -46,28 +46,28 @@ public class ImportOwnedCardFromExportedCSV {
 
 			OwnedCard card = CsvConnection.getOwnedCardFromExportedCSV(current, db);
 			
-			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(card.setNumber, card.priceBought,
-					card.dateBought, card.folderName, card.condition, card.editionPrinting, db);
+			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(card.getSetNumber(), card.getPriceBought(),
+					card.getDateBought(), card.getFolderName(), card.getCondition(), card.getEditionPrinting(), db);
 
 			for (OwnedCard existingCard : ownedRarities) {
-				if (Util.doesCardExactlyMatchWithColor(card.folderName, card.cardName, card.setCode, card.setNumber,
-						card.condition, card.editionPrinting, card.priceBought, card.dateBought, card.colorVariant,
+				if (Util.doesCardExactlyMatchWithColor(card.getFolderName(), card.getCardName(), card.getSetCode(), card.getSetNumber(),
+						card.getCondition(), card.getEditionPrinting(), card.getPriceBought(), card.getDateBought(), card.getColorVariant(),
 						existingCard)) {
 					// exact match found
-					if (existingCard.quantity == card.quantity && existingCard.rarityUnsure == card.rarityUnsure
-							&& existingCard.setRarity.equals(card.setRarity)) {
+					if (existingCard.getQuantity() == card.getQuantity() && existingCard.getRarityUnsure() == card.getRarityUnsure()
+							&& existingCard.getSetRarity().equals(card.getSetRarity())) {
 						// nothing to update
 						card = null;
 					} else {
 						// something to update
-						card.uuid = existingCard.uuid;
+						card.setUuid(existingCard.getUuid());
 					}
 					break;
 				}
 			}
 
 			if (card != null) {
-				count += card.quantity;
+				count += card.getQuantity();
 				db.upsertOwnedCardBatch(card);
 			}
 		}

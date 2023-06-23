@@ -34,7 +34,7 @@ public class ExportAllOwnedCardToCSV {
 		
 		for(OwnedCard current : list) {
 			
-			quantityCount += current.quantity;
+			quantityCount += current.getQuantity();
 
 			CsvConnection.writeOwnedCardToCSV(p,current);
 

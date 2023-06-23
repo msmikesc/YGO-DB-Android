@@ -9,19 +9,19 @@ public class OwnedCardNameComparator implements Comparator<OwnedCard> {
     @Override
     public int compare(OwnedCard ownedCard, OwnedCard t1) {
 
-        int val = ownedCard.cardName.compareTo(t1.cardName);
+        int val = ownedCard.getCardName().compareTo(t1.getCardName());
 
         if(val!=0){
             return val;
         }
 
-        val = ownedCard.quantity - t1.quantity;
+        val = ownedCard.getQuantity() - t1.getQuantity();
 
         if(val!=0){
             return val;
         }
 
-        val = ownedCard.setNumber.compareTo(t1.setNumber);
+        val = ownedCard.getSetNumber().compareTo(t1.getSetNumber());
 
         return val;
     }

@@ -70,9 +70,9 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             sellButton.setOnClickListener(view -> onSellButtonClick(current));
         }
 
-        viewHolder.title.setText(current.cardName);
+        viewHolder.title.setText(current.getCardName());
 
-        if(current.setNumber == null || current.setNumber.trim().equals("")) {
+        if(current.getSetNumber() == null || current.getSetNumber().trim().equals("")) {
             viewHolder.setCode.setVisibility(View.GONE);
             viewHolder.plusButton.setVisibility(View.GONE);
             viewHolder.cardRarity.setVisibility(View.GONE);
@@ -80,16 +80,16 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         }
         else{
 
-            String setRarityText = current.setRarity;
+            String setRarityText = current.getSetRarity();
 
-            if(current.colorVariant != null && !current.colorVariant.equals("") && !current.colorVariant.equals("-1")){
-                if(current.colorVariant.equalsIgnoreCase("a")){
+            if(current.getColorVariant() != null && !current.getColorVariant().equals("") && !current.getColorVariant().equals("-1")){
+                if(current.getColorVariant().equalsIgnoreCase("a")){
                     setRarityText = "Alt Art " + setRarityText;
                     viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold));
                 }
                 else{
-                    setRarityText = current.colorVariant.toUpperCase(Locale.ROOT) + " " + setRarityText;
-                    switch (current.colorVariant.toUpperCase(Locale.ROOT)) {
+                    setRarityText = current.getColorVariant().toUpperCase(Locale.ROOT) + " " + setRarityText;
+                    switch (current.getColorVariant().toUpperCase(Locale.ROOT)) {
                         case "R" ->
                                 viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson));
                         case "G" ->
@@ -107,7 +107,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
                 viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
             }
 
-            viewHolder.setCode.setText(current.setNumber);
+            viewHolder.setCode.setText(current.getSetNumber());
             viewHolder.cardRarity.setText(setRarityText);
             viewHolder.setCode.setVisibility(View.VISIBLE);
             viewHolder.cardRarity.setVisibility(View.VISIBLE);
@@ -122,23 +122,23 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             viewHolder.sellButton.setVisibility(View.VISIBLE);
         }
 
-        if(current.multiListSetNames == null || current.multiListSetNames.equals("")){
-            viewHolder.setName.setText(current.setName);
+        if(current.getMultiListSetNames() == null || current.getMultiListSetNames().equals("")){
+            viewHolder.setName.setText(current.getSetName());
         }
         else{
-            viewHolder.setName.setText(current.multiListSetNames);
+            viewHolder.setName.setText(current.getMultiListSetNames());
         }
 
-        if(current.priceBought != null) {
-            double price = Double.parseDouble(current.priceBought);
+        if(current.getPriceBought() != null) {
+            double price = Double.parseDouble(current.getPriceBought());
             viewHolder.cardPrice.setText("$" + String.format(Locale.ROOT,"%.2f", price));
         }
-        viewHolder.cardDate.setText(current.dateBought);
+        viewHolder.cardDate.setText(current.getDateBought());
 
-        viewHolder.cardQuantity.setText(String.valueOf(current.quantity));
+        viewHolder.cardQuantity.setText(String.valueOf(current.getQuantity()));
 
         try {
-            if(current.editionPrinting.contains("1st")){
+            if(current.getEditionPrinting().contains("1st")){
                 // get input stream
                 InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
                 // load image as Drawable
@@ -157,7 +157,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
         try {
             // get input stream
-            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+current.passcode+ ".jpg");
+            InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/"+ current.getPasscode() + ".jpg");
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView

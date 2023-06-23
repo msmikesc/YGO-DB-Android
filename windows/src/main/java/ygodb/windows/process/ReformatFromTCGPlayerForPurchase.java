@@ -44,10 +44,10 @@ public class ReformatFromTCGPlayerForPurchase {
 
 			if (card != null) {
 
-				String key = card.cardName;
+				String key = card.getCardName();
 
 				if (map.containsKey(key)) {
-					map.get(key).quantity += card.quantity;
+					map.get(key).setQuantity(map.get(key).getQuantity() + card.getQuantity());
 				} else {
 
 					map.put(key, card);
@@ -59,7 +59,7 @@ public class ReformatFromTCGPlayerForPurchase {
 		parser.close();
 
 		for (OwnedCard card : map.values()) {
-			YGOLogger.info(card.quantity + " " + card.cardName);
+			YGOLogger.info(card.getQuantity() + " " + card.getCardName());
 		}
 
 	}
