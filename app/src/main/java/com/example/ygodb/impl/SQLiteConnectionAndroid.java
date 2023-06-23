@@ -274,7 +274,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] params = new String[]{gamePlayCardUUID};
 
-
 		Cursor rs = connection.rawQuery(setQuery, params);
 
 		String[] col = rs.getColumnNames();
@@ -1411,11 +1410,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setName = card.setName;
 		String setRarity = card.setRarity;
 		
-		String UUID = card.uuid;
+		String uuid = card.uuid;
 		int passcode = card.passcode;
 
-		if(UUID == null || UUID.equals("")) {
-			UUID = java.util.UUID.randomUUID().toString();
+		if(uuid == null || uuid.equals("")) {
+			uuid = java.util.UUID.randomUUID().toString();
 		}
 
 		SQLiteDatabase connection = this.getInstance();
@@ -1449,7 +1448,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		setStringOrNull(batchUpsertOwnedCard,13, normalizedPrice);
 		setIntegerOrNull(batchUpsertOwnedCard,14, rarityUnsure);
 		
-		setStringOrNull(batchUpsertOwnedCard,15, UUID);
+		setStringOrNull(batchUpsertOwnedCard,15, uuid);
 		setIntegerOrNull(batchUpsertOwnedCard, 16, passcode);
 		
 		//conflict fields
@@ -1459,7 +1458,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		setStringOrNull(batchUpsertOwnedCard,19, setRarity);
 		setStringOrNull(batchUpsertOwnedCard,20, colorVariant);
 		
-		setStringOrNull(batchUpsertOwnedCard,21, UUID);
+		setStringOrNull(batchUpsertOwnedCard,21, uuid);
 
 		batchUpsertOwnedCard.execute();
 	}
