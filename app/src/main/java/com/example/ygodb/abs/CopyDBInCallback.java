@@ -16,9 +16,18 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import ygodb.commonlibrary.utility.YGOLogger;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 
 public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> {
@@ -67,11 +76,23 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
 
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+
+				File db = AndroidUtil.getDBInstance().getDatabaseFileReference();
+
+				YGOLogger.error("File modified time:" + dateFormat.format(new Date(db.lastModified())));
+				YGOLogger.error("File hashcode:" + getFileHash(db));
+
 				InputStream fileInputStream = activity.getContentResolver().openInputStream(chosenURI);
 
 				AndroidUtil.getDBInstance().copyDataBaseFromURI(fileInputStream);
 
 				fileInputStream.close();
+
+				db = AndroidUtil.getDBInstance().getDatabaseFileReference();
+
+				YGOLogger.error("File modified time:" + dateFormat.format(new Date(db.lastModified())));
+				YGOLogger.error("File hashcode:" + getFileHash(db));
 
 				SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
@@ -98,10 +119,27 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 				viewCardsSummaryViewModel.refreshViewDBUpdate();
 
 				view.post(() -> Snackbar.make(view, "DB Imported", BaseTransientBottomBar.LENGTH_LONG).show());
-			} catch (IOException e) {
+			} catch (Exception e) {
 				YGOLogger.logException(e);
 				view.post(() -> Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show());
 			}
 		});
+	}
+
+	public static String getFileHash(File file) throws NoSuchAlgorithmException, IOException {
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		byte[] buffer = new byte[4096];
+		try (FileInputStream fis = new FileInputStream(file);
+			 DigestInputStream dis = new DigestInputStream(fis, md)) {
+			while (dis.read(buffer) != -1) {
+				// Reading the file content to compute the hash
+			}
+			byte[] hashBytes = md.digest();
+			StringBuilder sb = new StringBuilder();
+			for (byte hashByte : hashBytes) {
+				sb.append(Integer.toString((hashByte & 0xff) + 0x100, 16).substring(1));
+			}
+			return sb.toString();
+		}
 	}
 }

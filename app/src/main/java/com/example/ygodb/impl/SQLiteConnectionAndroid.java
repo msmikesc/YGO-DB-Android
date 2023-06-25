@@ -48,6 +48,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	private boolean createDatabase = false;
 	private boolean upgradeDatabase = false;
 
+	public File getDatabaseFileReference(){
+		return new File(cont.getFilesDir(), DB_NAME);
+	}
+
 	public SQLiteConnectionAndroid() {
 		super(AndroidUtil.getAppContext(),
 				AndroidUtil.getAppContext().getFilesDir().getAbsolutePath() + "/" + SQLiteConnectionAndroid.DB_NAME,
@@ -117,7 +121,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		/*
 		 * Open the empty db in internal storage as the output stream.
 		 */
-		File output = new File(cont.getFilesDir(), DB_NAME);
+		File output = getDatabaseFileReference();
 		try {
 			File parent = output.getParentFile();
 
@@ -156,7 +160,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		/*
 		 * Open the database in the internal folder as the input stream.
 		 */
-		File input = new File(cont.getFilesDir(), DB_NAME);
+		File input = getDatabaseFileReference();
 		InputStream myInput = new FileInputStream(input);
 
 
