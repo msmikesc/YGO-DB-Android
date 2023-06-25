@@ -1,0 +1,26 @@
+<configuration>
+    <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
+        <tagEncoder>
+            <pattern>%logger{12}</pattern>
+        </tagEncoder>
+        <encoder>
+            <pattern>[%-20thread] %msg</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/sdcard/Android/data/com.example.ygodb/files/ygodb.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="ygodb.commonlibrary.utility" level="ERROR">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="logcat" />
+    </root>
+
+</configuration>

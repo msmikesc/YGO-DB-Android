@@ -23,7 +23,8 @@ public class YGOLogger {
 		logger.error(input);
 	}
 
-	public static void logException(Exception e){
+	public static void logException(Throwable e){
+
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);

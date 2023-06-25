@@ -4,18 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.ygodb.MainActivity;
-import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
+import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,49 +64,44 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 			return;
 		}
 
-		try (InputStream fileInputStream = activity.getContentResolver().openInputStream(chosenURI)) {
-			if (fileInputStream == null) {
-				Snackbar.make(view, "Error: InputStream Null", BaseTransientBottomBar.LENGTH_LONG).show();
-				return;
+		Executors.newSingleThreadExecutor().execute(() -> {
+			try {
+
+				InputStream fileInputStream = activity.getContentResolver().openInputStream(chosenURI);
+
+				AndroidUtil.getDBInstance().copyDataBaseFromURI(fileInputStream);
+
+				fileInputStream.close();
+
+				SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+
+				SharedPreferences.Editor editor = prefs.edit();
+
+				editor.putString("pref_db_location", chosenURI.toString());
+
+				editor.apply();
+
+				ViewCardSetViewModel viewCardSetViewModel =
+						new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
+
+				ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+				viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
+
+				viewCardSetViewModel.refreshViewDBUpdate();
+
+				ViewCardsViewModel viewCardsViewModel =
+						new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
+				viewCardsViewModel.refreshViewDBUpdate();
+
+				ViewCardsSummaryViewModel viewCardsSummaryViewModel =
+						new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
+				viewCardsSummaryViewModel.refreshViewDBUpdate();
+
+				view.post(() -> Snackbar.make(view, "DB Imported", BaseTransientBottomBar.LENGTH_LONG).show());
+			} catch (IOException e) {
+				YGOLogger.logException(e);
+				view.post(() -> Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show());
 			}
-
-            Executors.newSingleThreadExecutor().execute(() -> {
-				try {
-					AndroidUtil.getDBInstance().copyDataBaseFromURI(fileInputStream);
-
-					fileInputStream.close();
-
-					SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-
-					SharedPreferences.Editor editor = prefs.edit();
-
-					editor.putString("pref_db_location", chosenURI.toString());
-
-					editor.apply();
-
-					ViewCardSetViewModel viewCardSetViewModel =
-							new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
-
-					ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
-					viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
-
-					viewCardSetViewModel.refreshViewDBUpdate();
-
-					ViewCardsViewModel viewCardsViewModel =
-							new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
-					viewCardsViewModel.refreshViewDBUpdate();
-
-					ViewCardsSummaryViewModel viewCardsSummaryViewModel =
-							new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
-					viewCardsSummaryViewModel.refreshViewDBUpdate();
-
-					view.post(() -> Snackbar.make(view, "DB Imported", BaseTransientBottomBar.LENGTH_LONG).show());
-				} catch (IOException e) {
-					view.post(() -> Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show());
-				}
-			});
-		} catch (IOException e) {
-			Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
-		}
+		});
 	}
 }
