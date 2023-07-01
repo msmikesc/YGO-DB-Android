@@ -151,4 +151,7 @@ public class SQLConst {
 	public static final String UPDATE_CARD_SET_PRICE =
 			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
 			+ " where setNumber = ?";
+
+	public static final String GET_NEW_LOWEST_PASSCODE =
+			"select min(cast(passcode as INTEGER)) from gamePlayCard";
 }

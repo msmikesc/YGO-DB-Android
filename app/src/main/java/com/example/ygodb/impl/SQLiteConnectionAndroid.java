@@ -5,8 +5,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-
 import com.example.ygodb.abs.AndroidUtil;
+import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.GamePlayCard;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.FileHelper;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.constant.SQLConst;
+import ygodb.commonlibrary.utility.Util;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,18 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
-import ygodb.commonlibrary.bean.CardSet;
-import ygodb.commonlibrary.bean.GamePlayCard;
-import ygodb.commonlibrary.bean.OwnedCard;
-import ygodb.commonlibrary.bean.SetMetaData;
-import ygodb.commonlibrary.connection.FileHelper;
-import ygodb.commonlibrary.connection.SQLiteConnection;
-import ygodb.commonlibrary.constant.SQLConst;
-import ygodb.commonlibrary.utility.Util;
-import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.utility.YGOLogger;
 
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
 
@@ -1436,5 +1434,20 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			statement.bindString(2, setNumber);
 			return statement.executeUpdateDelete();
 		}
+	}
+
+	@Override
+	public int getNewLowestPasscode() {
+		SQLiteDatabase connection = this.getInstance();
+
+		String query = SQLConst.GET_NEW_LOWEST_PASSCODE;
+
+		try (Cursor rs = connection.rawQuery(query, null)) {
+			if(rs.moveToNext()){
+				int currentLowest = rs.getInt(0);
+				return currentLowest - 1;
+			}
+		}
+		return -1;
 	}
 }

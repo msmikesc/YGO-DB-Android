@@ -526,15 +526,22 @@ public class CsvConnection {
 		name = Util.checkForTranslatedCardName(name);
 		passcode = Util.checkForTranslatedPasscode(passcode);
 
+		if(passcode == -1){
+			passcode = db.getNewLowestPasscode();
+		}
+
 		gamePlayCard.setCardName(name);
 		gamePlayCard.setCardType(type);
 		gamePlayCard.setArchetype(archetype);
 		gamePlayCard.setPasscode(passcode);
 
-		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+		gamePlayCard.setGamePlayCardUUID(db.getGamePlayCardUUIDFromPasscode(passcode));
 
-		gamePlayCard.setGamePlayCardUUID(uuidAndName.getKey());
-		gamePlayCard.setCardName(uuidAndName.getValue());
+		if (gamePlayCard.getGamePlayCardUUID() == null) {
+			Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
+			gamePlayCard.setGamePlayCardUUID(uuidAndName.getKey());
+			gamePlayCard.setCardName(uuidAndName.getValue());
+		}
 
 		gamePlayCard.setDesc(lore);
 		gamePlayCard.setAttribute(attribute);
@@ -584,6 +591,7 @@ public class CsvConnection {
 			newGPC.setCardName(name);
 			newGPC.setGamePlayCardUUID(gamePlayCardUUID);
 			newGPC.setArchetype(Const.ARCHETYPE_AUTOGENERATE);
+			newGPC.setPasscode(db.getNewLowestPasscode());
 			db.replaceIntoGamePlayCard(newGPC);
 
 		}

@@ -1225,4 +1225,20 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
+	@Override
+	public int getNewLowestPasscode() throws SQLException {
+		Connection connection = this.getInstance();
+
+		String query = SQLConst.GET_NEW_LOWEST_PASSCODE;
+
+		try (PreparedStatement statement = connection.prepareStatement(query);
+			 ResultSet rarities = statement.executeQuery()) {
+			if(rarities.next()){
+				int currentLowest = rarities.getInt(0);
+				return currentLowest - 1;
+			}
+		}
+		return -1;
+	}
+
 }

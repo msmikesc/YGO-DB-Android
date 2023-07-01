@@ -111,4 +111,6 @@ public interface SQLiteConnection {
     int getUpdatedRowCount() throws SQLException;
 
     int updateCardSetPrice(String setNumber, String price) throws SQLException;
+
+    int getNewLowestPasscode() throws SQLException;
 }
