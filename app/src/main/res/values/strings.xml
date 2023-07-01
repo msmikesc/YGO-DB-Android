@@ -16,4 +16,5 @@
     <string name="menu_viewCardSet">View Card Sets</string>
     <string name="menu_addCards">Add Cards</string>
     <string name="menu_sellCards">Sell Cards</string>
+    <string name="menu_soldCards">Sold Cards</string>
 </resources>

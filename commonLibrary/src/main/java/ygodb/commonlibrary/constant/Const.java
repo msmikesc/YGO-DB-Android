@@ -36,7 +36,9 @@ public class Const {
     public static final String CONDITION = "condition";
     public static final String EDITION_PRINTING = "editionPrinting";
     public static final String DATE_BOUGHT = "dateBought";
+    public static final String DATE_SOLD = "dateSold";
     public static final String PRICE_BOUGHT = "priceBought";
+    public static final String PRICE_SOLD = "priceSold";
     public static final String CREATION_DATE = "creationDate";
     public static final String MODIFICATION_DATE = "modificationDate";
     public static final String UUID = "UUID";

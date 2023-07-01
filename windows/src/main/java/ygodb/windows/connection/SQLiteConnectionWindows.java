@@ -373,6 +373,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public ArrayList<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public ArrayList<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch) {
 		throw new UnsupportedOperationException();
 	}

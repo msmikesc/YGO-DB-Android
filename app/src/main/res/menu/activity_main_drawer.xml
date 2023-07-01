@@ -25,5 +25,9 @@
             android:id="@+id/nav_sellCards"
             android:icon="@drawable/dollar_sign"
             android:title="@string/menu_sellCards" />
+        <item
+            android:id="@+id/nav_soldCards"
+            android:icon="@drawable/dollar_sign"
+            android:title="@string/menu_soldCards" />
     </group>
 </menu>

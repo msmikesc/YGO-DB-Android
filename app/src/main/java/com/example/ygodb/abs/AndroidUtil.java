@@ -8,7 +8,14 @@ import android.provider.OpenableColumns;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.lifecycle.ViewModelProvider;
 import com.example.ygodb.impl.SQLiteConnectionAndroid;
+import com.example.ygodb.ui.viewSoldCards.ViewSoldCardsViewModel;
+import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
+import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
+import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
+
+import java.util.ArrayList;
 
 public class AndroidUtil {
 
@@ -63,6 +70,28 @@ public class AndroidUtil {
             }
         }
         return result;
+    }
+
+    public static void updateViewsAfterDBLoad(){
+        ViewCardSetViewModel viewCardSetViewModel =
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
+
+        ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+        viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
+
+        viewCardSetViewModel.refreshViewDBUpdate();
+
+        ViewCardsViewModel viewCardsViewModel =
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
+        viewCardsViewModel.refreshViewDBUpdate();
+
+        ViewCardsSummaryViewModel viewCardsSummaryViewModel =
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
+        viewCardsSummaryViewModel.refreshViewDBUpdate();
+
+        ViewSoldCardsViewModel viewSoldCardsViewModel =
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewSoldCardsViewModel.class);
+        viewSoldCardsViewModel.refreshViewDBUpdate();
     }
 
 

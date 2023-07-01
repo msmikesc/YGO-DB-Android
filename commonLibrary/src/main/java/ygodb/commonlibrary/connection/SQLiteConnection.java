@@ -43,7 +43,9 @@ public interface SQLiteConnection {
 
     ArrayList<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch);
 
-    ArrayList<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch);
+	ArrayList<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch);
+
+	ArrayList<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch);
 
     ArrayList<OwnedCard> getAllOwnedCardsWithoutSetNumber() throws SQLException;
 

@@ -7,11 +7,7 @@ import android.net.Uri;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProvider;
 import com.example.ygodb.MainActivity;
-import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
-import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
-import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import ygodb.commonlibrary.utility.YGOLogger;
@@ -25,7 +21,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Executors;
@@ -102,21 +97,7 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 
 				editor.apply();
 
-				ViewCardSetViewModel viewCardSetViewModel =
-						new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
-
-				ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
-				viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
-
-				viewCardSetViewModel.refreshViewDBUpdate();
-
-				ViewCardsViewModel viewCardsViewModel =
-						new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
-				viewCardsViewModel.refreshViewDBUpdate();
-
-				ViewCardsSummaryViewModel viewCardsSummaryViewModel =
-						new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
-				viewCardsSummaryViewModel.refreshViewDBUpdate();
+				AndroidUtil.updateViewsAfterDBLoad();
 
 				view.post(() -> Snackbar.make(view, "DB Imported", BaseTransientBottomBar.LENGTH_LONG).show());
 			} catch (Exception e) {

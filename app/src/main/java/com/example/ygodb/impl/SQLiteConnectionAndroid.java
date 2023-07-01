@@ -563,6 +563,40 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		}
 	}
 
+	@Override
+	public ArrayList<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
+		SQLiteDatabase connection = this.getInstance();
+
+		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID, Const.QUANTITY, Const.CARD_NAME, Const.SET_NUMBER,
+				Const.SET_NAME, Const.SET_RARITY, Const.SET_RARITY_COLOR_VARIANT, Const.EDITION_PRINTING,
+				Const.DATE_SOLD + " as " + Const.DATE_BOUGHT, Const.PRICE_SOLD + " as " +  Const.PRICE_BOUGHT,
+				Const.UUID, Const.SET_CODE, "'Sold Cards' as " + Const.FOLDER_NAME, "0 as " + Const.RARITY_UNSURE,
+				Const.CONDITION, Const.CREATION_DATE, Const.MODIFICATION_DATE, Const.PASSCODE};
+
+		String selection = null;
+		String[] selectionArgs = null;
+
+		if (cardNameSearch != null && !cardNameSearch.equals("")) {
+			selection = "upper(cardName) like upper(?)";
+			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
+		}
+
+		try (Cursor rs = connection.query("soldCards", columns, selection, selectionArgs,
+				null, null, orderBy, offset + "," + limit)) {
+
+			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			String[] col = rs.getColumnNames();
+
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, col, current);
+				cardsInSetList.add(current);
+			}
+
+			return cardsInSetList;
+		}
+	}
+
 	private void getAllOwnedCardFieldsFromRS(Cursor rs, String[] col, OwnedCard current) {
 		current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
 		current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));

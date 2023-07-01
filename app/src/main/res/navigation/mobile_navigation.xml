@@ -35,4 +35,10 @@
         android:label="@string/menu_sellCards"
         tools:layout="@layout/fragment_sellcards" />
 
+    <fragment
+            android:id="@+id/nav_soldCards"
+            android:name="com.example.ygodb.ui.viewSoldCards.ViewSoldCardsFragment"
+            android:label="@string/menu_soldCards"
+            tools:layout="@layout/fragment_soldcards" />
+
 </navigation>
