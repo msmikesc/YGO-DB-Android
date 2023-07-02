@@ -122,12 +122,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             viewHolder.sellButton.setVisibility(View.VISIBLE);
         }
 
-        if(current.getMultiListSetNames() == null || current.getMultiListSetNames().equals("")){
-            viewHolder.setName.setText(current.getSetName());
-        }
-        else{
-            viewHolder.setName.setText(current.getMultiListSetNames());
-        }
+        viewHolder.setName.setText(current.getSetName());
 
         if(current.getPriceBought() != null) {
             double price = Double.parseDouble(current.getPriceBought());

@@ -16,33 +16,30 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	private int quantity;
 	private String cardName;
 	private Set<String> setNumber;
-	private Set<String> setName;
+	private Set<String> setNames;
 	private Set<String> setRarities;
 	private String cardType;
-	private BigDecimal cardPriceAverage;
-	private String mainSetName;
-	private String mainSetCode;
+	private BigDecimal cardPriceSummary;
 	private int passcode;
-	private List<CardSet> mainSetCardSets;
+	private GamePlayCard gamePlayCard;
+	private List<CardSet> cardSets;
 
 
 	public AnalyzeData() {
 		setSetNumber(new HashSet<>());
-		setSetName(new HashSet<>());
+		setSetNames(new HashSet<>());
 		setSetRarities(new HashSet<>());
 
-		setMainSetCardSets(new ArrayList<>());
-		setCardPriceAverage(new BigDecimal(0));
-		setCardPriceAverage(getCardPriceAverage().setScale(2, RoundingMode.HALF_UP));
-
+		setCardPriceSummary(new BigDecimal(0));
+		setCardPriceSummary(getCardPriceSummary().setScale(2, RoundingMode.HALF_UP));
 	}
 
-	public String getAveragePrice(){
-		if(getCardPriceAverage() == null){
+	public String getDisplaySummaryPrice(){
+		if(getCardPriceSummary() == null){
 			return Const.ZERO_PRICE_STRING;
 		}
 
-		return getCardPriceAverage().toString();
+		return getCardPriceSummary().toString();
 	}
 
 	@Override
@@ -73,11 +70,11 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	public String getStringOfSetNames() {
 		
-		if(getSetName().isEmpty()) {
+		if(getSetNames().isEmpty()) {
 			return "";
 		}
 
-		ArrayList<String> results = new ArrayList<>(getSetName());
+		ArrayList<String> results = new ArrayList<>(getSetNames());
 
 		Collections.sort(results);
 
@@ -97,39 +94,6 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 		}
 		
 		ArrayList<String> results = new ArrayList<>(getSetNumber());
-
-		if(results.size() == 1){
-			return results.get(0);
-		}
-
-		if(results.isEmpty()){
-			return "None Found";
-		}
-
-		Collections.sort(results);
-
-		StringBuilder output = new StringBuilder(results.get(0));
-
-		for (int i = 1; i < results.size(); i++) {
-			output.append(", ").append(results.get(i));
-		}
-
-		return output.toString();
-	}
-
-	public String getStringOfMainSetNumbers() {
-
-		if(getMainSetCardSets().isEmpty()) {
-			return "";
-		}
-
-		HashSet<String> mainSetNumber = new HashSet<>();
-
-		for (CardSet mainSetCardSet : getMainSetCardSets()) {
-			mainSetNumber.add(mainSetCardSet.getSetNumber());
-		}
-
-		ArrayList<String> results = new ArrayList<>(mainSetNumber);
 
 		if(results.size() == 1){
 			return results.get(0);
@@ -185,78 +149,6 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 	}
 
-	public String getStringOfMainRarities() {
-
-		if(getMainSetCardSets().isEmpty()) {
-			return "";
-		}
-
-		HashSet<String> mainSetRarities = new HashSet<>();
-
-		for (CardSet mainSetCardSet : getMainSetCardSets()) {
-			mainSetRarities.add(mainSetCardSet.getSetRarity());
-		}
-
-		HashSet<Rarity> enumList = new HashSet<>();
-
-		for (String s : mainSetRarities) {
-			Rarity rarityValue = Rarity.fromString(s);
-			enumList.add(rarityValue);
-		}
-
-		ArrayList<Rarity> enumList2 = new ArrayList<>(enumList);
-
-		if(enumList2.size() == 1){
-			return enumList2.get(0).toString();
-		}
-
-		if(enumList2.isEmpty()){
-			return "None Found";
-		}
-
-		Collections.sort(enumList2);
-
-		StringBuilder output = new StringBuilder(enumList2.get(0).toString());
-
-		for (int i = 1; i < enumList.size(); i++) {
-			output.append(", ").append(enumList2.get(i).toString());
-		}
-
-		return output.toString();
-
-	}
-
-    public BigDecimal getLowestPriceFromMainSet() {
-
-		BigDecimal lowestPrice = null;
-
-		BigDecimal zero = new BigDecimal(0);
-
-		for(CardSet current: getMainSetCardSets()){
-
-			if(current.getSetPrice() == null){
-				current.setSetPrice("0");
-			}
-
-			BigDecimal newPrice = new BigDecimal(current.getSetPrice());
-
-			if(newPrice.compareTo(zero) == 0){
-				continue;
-			}
-
-			if(lowestPrice == null || (lowestPrice.compareTo(newPrice) > 0)) {
-				newPrice = newPrice.setScale(2, RoundingMode.HALF_UP);
-				lowestPrice = newPrice;
-			}
-		}
-
-		if(lowestPrice == null){
-			return new BigDecimal(Const.ZERO_PRICE_STRING);
-		}
-		return lowestPrice;
-
-    }
-
 	public String getGamePlayCardUUID() {
 		return gamePlayCardUUID;
 	}
@@ -289,12 +181,12 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 		this.setNumber = setNumber;
 	}
 
-	public Set<String> getSetName() {
-		return setName;
+	public Set<String> getSetNames() {
+		return setNames;
 	}
 
-	public void setSetName(Set<String> setName) {
-		this.setName = setName;
+	public void setSetNames(Set<String> setNames) {
+		this.setNames = setNames;
 	}
 
 	public Set<String> getSetRarities() {
@@ -313,28 +205,12 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 		this.cardType = cardType;
 	}
 
-	public BigDecimal getCardPriceAverage() {
-		return cardPriceAverage;
+	public BigDecimal getCardPriceSummary() {
+		return cardPriceSummary;
 	}
 
-	public void setCardPriceAverage(BigDecimal cardPriceAverage) {
-		this.cardPriceAverage = cardPriceAverage;
-	}
-
-	public String getMainSetName() {
-		return mainSetName;
-	}
-
-	public void setMainSetName(String mainSetName) {
-		this.mainSetName = mainSetName;
-	}
-
-	public String getMainSetCode() {
-		return mainSetCode;
-	}
-
-	public void setMainSetCode(String mainSetCode) {
-		this.mainSetCode = mainSetCode;
+	public void setCardPriceSummary(BigDecimal cardPriceAverage) {
+		this.cardPriceSummary = cardPriceAverage;
 	}
 
 	public int getPasscode() {
@@ -345,11 +221,19 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 		this.passcode = passcode;
 	}
 
-	public List<CardSet> getMainSetCardSets() {
-		return mainSetCardSets;
+	public GamePlayCard getGamePlayCard() {
+		return gamePlayCard;
 	}
 
-	public void setMainSetCardSets(List<CardSet> mainSetCardSets) {
-		this.mainSetCardSets = mainSetCardSets;
+	public void setGamePlayCard(GamePlayCard gamePlayCard) {
+		this.gamePlayCard = gamePlayCard;
+	}
+
+	public List<CardSet> getCardSets() {
+		return cardSets;
+	}
+
+	public void setCardSets(List<CardSet> cardSets) {
+		this.cardSets = cardSets;
 	}
 }

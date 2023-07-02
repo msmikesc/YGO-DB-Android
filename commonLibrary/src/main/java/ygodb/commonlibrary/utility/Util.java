@@ -240,6 +240,16 @@ public class Util {
 		}
 	}
 
+	public static String getPrefixFromSetNumber(String setNumber){
+		String[] splitStrings = setNumber.split("-");
+
+		if(splitStrings.length != 2){
+			return null;
+		}
+
+		return splitStrings[0];
+	}
+
 	public static void checkForIssuesWithSet(String setName, SQLiteConnection db) throws SQLException {
 
 		ArrayList<String> cardsInSetList = db.getSortedCardsInSetByName(setName);

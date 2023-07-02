@@ -46,7 +46,7 @@ class SellCardsButtonOnClickListener implements View.OnClickListener {
         PopupMenu popupMenu = new PopupMenu(context, fab);
 
         // Inflating popup menu from popup_menu.xml file
-        popupMenu.getMenuInflater().inflate(R.menu.save_menu, popupMenu.getMenu());
+        popupMenu.getMenuInflater().inflate(R.menu.sell_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(menuItem -> {
 
             if(sellCardsViewModel.getCardsList().isEmpty()){

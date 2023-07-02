@@ -87,12 +87,12 @@ public class SellCardsViewModel extends ViewModel {
 
             sellingCard.setPriceBought(current.getPriceBought());
             sellingCard.setPriceSold(getAPIPriceFromRarity(current.getSetRarity(),
-                    current.getMainSetCardSets(), current.getSetName(),
+                    current.getAnalyzeResultsCardSets(), current.getSetName(),
                     current.getGamePlayCardUUID(), current.getSetNumber()));
 
             sellingCard.setCreationDate(current.getCreationDate());
 
-            sellingCard.setMainSetCardSets(current.getMainSetCardSets());
+            sellingCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
 
             if(current.getCondition() == null || current.getCondition().equals("")){
                 sellingCard.setCondition("NearMint");
@@ -129,7 +129,7 @@ public class SellCardsViewModel extends ViewModel {
 
             String setNumber = (current.getDropdownSelectedSetNumber() == null) ? current.getSetNumber() : current.getDropdownSelectedSetNumber();
 
-            current.setPriceSold(getAPIPriceFromRarity(rarity, current.getMainSetCardSets(),
+            current.setPriceSold(getAPIPriceFromRarity(rarity, current.getAnalyzeResultsCardSets(),
                     current.getSetName(), current.getGamePlayCardUUID(), setNumber));
         }
     }
@@ -177,22 +177,14 @@ public class SellCardsViewModel extends ViewModel {
             return mainSetCardSets.get(0).getSetPrice();
         }
 
-        String[] rarities = rarity.split(", ");
-
-        String assumedRarity = rarity.trim();
-
-        if(rarities.length == 1){
-            assumedRarity = rarities[0].trim();
-        }
-
         for (CardSet mainSetCardSet : mainSetCardSets) {
-            if (mainSetCardSet.getSetRarity().equalsIgnoreCase(assumedRarity) &&
+            if (mainSetCardSet.getSetRarity().equalsIgnoreCase(rarity) &&
                     mainSetCardSet.getSetNumber().equalsIgnoreCase(setNumber)) {
                 return mainSetCardSet.getSetPrice();
             }
         }
 
-        return getEstimatePriceFromRarity(assumedRarity);
+        return getEstimatePriceFromRarity(rarity);
 
     }
 

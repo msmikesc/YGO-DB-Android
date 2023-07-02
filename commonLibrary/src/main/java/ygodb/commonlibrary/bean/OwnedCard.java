@@ -21,14 +21,16 @@ public class OwnedCard {
 	private String creationDate;
 	private String modificationDate;
 	private String uuid;
-	private String multiListSetNames;
+	private int passcode;
+
+	private List<String> setNamesOptions;
 	private String dropdownSelectedSetNumber;
 	private String dropdownSelectedRarity;
-	private List<CardSet> mainSetCardSets;
+	private String dropdownSelectedSetName;
+	private List<CardSet> analyzeResultsCardSets;
 	private int sellQuantity;
 	private String priceSold;
 	private String dateSold;
-	private int passcode;
 
 	public String getGamePlayCardUUID() {
 		return gamePlayCardUUID;
@@ -166,12 +168,13 @@ public class OwnedCard {
 		this.uuid = uuid;
 	}
 
-	public String getMultiListSetNames() {
-		return multiListSetNames;
+
+	public List<String> getSetNamesOptions() {
+		return setNamesOptions;
 	}
 
-	public void setMultiListSetNames(String multiListSetNames) {
-		this.multiListSetNames = multiListSetNames;
+	public void setSetNamesOptions(List<String> setNamesOptions) {
+		this.setNamesOptions = setNamesOptions;
 	}
 
 	public String getDropdownSelectedSetNumber() {
@@ -190,12 +193,20 @@ public class OwnedCard {
 		this.dropdownSelectedRarity = dropdownSelectedRarity;
 	}
 
-	public List<CardSet> getMainSetCardSets() {
-		return mainSetCardSets;
+	public String getDropdownSelectedSetName() {
+		return dropdownSelectedSetName;
 	}
 
-	public void setMainSetCardSets(List<CardSet> mainSetCardSets) {
-		this.mainSetCardSets = mainSetCardSets;
+	public void setDropdownSelectedSetName(String dropdownSelectedSetName) {
+		this.dropdownSelectedSetName = dropdownSelectedSetName;
+	}
+
+	public List<CardSet> getAnalyzeResultsCardSets() {
+		return analyzeResultsCardSets;
+	}
+
+	public void setAnalyzeResultsCardSets(List<CardSet> analyzeResultsCardSets) {
+		this.analyzeResultsCardSets = analyzeResultsCardSets;
 	}
 
 	public int getSellQuantity() {

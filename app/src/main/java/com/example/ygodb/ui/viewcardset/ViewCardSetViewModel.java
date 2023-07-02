@@ -8,11 +8,13 @@ import com.example.ygodb.abs.OwnedCardQuantityComparator;
 
 import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
 import ygodb.commonlibrary.bean.AnalyzeData;
+import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -112,16 +114,23 @@ public class ViewCardSetViewModel extends ViewModel {
         for(AnalyzeData current: results){
             OwnedCard currentCard = new OwnedCard();
             currentCard.setCardName(current.getCardName());
-            currentCard.setSetRarity(current.getStringOfMainRarities());
             currentCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
-            currentCard.setSetName(current.getMainSetName());
-            currentCard.setMultiListSetNames(current.getStringOfSetNames());
             currentCard.setQuantity(current.getQuantity());
-            currentCard.setSetNumber(current.getStringOfMainSetNumbers());
-            currentCard.setPriceBought(current.getAveragePrice());
-            currentCard.setSetCode(current.getMainSetCode());
-            currentCard.setMainSetCardSets(current.getMainSetCardSets());
+            currentCard.setPriceBought(current.getDisplaySummaryPrice());
             currentCard.setPasscode(current.getPasscode());
+
+            currentCard.setAnalyzeResultsCardSets(current.getCardSets());
+            currentCard.setSetRarity(current.getStringOfRarities());
+            currentCard.setSetName(current.getStringOfSetNames());
+            currentCard.setSetNumber(current.getStringOfSetNumbers());
+
+            HashSet<String> setNamesHashSet = new HashSet<>();
+            for(CardSet cardSet: current.getCardSets()){
+                setNamesHashSet.add(cardSet.getSetName());
+            }
+            List<String> setNames = new ArrayList<>(setNamesHashSet);
+            currentCard.setSetNamesOptions(setNames);
+
             newList.add(currentCard);
         }
 

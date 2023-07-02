@@ -8,6 +8,7 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,9 +34,13 @@ public class AddCardsViewModel extends ViewModel {
         for(OwnedCard current: cardsList){
             if(current.getDropdownSelectedSetNumber() != null && !current.getDropdownSelectedSetNumber().equals("")){
                 current.setSetNumber(current.getDropdownSelectedSetNumber());
+                current.setSetCode(Util.getPrefixFromSetNumber(current.getSetNumber()));
             }
             if(current.getDropdownSelectedRarity() != null && !current.getDropdownSelectedRarity().equals("")){
                 current.setSetRarity(current.getDropdownSelectedRarity());
+            }
+            if(current.getDropdownSelectedSetName() != null && !current.getDropdownSelectedSetName().equals("")){
+                current.setSetName(current.getDropdownSelectedSetName());
             }
 
             if(current.getPriceBought() == null){
@@ -67,7 +72,6 @@ public class AddCardsViewModel extends ViewModel {
         }
     }
 
-
     public List<OwnedCard> getCardsList(){
         return cardsList;
     }
@@ -80,6 +84,10 @@ public class AddCardsViewModel extends ViewModel {
         }
 
         String key = current.getSetNumber() + current.getSetRarity();
+
+        if(current.getSetNamesOptions() != null){
+            key = current.getSetNumber() + current.getSetRarity() + current.getSetNamesOptions().toString();
+        }
 
         Integer position = keyToPosition.get(key);
 
@@ -106,11 +114,13 @@ public class AddCardsViewModel extends ViewModel {
             newCard.setFolderName(Const.FOLDER_UNSYNCED);
             newCard.setSetNumber(current.getSetNumber());
             newCard.setColorVariant("-1");
-            newCard.setMainSetCardSets(current.getMainSetCardSets());
+            newCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
             newCard.setPasscode(current.getPasscode());
 
+            newCard.setSetNamesOptions(current.getSetNamesOptions());
+
             newCard.setPriceBought(getAPIPriceFromRarity(current.getSetRarity(),
-                    current.getMainSetCardSets(), current.getSetName(),
+                    current.getAnalyzeResultsCardSets(), current.getSetName(),
                     current.getGamePlayCardUUID(), current.getSetNumber()));
 
             if(current.getCondition() == null || current.getCondition().equals("")){
@@ -154,8 +164,10 @@ public class AddCardsViewModel extends ViewModel {
 
             String setNumber = (current.getDropdownSelectedSetNumber() == null) ? current.getSetNumber() : current.getDropdownSelectedSetNumber();
 
-            current.setPriceBought(getAPIPriceFromRarity(rarity, current.getMainSetCardSets(),
-                    current.getSetName(), current.getGamePlayCardUUID(), setNumber));
+            String setName = (current.getDropdownSelectedSetName() == null) ? current.getSetName() : current.getDropdownSelectedSetName();
+
+            current.setPriceBought(getAPIPriceFromRarity(rarity, current.getAnalyzeResultsCardSets(),
+                    setName, current.getGamePlayCardUUID(), setNumber));
         }
     }
 
@@ -190,40 +202,54 @@ public class AddCardsViewModel extends ViewModel {
 
     }
 
-    public String getAPIPriceFromRarity(String rarity, List<CardSet> mainSetCardSets,
+    public String getAPIPriceFromRarity(String rarity, List<CardSet> analyzeResultsCardSets,
                                         String setName, String gamePlayCardUUID, String setNumber){
 
-        if(mainSetCardSets == null){
-            mainSetCardSets = AndroidUtil.getDBInstance().
+        if(analyzeResultsCardSets == null){
+            analyzeResultsCardSets = AndroidUtil.getDBInstance().
                     getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
         }
 
-        if(mainSetCardSets.size() == 1){
-            return mainSetCardSets.get(0).getSetPrice();
+        if(analyzeResultsCardSets.size() == 1){
+            return analyzeResultsCardSets.get(0).getSetPrice();
         }
 
         String[] rarities = rarity.split(", ");
-
         String assumedRarity = rarity.trim();
-
-        if(rarities.length == 1){
+        if(rarities.length > 1){
             assumedRarity = rarities[0].trim();
         }
 
-        for (CardSet mainSetCardSet : mainSetCardSets) {
-            if (mainSetCardSet.getSetRarity().equalsIgnoreCase(assumedRarity) &&
-                    mainSetCardSet.getSetNumber().equalsIgnoreCase(setNumber)) {
-                return mainSetCardSet.getSetPrice();
+        String[] setNumbers = setNumber.split(", ");
+        String assumedNumber = setNumber.trim();
+        if(setNumbers.length > 1){
+            assumedNumber = setNumbers[0].trim();
+        }
+
+        String[] setNames = setName.split(", ");
+        String assumedSet = setName.trim();
+        if(setNames.length > 1){
+            assumedSet = setNames[0].trim();
+        }
+
+        for (CardSet cardSet : analyzeResultsCardSets) {
+            if (cardSet.getSetRarity().equalsIgnoreCase(assumedRarity) &&
+                    cardSet.getSetNumber().equalsIgnoreCase(assumedNumber) &&
+                    cardSet.getSetName().equalsIgnoreCase(assumedSet)) {
+                return cardSet.getSetPrice();
             }
         }
 
         return getEstimatePriceFromRarity(assumedRarity);
-
     }
 
     public void removeNewFromOwnedCard(OwnedCard current){
 
         String key = current.getSetNumber() + current.getSetRarity();
+
+        if(current.getSetNamesOptions() != null){
+            key = current.getSetNumber() + current.getSetRarity() + current.getSetNamesOptions().toString();
+        }
 
         Integer position = keyToPosition.get(key);
         OwnedCard newCard = null;

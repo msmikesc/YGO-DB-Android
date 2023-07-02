@@ -12,6 +12,7 @@ public class CardSet {
 	private String colorVariant;
 	private int rarityUnsure;
 	private String cardType;
+	private String setCode;
 
 	public String getGamePlayCardUUID() {
 		return gamePlayCardUUID;
@@ -91,5 +92,13 @@ public class CardSet {
 
 	public void setCardType(String cardType) {
 		this.cardType = cardType;
+	}
+
+	public String getSetCode() {
+		return setCode;
+	}
+
+	public void setSetCode(String setCode) {
+		this.setCode = setCode;
 	}
 }

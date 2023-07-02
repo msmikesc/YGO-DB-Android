@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.csv.CSVPrinter;
 import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
@@ -46,15 +47,7 @@ public class RunAnalyzeCardsInSet {
 			finalFileName = "Combined";
 		}
 
-		HashMap<String, AnalyzeData> h = new HashMap<>();
-
-		String[] sets = setName.split(";");
-
-		for (String individualSet : sets) {
-			mainObj.addAnalyzeDataForSet(h, individualSet, db);
-		}
-
-		ArrayList<AnalyzeData> array = new ArrayList<>(h.values());
+		List<AnalyzeData> array = mainObj.runFor(setName, db);
 
 		printOutput(array, finalFileName);
 

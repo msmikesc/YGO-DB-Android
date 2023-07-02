@@ -35,7 +35,7 @@ public interface SQLiteConnection {
 
     String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException;
 
-    ArrayList<OwnedCard> getNumberOfOwnedCardsByGamePlayCardUUID(String name) throws SQLException;
+    ArrayList<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String name) throws SQLException;
 
     ArrayList<OwnedCard> getAllOwnedCards() throws SQLException;
 
@@ -57,9 +57,9 @@ public interface SQLiteConnection {
 
     ArrayList<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) throws SQLException;
 
-    ArrayList<GamePlayCard> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) throws SQLException;
+    ArrayList<GamePlayCard> getDistinctGamePlayCardsInSetByName(String setName) throws SQLException;
 
-    ArrayList<GamePlayCard> getDistinctCardNamesAndIdsByArchetype(String archetype) throws SQLException;
+    ArrayList<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) throws SQLException;
 
     ArrayList<String> getSortedCardsInSetByName(String setName) throws SQLException;
 

@@ -25,7 +25,7 @@ public class SQLConst {
 			"Select * from gamePlayCard where UPPER(title)=UPPER(?)";
 	public static final String GET_GAME_PLAY_CARD_UUID_FROM_PASSCODE =
 			"Select * from gamePlayCard where passcode = ?";
-	public static final String GET_NUMBER_OF_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID =
+	public static final String GET_ANALYZE_DATA_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID =
 			"select sum(quantity), cardName, " +
 			"group_concat(DISTINCT setName), MAX(dateBought) as maxDate, " +
 			"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
@@ -43,11 +43,11 @@ public class SQLConst {
 			"select * from ownedCards where rarityUnsure = 1 order by setName";
 	public static final String GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME =
 			"select distinct gamePlayCardUUID from cardSets where setName = ?";
-	public static final String GET_DISTINCT_CARD_NAMES_AND_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME =
+	public static final String GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME =
 			"select a.* from gamePlayCard a left join cardSets b " +
 			"on a.gamePlayCardUUID = b.gamePlayCardUUID " +
 			"where b.setName = ?";
-	public static final String GET_DISTINCT_CARD_NAMES_AND_IDS_BY_ARCHETYPE =
+	public static final String GET_DISTINCT_GAMEPLAYCARDS_BY_ARCHETYPE =
 			"select * from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
 	public static final String GET_SORTED_CARDS_IN_SET_BY_NAME =
 			"select setNumber from cardSets where setName = ?";

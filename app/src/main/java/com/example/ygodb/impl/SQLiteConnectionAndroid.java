@@ -442,11 +442,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getNumberOfOwnedCardsByGamePlayCardUUID(String name) {
+	public ArrayList<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String name) {
 
 		SQLiteDatabase connection = this.getInstance();
 
-		String setQuery = SQLConst.GET_NUMBER_OF_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID;
+		String setQuery = SQLConst.GET_ANALYZE_DATA_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID;
 
 		String[] params = new String[]{name};
 
@@ -764,10 +764,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<GamePlayCard> getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(String setName) {
+	public ArrayList<GamePlayCard> getDistinctGamePlayCardsInSetByName(String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String setQuery = SQLConst.GET_DISTINCT_CARD_NAMES_AND_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME;
+		String setQuery = SQLConst.GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME;
 
 		String[] params = new String[]{setName};
 		try (Cursor rs = connection.rawQuery(setQuery, params)) {
@@ -786,10 +786,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<GamePlayCard> getDistinctCardNamesAndIdsByArchetype(String archetype) {
+	public ArrayList<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String setQuery = SQLConst.GET_DISTINCT_CARD_NAMES_AND_IDS_BY_ARCHETYPE;
+		String setQuery = SQLConst.GET_DISTINCT_GAMEPLAYCARDS_BY_ARCHETYPE;
 
 		String[] params = new String[]{archetype, "%" + archetype + "%"};
 		try (Cursor rs = connection.rawQuery(setQuery, params)) {

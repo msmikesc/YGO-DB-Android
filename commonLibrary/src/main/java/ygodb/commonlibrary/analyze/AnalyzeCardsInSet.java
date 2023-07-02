@@ -1,5 +1,13 @@
 package ygodb.commonlibrary.analyze;
 
+import ygodb.commonlibrary.bean.AnalyzeData;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.GamePlayCard;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.YGOLogger;
+
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,173 +17,141 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import ygodb.commonlibrary.bean.AnalyzeData;
-import ygodb.commonlibrary.bean.CardSet;
-import ygodb.commonlibrary.bean.GamePlayCard;
-import ygodb.commonlibrary.bean.OwnedCard;
-import ygodb.commonlibrary.bean.SetMetaData;
-import ygodb.commonlibrary.connection.SQLiteConnection;
-
 public class AnalyzeCardsInSet {
 
 	public List<AnalyzeData> runFor(String setName, SQLiteConnection db) throws SQLException {
-		HashMap<String, AnalyzeData> h = new HashMap<>();
+		HashMap<String, AnalyzeData> analyzeDataHashMap = new HashMap<>();
 
 		String[] sets = setName.split(";");
 
 		for (String individualSet : sets) {
-			addAnalyzeDataForSet(h, individualSet, db);
+			addInitialAnalyzeDataForSet(analyzeDataHashMap, individualSet, db);
 		}
 
-		return new ArrayList<>(h.values());
+		for(AnalyzeData analyzeData: analyzeDataHashMap.values()){
+			updateAnalyzeDataValues(analyzeData, db);
+		}
+
+		return new ArrayList<>(analyzeDataHashMap.values());
 	}
 
-	public void addAnalyzeDataForSet(Map<String, AnalyzeData> h, String setName, SQLiteConnection db) throws SQLException {
-		ArrayList<GamePlayCard> list = db.getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(setName);
+	public void addInitialAnalyzeDataForSet(Map<String, AnalyzeData> analyzeDataHashMap, String requestedSetName, SQLiteConnection db) throws SQLException {
+		ArrayList<GamePlayCard> list = db.getDistinctGamePlayCardsInSetByName(requestedSetName);
 		boolean archetypeMode = false;
 
 		if (list.isEmpty()) {
-			ArrayList<SetMetaData> setNames = db.getSetMetaDataFromSetCode(setName.toUpperCase(Locale.ROOT));
+			ArrayList<SetMetaData> setNames = db.getSetMetaDataFromSetCode(requestedSetName.toUpperCase(Locale.ROOT));
 
 			if (setNames == null || setNames.isEmpty() ) {
 
-				list = db.getDistinctCardNamesAndIdsByArchetype(setName);
+				list = db.getDistinctGamePlayCardsByArchetype(requestedSetName);
 				archetypeMode = true;
 				if (list.isEmpty()) {
 					return;
 				}
 			}
 			else {
-				setName = setNames.get(0).getSetName();
-				list = db.getDistinctCardNamesAndGamePlayCardUUIDsInSetByName(setName);
+				requestedSetName = setNames.get(0).getSetName();
+				list = db.getDistinctGamePlayCardsInSetByName(requestedSetName);
 			}
 		}
 
-		ArrayList<SetMetaData> setMetaData = db.getSetMetaDataFromSetName(setName);
+		String requestedSetCode = "";
 
-		for (GamePlayCard currentCardSet : list) {
+		if(!archetypeMode) {
+			ArrayList<SetMetaData> setMetaData = db.getSetMetaDataFromSetName(requestedSetName);
+			requestedSetCode = setMetaData.get(0).getSetCode();
+		}
 
-			String currentCard = currentCardSet.getCardName();
-			String gamePlayCardUUID = currentCardSet.getGamePlayCardUUID();
-			int passcode = currentCardSet.getPasscode();
+		for (GamePlayCard currentGamePlayCard : list) {
 
-			ArrayList<OwnedCard> cardsList = db.getNumberOfOwnedCardsByGamePlayCardUUID(gamePlayCardUUID);
+			String gamePlayCardUUID = currentGamePlayCard.getGamePlayCardUUID();
 
 			ArrayList<CardSet> rarityList;
 			if(!archetypeMode) {
-				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
+				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, requestedSetName);
+				for(CardSet set : rarityList){
+					set.setSetCode(requestedSetCode);
+				}
 			}
 			else{
 				rarityList = db.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID);
 			}
 
-			if (cardsList.isEmpty()) {
+			AnalyzeData analyzeData= new AnalyzeData();
+			analyzeData.setCardName(currentGamePlayCard.getCardName());
+			analyzeData.setGamePlayCardUUID(gamePlayCardUUID);
+			analyzeData.setPasscode(currentGamePlayCard.getPasscode());
+			analyzeData.setGamePlayCard(currentGamePlayCard);
+			analyzeData.setCardSets(rarityList);
+			analyzeData.setCardType(currentGamePlayCard.getCardType());
 
-				AnalyzeData currentData = new AnalyzeData();
-
-				if (currentCard == null) {
-					currentData.setCardName("No cards found for id:" + gamePlayCardUUID);
-					currentData.setQuantity(-1);
-				} else {
-					currentData.setCardName(currentCard);
-					currentData.setQuantity(0);
-				}
-
-				if(!archetypeMode){
-					for (CardSet rarity : rarityList) {
-						currentData.getSetRarities().add(rarity.getSetRarity());
-
-						if(rarity.getSetName().equalsIgnoreCase(setName)){
-							currentData.getMainSetCardSets().add(rarity);
-						}
-
-					}
-					currentData.setCardPriceAverage(currentData.getLowestPriceFromMainSet());
-				}
-				else{
-					BigDecimal origSetPrice = new BigDecimal(Integer.MAX_VALUE);
-					currentData.setCardPriceAverage(origSetPrice);
-					for (CardSet rarity : rarityList) {
-						currentData.getSetName().add(rarity.getSetName());
-						currentData.getSetRarities().add(rarity.getSetRarity());
-
-						if(rarity.getSetPrice() == null){
-							rarity.setSetPrice("0");
-						}
-
-						BigDecimal setPrice = new BigDecimal(rarity.getSetPrice());
-						BigDecimal zero = new BigDecimal(0);
-
-						if (!(zero.equals(setPrice)) && currentData.getCardPriceAverage().compareTo(setPrice) > 0){
-							currentData.setCardPriceAverage(setPrice);
-						}
-					}
-					if(origSetPrice.equals(currentData.getCardPriceAverage())){
-						currentData.setCardPriceAverage(new BigDecimal(0));
-					}
-				}
-
-				currentData.setGamePlayCardUUID(gamePlayCardUUID);
-				currentData.setPasscode(passcode);
-
-				if(!archetypeMode) {
-					currentData.getSetNumber().add(rarityList.get(0).getSetNumber());
-					currentData.setCardType(rarityList.get(0).getCardType());
-					currentData.getSetName().add(setName);
-					currentData.setMainSetName(setName);
-					currentData.setMainSetCode(setMetaData.get(0).getSetCode());
-				}
-				addToHashMap(h, currentData);
-			}
-
-			for (OwnedCard current : cardsList) {
-				AnalyzeData currentData = new AnalyzeData();
-
-				currentData.setCardName(current.getCardName());
-				currentData.setQuantity(current.getQuantity());
-
-				if(!archetypeMode) {
-					for (CardSet rarity : rarityList) {
-						currentData.getSetRarities().add(rarity.getSetRarity());
-
-						if (rarity.getSetName().equalsIgnoreCase(setName)) {
-							currentData.getMainSetCardSets().add(rarity);
-						}
-					}
-				}
-				else{
-					for (CardSet rarity : rarityList) {
-						currentData.getSetName().add(rarity.getSetName());
-						currentData.getSetRarities().add(rarity.getSetRarity());
-					}
-				}
-
-				currentData.setGamePlayCardUUID(gamePlayCardUUID);
-				currentData.setPasscode(passcode);
-				if(!archetypeMode) {
-					currentData.getSetNumber().add(rarityList.get(0).getSetNumber());
-					currentData.setCardType(rarityList.get(0).getCardType());
-					currentData.setMainSetName(setName);
-					currentData.setMainSetCode(setMetaData.get(0).getSetCode());
-				}
-				Collections.addAll(currentData.getSetName(), current.getSetName().split(","));
-				currentData.setCardPriceAverage(new BigDecimal(current.getPriceBought()));
-				addToHashMap(h, currentData);
-			}
+			addInitialDataToHashMap(analyzeDataHashMap, analyzeData);
 		}
 	}
 
-	private void addToHashMap(Map<String, AnalyzeData> h, AnalyzeData s) {
+	private void addInitialDataToHashMap(Map<String, AnalyzeData> h, AnalyzeData s) {
 
-		AnalyzeData existing = h.get(s.getCardName());
+		AnalyzeData existing = h.get(s.getGamePlayCardUUID());
 
 		if (existing == null) {
-			h.put(s.getCardName(), s);
+			h.put(s.getGamePlayCardUUID(), s);
 		} else {
-			existing.getSetName().addAll(s.getSetName());
-			existing.getSetNumber().addAll(s.getSetNumber());
-			existing.getSetRarities().addAll(s.getSetRarities());
+			existing.getCardSets().addAll(s.getCardSets());
 		}
 
+	}
+
+	private void updateAnalyzeDataValues(AnalyzeData analyzeData, SQLiteConnection db) throws SQLException {
+
+		List<CardSet> rarityList = analyzeData.getCardSets();
+
+		for(CardSet currentRarity: rarityList){
+			analyzeData.getSetNumber().add(currentRarity.getSetNumber());
+			analyzeData.getSetNames().add(currentRarity.getSetName());
+			analyzeData.getSetRarities().add(currentRarity.getSetRarity());
+		}
+		setPriceSummaryToLowestFromRarityList(analyzeData, rarityList);
+
+		ArrayList<OwnedCard> cardsList = db.getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(analyzeData.getGamePlayCardUUID());
+
+		if (cardsList.isEmpty()) {
+			analyzeData.setQuantity(0);
+		}
+		else if(cardsList.size() > 1 ){
+			YGOLogger.error("More than 1 summary output from getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID");
+		}
+		else{
+			OwnedCard current = cardsList.get(0);
+
+			analyzeData.setQuantity(current.getQuantity());
+
+			analyzeData.getSetNames().clear();
+
+			Collections.addAll(analyzeData.getSetNames(), current.getSetName().split(","));
+		}
+	}
+
+	private static void setPriceSummaryToLowestFromRarityList(AnalyzeData currentData, List<CardSet> rarityList) {
+		BigDecimal origSetPrice = new BigDecimal(Integer.MAX_VALUE);
+		currentData.setCardPriceSummary(origSetPrice);
+		//loop through all rarities and show the lowest price for summary
+		for (CardSet rarity : rarityList) {
+
+			if(rarity.getSetPrice() == null){
+				rarity.setSetPrice("0");
+			}
+
+			BigDecimal setPrice = new BigDecimal(rarity.getSetPrice());
+			BigDecimal zero = new BigDecimal(0);
+
+			if (!(zero.equals(setPrice)) && currentData.getCardPriceSummary().compareTo(setPrice) > 0){
+				currentData.setCardPriceSummary(setPrice);
+			}
+		}
+		//If price has not changed due to no existing price data, default to 0
+		if(origSetPrice.equals(currentData.getCardPriceSummary())){
+			currentData.setCardPriceSummary(new BigDecimal(0));
+		}
 	}
 }
