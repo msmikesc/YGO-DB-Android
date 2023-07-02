@@ -34,13 +34,21 @@ public class AddCardsViewModel extends ViewModel {
         for(OwnedCard current: cardsList){
             if(current.getDropdownSelectedSetNumber() != null && !current.getDropdownSelectedSetNumber().equals("")){
                 current.setSetNumber(current.getDropdownSelectedSetNumber());
+            }
+
+            if(current.getSetCode() == null || current.getSetCode().equals("")) {
                 current.setSetCode(Util.getPrefixFromSetNumber(current.getSetNumber()));
             }
+
             if(current.getDropdownSelectedRarity() != null && !current.getDropdownSelectedRarity().equals("")){
                 current.setSetRarity(current.getDropdownSelectedRarity());
             }
+
             if(current.getDropdownSelectedSetName() != null && !current.getDropdownSelectedSetName().equals("")){
                 current.setSetName(current.getDropdownSelectedSetName());
+            }
+            else if(current.getSetNamesOptions() != null && current.getSetNamesOptions().size() == 1){
+                current.setSetName(current.getSetNamesOptions().get(0));
             }
 
             if(current.getPriceBought() == null){

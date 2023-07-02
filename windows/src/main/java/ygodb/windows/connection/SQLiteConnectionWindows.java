@@ -1111,6 +1111,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			setStringOrNull(statementSetInsert, 3, setName);
 			setStringOrNull(statementSetInsert, 4, rarity);
 			setStringOrNull(statementSetInsert, 5, cardName);
+			statementSetInsert.execute();
 
 			if (price != null && !Util.normalizePrice(price).equals(Util.normalizePrice("0"))) {
 
@@ -1120,8 +1121,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 					updateCardSetPriceWithSetName(setNumber, rarity, price, setName);
 				}
 			}
-
-			statementSetInsert.execute();
 		}
 	}
 

@@ -512,9 +512,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String selection = "gamePlayCardUUID = ? AND folderName = ? AND setNumber = ? AND setRarity = ? AND " +
 				"setRarityColorVariant = ? AND condition = ? AND editionPrinting = ? AND " +
-				"dateBought = ? AND priceBought = ?";
+				"dateBought = ? AND priceBought = ? AND setName = ? AND setCode = ?";
 		String[] selectionArgs = new String[]{query.getGamePlayCardUUID(), query.getFolderName(), query.getSetNumber(), query.getSetRarity(),
-				query.getColorVariant(), query.getCondition(), query.getEditionPrinting(), query.getDateBought(), query.getPriceBought()};
+				query.getColorVariant(), query.getCondition(), query.getEditionPrinting(), query.getDateBought(), query.getPriceBought(),
+					query.getSetName(), query.getSetCode()};
 
 		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE, columns, selection, selectionArgs,
 				null, null, null, null)) {
@@ -1363,6 +1364,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			statementSetInsert.bindString(3, setName);
 			statementSetInsert.bindString(4, rarity);
 			statementSetInsert.bindString(5, cardName);
+			statementSetInsert.execute();
 
 			if (price != null && !Util.normalizePrice(price).equals(Util.normalizePrice("0"))) {
 				List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
@@ -1371,8 +1373,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 					updateCardSetPriceWithSetName(setNumber, rarity, price, setName);
 				}
 			}
-
-			statementSetInsert.execute();
 		}
 	}
 
