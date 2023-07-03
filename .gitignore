@@ -15,3 +15,5 @@
 local.properties
 *.jpg
 /.idea/deploymentTargetDropDown.xml
+
+/csv/
