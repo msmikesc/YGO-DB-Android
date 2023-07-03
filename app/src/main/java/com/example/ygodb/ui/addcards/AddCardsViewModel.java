@@ -62,7 +62,7 @@ public class AddCardsViewModel extends ViewModel {
                 current = existingRecord;
             }
 
-            AndroidUtil.getDBInstance().upsertOwnedCardBatch(current);
+            AndroidUtil.getDBInstance().insertOrUpdateOwnedCardByUUID(current);
 
         }
         keyToPosition.clear();

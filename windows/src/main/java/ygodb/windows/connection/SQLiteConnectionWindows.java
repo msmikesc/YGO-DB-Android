@@ -23,12 +23,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	private Connection connectionInstance = null;
 
-	private PreparedStatement batchUpsertOwnedCard = null;
-
-	private static final int BATCH_UPSERT_SIZE = 1000;
-
-	private int batchUpsertCurrentSize = 0;
-
 	public Connection getInstance() throws SQLException {
 		if (connectionInstance == null) {
 			connectionInstance = DriverManager
@@ -40,12 +34,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	@Override
 	public void closeInstance() throws SQLException {
-		if (batchUpsertOwnedCard != null) {
-			batchUpsertOwnedCard.executeBatch();
-			batchUpsertOwnedCard.close();
-			batchUpsertOwnedCard = null;
-		}
-
 		if (connectionInstance == null) {
 			return;
 		}
@@ -956,7 +944,23 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public void updateOwnedCardByUUID(OwnedCard card) throws SQLException {
+	public void insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException {
+		if(card.getUuid() == null || card.getUuid().equals("")){
+			int rowsInserted = insertIntoOwnedCards(card);
+			if(rowsInserted != 1){
+				YGOLogger.error(rowsInserted + " rows inserted for insert for:" + card);
+			}
+		}
+		else{
+			int rowsUpdated =updateOwnedCardByUUID(card);
+			if(rowsUpdated != 1){
+				YGOLogger.error(rowsUpdated + " rows updated for update for:" + card);
+			}
+		}
+	}
+
+	@Override
+	public int updateOwnedCardByUUID(OwnedCard card) throws SQLException {
 
 		String gamePlayCardUUID = card.getGamePlayCardUUID();
 		String folder = card.getFolderName();
@@ -976,6 +980,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		int passcode = card.getPasscode();
 
 		String uuid = card.getUuid();
+
+		if(uuid == null || uuid.equals("")){
+			YGOLogger.error("UUID null on updated owned card");
+			return 0;
+		}
 
 		Connection connection = this.getInstance();
 
@@ -1011,7 +1020,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			statement.setInt(15, passcode);
 			statement.setString(16, uuid);
 
-			statement.execute();
+			return statement.executeUpdate();
 		}
 	}
 
@@ -1021,7 +1030,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public void upsertOwnedCardBatch(OwnedCard card) throws SQLException {
+	public int insertIntoOwnedCards(OwnedCard card) throws SQLException {
 
 		String gamePlayCardUUID = card.getGamePlayCardUUID();
 		String folder = card.getFolderName();
@@ -1037,9 +1046,16 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		String setNumber = card.getSetNumber();
 		String setName = card.getSetName();
 		String setRarity = card.getSetRarity();
+		int passcode = card.getPasscode();
 
 		String uuid = card.getUuid();
-		int passcode = card.getPasscode();
+		if (uuid == null || uuid.equals("")) {
+			uuid = java.util.UUID.randomUUID().toString();
+		}
+		else{
+			YGOLogger.error("UUID not null on an insert owned card:" + uuid);
+			return 0;
+		}
 
 		Connection connection = this.getInstance();
 
@@ -1053,46 +1069,27 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String normalizedPrice = Util.normalizePrice(priceBought);
 
-		String ownedInsert = SQLConst.UPSERT_OWNED_CARD_BATCH;
+		String ownedInsert = SQLConst.INSERT_OR_IGNORE_INTO_OWNED_CARDS;
 
-		if (batchUpsertOwnedCard == null) {
+		try (PreparedStatement statement = connection.prepareStatement(ownedInsert)) {
+			setStringOrNull(statement, 1, gamePlayCardUUID);
+			setStringOrNull(statement, 2, folder);
+			setStringOrNull(statement, 3, name);
+			setIntegerOrNull(statement, 4, quantity);
+			setStringOrNull(statement, 5, setCode);
+			setStringOrNull(statement, 6, setNumber);
+			setStringOrNull(statement, 7, setName);
+			setStringOrNull(statement, 8, setRarity);
+			setStringOrNull(statement, 9, colorVariant);
+			setStringOrNull(statement, 10, condition);
+			setStringOrNull(statement, 11, printing);
+			setStringOrNull(statement, 12, dateBought);
+			setStringOrNull(statement, 13, normalizedPrice);
+			setIntegerOrNull(statement, 14, rarityUnsure);
+			setStringOrNull(statement, 15, uuid);
+			setIntegerOrNull(statement, 16, passcode);
 
-			batchUpsertOwnedCard = connection.prepareStatement(ownedInsert);
-		}
-
-		batchUpsertOwnedCard.setString(1, gamePlayCardUUID);
-		batchUpsertOwnedCard.setString(2, folder);
-		batchUpsertOwnedCard.setString(3, name);
-		batchUpsertOwnedCard.setInt(4, quantity);
-		batchUpsertOwnedCard.setString(5, setCode);
-		batchUpsertOwnedCard.setString(6, setNumber);
-		batchUpsertOwnedCard.setString(7, setName);
-		batchUpsertOwnedCard.setString(8, setRarity);
-		batchUpsertOwnedCard.setString(9, colorVariant);
-		batchUpsertOwnedCard.setString(10, condition);
-		batchUpsertOwnedCard.setString(11, printing);
-		batchUpsertOwnedCard.setString(12, dateBought);
-		batchUpsertOwnedCard.setString(13, normalizedPrice);
-		batchUpsertOwnedCard.setInt(14, rarityUnsure);
-
-		batchUpsertOwnedCard.setString(15, uuid);
-		batchUpsertOwnedCard.setInt(16, passcode);
-
-		// conflict fields
-
-		batchUpsertOwnedCard.setInt(17, quantity);
-		batchUpsertOwnedCard.setInt(18, rarityUnsure);
-		batchUpsertOwnedCard.setString(19, setRarity);
-		batchUpsertOwnedCard.setString(20, colorVariant);
-
-		batchUpsertOwnedCard.setString(21, uuid);
-
-		batchUpsertOwnedCard.addBatch();
-		batchUpsertCurrentSize++;
-
-		if (batchUpsertCurrentSize >= BATCH_UPSERT_SIZE) {
-			batchUpsertCurrentSize = 0;
-			batchUpsertOwnedCard.executeBatch();
+			return statement.executeUpdate();
 		}
 	}
 
@@ -1238,7 +1235,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		try (PreparedStatement statement = connection.prepareStatement(query);
 			 ResultSet rarities = statement.executeQuery()) {
 			if(rarities.next()){
-				int currentLowest = rarities.getInt(0);
+				int currentLowest = rarities.getInt(1);
 				return currentLowest - 1;
 			}
 		}

@@ -193,98 +193,6 @@ public class CsvConnection {
 
 	}
 
-	public static OwnedCard getOwnedCardFromDragonShieldCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
-
-		String folder = getStringOrNull(current,Const.FOLDER_NAME_CSV);
-		String name = getStringOrNull(current,Const.CARD_NAME_CSV);
-		String quantity = getStringOrNull(current,Const.QUANTITY_CSV);
-		String setCode = getStringOrNull(current,Const.SET_CODE_CSV);
-		String setNumber = getStringOrNull(current,Const.CARD_NUMBER_CSV);
-		String setName = getStringOrNull(current,Const.SET_NAME_CSV);
-		String condition = getStringOrNull(current,Const.CONDITION_CSV);
-		String printing = getStringOrNull(current,Const.PRINTING_CSV);
-		String priceBought = Util.normalizePrice(getStringOrNull(current,Const.PRICE_BOUGHT_CSV));
-		String dateBought = getStringOrNull(current,Const.DATE_BOUGHT_CSV);
-		
-		String colorCode = Const.DEFAULT_COLOR_VARIANT;
-
-		if (Const.CARD_PRINTING_FOIL.equals(printing)) {
-			printing = Const.CARD_PRINTING_FIRST_EDITION;
-		}
-
-		name = Util.checkForTranslatedCardName(name);
-		setName = Util.checkForTranslatedSetName(setName);
-		setNumber = Util.checkForTranslatedSetNumber(setNumber);
-
-		List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(setNumber,
-				priceBought, dateBought, folder, condition, printing, db);
-
-		if (ownedRarities.isEmpty()) {
-			// try removing color code
-
-			String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
-			String newColorCode = setNumber.substring(setNumber.length() - 1);
-
-			ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(newSetNumber, priceBought,
-					dateBought, folder, condition, printing, db);
-
-			if (!ownedRarities.isEmpty()) {
-				setNumber = newSetNumber;
-				colorCode = newColorCode;
-			}
-		}
-
-		for (OwnedCard existingCard : ownedRarities) {
-			if (Util.doesCardExactlyMatch(folder, name, setCode, setNumber, condition, printing, priceBought,
-					dateBought, existingCard)) {
-				
-				CardSet setIdentified = new CardSet();
-				
-				setIdentified.setColorVariant(existingCard.getColorVariant());
-				setIdentified.setSetName(existingCard.getSetName());
-				setIdentified.setSetNumber(existingCard.getSetNumber());
-				setIdentified.setGamePlayCardUUID(existingCard.getGamePlayCardUUID());
-				setIdentified.setSetRarity(existingCard.getSetRarity());
-				setIdentified.setRarityUnsure(existingCard.getRarityUnsure());
-
-				int passcode = -1;
-				GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.getGamePlayCardUUID());
-
-				if(gpc == null){
-					YGOLogger.error("Unknown gamePlayCard for " + name);
-				}
-				else{
-					passcode = gpc.getPasscode();
-				}
-				
-				OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-						dateBought, setIdentified, passcode);
-				
-				card.setUuid(existingCard.getUuid());
-				
-				return card;
-			}
-		}
-
-		CardSet setIdentified = Util.findRarity(priceBought, setNumber,
-				setName, name, db);
-		
-		setIdentified.setColorVariant(colorCode);
-
-		int passcode = -1;
-		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.getGamePlayCardUUID());
-
-		if(gpc == null){
-			YGOLogger.error("Unknown gamePlayCard for " + name);
-		}
-		else{
-			passcode = gpc.getPasscode();
-		}
-
-		return Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
-				dateBought, setIdentified, passcode);
-	}
-
 	public static OwnedCard getOwnedCardFromExportedCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
 		String folder = getStringOrNull(current,Const.FOLDER_NAME_CSV);
@@ -308,11 +216,18 @@ public class CsvConnection {
 		name = Util.checkForTranslatedCardName(name);
 		rarity = Util.checkForTranslatedRarity(rarity);
 		passcode = Util.checkForTranslatedPasscode(passcode);
+		setName = Util.checkForTranslatedSetName(setName);
+		setNumber = Util.checkForTranslatedSetNumber(setNumber);
+
+		List<String> translatedList = Util.checkForTranslatedQuadKey(name, setNumber, rarity, setName);
+		name = translatedList.get(0);
+		setNumber = translatedList.get(1);
+		rarity = translatedList.get(2);
+		setName = translatedList.get(3);
 
 		if ((Const.CARD_PRINTING_FOIL).equals(printing)) {
 			printing = Const.CARD_PRINTING_FIRST_EDITION;
 		}
-
 
 		if(gamePlayCardUUID == null) {
 			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
@@ -612,26 +527,6 @@ public class CsvConnection {
 				getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_PRICE_CSV),
 				getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_QUANTITY_CSV),
 				current.getReadTime());
-
-	}
-	
-	public static void writeUploadCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
-		String printing = current.getEditionPrinting();
-		
-		if(printing.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
-			printing = Const.CARD_PRINTING_FOIL;
-		}
-		
-		String outputSetNumber = current.getSetNumber();
-
-		if (!current.getColorVariant().equalsIgnoreCase(Const.DEFAULT_COLOR_VARIANT)
-				&& !Const.setColorVariantUnsupportedDragonShield.contains(current.getSetName())) {
-			outputSetNumber += current.getColorVariant();
-		}
-
-		p.printRecord(current.getFolderName(), current.getQuantity(),0, current.getCardName(), current.getSetCode(), current.getSetName(),
-				outputSetNumber, current.getCondition(), printing, "English", current.getPriceBought(), current.getDateBought(),
-				0, 0, 0);
 
 	}
 

@@ -94,11 +94,13 @@ public interface SQLiteConnection {
 
     void replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 
-    void updateOwnedCardByUUID(OwnedCard card) throws SQLException;
+    void insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException;
+
+    int updateOwnedCardByUUID(OwnedCard card) throws SQLException;
 
     void sellCards(OwnedCard card, int quantity, String priceSold);
 
-    void upsertOwnedCardBatch(OwnedCard card) throws SQLException;
+    int insertIntoOwnedCards(OwnedCard card) throws SQLException;
 
     void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
                                                String cardName) throws SQLException;

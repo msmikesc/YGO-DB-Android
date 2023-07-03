@@ -1178,7 +1178,23 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void updateOwnedCardByUUID(OwnedCard card) {
+	public void insertOrUpdateOwnedCardByUUID(OwnedCard card) {
+		if(card.getUuid() == null || card.getUuid().equals("")){
+			int rowsInserted = insertIntoOwnedCards(card);
+			if(rowsInserted != 1){
+				YGOLogger.error(rowsInserted + " rows inserted for insert for:" + card);
+			}
+		}
+		else{
+			int rowsUpdated =updateOwnedCardByUUID(card);
+			if(rowsUpdated != 1){
+				YGOLogger.error(rowsUpdated + " rows updated for update for:" + card);
+			}
+		}
+	}
+
+	@Override
+	public int updateOwnedCardByUUID(OwnedCard card) {
 		String gamePlayCardUUID = card.getGamePlayCardUUID();
 		String folder = card.getFolderName();
 		String name = card.getCardName();
@@ -1195,6 +1211,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String setRarity = card.getSetRarity();
 		int passcode = card.getPasscode();
 		String uuid = card.getUuid();
+
+		if(uuid == null || uuid.equals("")) {
+			YGOLogger.error("UUID null on updated owned card");
+			return 0;
+		}
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -1228,7 +1249,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			setIntegerOrNull(statement, 15, passcode);
 			setStringOrNull(statement, 16, uuid);
 
-			statement.execute();
+			return statement.executeUpdateDelete();
 		}
 	}
 
@@ -1279,7 +1300,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			setStringOrNull(statement, 12, card.getPriceBought());
 			setStringOrNull(statement, 13, sdf.format(new Date()));
 			setStringOrNull(statement, 14, priceSold);
-			setStringOrNull(statement, 15, card.getUuid());
+			setStringOrNull(statement, 15, java.util.UUID.randomUUID().toString());
 			setStringOrNull(statement, 16, card.getCreationDate());
 			setIntegerOrNull(statement, 17, card.getPasscode());
 			statement.execute();
@@ -1287,7 +1308,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void upsertOwnedCardBatch(OwnedCard card) {
+	public int insertIntoOwnedCards(OwnedCard card) {
 		String gamePlayCardUUID = card.getGamePlayCardUUID();
 		String folder = card.getFolderName();
 		String name = card.getCardName();
@@ -1308,6 +1329,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		if (uuid == null || uuid.equals("")) {
 			uuid = java.util.UUID.randomUUID().toString();
 		}
+		else{
+			YGOLogger.error("UUID not null on an insert owned card:" + uuid);
+			return 0;
+		}
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -1321,33 +1346,27 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String normalizedPrice = Util.normalizePrice(priceBought);
 
-		String ownedInsert = SQLConst.UPSERT_OWNED_CARD_BATCH;
+		String ownedInsert = SQLConst.INSERT_OR_IGNORE_INTO_OWNED_CARDS;
 
-		try (SQLiteStatement batchUpsertOwnedCard = connection.compileStatement(ownedInsert)) {
-			setStringOrNull(batchUpsertOwnedCard, 1, gamePlayCardUUID);
-			setStringOrNull(batchUpsertOwnedCard, 2, folder);
-			setStringOrNull(batchUpsertOwnedCard, 3, name);
-			setIntegerOrNull(batchUpsertOwnedCard, 4, quantity);
-			setStringOrNull(batchUpsertOwnedCard, 5, setCode);
-			setStringOrNull(batchUpsertOwnedCard, 6, setNumber);
-			setStringOrNull(batchUpsertOwnedCard, 7, setName);
-			setStringOrNull(batchUpsertOwnedCard, 8, setRarity);
-			setStringOrNull(batchUpsertOwnedCard, 9, colorVariant);
-			setStringOrNull(batchUpsertOwnedCard, 10, condition);
-			setStringOrNull(batchUpsertOwnedCard, 11, printing);
-			setStringOrNull(batchUpsertOwnedCard, 12, dateBought);
-			setStringOrNull(batchUpsertOwnedCard, 13, normalizedPrice);
-			setIntegerOrNull(batchUpsertOwnedCard, 14, rarityUnsure);
-			setStringOrNull(batchUpsertOwnedCard, 15, uuid);
-			setIntegerOrNull(batchUpsertOwnedCard, 16, passcode);
-			// conflict fields
-			setIntegerOrNull(batchUpsertOwnedCard, 17, quantity);
-			setIntegerOrNull(batchUpsertOwnedCard, 18, rarityUnsure);
-			setStringOrNull(batchUpsertOwnedCard, 19, setRarity);
-			setStringOrNull(batchUpsertOwnedCard, 20, colorVariant);
-			setStringOrNull(batchUpsertOwnedCard, 21, uuid);
+		try (SQLiteStatement statement = connection.compileStatement(ownedInsert)) {
+			setStringOrNull(statement, 1, gamePlayCardUUID);
+			setStringOrNull(statement, 2, folder);
+			setStringOrNull(statement, 3, name);
+			setIntegerOrNull(statement, 4, quantity);
+			setStringOrNull(statement, 5, setCode);
+			setStringOrNull(statement, 6, setNumber);
+			setStringOrNull(statement, 7, setName);
+			setStringOrNull(statement, 8, setRarity);
+			setStringOrNull(statement, 9, colorVariant);
+			setStringOrNull(statement, 10, condition);
+			setStringOrNull(statement, 11, printing);
+			setStringOrNull(statement, 12, dateBought);
+			setStringOrNull(statement, 13, normalizedPrice);
+			setIntegerOrNull(statement, 14, rarityUnsure);
+			setStringOrNull(statement, 15, uuid);
+			setIntegerOrNull(statement, 16, passcode);
 
-			batchUpsertOwnedCard.execute();
+			return statement.executeUpdateDelete();
 		}
 	}
 
@@ -1478,7 +1497,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		try (Cursor rs = connection.rawQuery(query, null)) {
 			if(rs.moveToNext()){
-				int currentLowest = rs.getInt(0);
+				int currentLowest = rs.getInt(1);
 				return currentLowest - 1;
 			}
 		}

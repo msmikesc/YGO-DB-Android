@@ -52,10 +52,10 @@ public class ImportOwnedCardFromExportedCSV {
 			for (OwnedCard existingCard : ownedRarities) {
 				if (Util.doesCardExactlyMatchWithColor(card.getFolderName(), card.getCardName(), card.getSetCode(), card.getSetNumber(),
 						card.getCondition(), card.getEditionPrinting(), card.getPriceBought(), card.getDateBought(), card.getColorVariant(),
+						card.getSetRarity(), card.getSetName(), card.getPasscode(), card.getGamePlayCardUUID(),
 						existingCard)) {
 					// exact match found
-					if (existingCard.getQuantity() == card.getQuantity() && existingCard.getRarityUnsure() == card.getRarityUnsure()
-							&& existingCard.getSetRarity().equals(card.getSetRarity())) {
+					if (existingCard.getQuantity() == card.getQuantity() && existingCard.getRarityUnsure() == card.getRarityUnsure()) {
 						// nothing to update
 						card = null;
 					} else {
@@ -68,7 +68,7 @@ public class ImportOwnedCardFromExportedCSV {
 
 			if (card != null) {
 				count += card.getQuantity();
-				db.upsertOwnedCardBatch(card);
+				db.insertOrUpdateOwnedCardByUUID(card);
 			}
 		}
 

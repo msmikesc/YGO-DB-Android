@@ -82,7 +82,7 @@ public class ImportFromTCGPlayer {
 		overwriteInputFileWithUpdates(tempResourcePath, inputFile, readCSVRecords);
 
 		for (OwnedCard card : map.values()) {
-			db.upsertOwnedCardBatch(card);
+			db.insertOrUpdateOwnedCardByUUID(card);
 		}
 
 		db.closeInstance();
@@ -154,10 +154,10 @@ public class ImportFromTCGPlayer {
 				for (OwnedCard existingCard : ownedRarities) {
 					if (Util.doesCardExactlyMatchWithColor(card.getFolderName(), card.getCardName(), card.getSetCode(),
 							card.getSetNumber(), card.getCondition(), card.getEditionPrinting(), card.getPriceBought(), card.getDateBought(),
-							card.getColorVariant(), existingCard)) {
+							card.getColorVariant(), card.getSetRarity(), card.getSetName(), card.getPasscode(), card.getGamePlayCardUUID(),
+							existingCard)) {
 						card.setQuantity(card.getQuantity() + existingCard.getQuantity());
 						card.setUuid(existingCard.getUuid());
-						card.setGamePlayCardUUID(existingCard.getGamePlayCardUUID());
 						break;
 					}
 				}

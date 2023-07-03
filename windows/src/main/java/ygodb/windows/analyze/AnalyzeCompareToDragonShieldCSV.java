@@ -53,6 +53,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 			String printing = current.get(Const.PRINTING_CSV).trim();
 			String priceBought = Util.normalizePrice(current.get(Const.PRICE_BOUGHT_CSV));
 			String dateBought = current.get(Const.DATE_BOUGHT_CSV).trim();
+			String setName = current.get(Const.SET_NAME_CSV).trim();
 
 			String colorCode = Const.DEFAULT_COLOR_VARIANT;
 
@@ -104,7 +105,8 @@ public class AnalyzeCompareToDragonShieldCSV {
 					OwnedCard card = list.get(i);
 
 					if (Util.doesCardExactlyMatchWithColor(folder, name, setCode, setNumber, condition, printing,
-							priceBought, dateBought, colorCode, card)) {
+							priceBought, dateBought, colorCode, card.getSetRarity(), setName, card.getPasscode(),
+							card.getGamePlayCardUUID(), card)) {
 						foundMatch = true;
 						list.remove(i);
 

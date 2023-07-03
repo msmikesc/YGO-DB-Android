@@ -57,28 +57,26 @@ public class Util {
 		card.setSetNumber(setIdentified.getSetNumber());
 		card.setRarityUnsure(setIdentified.getRarityUnsure());
 		card.setPasscode(passcode);
-
-		card.setUuid(UUID.randomUUID().toString());
 		
 		return card;
 	}
 	
-	public static boolean doesCardExactlyMatch(String folder, String name, String setCode, String setNumber,
-			String condition, String printing, String priceBought, String dateBought, OwnedCard existingCard) {
-        return setNumber.equals(existingCard.getSetNumber()) && priceBought.equals(existingCard.getPriceBought())
-                && dateBought.equals(existingCard.getDateBought()) && folder.equals(existingCard.getFolderName())
-                && condition.equals(existingCard.getCondition()) && printing.equals(existingCard.getEditionPrinting())
-                && name.equals(existingCard.getCardName()) && setCode.equals(existingCard.getSetCode());
-    }
-	
 	public static boolean doesCardExactlyMatchWithColor(String folder, String name, String setCode, String setNumber,
-			String condition, String printing, String priceBought, String dateBought, String colorVariant,
-			OwnedCard existingCard) {
-        return setNumber.equals(existingCard.getSetNumber()) && priceBought.equals(existingCard.getPriceBought())
-                && dateBought.equals(existingCard.getDateBought()) && folder.equals(existingCard.getFolderName())
-                && condition.equals(existingCard.getCondition()) && printing.equals(existingCard.getEditionPrinting())
-                && name.equals(existingCard.getCardName()) && setCode.equals(existingCard.getSetCode())
-                && colorVariant.equals(existingCard.getColorVariant());
+			String condition, String printing, String priceBought, String dateBought, String colorVariant, String rarity,
+			String setName, int passcode, String gamePlayCardUUID, OwnedCard existingCard) {
+		try{
+			return setNumber.equals(existingCard.getSetNumber()) && priceBought.equals(existingCard.getPriceBought())
+					&& dateBought.equals(existingCard.getDateBought()) && folder.equals(existingCard.getFolderName())
+					&& condition.equals(existingCard.getCondition()) && printing.equals(existingCard.getEditionPrinting())
+					&& name.equals(existingCard.getCardName()) && setCode.equals(existingCard.getSetCode())
+					&& colorVariant.equals(existingCard.getColorVariant()) && rarity.equals(existingCard.getSetRarity())
+					&& setName.equals(existingCard.getSetName()) && passcode == existingCard.getPasscode()
+					&& gamePlayCardUUID.equals(existingCard.getGamePlayCardUUID()
+			);
+		}catch (Exception e){
+			YGOLogger.logException(e);
+			throw e;
+		}
     }
 
 	public static void checkSetCounts(SQLiteConnection db) throws SQLException {

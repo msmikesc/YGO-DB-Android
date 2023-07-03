@@ -115,22 +115,12 @@ public class SQLConst {
 			"setName, setRarity, setRarityColorVariant, condition, editionPrinting, dateBought, " +
 			"priceBought, dateSold, priceSold, UUID, creationDate, modificationDate, passcode) " +
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now','localtime'), ?)";
-	public static final String UPSERT_OWNED_CARD_BATCH =
-			"insert into ownedCards(gamePlayCardUUID,folderName,cardName,quantity,setCode,"
-			+ "setNumber,setName,setRarity,setRarityColorVariant,condition,editionPrinting,dateBought"
-			+ ",priceBought,rarityUnsure, creationDate, modificationDate, UUID, passcode) "
-			+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
-			+ "datetime('now','localtime'),datetime('now','localtime'),?,?)"
-			+ "on conflict (gamePlayCardUUID," +
-			"setNumber," +
-			"condition," +
-			"editionPrinting," +
-			"dateBought," +
-			"priceBought," +
-			"folderName) "
-			+ "do update set quantity = ?, rarityUnsure = ?, setRarity = ?, setRarityColorVariant = ?, "
-			+ "modificationDate = datetime('now','localtime'), "
-			+ "UUID = ?";
+	public static final String INSERT_OR_IGNORE_INTO_OWNED_CARDS =
+			"insert OR IGNORE into ownedCards(gamePlayCardUUID,folderName,cardName,quantity,setCode,"
+					+ "setNumber,setName,setRarity,setRarityColorVariant,condition,editionPrinting,dateBought"
+					+ ",priceBought,rarityUnsure, creationDate, modificationDate, UUID, passcode) "
+					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
+					+ "datetime('now','localtime'),datetime('now','localtime'),?,?)";
 	public static final String REPLACE_INTO_CARD_SET_WITH_SOFT_PRICE_UPDATE =
 			"INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName,setRarity,cardName) values(?,?,?,?,?)";
 	public static final String UPDATE_CARD_SETS_SET_NAME =
