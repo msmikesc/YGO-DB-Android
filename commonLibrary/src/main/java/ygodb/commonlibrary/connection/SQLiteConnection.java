@@ -17,8 +17,6 @@ public interface SQLiteConnection {
 
     HashMap<String, ArrayList<CardSet>> getAllCardRarities() throws SQLException;
 
-    ArrayList<CardSet> getAllCardSetsOfCardByGamePlayCardUUIDAndSet(String gamePlayCardUUID, String setName) throws SQLException;
-
     ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException;
 
     ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;

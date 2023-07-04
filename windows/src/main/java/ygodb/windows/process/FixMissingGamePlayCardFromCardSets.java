@@ -36,7 +36,7 @@ public class FixMissingGamePlayCardFromCardSets {
 			for (String gamePlayCardUUID : list) {
 				ArrayList<String> titles = db.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID);
 				
-				ArrayList<CardSet> cardSets = db.getAllCardSetsOfCardByGamePlayCardUUIDAndSet(gamePlayCardUUID, setName);
+				ArrayList<CardSet> cardSets = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
 				
 				if(titles == null || titles.isEmpty()) {
 					YGOLogger.info("0 gamePlayCard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).getCardName());

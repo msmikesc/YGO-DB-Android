@@ -11,7 +11,6 @@ public class CardSet {
 	private String setPriceUpdateTime;
 	private String colorVariant;
 	private int rarityUnsure;
-	private String cardType;
 	private String setCode;
 
 	public String getGamePlayCardUUID() {
@@ -84,14 +83,6 @@ public class CardSet {
 
 	public void setRarityUnsure(int rarityUnsure) {
 		this.rarityUnsure = rarityUnsure;
-	}
-
-	public String getCardType() {
-		return cardType;
-	}
-
-	public void setCardType(String cardType) {
-		this.cardType = cardType;
 	}
 
 	public String getSetCode() {

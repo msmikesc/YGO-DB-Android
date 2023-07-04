@@ -6,19 +6,19 @@ public class SQLConst {
 
 	public static final String OWNED_CARDS_TABLE = "ownedCards";
 
-	public static final String GET_ALL_CARD_RARITIES =
-			"Select * from cardSets";
-	public static final String GET_ALL_CARD_SETS_OF_CARD_BY_GAME_PLAY_CARD_UUID_AND_SET =
-			"Select * from cardSets where gamePlayCardUUID=? and setName = ?";
+	public static final String SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE =
+			"Select cardSets.*, setData.setCode from cardSets left join setData on cardSets.setName = setData.setName";
+
+	public static final String GET_ALL_CARD_RARITIES = SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE;
 	public static final String GET_ALL_CARD_SETS_OF_CARD_BY_SET_NUMBER =
-			"Select * from cardSets where setNumber = ?";
+			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
+			" where setNumber = ?";
 	public static final String GET_RARITIES_OF_CARD_BY_GAME_PLAY_CARD_UUID =
-			"Select * from cardSets a left join gamePlayCard b on a.gamePlayCardUUID = b.gamePlayCardUUID " +
-			"where a.gamePlayCardUUID=?";
+			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
+			" where gamePlayCardUUID=?";
 	public static final String GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID =
-			"Select * from cardSets a left join gamePlayCard b " +
-			"on a.gamePlayCardUUID = b.gamePlayCardUUID " +
-			"where a.gamePlayCardUUID=? and UPPER(a.setName) = UPPER(?)";
+			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
+			" where gamePlayCardUUID=? and UPPER(cardSets.setName) = UPPER(?)";
 	public static final String GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID =
 			"Select * from gamePlayCard where gamePlayCardUUID=?";
 	public static final String GET_GAME_PLAY_CARD_UUID_FROM_TITLE =
@@ -68,10 +68,11 @@ public class SQLConst {
 	public static final String GET_COUNT_QUANTITY_MANUAL =
 			"select sum(quantity) from ownedCards where ownedCards.folderName = 'Manual Folder'";
 	public static final String GET_FIRST_CARD_SET_FOR_CARD_IN_SET =
-			"select * from cardSets where UPPER(setName) = UPPER(?) and UPPER(cardName) = UPPER(?)";
+			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
+			" where UPPER(cardSets.setName) = UPPER(?) and UPPER(cardName) = UPPER(?)";
 	public static final String GET_CARD_SETS_FOR_VALUES =
-			"select * from cardSets where UPPER(setName) = UPPER(?) " +
-			"and UPPER(setNumber) = UPPER(?) and UPPER(setRarity) = UPPER(?)";
+			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
+			" where UPPER(cardSets.setName) = UPPER(?) and UPPER(setNumber) = UPPER(?) and UPPER(setRarity) = UPPER(?)";
 	public static final String GET_SET_META_DATA_FROM_SET_NAME =
 			"select setName,setCode,numOfCards,releaseDate from setData where UPPER(setName) = UPPER(?)";
 	public static final String GET_SET_META_DATA_FROM_SET_CODE =

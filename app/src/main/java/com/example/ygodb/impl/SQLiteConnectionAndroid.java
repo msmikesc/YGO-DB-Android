@@ -242,11 +242,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		set.setSetRarity(rs.getString(getColumn(col, Const.SET_RARITY)));
 		set.setSetPrice(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE))));
 		set.setSetPriceUpdateTime(rs.getString(getColumn(col, Const.SET_PRICE_UPDATE_TIME)));
-	}
-
-	@Override
-	public ArrayList<CardSet> getAllCardSetsOfCardByGamePlayCardUUIDAndSet(String gamePlayCardUUID, String setName) {
-		throw new UnsupportedOperationException();
+		set.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
 	}
 
 	@Override
@@ -272,8 +268,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			while (rs.moveToNext()) {
 				CardSet set = new CardSet();
 				getAllCardSetFieldsFromRS(rs, col, set);
-				set.setCardType(rs.getString(getColumn(col, Const.TYPE)));
-
 				results.add(set);
 			}
 
@@ -299,8 +293,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			while (rs.moveToNext()) {
 				CardSet set = new CardSet();
 				getAllCardSetFieldsFromRS(rs, col, set);
-				set.setCardType(rs.getString(getColumn(col, Const.TYPE)));
-
 				results.add(set);
 			}
 
@@ -928,14 +920,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String[] params = new String[]{setName, cardName};
 		try (Cursor rs = connection.rawQuery(query, params)) {
 			String[] col = rs.getColumnNames();
-
 			CardSet set = null;
-
 			if (rs.moveToNext()) {
 				set = new CardSet();
 				getAllCardSetFieldsFromRS(rs, col, set);
 			}
-
 			return set;
 		}
 	}

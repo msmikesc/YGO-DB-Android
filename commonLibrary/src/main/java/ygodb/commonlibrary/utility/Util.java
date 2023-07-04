@@ -38,14 +38,14 @@ public class Util {
 
 	private Util(){}
 
-	public static OwnedCard formOwnedCard(String folder, String name, String quantity, String setCode, String condition,
+	public static OwnedCard formOwnedCard(String folder, String name, String quantity, String condition,
 			String printing, String priceBought, String dateBought, CardSet setIdentified, int passcode) {
 		OwnedCard card = new OwnedCard();
 		
 		card.setFolderName(folder);
 		card.setCardName(name);
 		card.setQuantity(Integer.parseInt(quantity));
-		card.setSetCode(setCode);
+		card.setSetCode(setIdentified.getSetCode());
 		card.setCondition(condition);
 		card.setEditionPrinting(printing);
 		card.setPriceBought(normalizePrice(priceBought));

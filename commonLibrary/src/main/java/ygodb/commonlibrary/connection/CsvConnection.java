@@ -251,8 +251,9 @@ public class CsvConnection {
 		setIdentified.setSetName(setName);
 		setIdentified.setSetNumber(setNumber);
 		setIdentified.setGamePlayCardUUID(gamePlayCardUUID);
+		setIdentified.setSetCode(setCode);
 		
-		OwnedCard card = Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
+		OwnedCard card = Util.formOwnedCard(folder, name, quantity, condition, printing, priceBought,
 				dateBought, setIdentified, passcode);
 		
 		card.setUuid(uuid);
@@ -363,22 +364,12 @@ public class CsvConnection {
 			setIdentified.setColorVariant(Const.DEFAULT_COLOR_VARIANT);
 			setIdentified.setSetName(setName);
 			setIdentified.setSetNumber(null);
+			setIdentified.setSetCode(null);
 			setIdentified.setGamePlayCardUUID(db.getGamePlayCardUUIDFromTitle(name));
-
 		}
 
 		setIdentified.setSetRarity(rarity);
 		setIdentified.setColorVariant(colorVariant);
-		
-		String setCode = null;
-
-		ArrayList<SetMetaData> metaData = db.getSetMetaDataFromSetName(setName);
-
-		if (metaData.size() != 1) {
-			YGOLogger.error("Unknown metaData for set: " + setName);
-		} else {
-			setCode = metaData.get(0).getSetCode();
-		}
 
 		String priceBought = Util.normalizePrice(price);
 
@@ -396,7 +387,7 @@ public class CsvConnection {
 			passcode = gpc.getPasscode();
 		}
 
-		return Util.formOwnedCard(folder, name, quantity, setCode, condition, printing, priceBought,
+		return Util.formOwnedCard(folder, name, quantity, condition, printing, priceBought,
 				dateBought, setIdentified, passcode);
 	}
 

@@ -56,13 +56,6 @@ public class AnalyzeCardsInSet {
 			}
 		}
 
-		String requestedSetCode = "";
-
-		if(!archetypeMode) {
-			ArrayList<SetMetaData> setMetaData = db.getSetMetaDataFromSetName(requestedSetName);
-			requestedSetCode = setMetaData.get(0).getSetCode();
-		}
-
 		for (GamePlayCard currentGamePlayCard : list) {
 
 			String gamePlayCardUUID = currentGamePlayCard.getGamePlayCardUUID();
@@ -70,9 +63,6 @@ public class AnalyzeCardsInSet {
 			ArrayList<CardSet> rarityList;
 			if(!archetypeMode) {
 				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, requestedSetName);
-				for(CardSet set : rarityList){
-					set.setSetCode(requestedSetCode);
-				}
 			}
 			else{
 				rarityList = db.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID);

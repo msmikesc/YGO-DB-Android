@@ -43,16 +43,7 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 
 			card.setGamePlayCardUUID(setIdentified.getGamePlayCardUUID());
 			card.setSetNumber(setIdentified.getSetNumber());
-
-			ArrayList<SetMetaData> metaData = db.getSetMetaDataFromSetName(newSetName);
-
-			if (metaData.size() != 1) {
-				YGOLogger.info("Unknown metaData for set: " + newSetName);
-				continue;
-			} else {
-				card.setSetCode(metaData.get(0).getSetCode());
-			}
-
+			card.setSetCode(setIdentified.getSetCode());
 			card.setRarityUnsure(0);
 
 			try{

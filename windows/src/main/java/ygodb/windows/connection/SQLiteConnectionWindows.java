@@ -68,33 +68,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<CardSet> getAllCardSetsOfCardByGamePlayCardUUIDAndSet(String gamePlayCardUUID, String setName) throws SQLException {
-
-		Connection connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_ALL_CARD_SETS_OF_CARD_BY_GAME_PLAY_CARD_UUID_AND_SET;
-
-		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery)) {
-			statementSetQuery.setString(1, gamePlayCardUUID);
-			statementSetQuery.setString(2, setName);
-
-			try (ResultSet rarities = statementSetQuery.executeQuery()) {
-
-				ArrayList<CardSet> setRarities = new ArrayList<>();
-
-				while (rarities.next()) {
-					CardSet set = new CardSet();
-					getAllCardSetFieldsFromRS(rarities, set);
-
-					setRarities.add(set);
-				}
-				return setRarities;
-			}
-
-		}
-	}
-
-	@Override
 	public ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_CARD_SETS_OF_CARD_BY_SET_NUMBER;
@@ -124,6 +97,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		set.setSetRarity(rarities.getString(Const.SET_RARITY));
 		set.setSetPrice(rarities.getString(Const.SET_PRICE));
 		set.setSetPriceUpdateTime(rarities.getString(Const.SET_PRICE_UPDATE_TIME));
+		set.setSetCode(rarities.getString(Const.SET_CODE));
 	}
 
 	@Override
@@ -140,8 +114,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				while (rarities.next()) {
 					CardSet set = new CardSet();
 					getAllCardSetFieldsFromRS(rarities, set);
-					set.setCardType(rarities.getString(Const.TYPE));
-
 					results.add(set);
 				}
 
@@ -167,8 +139,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				while (rarities.next()) {
 					CardSet set = new CardSet();
 					getAllCardSetFieldsFromRS(rarities, set);
-					set.setCardType(rarities.getString(Const.TYPE));
-
 					setRarities.add(set);
 				}
 
@@ -643,13 +613,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			distinctQueryStatement.setString(2, cardName);
 
 			try (ResultSet rs = distinctQueryStatement.executeQuery()) {
-
-				CardSet set = new CardSet();
-
+				CardSet set = null;
 				if (rs.next()) {
+					set = new CardSet();
 					getAllCardSetFieldsFromRS(rs, set);
 				}
-
 				return set;
 			}
 		}
