@@ -89,7 +89,7 @@ public class ImportPricesFromYGOPROAPI {
 				List<String> namesList = new ArrayList<>(nameUpdateMap.keySet());
 
 				for (String setName : namesList) {
-					YGOLogger.info("Possibly need to handle set name issue count: " + nameUpdateMap.get(setName).size() + " " + setName);
+					YGOLogger.debug("Possibly need to handle set name issue count: " + nameUpdateMap.get(setName).size() + " " + setName);
 
 					for (int j = 0; j < nameUpdateMap.get(setName).size(); j++) {
 						YGOLogger.debug(nameUpdateMap.get(setName).get(j));
