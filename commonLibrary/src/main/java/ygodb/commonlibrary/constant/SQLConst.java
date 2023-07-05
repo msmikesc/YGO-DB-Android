@@ -44,11 +44,11 @@ public class SQLConst {
 	public static final String GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME =
 			"select distinct gamePlayCardUUID from cardSets where setName = ?";
 	public static final String GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME =
-			"select a.* from gamePlayCard a left join cardSets b " +
+			"select distinct a.* from gamePlayCard a left join cardSets b " +
 			"on a.gamePlayCardUUID = b.gamePlayCardUUID " +
 			"where b.setName = ?";
 	public static final String GET_DISTINCT_GAMEPLAYCARDS_BY_ARCHETYPE =
-			"select * from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
+			"select distinct * from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
 	public static final String GET_SORTED_CARDS_IN_SET_BY_NAME =
 			"select setNumber from cardSets where setName = ?";
 	public static final String GET_DISTINCT_SET_NAMES =
@@ -133,15 +133,42 @@ public class SQLConst {
 	public static final String UPDATE_CARD_SET_PRICE_WITH_RARITY =
 			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
 			+ " where setNumber = ? and setRarity = ?";
+	public static final String UPDATE_CARD_SET_PRICE_WITH_RARITY_FIRST =
+			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime')"
+					+ " where setNumber = ? and setRarity = ?";
 	public static final String GET_UPDATED_ROW_COUNT =
 			"select changes()";
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME =
 			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
 			+ " where setNumber = ? and setRarity = ? and setName = ?";
 
+	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_FIRST =
+			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime')"
+					+ " where setNumber = ? and setRarity = ? and setName = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME =
+			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
+					+ " where setNumber = ? and setRarity = ? and setName = ? and UPPER(cardName) = UPPER(?)";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST =
+			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime')"
+					+ " where setNumber = ? and setRarity = ? and setName = ? and UPPER(cardName) = UPPER(?)";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME =
+			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
+					+ " where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?)";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST =
+			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime')"
+					+ " where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?)";
+
 	public static final String UPDATE_CARD_SET_PRICE =
 			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
 			+ " where setNumber = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_FIRST =
+			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime')"
+					+ " where setNumber = ?";
 
 	public static final String GET_NEW_LOWEST_PASSCODE =
 			"select min(cast(passcode as INTEGER)) from gamePlayCard";

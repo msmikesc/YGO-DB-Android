@@ -105,14 +105,21 @@ public interface SQLiteConnection {
 
     void updateSetName(String original, String newName) throws SQLException;
 
-    int updateCardSetPrice(String setNumber, String rarity, String price) throws SQLException;
+    int updateCardSetPrice(String setNumber, String rarity, String price, boolean isFirstEdition) throws SQLException;
 
-    int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName)
+    int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition)
             throws SQLException;
 
     int getUpdatedRowCount() throws SQLException;
 
-    int updateCardSetPrice(String setNumber, String price) throws SQLException;
+    int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName,
+                                             String cardName, boolean isFirstEdition)
+            throws SQLException;
+
+    int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+            throws SQLException;
+
+    int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) throws SQLException;
 
     int getNewLowestPasscode() throws SQLException;
 }

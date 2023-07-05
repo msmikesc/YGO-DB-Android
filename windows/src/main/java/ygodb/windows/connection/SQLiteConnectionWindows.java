@@ -97,6 +97,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		set.setSetRarity(rarities.getString(Const.SET_RARITY));
 		set.setSetPrice(rarities.getString(Const.SET_PRICE));
 		set.setSetPriceUpdateTime(rarities.getString(Const.SET_PRICE_UPDATE_TIME));
+		set.setSetPriceFirst(rarities.getString(Const.SET_PRICE_FIRST));
+		set.setSetPriceFirstUpdateTime(rarities.getString(Const.SET_PRICE_FIRST_UPDATE_TIME));
 		set.setSetCode(rarities.getString(Const.SET_CODE));
 	}
 
@@ -1083,7 +1085,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
 
 				if (!list.isEmpty() && (list.get(0).getSetPrice() == null || Util.normalizePrice(price).equals(Util.normalizePrice("0")))) {
-					updateCardSetPriceWithSetName(setNumber, rarity, price, setName);
+					updateCardSetPriceWithSetName(setNumber, rarity, price, setName, false);
 				}
 			}
 		}
@@ -1132,11 +1134,15 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String rarity, String price) throws SQLException {
+	public int updateCardSetPrice(String setNumber, String rarity, String price, boolean isFirstEdition) throws SQLException {
 
 		Connection connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY_FIRST;
+		}
 
 		try (PreparedStatement statement = connection.prepareStatement(update)) {
 
@@ -1162,12 +1168,16 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName)
+	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition)
 			throws SQLException {
 
 		Connection connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_FIRST;
+		}
 
 		try (PreparedStatement statement = connection.prepareStatement(update)) {
 
@@ -1181,10 +1191,62 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String price) throws SQLException {
+	public int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName,
+													String cardName, boolean isFirstEdition)
+			throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST;
+		}
+
+		try (PreparedStatement statement = connection.prepareStatement(update)) {
+
+			statement.setString(1, price);
+			statement.setString(2, setNumber);
+			statement.setString(3, rarity);
+			statement.setString(4, setName);
+			statement.setString(5, cardName);
+
+			return statement.executeUpdate();
+		}
+	}
+
+	@Override
+	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+			throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST;
+		}
+
+		try (PreparedStatement statement = connection.prepareStatement(update)) {
+
+			statement.setString(1, price);
+			statement.setString(2, setNumber);
+			statement.setString(3, rarity);
+			statement.setString(4, cardName);
+
+			return statement.executeUpdate();
+		}
+	}
+
+	@Override
+	public int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) throws SQLException {
 		Connection connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_FIRST;
+		}
 
 		try (PreparedStatement statement = connection.prepareStatement(update)) {
 			statement.setString(1, price);

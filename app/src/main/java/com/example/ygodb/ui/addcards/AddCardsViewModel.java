@@ -127,17 +127,6 @@ public class AddCardsViewModel extends ViewModel {
 
             newCard.setSetNamesOptions(current.getSetNamesOptions());
 
-            newCard.setPriceBought(getAPIPriceFromRarity(current.getSetRarity(),
-                    current.getAnalyzeResultsCardSets(), current.getSetName(),
-                    current.getGamePlayCardUUID(), current.getSetNumber()));
-
-            if(current.getCondition() == null || current.getCondition().equals("")){
-                newCard.setCondition("NearMint");
-            }
-            else{
-                newCard.setCondition(current.getCondition());
-            }
-
             if(current.getEditionPrinting() == null || current.getEditionPrinting().equals("")){
                 //assume ots unlimited, everything else 1st
                 if(newCard.getSetName().contains("OTS")){
@@ -151,6 +140,21 @@ public class AddCardsViewModel extends ViewModel {
             else{
                 newCard.setEditionPrinting(current.getEditionPrinting());
             }
+
+            boolean isFirstEdition = newCard.getEditionPrinting().contains("1st");
+
+            newCard.setPriceBought(getAPIPriceFromRarity(current.getSetRarity(),
+                    current.getAnalyzeResultsCardSets(), current.getSetName(),
+                    current.getGamePlayCardUUID(), current.getSetNumber(), isFirstEdition));
+
+            if(current.getCondition() == null || current.getCondition().equals("")){
+                newCard.setCondition("NearMint");
+            }
+            else{
+                newCard.setCondition(current.getCondition());
+            }
+
+
 
         }
 
@@ -174,8 +178,10 @@ public class AddCardsViewModel extends ViewModel {
 
             String setName = (current.getDropdownSelectedSetName() == null) ? current.getSetName() : current.getDropdownSelectedSetName();
 
+            boolean isFirstEdition = current.getEditionPrinting().contains("1st");
+
             current.setPriceBought(getAPIPriceFromRarity(rarity, current.getAnalyzeResultsCardSets(),
-                    setName, current.getGamePlayCardUUID(), setNumber));
+                    setName, current.getGamePlayCardUUID(), setNumber, isFirstEdition));
         }
     }
 
@@ -211,7 +217,7 @@ public class AddCardsViewModel extends ViewModel {
     }
 
     public String getAPIPriceFromRarity(String rarity, List<CardSet> analyzeResultsCardSets,
-                                        String setName, String gamePlayCardUUID, String setNumber){
+                                        String setName, String gamePlayCardUUID, String setNumber, boolean isFirstEdition){
 
         if(analyzeResultsCardSets == null){
             analyzeResultsCardSets = AndroidUtil.getDBInstance().
@@ -219,7 +225,7 @@ public class AddCardsViewModel extends ViewModel {
         }
 
         if(analyzeResultsCardSets.size() == 1){
-            return analyzeResultsCardSets.get(0).getSetPrice();
+            return analyzeResultsCardSets.get(0).getBestExistingPrice(isFirstEdition);
         }
 
         String[] rarities = rarity.split(", ");
@@ -244,7 +250,7 @@ public class AddCardsViewModel extends ViewModel {
             if (cardSet.getSetRarity().equalsIgnoreCase(assumedRarity) &&
                     cardSet.getSetNumber().equalsIgnoreCase(assumedNumber) &&
                     cardSet.getSetName().equalsIgnoreCase(assumedSet)) {
-                return cardSet.getSetPrice();
+                return cardSet.getBestExistingPrice(isFirstEdition);
             }
         }
 

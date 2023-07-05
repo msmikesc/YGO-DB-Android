@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -242,6 +243,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		set.setSetRarity(rs.getString(getColumn(col, Const.SET_RARITY)));
 		set.setSetPrice(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE))));
 		set.setSetPriceUpdateTime(rs.getString(getColumn(col, Const.SET_PRICE_UPDATE_TIME)));
+		set.setSetPriceFirst(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE_FIRST))));
+		set.setSetPriceFirstUpdateTime(rs.getString(getColumn(col, Const.SET_PRICE_FIRST_UPDATE_TIME)));
 		set.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
 	}
 
@@ -308,7 +311,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		ArrayList<OwnedCard> results = new ArrayList<>();
 
 		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
-				"a.setRarity as setRarityCol", "a.setPrice", "sum(b.quantity) as quantity",
+				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "sum(b.quantity) as quantity",
 				"MAX(b.dateBought) as maxDate, c.setCode", "d.passcode"};
 
 		String selection = "a.cardName like ?";
@@ -333,7 +336,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
 				current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
 				current.setSetRarity(rs.getString(getColumn(col, "setRarityCol")));
-				current.setPriceBought(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE))));
+
+				String lowestPrice = Util.getLowestPriceString(rs.getString(getColumn(col, Const.SET_PRICE)),
+						rs.getString(getColumn(col, Const.SET_PRICE_FIRST)));
+
+				current.setPriceBought(Util.normalizePrice(lowestPrice));
+
 				current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));
 				current.setDateBought(rs.getString(getColumn(col, "maxDate")));
 				current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
@@ -1378,7 +1386,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
 
 				if (!list.isEmpty() && list.get(0).getSetPrice() != null) {
-					updateCardSetPriceWithSetName(setNumber, rarity, price, setName);
+					updateCardSetPriceWithSetName(setNumber, rarity, price, setName, false);
 				}
 			}
 		}
@@ -1423,10 +1431,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String rarity, String price) {
+	public int updateCardSetPrice(String setNumber, String rarity, String price, boolean isFirstEdition) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY_FIRST;
+		}
 
 		try (SQLiteStatement statement = connection.compileStatement(update)) {
 			statement.bindString(1, price);
@@ -1438,10 +1450,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName) {
+	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_FIRST;
+		}
 
 		try (SQLiteStatement statement = connection.compileStatement(update)) {
 			statement.bindString(1, price);
@@ -1466,10 +1482,57 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String price) {
+	public int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName, boolean isFirstEdition) {
+		SQLiteDatabase connection = this.getInstance();
+
+		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST;
+		}
+
+		try (SQLiteStatement statement = connection.compileStatement(update)) {
+
+			statement.bindString(1, price);
+			statement.bindString(2, setNumber);
+			statement.bindString(3, rarity);
+			statement.bindString(4, setName);
+			statement.bindString(5, cardName);
+
+			return statement.executeUpdateDelete();
+		}
+	}
+
+	@Override
+	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) {
+		SQLiteDatabase connection = this.getInstance();
+
+		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST;
+		}
+
+		try (SQLiteStatement statement = connection.compileStatement(update)) {
+
+			statement.bindString(1, price);
+			statement.bindString(2, setNumber);
+			statement.bindString(3, rarity);
+			statement.bindString(4, cardName);
+
+			return statement.executeUpdateDelete();
+		}
+	}
+
+	@Override
+	public int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE;
+
+		if(isFirstEdition){
+			update = SQLConst.UPDATE_CARD_SET_PRICE_FIRST;
+		}
 
 		try (SQLiteStatement statement = connection.compileStatement(update)) {
 			statement.bindString(1, price);

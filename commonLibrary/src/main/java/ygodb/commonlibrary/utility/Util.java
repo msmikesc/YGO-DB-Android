@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import javafx.util.Pair;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
-import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.SetMetaData;
-import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 
@@ -140,90 +138,6 @@ public class Util {
 		price = price.setScale(2, RoundingMode.HALF_UP);
 
 		return price.toString();
-	}
-
-	public static CardSet findRarity(String priceBought,
-									 String setNumber, String setName, String cardName, SQLiteConnection db) throws SQLException {
-
-		List<CardSet> setRarities = DatabaseHashMap.getRaritiesOfCardInSetFromHashMap(setNumber, db);
-
-		if (setRarities.isEmpty()) {
-			// try removing color code
-
-			String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
-			String colorCode = setNumber.substring(setNumber.length() - 1);
-
-			setRarities = DatabaseHashMap.getRaritiesOfCardInSetFromHashMap(newSetNumber, db);
-
-			for (CardSet c : setRarities) {
-				c.setColorVariant(colorCode);
-			}
-		}
-
-		if (setRarities.size() == 1) {
-			CardSet match = setRarities.get(0);
-
-			match.setRarityUnsure(0);
-
-			return match;
-		}
-
-		// if we haven't found any at all give up
-		if (setRarities.isEmpty()) {
-			YGOLogger.info("Unable to find anything for " + setNumber);
-			CardSet setIdentified = new CardSet();
-
-			setIdentified.setSetName(setName);
-			setIdentified.setSetNumber(setNumber);
-			setIdentified.setSetRarity("Unknown");
-			setIdentified.setColorVariant("Unknown");
-			setIdentified.setRarityUnsure(1);
-
-			// check for name
-			setIdentified.setGamePlayCardUUID(db.getGamePlayCardUUIDFromTitle(cardName));
-
-			return setIdentified;
-		}
-
-		// assume NOT starlight, ultimate, or collectors
-		if (setRarities.size() == 2) {
-			for (int i = 0; i < 2; i++) {
-				String name = setRarities.get(i).getSetRarity();
-				if (name.equals((Rarity.StarlightRare.toString())) || name.equals((Rarity.UltimateRare.toString()))
-						|| name.equals((Rarity.CollectorsRare.toString()))) {
-					CardSet match;
-					if (i == 0) {
-						match = setRarities.get(1);
-					}
-					else{
-						match = setRarities.get(0);
-					}
-					match.setRarityUnsure(0);
-					YGOLogger.info("Took a guess that " + setNumber + ":" + cardName + " is:" + match.getSetRarity());
-					return match;
-				}
-			}
-		}
-
-		// try the closest price
-		BigDecimal priceBoughtDec = new BigDecimal(priceBought);
-		BigDecimal distance = new BigDecimal(setRarities.get(0).getSetPrice()).subtract(priceBoughtDec).abs();
-		int idx = 0;
-		for (int c = 1; c < setRarities.size(); c++) {
-			BigDecimal cDistance = new BigDecimal(setRarities.get(c).getSetPrice()).subtract(priceBoughtDec).abs();
-			if (cDistance.compareTo(distance) <= 0) {
-				idx = c;
-				distance = cDistance;
-			}
-		}
-
-		CardSet rValue = setRarities.get(idx);
-		rValue.setRarityUnsure(1);
-
-		YGOLogger.info("Took a guess that " + setNumber + ":" + cardName + " is:" + rValue.getSetRarity());
-
-		return rValue;
-
 	}
 
 	public static void checkForIssuesWithCardNamesInSet(String setName, SQLiteConnection db) throws SQLException {
@@ -633,5 +547,46 @@ public class Util {
 		}
 
 		return newPasscode;
+	}
+	
+	public static String getLowestPriceString(String input1, String input2){
+		BigDecimal zero = new BigDecimal(0);
+		BigDecimal price;
+		BigDecimal priceFirst;
+		boolean noFirstOption = false;
+		boolean noSecondOption = false;
+
+		if(input1 == null){
+			price = new BigDecimal(Integer.MAX_VALUE);
+			noFirstOption = true;
+		}
+		else{
+			price = new BigDecimal(input1);
+		}
+
+		if(input2 == null){
+			priceFirst = new BigDecimal(Integer.MAX_VALUE);
+			noSecondOption = true;
+		}
+		else{
+			priceFirst = new BigDecimal(input2);
+		}
+
+		if(noFirstOption && noSecondOption){
+			return Const.ZERO_PRICE_STRING;
+		}
+		if(noFirstOption || zero.compareTo(price) == 0){
+			return input2;
+		}
+		if(noSecondOption || zero.compareTo(priceFirst) == 0){
+			return input1;
+		}
+
+		if(price.compareTo(priceFirst) < 0){
+			return input1;
+		}
+		else{
+			return input2;
+		}
 	}
 }

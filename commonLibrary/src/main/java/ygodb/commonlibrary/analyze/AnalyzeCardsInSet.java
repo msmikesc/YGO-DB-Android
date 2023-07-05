@@ -128,14 +128,10 @@ public class AnalyzeCardsInSet {
 		//loop through all rarities and show the lowest price for summary
 		for (CardSet rarity : rarityList) {
 
-			if(rarity.getSetPrice() == null){
-				rarity.setSetPrice("0");
-			}
-
-			BigDecimal setPrice = new BigDecimal(rarity.getSetPrice());
+			BigDecimal setPrice = new BigDecimal(rarity.getLowestExistingPrice());
 			BigDecimal zero = new BigDecimal(0);
 
-			if (!(zero.equals(setPrice)) && currentData.getCardPriceSummary().compareTo(setPrice) > 0){
+			if ((zero.compareTo(setPrice) != 0) && currentData.getCardPriceSummary().compareTo(setPrice) > 0){
 				currentData.setCardPriceSummary(setPrice);
 			}
 		}

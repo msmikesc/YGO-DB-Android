@@ -1,5 +1,10 @@
 package ygodb.commonlibrary.bean;
 
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
+
+import java.math.BigDecimal;
+
 public class CardSet {
 
 	private String gamePlayCardUUID;
@@ -9,9 +14,43 @@ public class CardSet {
 	private String setRarity;
 	private String setPrice;
 	private String setPriceUpdateTime;
+	private String setPriceFirst;
+	private String setPriceFirstUpdateTime;
 	private String colorVariant;
 	private int rarityUnsure;
 	private String setCode;
+
+	public String getLowestExistingPrice(){
+		return Util.getLowestPriceString(getSetPrice(), getSetPriceFirst());
+	}
+
+	public String getBestExistingPrice(boolean preferFirstEdition){
+		BigDecimal zero = new BigDecimal(0);
+
+		String preferredPrice;
+		String secondaryPrice;
+
+		if(preferFirstEdition){
+			preferredPrice = getSetPriceFirst();
+			secondaryPrice = getSetPrice();
+		}
+		else{
+			preferredPrice = getSetPrice();
+			secondaryPrice = getSetPriceFirst();
+		}
+
+
+		if (preferredPrice != null && !new BigDecimal(preferredPrice).equals(zero)) {
+			return preferredPrice;
+		}
+
+		if (secondaryPrice != null && !new BigDecimal(secondaryPrice).equals(zero)) {
+			return secondaryPrice;
+		}
+
+		return Const.ZERO_PRICE_STRING;
+
+	}
 
 	public String getGamePlayCardUUID() {
 		return gamePlayCardUUID;
@@ -91,5 +130,21 @@ public class CardSet {
 
 	public void setSetCode(String setCode) {
 		this.setCode = setCode;
+	}
+
+	public String getSetPriceFirst() {
+		return setPriceFirst;
+	}
+
+	public void setSetPriceFirst(String setPriceFirst) {
+		this.setPriceFirst = setPriceFirst;
+	}
+
+	public String getSetPriceFirstUpdateTime() {
+		return setPriceFirstUpdateTime;
+	}
+
+	public void setSetPriceFirstUpdateTime(String setPriceFirstUpdateTime) {
+		this.setPriceFirstUpdateTime = setPriceFirstUpdateTime;
 	}
 }
