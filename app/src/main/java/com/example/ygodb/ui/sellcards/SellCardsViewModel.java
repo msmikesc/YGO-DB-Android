@@ -97,13 +97,13 @@ public class SellCardsViewModel extends ViewModel {
 
             boolean isFirstEdition = sellingCard.getEditionPrinting().contains("1st");
 
-            sellingCard.setPriceSold(getAPIPriceFromRarity(current.getSetRarity(),
-                    current.getAnalyzeResultsCardSets(), current.getSetName(),
-                    current.getGamePlayCardUUID(), current.getSetNumber(), isFirstEdition));
+            sellingCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
+
+            sellingCard.setPriceSold(getAPIPriceFromRarity(sellingCard.getSetRarity(),
+                    sellingCard.getAnalyzeResultsCardSets(), sellingCard.getSetName(),
+                    sellingCard.getGamePlayCardUUID(), sellingCard.getSetNumber(), isFirstEdition));
 
             sellingCard.setCreationDate(current.getCreationDate());
-
-            sellingCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
 
             if(current.getCondition() == null || current.getCondition().equals("")){
                 sellingCard.setCondition("NearMint");
@@ -111,11 +111,7 @@ public class SellCardsViewModel extends ViewModel {
             else{
                 sellingCard.setCondition(current.getCondition());
             }
-
-
-
         }
-
     }
 
     public void setAllPricesEstimate(){

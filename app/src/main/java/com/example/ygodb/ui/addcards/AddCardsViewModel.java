@@ -115,7 +115,6 @@ public class AddCardsViewModel extends ViewModel {
             newCard.setDateBought(sdf.format(new Date()));
             newCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
             newCard.setSetRarity(current.getSetRarity());
-            newCard.setSetName(current.getSetName());
             newCard.setQuantity(1);
             newCard.setRarityUnsure(0);
             newCard.setSetCode(current.getSetCode());
@@ -126,6 +125,14 @@ public class AddCardsViewModel extends ViewModel {
             newCard.setPasscode(current.getPasscode());
 
             newCard.setSetNamesOptions(current.getSetNamesOptions());
+
+            if(current.getSetNamesOptions() != null && !current.getSetNamesOptions().isEmpty()){
+                //set name might not be trustworthy, from view sets menu
+                newCard.setSetName(current.getSetNamesOptions().get(0));
+            }
+            else{
+                newCard.setSetName(current.getSetName());
+            }
 
             if(current.getEditionPrinting() == null || current.getEditionPrinting().equals("")){
                 //assume ots unlimited, everything else 1st
@@ -143,9 +150,9 @@ public class AddCardsViewModel extends ViewModel {
 
             boolean isFirstEdition = newCard.getEditionPrinting().contains("1st");
 
-            newCard.setPriceBought(getAPIPriceFromRarity(current.getSetRarity(),
-                    current.getAnalyzeResultsCardSets(), current.getSetName(),
-                    current.getGamePlayCardUUID(), current.getSetNumber(), isFirstEdition));
+            newCard.setPriceBought(getAPIPriceFromRarity(newCard.getSetRarity(),
+                    newCard.getAnalyzeResultsCardSets(), newCard.getSetName(),
+                    newCard.getGamePlayCardUUID(), newCard.getSetNumber(), isFirstEdition));
 
             if(current.getCondition() == null || current.getCondition().equals("")){
                 newCard.setCondition("NearMint");
@@ -153,11 +160,7 @@ public class AddCardsViewModel extends ViewModel {
             else{
                 newCard.setCondition(current.getCondition());
             }
-
-
-
         }
-
     }
 
     public void setAllPricesEstimate(){
