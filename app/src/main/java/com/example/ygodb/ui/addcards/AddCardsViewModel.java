@@ -84,7 +84,7 @@ public class AddCardsViewModel extends ViewModel {
         return cardsList;
     }
 
-    public void addNewFromOwnedCard(OwnedCard current){
+    public void addNewFromOwnedCard(OwnedCard current, int quantity){
 
         if(current.getSetNumber() == null || current.getSetRarity() == null ||
                 current.getSetName() == null || current.getCardName() == null){
@@ -105,7 +105,7 @@ public class AddCardsViewModel extends ViewModel {
             newCard = cardsList.get(position);
         }
         if(newCard != null){
-            newCard.setQuantity(newCard.getQuantity() + 1);
+            newCard.setQuantity(newCard.getQuantity() + quantity);
         }
         else{
             newCard = new OwnedCard();
@@ -115,7 +115,7 @@ public class AddCardsViewModel extends ViewModel {
             newCard.setDateBought(sdf.format(new Date()));
             newCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
             newCard.setSetRarity(current.getSetRarity());
-            newCard.setQuantity(1);
+            newCard.setQuantity(quantity);
             newCard.setRarityUnsure(0);
             newCard.setSetCode(current.getSetCode());
             newCard.setFolderName(Const.FOLDER_UNSYNCED);

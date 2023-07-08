@@ -4,10 +4,13 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
@@ -25,12 +28,15 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
     private final AddCardsViewModel addCardsViewModel;
     private final SellCardsViewModel sellCardsViewModel;
+    private final boolean isManyPlusButtons;
 
     public SingleCardToListAdapter(List<OwnedCard> ownedCards,
-           AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel) {
+           AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel,
+           boolean isManyPlusButtons) {
         this.ownedCards = ownedCards;
         this.addCardsViewModel = addCardsViewModel;
         this.sellCardsViewModel = sellCardsViewModel;
+        this.isManyPlusButtons = isManyPlusButtons;
     }
 
     public void setOwnedCards(List<OwnedCard> ownedCards) {
@@ -46,9 +52,9 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         return new ItemViewHolder(view);
     }
 
-    public void onPlusButtonClick(OwnedCard current) {
+    public void onPlusButtonClick(OwnedCard current, int quantity) {
         if(addCardsViewModel != null) {
-            addCardsViewModel.addNewFromOwnedCard(current);
+            addCardsViewModel.addNewFromOwnedCard(current, quantity);
         }
     }
 
@@ -64,8 +70,36 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         OwnedCard current = ownedCards.get(position);
 
         if(addCardsViewModel != null) {
-            ImageButton button = viewHolder.itemView.findViewById(R.id.plusButton);
-            button.setOnClickListener(view -> onPlusButtonClick(current));
+
+            LinearLayout buttonContainer = viewHolder.itemView.findViewById(R.id.incrementQuantityButtonContainer);
+
+            if(isManyPlusButtons){
+                viewHolder.plusButton.setVisibility(View.GONE);
+                buttonContainer.setVisibility(View.VISIBLE);
+                LayoutInflater inflater = LayoutInflater.from(buttonContainer.getContext());
+
+                buttonContainer.removeAllViews();
+
+                for (int i = 1; i <= 6; i++) {
+                    FrameLayout buttonLayout = (FrameLayout) inflater.inflate(R.layout.labeled_increment_quantity_button, buttonContainer, false);
+                    ImageButton button = buttonLayout.findViewById(R.id.incrementButton);
+                    TextView incrementLabel = buttonLayout.findViewById(R.id.incrementLabel);
+
+                    final int increment = i; // Capture the current value of 'i' for each button
+
+                    incrementLabel.setText(String.valueOf(increment));
+
+                    button.setOnClickListener(v -> onPlusButtonClick(current, increment));
+
+                    buttonContainer.addView(buttonLayout);
+                }
+            }
+            else {
+                viewHolder.plusButton.setVisibility(View.VISIBLE);
+                buttonContainer.setVisibility(View.GONE);
+                ImageButton singleButton = viewHolder.itemView.findViewById(R.id.plusButton);
+                singleButton.setOnClickListener(view -> onPlusButtonClick(current, 1));
+            }
         }
 
         if(sellCardsViewModel != null){
@@ -107,13 +141,6 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         viewHolder.setCode.setVisibility(View.VISIBLE);
         viewHolder.cardRarity.setVisibility(View.VISIBLE);
         viewHolder.setName.setMaxLines(2);
-
-        if(addCardsViewModel == null) {
-            viewHolder.plusButton.setVisibility(View.GONE);
-        }
-        else{
-            viewHolder.plusButton.setVisibility(View.VISIBLE);
-        }
 
         if(sellCardsViewModel == null){
             viewHolder.sellButton.setVisibility(View.GONE);
@@ -182,8 +209,8 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         ImageView cardImage;
         ImageView firstEdition;
         ImageButton plusButton;
-
         ImageButton sellButton;
+        LinearLayout incrementQuantityButtonContainer;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
@@ -199,6 +226,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             firstEdition = view.findViewById(R.id.firststEditionIcon);
             plusButton = view.findViewById(R.id.plusButton);
             sellButton = view.findViewById(R.id.sellButton);
+            incrementQuantityButtonContainer = view.findViewById(R.id.incrementQuantityButtonContainer);
 
         }
 

@@ -44,7 +44,7 @@ public class ViewCardsFragment extends Fragment {
         RecyclerView cardsListView = binding.viewList;
 
         SingleCardToListAdapter adapter = new SingleCardToListAdapter(
-                viewCardsViewModel.getCardsList(), addCardsViewModel, sellCardsViewModel);
+                viewCardsViewModel.getCardsList(), addCardsViewModel, sellCardsViewModel, false);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         layout = linearLayoutManager;
