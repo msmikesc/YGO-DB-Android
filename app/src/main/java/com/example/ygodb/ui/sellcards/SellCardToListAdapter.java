@@ -38,7 +38,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         this.sellCardsViewModel = sellCardsViewModel;
 
         try {
-            InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
+            InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open(Const.FIRST_ICON_PNG);
             firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
         }
         catch (Exception e){
@@ -144,7 +144,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         viewHolder.cardDate.setText(current.getDateBought());
         viewHolder.cardQuantity.setText(String.valueOf(current.getSellQuantity()));
 
-        if(current.getEditionPrinting().contains("1st")){
+        if(current.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST)){
             // set image to ImageView
             viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }

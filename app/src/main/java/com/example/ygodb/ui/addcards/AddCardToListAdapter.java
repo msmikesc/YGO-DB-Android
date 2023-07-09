@@ -13,21 +13,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
-import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,14 +41,14 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
         try {
             // get input stream
-            InputStream firstInputStream = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
+            InputStream firstInputStream = AndroidUtil.getAppContext().getAssets().open(Const.FIRST_ICON_PNG);
             // load image as Drawable
             firstDrawable = Drawable.createFromStream(firstInputStream, null);
 
-            InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
+            InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open(Const.FIRST_ICON_PNG);
             firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
 
-            InputStream limitedInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/Limited.png");
+            InputStream limitedInputStreamSmall = AndroidUtil.getAppContext().getAssets().open(Const.LIMITED_ICON_PNG);
             limitedDrawableSmall = Drawable.createFromStream(limitedInputStreamSmall, null);
         }
         catch (Exception e){
@@ -87,7 +82,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
     public void onFirstButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
 
-        if(current.getEditionPrinting() != null && current.getEditionPrinting().contains("1st")){
+        if(current.getEditionPrinting() != null && current.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST)){
             current.setEditionPrinting(Const.CARD_PRINTING_LIMITED);
             viewHolder.firstEdition.setImageDrawable(limitedDrawableSmall);
         }
@@ -323,7 +318,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
         button3.setImageDrawable(firstDrawable);
 
-        if(current.getEditionPrinting().contains("1st")){
+        if(current.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST)){
             // set image to ImageView
             viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
         }

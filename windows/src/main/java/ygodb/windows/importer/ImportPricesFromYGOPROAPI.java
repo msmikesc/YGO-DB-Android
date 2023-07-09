@@ -140,7 +140,7 @@ public class ImportPricesFromYGOPROAPI {
 			cardEdition = "";
 		}
 
-		boolean isFirstEdition = cardEdition.contains("1st");
+		boolean isFirstEdition = cardEdition.contains(Const.CARD_PRINTING_CONTAINS_FIRST);
 
 		setRarity = Util.checkForTranslatedRarity(setRarity);
 		setName = Util.checkForTranslatedSetName(setName);

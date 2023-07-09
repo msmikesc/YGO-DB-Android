@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
@@ -19,6 +18,7 @@ import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.InputStream;
 import java.util.List;
@@ -30,6 +30,8 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
     private final AddCardsViewModel addCardsViewModel;
     private final SellCardsViewModel sellCardsViewModel;
     private final boolean isManyPlusButtons;
+    private Drawable firstDrawableSmall;
+    private Drawable limitedDrawableSmall;
 
     public SingleCardToListAdapter(List<OwnedCard> ownedCards,
            AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel,
@@ -38,6 +40,17 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         this.addCardsViewModel = addCardsViewModel;
         this.sellCardsViewModel = sellCardsViewModel;
         this.isManyPlusButtons = isManyPlusButtons;
+
+        try {
+            InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open(Const.FIRST_ICON_PNG);
+            firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
+
+            InputStream limitedInputStreamSmall = AndroidUtil.getAppContext().getAssets().open(Const.LIMITED_ICON_PNG);
+            limitedDrawableSmall = Drawable.createFromStream(limitedInputStreamSmall, null);
+        }
+        catch (Exception e){
+            YGOLogger.logException(e);
+        }
     }
 
     public void setOwnedCards(List<OwnedCard> ownedCards) {
@@ -161,23 +174,11 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         viewHolder.cardQuantity.setText(String.valueOf(current.getQuantity()));
 
         try {
-            if(current.getEditionPrinting().contains("1st")){
-                // get input stream
-                InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
-                // load image as Drawable
-                Drawable d = Drawable.createFromStream(ims, null);
-                // set image to ImageView
-
-                viewHolder.firstEdition.setImageDrawable(d);
+            if(current.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST)){
+                viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
             }
             else if(current.getEditionPrinting().equalsIgnoreCase(Const.CARD_PRINTING_LIMITED)){
-                // get input stream
-                InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/Limited.png");
-                // load image as Drawable
-                Drawable d = Drawable.createFromStream(ims, null);
-                // set image to ImageView
-
-                viewHolder.firstEdition.setImageDrawable(d);
+                viewHolder.firstEdition.setImageDrawable(limitedDrawableSmall);
             }
             else{
                 viewHolder.firstEdition.setImageDrawable(null);

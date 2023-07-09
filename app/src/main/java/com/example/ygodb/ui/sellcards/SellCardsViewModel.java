@@ -99,7 +99,7 @@ public class SellCardsViewModel extends ViewModel {
                 sellingCard.setEditionPrinting(current.getEditionPrinting());
             }
 
-            boolean isFirstEdition = sellingCard.getEditionPrinting().contains("1st");
+            boolean isFirstEdition = sellingCard.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
 
             sellingCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
 
@@ -134,7 +134,7 @@ public class SellCardsViewModel extends ViewModel {
 
             String setNumber = (current.getDropdownSelectedSetNumber() == null) ? current.getSetNumber() : current.getDropdownSelectedSetNumber();
 
-            boolean isFirstEdition = current.getEditionPrinting().contains("1st");
+            boolean isFirstEdition = current.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
 
             current.setPriceSold(getAPIPriceFromRarity(rarity, current.getAnalyzeResultsCardSets(),
                     current.getSetName(), current.getGamePlayCardUUID(), setNumber, isFirstEdition));
