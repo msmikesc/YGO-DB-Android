@@ -1,42 +1,48 @@
 package ygodb.commonlibrary.connection;
 
-import java.io.*;
+import javafx.util.Pair;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.GamePlayCard;
+import ygodb.commonlibrary.bean.NameAndColor;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.ReadCSVRecord;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
+import ygodb.commonlibrary.utility.YGOLogger;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
-
-import javafx.util.Pair;
-import ygodb.commonlibrary.bean.CardSet;
-import ygodb.commonlibrary.bean.GamePlayCard;
-import ygodb.commonlibrary.bean.OwnedCard;
-import ygodb.commonlibrary.bean.ReadCSVRecord;
-import ygodb.commonlibrary.bean.SetMetaData;
-import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.utility.Util;
-import ygodb.commonlibrary.utility.YGOLogger;
-
 public class CsvConnection {
-
-	private CsvConnection(){}
 
 	private static final CSVFormat format = CSVFormat.DEFAULT.builder()
 			.setHeader()
 			.setSkipHeaderRecord(true)
 			.build();
 
-	public static CSVParser getParser(String filename, Charset charset) throws IOException {
+	public CSVParser getParser(String filename, Charset charset) throws IOException {
 		File f = new File(filename);
 
 		InputStream fileStream = new FileInputStream(f);
@@ -44,7 +50,7 @@ public class CsvConnection {
 		return getParser(fileStream, charset);
 	}
 
-	public static CSVParser getParser(InputStream input, Charset charset) throws IOException {
+	public CSVParser getParser(InputStream input, Charset charset) throws IOException {
 
 		BufferedReader fr = new BufferedReader(new InputStreamReader(input, charset));
 
@@ -53,7 +59,7 @@ public class CsvConnection {
 		return format.parse(fr);
 	}
 
-	private static void skipByteOrderMark(Reader reader) throws IOException {
+	private void skipByteOrderMark(Reader reader) throws IOException {
 		reader.mark(1);
 		char[] possibleBOM = new char[1];
 		int amountRead = reader.read(possibleBOM);
@@ -63,7 +69,7 @@ public class CsvConnection {
 		}
 	}
 
-	public static CSVParser getParserSkipFirstLine(String filename, Charset charset) throws IOException {
+	public CSVParser getParserSkipFirstLine(String filename, Charset charset) throws IOException {
 		File f = new File(filename);
 
 		InputStream fileStream = new FileInputStream(f);
@@ -71,7 +77,7 @@ public class CsvConnection {
 		return getParserSkipFirstLine(fileStream, charset);
 	}
 
-	public static CSVParser getParserSkipFirstLine(InputStream input, Charset charset) throws IOException {
+	public CSVParser getParserSkipFirstLine(InputStream input, Charset charset) throws IOException {
 
 		BufferedReader fr = new BufferedReader(new InputStreamReader(input, charset));
 
@@ -80,7 +86,7 @@ public class CsvConnection {
 		return format.parse(fr);
 	}
 
-	public static CSVPrinter getExportOutputFile(String filename) {
+	public CSVPrinter getExportOutputFile(String filename) {
 
 		try {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
@@ -101,7 +107,7 @@ public class CsvConnection {
 
 	}
 
-	public static CSVPrinter getTCGPlayerOutputFile(String filename) {
+	public CSVPrinter getTCGPlayerOutputFile(String filename) {
 
 		try {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
@@ -119,7 +125,7 @@ public class CsvConnection {
 
 	}
 	
-	public static CSVPrinter getExportUploadFile(String filename) {
+	public CSVPrinter getExportUploadFile(String filename) {
 
 		try {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
@@ -140,7 +146,7 @@ public class CsvConnection {
 
 	}
 	
-	public static CSVPrinter getAnalyzeOutputFile(String filename) {
+	public CSVPrinter getAnalyzeOutputFile(String filename) {
 
 		try {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
@@ -158,7 +164,7 @@ public class CsvConnection {
 
 	}
 	
-	public static CSVPrinter getSellFile(String filename) {
+	public CSVPrinter getSellFile(String filename) {
 
 		try {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
@@ -175,7 +181,7 @@ public class CsvConnection {
 
 	}
 	
-	public static CSVPrinter getAnalyzePrintedOnceOutputFile(String filename) {
+	public CSVPrinter getAnalyzePrintedOnceOutputFile(String filename) {
 
 		try {
 			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
@@ -193,7 +199,7 @@ public class CsvConnection {
 
 	}
 
-	public static OwnedCard getOwnedCardFromExportedCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
+	public OwnedCard getOwnedCardFromExportedCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
 		String folder = getStringOrNull(current,Const.FOLDER_NAME_CSV);
 		String name = getStringOrNull(current,Const.CARD_NAME_CSV);
@@ -261,7 +267,7 @@ public class CsvConnection {
 		return card;
 	}
 
-	public static OwnedCard getOwnedCardFromTCGPlayerCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
+	public OwnedCard getOwnedCardFromTCGPlayerCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 		String folder = Const.FOLDER_UNSYNCED;
 
 		String items = getStringOrNull(current, Const.TCGPLAYER_ITEMS_CSV);
@@ -322,7 +328,7 @@ public class CsvConnection {
 				dateBought, setIdentified, passcode);
 	}
 
-	private static NameAndColor getNameAndColor(String name) {
+	public NameAndColor getNameAndColor(String name) {
 		String colorVariant = Const.DEFAULT_COLOR_VARIANT;
 		String[] colorVariants = {"(Red)", "(Blue)", "(Green)", "(Purple)", "(Alternate Art)"};
 
@@ -355,17 +361,7 @@ public class CsvConnection {
 		return new NameAndColor(name, colorVariant);
 	}
 
-	private static class NameAndColor {
-		public final String name;
-		public final String colorVariant;
-
-		public NameAndColor(String name, String colorVariant) {
-			this.name = name;
-			this.colorVariant = colorVariant;
-		}
-	}
-
-	private static String getCondition(String input) {
+	public String getCondition(String input) {
 		return input.replace(Const.CARD_PRINTING_UNLIMITED, "")
 				.replace(Const.CARD_PRINTING_LIMITED, "")
 				.replace(Const.CARD_PRINTING_FIRST_EDITION, "")
@@ -377,7 +373,7 @@ public class CsvConnection {
 				.replace("Damaged", "Poor");
 	}
 
-	private static String getPrinting(String input) {
+	public String getPrinting(String input) {
 		if (input.contains(Const.CARD_PRINTING_FIRST_EDITION)) {
 			return Const.CARD_PRINTING_FIRST_EDITION;
 		} else if (input.contains(Const.CARD_PRINTING_UNLIMITED)) {
@@ -386,7 +382,7 @@ public class CsvConnection {
 		return Const.CARD_PRINTING_LIMITED;
 	}
 
-	private static int getPasscodeOrNegativeOne(SQLiteConnection db, String name, String uuid) throws SQLException {
+	public int getPasscodeOrNegativeOne(SQLiteConnection db, String name, String uuid) throws SQLException {
 		GamePlayCard gpc = db.getGamePlayCardByUUID(uuid);
 		if (gpc != null) {
 			return gpc.getPasscode();
@@ -396,7 +392,7 @@ public class CsvConnection {
 		return -1;
 	}
 
-	private static CardSet getCardSet(SQLiteConnection db, String name, String setName, String colorVariant, String rarity) throws SQLException {
+	public CardSet getCardSet(SQLiteConnection db, String name, String setName, String colorVariant, String rarity) throws SQLException {
 		CardSet setIdentified = db.getFirstCardSetForCardInSet(name, setName);
 		if (setIdentified == null) {
 			setIdentified = createUnknownCardSet(name, setName, db);
@@ -406,7 +402,7 @@ public class CsvConnection {
 		return setIdentified;
 	}
 
-	private static CardSet createUnknownCardSet(String name, String setName, SQLiteConnection db) throws SQLException {
+	public CardSet createUnknownCardSet(String name, String setName, SQLiteConnection db) throws SQLException {
 		YGOLogger.error("Unknown setCode for card name and set: " + name + ":" + setName);
 		CardSet setIdentified = new CardSet();
 		setIdentified.setRarityUnsure(1);
@@ -418,7 +414,7 @@ public class CsvConnection {
 		return setIdentified;
 	}
 
-	public static Integer getIntOrNegativeOne(CSVRecord current, String recordName) {
+	public Integer getIntOrNegativeOne(CSVRecord current, String recordName) {
 		try {
 			return Integer.parseInt(current.get(recordName));
 		} catch (Exception e) {
@@ -426,7 +422,7 @@ public class CsvConnection {
 		}
 	}
 
-	public static String getStringOrNull(CSVRecord current, String recordName) {
+	public String getStringOrNull(CSVRecord current, String recordName) {
 		try {
 			String returnVal = current.get(recordName);
 
@@ -440,7 +436,7 @@ public class CsvConnection {
 		}
 	}
 
-	public static void insertGamePlayCardFromCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
+	public void insertGamePlayCardFromCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 		String name = getStringOrNull(current, Const.CARD_NAME_CSV);
 		String type = getStringOrNull(current, Const.CARD_TYPE_CSV);
 		Integer passcode = getIntOrNegativeOne(current, Const.PASSCODE_CSV);
@@ -488,7 +484,7 @@ public class CsvConnection {
 		db.replaceIntoGamePlayCard(gamePlayCard);
 	}
 
-	public static void insertCardSetFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
+	public void insertCardSetFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
 
 		String name = getStringOrNull(current,Const.CARD_NAME_CSV);
 		String cardNumber = getStringOrNull(current,Const.CARD_NUMBER_CSV);
@@ -532,14 +528,14 @@ public class CsvConnection {
 		db.replaceIntoCardSetWithSoftPriceUpdate(cardNumber, rarity, setName, gamePlayCardUUID, null, name);
 	}
 
-	public static void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
+	public void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
 		p.printRecord(current.getFolderName(), current.getQuantity(), current.getCardName(), current.getSetCode(), current.getSetName(),
 				current.getSetNumber(), current.getCondition(), current.getEditionPrinting(), current.getPriceBought(), current.getDateBought(),
 				current.getSetRarity(), current.getColorVariant(), current.getRarityUnsure(), current.getGamePlayCardUUID(), current.getUuid(), current.getPasscode());
 
 	}
 
-	public static void writeTCGPlayerRecordToCSV(CSVPrinter p, ReadCSVRecord current) throws IOException {
+	public void writeTCGPlayerRecordToCSV(CSVPrinter p, ReadCSVRecord current) throws IOException {
 		p.printRecord(getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_ITEMS_CSV),
 				getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_DETAILS_CSV),
 				getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_PRICE_CSV),

@@ -29,7 +29,9 @@ public class ReformatFromTCGPlayerForPurchase {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		CSVParser parser = CsvConnection.getParser(
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVParser parser = csvConnection.getParser(
 				"C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\TCGPlayer.csv", StandardCharsets.UTF_16LE);
 
 		Iterator<CSVRecord> it = parser.iterator();
@@ -40,7 +42,7 @@ public class ReformatFromTCGPlayerForPurchase {
 
 			CSVRecord current = it.next();
 
-			OwnedCard card = CsvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
+			OwnedCard card = csvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
 
 			if (card != null) {
 

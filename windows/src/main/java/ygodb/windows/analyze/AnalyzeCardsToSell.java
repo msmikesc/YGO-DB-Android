@@ -77,7 +77,9 @@ public class AnalyzeCardsToSell {
 		String filename = "Analyze-Sell.csv";
 		String resourcePath = Const.CSV_ANALYZE_FOLDER + filename;
 
-		CSVPrinter p = CsvConnection.getSellFile(resourcePath);
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVPrinter p = csvConnection.getSellFile(resourcePath);
 		for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
 
 			String cardName = entry.getKey();

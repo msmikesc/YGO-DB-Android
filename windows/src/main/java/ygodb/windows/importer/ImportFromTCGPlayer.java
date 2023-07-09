@@ -51,14 +51,16 @@ public class ImportFromTCGPlayer {
 		List<ReadCSVRecord> readCSVRecords = new ArrayList<>();
 		int importedCardQuantity = 0;
 
-		CSVParser parser = getCSVFileWithWriteAccess(inputFile);
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVParser parser = getCSVFileWithWriteAccess(csvConnection, inputFile);
 		if (parser == null) {
 			return false;
 		}
 
 		for (CSVRecord current : parser) {
 
-			String importTime = CsvConnection.getStringOrNull(current, Const.TCGPLAYER_IMPORT_TIME);
+			String importTime = csvConnection.getStringOrNull(current, Const.TCGPLAYER_IMPORT_TIME);
 
 			if (importTime != null) {
 				//card is already imported
@@ -72,14 +74,14 @@ public class ImportFromTCGPlayer {
 				readCSVRecords.add(currentRead);
 			} else {
 				readCSVRecords.add(new ReadCSVRecord(current, new Date()));
-				importedCardQuantity += addCSVRecordToImportMap(db, map, current);
+				importedCardQuantity += addCSVRecordToImportMap(csvConnection, db, map, current);
 			}
 
 		}
 
 		parser.close();
 
-		overwriteInputFileWithUpdates(tempResourcePath, inputFile, readCSVRecords);
+		overwriteInputFileWithUpdates(csvConnection, tempResourcePath, inputFile, readCSVRecords);
 
 		for (OwnedCard card : map.values()) {
 			db.insertOrUpdateOwnedCardByUUID(card);
@@ -93,7 +95,7 @@ public class ImportFromTCGPlayer {
 		return true;
 	}
 
-	private static CSVParser getCSVFileWithWriteAccess(File inputFile) throws IOException {
+	private static CSVParser getCSVFileWithWriteAccess(CsvConnection csvConnection, File inputFile) throws IOException {
 		boolean fileIsNotLocked = inputFile.renameTo(inputFile);
 
 		if (!fileIsNotLocked) {
@@ -103,16 +105,16 @@ public class ImportFromTCGPlayer {
 
 		InputStream fileStream = new FileInputStream(inputFile);
 
-		return CsvConnection.getParser(fileStream, StandardCharsets.UTF_16LE);
+		return csvConnection.getParser(fileStream, StandardCharsets.UTF_16LE);
 	}
 
-	private static void overwriteInputFileWithUpdates(String tempResourcePath, File inputFile, List<ReadCSVRecord> readCSVRecords) throws IOException {
+	private static void overwriteInputFileWithUpdates(CsvConnection csvConnection, String tempResourcePath, File inputFile, List<ReadCSVRecord> readCSVRecords) throws IOException {
 		File tempFile = new File(tempResourcePath);
 
-		CSVPrinter outfile = CsvConnection.getTCGPlayerOutputFile(tempFile.getPath());
+		CSVPrinter outfile = csvConnection.getTCGPlayerOutputFile(tempFile.getPath());
 
 		for (ReadCSVRecord current : readCSVRecords) {
-			CsvConnection.writeTCGPlayerRecordToCSV(outfile, current);
+			csvConnection.writeTCGPlayerRecordToCSV(outfile, current);
 		}
 
 		outfile.close();
@@ -132,9 +134,9 @@ public class ImportFromTCGPlayer {
 		}
 	}
 
-	private static int addCSVRecordToImportMap(SQLiteConnection db, HashMap<String, OwnedCard> map, CSVRecord current) throws SQLException {
+	private static int addCSVRecordToImportMap(CsvConnection csvConnection, SQLiteConnection db, HashMap<String, OwnedCard> map, CSVRecord current) throws SQLException {
 
-		OwnedCard card = CsvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
+		OwnedCard card = csvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
 
 		if (card != null) {
 

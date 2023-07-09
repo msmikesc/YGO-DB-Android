@@ -29,10 +29,12 @@ public class ImportCardSetFromCSV {
 		String filename = "cardsets.csv";
 		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
 
-		CSVParser parser = CsvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVParser parser = csvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
 
 		for (CSVRecord current : parser) {
-			CsvConnection.insertCardSetFromCSV(current, filename, db);
+			csvConnection.insertCardSetFromCSV(current, filename, db);
 		}
 
 		parser.close();

@@ -34,7 +34,9 @@ public class ImportOwnedCardFromExportedCSV {
 		String filename = "all-export.csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
-		CSVParser parser = CsvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVParser parser = csvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
 
 		Iterator<CSVRecord> it = parser.iterator();
 		
@@ -44,7 +46,7 @@ public class ImportOwnedCardFromExportedCSV {
 
 			CSVRecord current = it.next();
 
-			OwnedCard card = CsvConnection.getOwnedCardFromExportedCSV(current, db);
+			OwnedCard card = csvConnection.getOwnedCardFromExportedCSV(current, db);
 			
 			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(card.getSetNumber(), card.getPriceBought(),
 					card.getDateBought(), card.getFolderName(), card.getCondition(), card.getEditionPrinting(), db);

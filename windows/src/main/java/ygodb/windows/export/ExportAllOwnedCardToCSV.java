@@ -27,8 +27,10 @@ public class ExportAllOwnedCardToCSV {
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 		
 		ArrayList<OwnedCard> list = db.getAllOwnedCards();
+
+		CsvConnection csvConnection = new CsvConnection();
 		
-		CSVPrinter p = CsvConnection.getExportOutputFile(resourcePath);
+		CSVPrinter p = csvConnection.getExportOutputFile(resourcePath);
 		
 		int quantityCount = 0;
 		
@@ -36,7 +38,7 @@ public class ExportAllOwnedCardToCSV {
 			
 			quantityCount += current.getQuantity();
 
-			CsvConnection.writeOwnedCardToCSV(p,current);
+			csvConnection.writeOwnedCardToCSV(p,current);
 
 		}
 		

@@ -34,7 +34,9 @@ public class AnalyzeCompareToDragonShieldCSV {
 		String filename = "all-folders.csv";
 		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
 
-		CSVParser parser = CsvConnection.getParserSkipFirstLine(resourcePath, StandardCharsets.UTF_16LE);
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVParser parser = csvConnection.getParserSkipFirstLine(resourcePath, StandardCharsets.UTF_16LE);
 
 		Iterator<CSVRecord> it = parser.iterator();
 

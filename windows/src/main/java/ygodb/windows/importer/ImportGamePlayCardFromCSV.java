@@ -30,10 +30,12 @@ public class ImportGamePlayCardFromCSV {
 		String filename = "gamePlayCards.csv";
 		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
 
-		CSVParser parser = CsvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVParser parser = csvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
 
 		for (CSVRecord current : parser) {
-			CsvConnection.insertGamePlayCardFromCSV(current, db);
+			csvConnection.insertGamePlayCardFromCSV(current, db);
 		}
 
 		parser.close();

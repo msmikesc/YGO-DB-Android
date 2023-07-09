@@ -40,7 +40,9 @@ public class AnalyzePrintedOnce {
 		String filename = "Analyze-PrintedOnce.csv";
 		String resourcePath = Const.CSV_ANALYZE_FOLDER + filename;
 
-		CSVPrinter p = CsvConnection.getAnalyzePrintedOnceOutputFile(resourcePath);
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVPrinter p = csvConnection.getAnalyzePrintedOnceOutputFile(resourcePath);
 
 		for (AnalyzePrintedOnceData s : array) {
 			p.printRecord(s.getGamePlayCardUUID(), s.getCardName(), s.getCardType(), s.getStringOfRarities(), s.getStringOfSetNames(),

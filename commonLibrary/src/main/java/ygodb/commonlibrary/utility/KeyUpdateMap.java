@@ -32,13 +32,15 @@ public class KeyUpdateMap {
 
     private void loadMappings(InputStream input) throws IOException {
 
-        CSVParser parser = CsvConnection.getParser(input, StandardCharsets.UTF_16LE);
+        CsvConnection csvConnection = new CsvConnection();
+
+        CSVParser parser = csvConnection.getParser(input, StandardCharsets.UTF_16LE);
 
         for (CSVRecord current : parser) {
 
-            String key = CsvConnection.getStringOrNull(current, "Key");
+            String key = csvConnection.getStringOrNull(current, "Key");
 
-            String value = CsvConnection.getStringOrNull(current, "Value");
+            String value = csvConnection.getStringOrNull(current, "Value");
 
             addMapping(key, value);
         }

@@ -59,7 +59,9 @@ public class RunAnalyzeCardsInSet {
 		String filename = "Analyze-" + setName.replaceAll("[\\s\\\\/:*?\"<>|]", "") + ".csv";
 		String resourcePath = Const.CSV_ANALYZE_FOLDER + filename;
 
-		CSVPrinter p = CsvConnection.getAnalyzeOutputFile(resourcePath);
+		CsvConnection csvConnection = new CsvConnection();
+
+		CSVPrinter p = csvConnection.getAnalyzeOutputFile(resourcePath);
 
 		boolean printedSeparator = false;
 

@@ -36,19 +36,21 @@ public class QuadKeyUpdateMap {
 
     private void loadMappings(InputStream input) throws IOException {
 
-        CSVParser parser = CsvConnection.getParser(input, StandardCharsets.UTF_16LE);
+        CsvConnection csvConnection = new CsvConnection();
+
+        CSVParser parser = csvConnection.getParser(input, StandardCharsets.UTF_16LE);
 
         for (CSVRecord current : parser) {
 
-            String name = CsvConnection.getStringOrNull(current, "Card Name Key");
-            String cardNumber = CsvConnection.getStringOrNull(current, "Card Number Key");
-            String rarity = CsvConnection.getStringOrNull(current, "Rarity Key");
-            String setName = CsvConnection.getStringOrNull(current, "Set Name Key");
+            String name = csvConnection.getStringOrNull(current, "Card Name Key");
+            String cardNumber = csvConnection.getStringOrNull(current, "Card Number Key");
+            String rarity = csvConnection.getStringOrNull(current, "Rarity Key");
+            String setName = csvConnection.getStringOrNull(current, "Set Name Key");
 
-            String nameValue = CsvConnection.getStringOrNull(current, "Card Name Value");
-            String cardNumberValue = CsvConnection.getStringOrNull(current, "Card Number Value");
-            String rarityValue = CsvConnection.getStringOrNull(current, "Rarity Value");
-            String setNameValue = CsvConnection.getStringOrNull(current, "Set Name Value");
+            String nameValue = csvConnection.getStringOrNull(current, "Card Name Value");
+            String cardNumberValue = csvConnection.getStringOrNull(current, "Card Number Value");
+            String rarityValue = csvConnection.getStringOrNull(current, "Rarity Value");
+            String setNameValue = csvConnection.getStringOrNull(current, "Set Name Value");
 
             if(nameValue == null || cardNumberValue == null || rarityValue == null || setNameValue == null){
                 YGOLogger.error("missing value in quad csv:" + nameValue +":"
