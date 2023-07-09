@@ -18,6 +18,7 @@ import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
 
 import java.io.InputStream;
 import java.util.List;
@@ -163,6 +164,15 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
             if(current.getEditionPrinting().contains("1st")){
                 // get input stream
                 InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
+                // load image as Drawable
+                Drawable d = Drawable.createFromStream(ims, null);
+                // set image to ImageView
+
+                viewHolder.firstEdition.setImageDrawable(d);
+            }
+            else if(current.getEditionPrinting().equalsIgnoreCase(Const.CARD_PRINTING_LIMITED)){
+                // get input stream
+                InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/Limited.png");
                 // load image as Drawable
                 Drawable d = Drawable.createFromStream(ims, null);
                 // set image to ImageView

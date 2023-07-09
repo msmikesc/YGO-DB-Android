@@ -38,6 +38,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
     private Drawable firstDrawable;
     private Drawable firstDrawableSmall;
+    private Drawable limitedDrawableSmall;
 
     public AddCardToListAdapter(List<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel) {
         this.addingOwnedCards = ownedCards;
@@ -51,6 +52,9 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
             InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/1st.png");
             firstDrawableSmall = Drawable.createFromStream(firstInputStreamSmall, null);
+
+            InputStream limitedInputStreamSmall = AndroidUtil.getAppContext().getAssets().open("images/Limited.png");
+            limitedDrawableSmall = Drawable.createFromStream(limitedInputStreamSmall, null);
         }
         catch (Exception e){
             YGOLogger.logException(e);
@@ -84,6 +88,11 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
     public void onFirstButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
 
         if(current.getEditionPrinting() != null && current.getEditionPrinting().contains("1st")){
+            current.setEditionPrinting(Const.CARD_PRINTING_LIMITED);
+            viewHolder.firstEdition.setImageDrawable(limitedDrawableSmall);
+        }
+        else if(current.getEditionPrinting() != null
+                && current.getEditionPrinting().equalsIgnoreCase(Const.CARD_PRINTING_LIMITED)) {
             current.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
             viewHolder.firstEdition.setImageDrawable(null);
         }
@@ -317,6 +326,9 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         if(current.getEditionPrinting().contains("1st")){
             // set image to ImageView
             viewHolder.firstEdition.setImageDrawable(firstDrawableSmall);
+        }
+        else if(current.getEditionPrinting().equalsIgnoreCase(Const.CARD_PRINTING_LIMITED)){
+            viewHolder.firstEdition.setImageDrawable(limitedDrawableSmall);
         }
         else{
             viewHolder.firstEdition.setImageDrawable(null);
