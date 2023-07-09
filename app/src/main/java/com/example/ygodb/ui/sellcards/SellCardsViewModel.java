@@ -46,8 +46,7 @@ public class SellCardsViewModel extends ViewModel {
 
     public void addNewFromOwnedCard(OwnedCard current){
 
-        //TODO support multiple buttons to add different amounts
-        //TODO support limited edition
+        //TODO move around multiple buttons to add different amounts
         //TODO simplify addcards set names models
 
         if(current.getSetNumber() == null || current.getSetRarity() == null ||

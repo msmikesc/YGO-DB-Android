@@ -260,28 +260,26 @@ public class CsvConnection {
 
 		return card;
 	}
-	
-	public static OwnedCard getOwnedCardFromTCGPlayerCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
+	public static OwnedCard getOwnedCardFromTCGPlayerCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 		String folder = Const.FOLDER_UNSYNCED;
 
-		String items = getStringOrNull(current,Const.TCGPLAYER_ITEMS_CSV);
-		String details = getStringOrNull(current,Const.TCGPLAYER_DETAILS_CSV);
-		String price = getStringOrNull(current,Const.TCGPLAYER_PRICE_CSV);
-		String quantity = getStringOrNull(current,Const.TCGPLAYER_QUANTITY_CSV);
-		String importTime = getStringOrNull(current,Const.TCGPLAYER_IMPORT_TIME);
+		String items = getStringOrNull(current, Const.TCGPLAYER_ITEMS_CSV);
+		String details = getStringOrNull(current, Const.TCGPLAYER_DETAILS_CSV);
+		String price = getStringOrNull(current, Const.TCGPLAYER_PRICE_CSV);
+		String quantity = getStringOrNull(current, Const.TCGPLAYER_QUANTITY_CSV);
+		String importTime = getStringOrNull(current, Const.TCGPLAYER_IMPORT_TIME);
 
-		if(items == null || details == null || price == null || quantity == null || importTime != null){
+		if (items == null || details == null || price == null || quantity == null || importTime != null) {
 			return null;
 		}
 
 		price = price.replace("$", "");
-		
+
 		String colorVariant = Const.DEFAULT_COLOR_VARIANT;
 
 		String[] nameAndSet = items.split("\n");
 
-		// possible sold by line
 		if (nameAndSet.length < 2 || nameAndSet.length > 3) {
 			YGOLogger.error("Unknown format: " + items);
 			return null;
@@ -290,40 +288,38 @@ public class CsvConnection {
 		String name = nameAndSet[0].trim();
 		String setName = nameAndSet[1].trim();
 
-		// remove tcgplayer rarity id
-		if (name.contains("(Duel Terminal)")) {
-			name = name.replace("(Duel Terminal)", "").trim();
+		name = Util.removeRarityStringsFromName(name);
+
+		String[] colorVariants = {"(Red)", "(Blue)", "(Green)", "(Purple)", "(Alternate Art)"};
+
+		for (String variant : colorVariants) {
+			if (name.contains(variant)) {
+				name = name.replace(variant, "").trim();
+
+				switch (variant) {
+					case "(Red)":
+						colorVariant = "r";
+						break;
+					case "(Blue)":
+						colorVariant = "b";
+						break;
+					case "(Green)":
+						colorVariant = "g";
+						break;
+					case "(Purple)":
+						colorVariant = "p";
+						break;
+					case "(Alternate Art)":
+						colorVariant = "a";
+						break;
+					default:
+						break;
+				}
+				break;
+			}
 		}
 
-		if (name.contains("(Secret Rare)")) {
-			name = name.replace("(Secret Rare)", "").trim();
-		}
-		//TODO generic rarity removal
-		
-		if (name.contains("(Red)")) {
-			name = name.replace("(Red)", "").trim();
-			colorVariant = "r";
-		}
-		
-		if (name.contains("(Blue)")) {
-			name = name.replace("(Blue)", "").trim();
-			colorVariant = "b";
-		}
-		
-		if (name.contains("(Green)")) {
-			name = name.replace("(Green)", "").trim();
-			colorVariant = "g";
-		}
-		
-		if (name.contains("(Purple)")) {
-			name = name.replace("(Purple)", "").trim();
-			colorVariant = "p";
-		}
-		
-		if (name.contains("(Alternate Art)")) {
-			name = name.replace("(Alternate Art)", "").trim();
-			colorVariant = "a";
-		}
+		name = name.replace("(Duel Terminal)", "").trim();
 
 		String[] rarityConditionPrinting = details.split("\n");
 
@@ -342,18 +338,19 @@ public class CsvConnection {
 
 		if (rarityConditionPrinting[1].contains(Const.CARD_PRINTING_FIRST_EDITION)) {
 			printing = Const.CARD_PRINTING_FIRST_EDITION;
-		}
-		if (rarityConditionPrinting[1].contains(Const.CARD_PRINTING_UNLIMITED)) {
+		} else if (rarityConditionPrinting[1].contains(Const.CARD_PRINTING_UNLIMITED)) {
 			printing = Const.CARD_PRINTING_UNLIMITED;
 		}
 
 		String condition = rarityConditionPrinting[1].replace(Const.CARD_PRINTING_UNLIMITED, "")
 				.replace(Const.CARD_PRINTING_LIMITED, "")
-				.replace(Const.CARD_PRINTING_FIRST_EDITION, "").replace("Condition:", "")
+				.replace(Const.CARD_PRINTING_FIRST_EDITION, "")
+				.replace("Condition:", "")
 				.replaceAll("\\s", "")
 				.replace("LightlyPlayed", "LightPlayed")
 				.replace("ModeratelyPlayed", "Played")
-				.replace("HeavilyPlayed", "Poor").replace("Damaged", "Poor");
+				.replace("HeavilyPlayed", "Poor")
+				.replace("Damaged", "Poor");
 
 		CardSet setIdentified = db.getFirstCardSetForCardInSet(name, setName);
 
@@ -374,16 +371,14 @@ public class CsvConnection {
 		String priceBought = Util.normalizePrice(price);
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
 		String dateBought = dateFormat.format(new Date());
 
 		int passcode = -1;
 		GamePlayCard gpc = db.getGamePlayCardByUUID(setIdentified.getGamePlayCardUUID());
 
-		if(gpc == null){
+		if (gpc == null) {
 			YGOLogger.error("Unknown gamePlayCard for " + name);
-		}
-		else{
+		} else {
 			passcode = gpc.getPasscode();
 		}
 

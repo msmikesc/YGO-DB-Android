@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import javafx.util.Pair;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
@@ -588,5 +589,23 @@ public class Util {
 		else{
 			return input2;
 		}
+	}
+
+	public static String removeRarityStringsFromName(String name) {
+		if (name == null) {
+			return null;
+		}
+
+		StringBuilder builder = new StringBuilder(name);
+		for (Rarity rarity : Rarity.values()) {
+			String rarityWithParens = "("+rarity.toString()+")";
+			int index = builder.indexOf(rarityWithParens);
+			while (index != -1) {
+				builder.delete(index, index + rarityWithParens.length());
+				index = builder.indexOf(rarityWithParens);
+			}
+		}
+
+		return builder.toString().trim();
 	}
 }
