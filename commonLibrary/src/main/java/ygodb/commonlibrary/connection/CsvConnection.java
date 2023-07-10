@@ -42,6 +42,8 @@ public class CsvConnection {
 			.setSkipHeaderRecord(true)
 			.build();
 
+	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
 	public CSVParser getParser(String filename, Charset charset) throws IOException {
 		File f = new File(filename);
 
@@ -293,72 +295,31 @@ public class CsvConnection {
 		name = name.replace("(Duel Terminal)", "").trim();
 		name = Util.removeRarityStringsFromName(name);
 
-		NameAndColor nameAndColor = getNameAndColor(name);
+		NameAndColor nameAndColor = Util.getNameAndColor(name);
 		name = nameAndColor.name;
 		String colorVariant = nameAndColor.colorVariant;
 
 		String[] rarityConditionPrinting = details.split("\n");
-
 		if (rarityConditionPrinting.length != 2) {
 			YGOLogger.error("Unknown format: " + details);
 			return null;
 		}
-
 		String rarity = rarityConditionPrinting[0].replace("Rarity:", "").trim();
+		String printing = getPrinting(rarityConditionPrinting[1]);
+		String condition = getCondition(rarityConditionPrinting[1]);
 
 		name = Util.checkForTranslatedCardName(name);
 		rarity = Util.checkForTranslatedRarity(rarity);
 		setName = Util.checkForTranslatedSetName(setName);
-
-		String printing = getPrinting(rarityConditionPrinting[1]);
-
-		String condition = getCondition(rarityConditionPrinting[1]);
-
-		CardSet setIdentified = getCardSet(db, name, setName, colorVariant, rarity);
-
 		price = price.replace("$", "");
 		String priceBought = Util.normalizePrice(price);
-
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 		String dateBought = dateFormat.format(new Date());
 
+		CardSet setIdentified = getCardSet(db, name, setName, colorVariant, rarity);
 		int passcode = getPasscodeOrNegativeOne(db, name, setIdentified.getGamePlayCardUUID());
 
 		return Util.formOwnedCard(folder, name, quantity, condition, printing, priceBought,
 				dateBought, setIdentified, passcode);
-	}
-
-	public NameAndColor getNameAndColor(String name) {
-		String colorVariant = Const.DEFAULT_COLOR_VARIANT;
-		String[] colorVariants = {"(Red)", "(Blue)", "(Green)", "(Purple)", "(Alternate Art)"};
-
-		for (String variant : colorVariants) {
-			if (name.contains(variant)) {
-				name = name.replace(variant, "").trim();
-
-				switch (variant) {
-					case "(Red)":
-						colorVariant = "r";
-						break;
-					case "(Blue)":
-						colorVariant = "b";
-						break;
-					case "(Green)":
-						colorVariant = "g";
-						break;
-					case "(Purple)":
-						colorVariant = "p";
-						break;
-					case "(Alternate Art)":
-						colorVariant = "a";
-						break;
-					default:
-						break;
-				}
-				break;
-			}
-		}
-		return new NameAndColor(name, colorVariant);
 	}
 
 	public String getCondition(String input) {
@@ -395,22 +356,10 @@ public class CsvConnection {
 	public CardSet getCardSet(SQLiteConnection db, String name, String setName, String colorVariant, String rarity) throws SQLException {
 		CardSet setIdentified = db.getFirstCardSetForCardInSet(name, setName);
 		if (setIdentified == null) {
-			setIdentified = createUnknownCardSet(name, setName, db);
+			setIdentified = Util.createUnknownCardSet(name, setName, db);
 		}
 		setIdentified.setSetRarity(rarity);
 		setIdentified.setColorVariant(colorVariant);
-		return setIdentified;
-	}
-
-	public CardSet createUnknownCardSet(String name, String setName, SQLiteConnection db) throws SQLException {
-		YGOLogger.error("Unknown setCode for card name and set: " + name + ":" + setName);
-		CardSet setIdentified = new CardSet();
-		setIdentified.setRarityUnsure(1);
-		setIdentified.setColorVariant(Const.DEFAULT_COLOR_VARIANT);
-		setIdentified.setSetName(setName);
-		setIdentified.setSetNumber(null);
-		setIdentified.setSetCode(null);
-		setIdentified.setGamePlayCardUUID(db.getGamePlayCardUUIDFromTitle(name));
 		return setIdentified;
 	}
 

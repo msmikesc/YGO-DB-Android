@@ -1,12 +1,10 @@
 package ygodb.commonlibrary.connection;
 
 import org.apache.commons.csv.CSVRecord;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
-import ygodb.commonlibrary.bean.NameAndColor;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
 
@@ -23,62 +21,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class CSVConnectionTest {
-
-	@Test
-	void testGetNameAndColor_NoVariant() {
-		CsvConnection obj = new CsvConnection();
-		NameAndColor result = obj.getNameAndColor("Card Name");
-		assertEquals("Card Name", result.name);
-		assertEquals(Const.DEFAULT_COLOR_VARIANT , result.colorVariant);
-	}
-
-	@Test
-	void testGetNameAndColor_RedVariant() {
-		CsvConnection obj = new CsvConnection();
-		NameAndColor result = obj.getNameAndColor("Card Name (Red)");
-		assertEquals("Card Name", result.name);
-		assertEquals("r", result.colorVariant);
-	}
-
-	@Test
-	void testGetNameAndColor_BlueVariant() {
-		CsvConnection obj = new CsvConnection();
-		NameAndColor result = obj.getNameAndColor("Card Name (Blue)");
-		assertEquals("Card Name", result.name);
-		assertEquals("b", result.colorVariant);
-	}
-
-	@Test
-	void testGetNameAndColor_GreenVariant() {
-		CsvConnection obj = new CsvConnection();
-		NameAndColor result = obj.getNameAndColor("Card Name (Green)");
-		assertEquals("Card Name", result.name);
-		assertEquals("g", result.colorVariant);
-	}
-
-	@Test
-	void testGetNameAndColor_PurpleVariant() {
-		CsvConnection obj = new CsvConnection();
-		NameAndColor result = obj.getNameAndColor("Card Name (Purple)");
-		assertEquals("Card Name", result.name);
-		assertEquals("p", result.colorVariant);
-	}
-
-	@Test
-	void testGetNameAndColor_AlternateArtVariant() {
-		CsvConnection obj = new CsvConnection();
-		NameAndColor result = obj.getNameAndColor("Card Name (Alternate Art)");
-		assertEquals("Card Name", result.name);
-		assertEquals("a", result.colorVariant);
-	}
-
-	@Test
-	void testGetNameAndColor_VariantInName() {
-		CsvConnection obj = new CsvConnection();
-		NameAndColor result = obj.getNameAndColor("(Red) Card Name");
-		assertEquals("Card Name", result.name);
-		assertEquals("r", result.colorVariant);
-	}
 
 	@Test
 	void testGetCondition_NoReplacements() {

@@ -4,6 +4,7 @@ package ygodb.commonlibrary.utility;
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.util.Pair;
 import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.NameAndColor;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.SetMetaData;
@@ -607,5 +608,50 @@ public class Util {
 		}
 
 		return builder.toString().trim();
+	}
+
+	public static CardSet createUnknownCardSet(String name, String setName, SQLiteConnection db) throws SQLException {
+		YGOLogger.error("Unknown setCode for card name and set: " + name + ":" + setName);
+		CardSet setIdentified = new CardSet();
+		setIdentified.setRarityUnsure(1);
+		setIdentified.setColorVariant(Const.DEFAULT_COLOR_VARIANT);
+		setIdentified.setSetName(setName);
+		setIdentified.setSetNumber(null);
+		setIdentified.setSetCode(null);
+		setIdentified.setGamePlayCardUUID(db.getGamePlayCardUUIDFromTitle(name));
+		return setIdentified;
+	}
+
+	public static NameAndColor getNameAndColor(String name) {
+		String colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		String[] colorVariants = {"(Red)", "(Blue)", "(Green)", "(Purple)", "(Alternate Art)"};
+
+		for (String variant : colorVariants) {
+			if (name.contains(variant)) {
+				name = name.replace(variant, "").trim();
+
+				switch (variant) {
+					case "(Red)":
+						colorVariant = "r";
+						break;
+					case "(Blue)":
+						colorVariant = "b";
+						break;
+					case "(Green)":
+						colorVariant = "g";
+						break;
+					case "(Purple)":
+						colorVariant = "p";
+						break;
+					case "(Alternate Art)":
+						colorVariant = "a";
+						break;
+					default:
+						break;
+				}
+				break;
+			}
+		}
+		return new NameAndColor(name, colorVariant);
 	}
 }
