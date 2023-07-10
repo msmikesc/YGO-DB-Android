@@ -40,11 +40,11 @@ public class CardSet {
 		}
 
 
-		if (preferredPrice != null && !new BigDecimal(preferredPrice).equals(zero)) {
+		if (preferredPrice != null && new BigDecimal(preferredPrice).compareTo(zero) != 0) {
 			return preferredPrice;
 		}
 
-		if (secondaryPrice != null && !new BigDecimal(secondaryPrice).equals(zero)) {
+		if (secondaryPrice != null && new BigDecimal(secondaryPrice).compareTo(zero) != 0) {
 			return secondaryPrice;
 		}
 
