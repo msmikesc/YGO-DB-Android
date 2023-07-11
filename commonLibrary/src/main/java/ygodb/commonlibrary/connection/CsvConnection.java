@@ -147,6 +147,26 @@ public class CsvConnection {
 		}
 
 	}
+
+	public void writeUploadCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
+		String printing = current.getEditionPrinting();
+
+		if(printing.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
+			printing = Const.CARD_PRINTING_FOIL;
+		}
+
+		String outputSetNumber = current.getSetNumber();
+
+		if (!current.getColorVariant().equalsIgnoreCase(Const.DEFAULT_COLOR_VARIANT)
+				&& !Const.setColorVariantUnsupportedDragonShield.contains(current.getSetName())) {
+			outputSetNumber += current.getColorVariant();
+		}
+
+		p.printRecord(current.getFolderName(), current.getQuantity(),0, current.getCardName(), current.getSetCode(), current.getSetName(),
+				outputSetNumber, current.getCondition(), printing, "English", current.getPriceBought(), current.getDateBought(),
+				0, 0, 0);
+
+	}
 	
 	public CSVPrinter getAnalyzeOutputFile(String filename) {
 

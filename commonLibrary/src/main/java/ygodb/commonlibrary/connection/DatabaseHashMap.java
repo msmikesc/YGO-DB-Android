@@ -55,7 +55,7 @@ public class DatabaseHashMap {
 																			 String dateBought, String folderName, String condition, String editionPrinting, SQLiteConnection db) throws SQLException {
 		Map<String, ArrayList<OwnedCard>> data = DatabaseHashMap.getOwnedInstance(db);
 
-		String key = setNumber + Util.normalizePrice(priceBought) + dateBought + folderName + condition
+		String key = setNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folderName +":"+ condition
 				+ editionPrinting;
 
 		ArrayList<OwnedCard> list = data.get(key);

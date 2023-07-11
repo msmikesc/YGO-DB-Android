@@ -396,8 +396,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				OwnedCard current = new OwnedCard();
 				getAllOwnedCardFieldsFromRS(rs, current);
 
-				String key = current.getSetNumber() + current.getPriceBought() + current.getDateBought() + current.getFolderName()
-						+ current.getCondition() + current.getEditionPrinting();
+				String key = current.getSetNumber() +":"+ current.getPriceBought() +":"+ current.getDateBought() +":"+ current.getFolderName()
+						+":"+ current.getCondition() +":"+ current.getEditionPrinting();
 
 				ArrayList<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
 				currentList.add(current);

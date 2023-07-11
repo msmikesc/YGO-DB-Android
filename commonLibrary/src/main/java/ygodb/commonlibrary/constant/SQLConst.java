@@ -64,9 +64,9 @@ public class SQLConst {
 	public static final String GET_COUNT_DISTINCT_CARDS_IN_SET =
 			"select count (distinct setNumber) from cardSets where setName = ?";
 	public static final String GET_COUNT_QUANTITY =
-			"select sum(quantity) from ownedCards where ownedCards.folderName <> 'Manual Folder'";
+			"select sum(quantity) from ownedCards where ownedCards.folderName <> '"+Const.FOLDER_MANUAL+"'";
 	public static final String GET_COUNT_QUANTITY_MANUAL =
-			"select sum(quantity) from ownedCards where ownedCards.folderName = 'Manual Folder'";
+			"select sum(quantity) from ownedCards where ownedCards.folderName = '"+Const.FOLDER_MANUAL+"'";
 	public static final String GET_FIRST_CARD_SET_FOR_CARD_IN_SET =
 			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
 			" where UPPER(cardSets.setName) = UPPER(?) and UPPER(cardName) = UPPER(?)";
