@@ -22,6 +22,31 @@ import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzeCompareToDragonShieldCSV {
 
+	private static Map<String, String> longRareMap = new HashMap<>();
+
+	static {
+		longRareMap.put("SR","Super Rare");
+		longRareMap.put("R","Rare");
+		longRareMap.put("C","Common");
+		longRareMap.put("SP","Common");
+		longRareMap.put("UR","Ultra Rare");
+		longRareMap.put("PGR","Premium Gold Rare");
+		longRareMap.put("PScR","Prismatic Secret Rare");
+		longRareMap.put("ScR","Secret Rare");
+		longRareMap.put("DUPR","Duel Terminal Ultra Parallel Rare");
+		longRareMap.put("DRPR","Duel Terminal Normal Parallel Rare");
+		longRareMap.put("UtR","Ultimate Rare");
+		longRareMap.put("GUR","Gold Rare");
+		longRareMap.put("GScR","Gold Secret Rare");
+		longRareMap.put("SSP","Common");
+		longRareMap.put("CR","Collector's Rare");
+		longRareMap.put("SHR","Shatterfoil Rare");
+		longRareMap.put("DNPR","Duel Terminal Normal Parallel Rare");
+		longRareMap.put("SFR","Starfoil Rare");
+		longRareMap.put("QCScR","Quarter Century Secret Rare");
+	}
+
+
 	public static void main(String[] args) throws SQLException, IOException {
 		AnalyzeCompareToDragonShieldCSV mainObj = new AnalyzeCompareToDragonShieldCSV();
 		SQLiteConnection db = WindowsUtil.getDBInstance();
@@ -129,34 +154,11 @@ public class AnalyzeCompareToDragonShieldCSV {
 	}
 
 	public String convertRarityToLongForm(String input){
-
-		Map<String, String> longRareMap = new HashMap<>();
-
-		longRareMap.put("SR","Super Rare");
-		longRareMap.put("R","Rare");
-		longRareMap.put("C","Common");
-		longRareMap.put("SP","Common");
-		longRareMap.put("UR","Ultra Rare");
-		longRareMap.put("PGR","Premium Gold Rare");
-		longRareMap.put("PScR","Prismatic Secret Rare");
-		longRareMap.put("ScR","Secret Rare");
-		longRareMap.put("DUPR","Duel Terminal Ultra Parallel Rare");
-		longRareMap.put("DRPR","Duel Terminal Normal Parallel Rare");
-		longRareMap.put("UtR","Ultimate Rare");
-		longRareMap.put("GUR","Gold Rare");
-		longRareMap.put("GScR","Gold Secret Rare");
-		longRareMap.put("SSP","Common");
-		longRareMap.put("CR","Collector's Rare");
-		longRareMap.put("SHR","Shatterfoil Rare");
-		longRareMap.put("DNPR","Duel Terminal Normal Parallel Rare");
-
 		String output = longRareMap.get(input);
-
 		if(output == null){
 			return input;
 		}
 		return output;
-
 	}
 
 
