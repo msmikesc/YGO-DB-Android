@@ -10,11 +10,14 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.ygodb.MainActivity;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.Executors;
 
 public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult> {
     private final MainActivity activity;
@@ -27,69 +30,79 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
     public void onActivityResult(ActivityResult result) {
 
         DrawerLayout view = activity.getBinding().getRoot();
+        Uri chosenURI = null;
+
+        try {
+            chosenURI = getFileURIFromActivityResult(result);
+        } catch (Exception e) {
+            YGOLogger.logException(e);
+            Snackbar.make(view, e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+            return;
+        }
+
+        Uri finalChosenURI = chosenURI;
+
+        Executors.newSingleThreadExecutor().execute(() -> exportDBFileToURI(finalChosenURI));
+
+    }
+
+    public Uri getFileURIFromActivityResult(ActivityResult result) throws IOException {
 
         if (result == null) {
-            Snackbar.make(view, "Error: Result Null", Snackbar.LENGTH_LONG).show();
-            return;
+            throw new IOException("Error: Result Null");
         }
 
         Intent contentChosen = result.getData();
 
         if (contentChosen == null) {
-            Snackbar.make(view, "Error: Intent Null", Snackbar.LENGTH_LONG).show();
-            return;
+            throw new IOException("Error: Intent Null");
         }
 
         Uri chosenURI = contentChosen.getData();
 
         if (chosenURI == null) {
-            Snackbar.make(view, "Error: URI Null", Snackbar.LENGTH_LONG).show();
-            return;
+            throw new IOException("Error: URI Null");
         }
 
         String fileName = AndroidUtil.getFileName(chosenURI);
 
         if (fileName == null) {
-            Snackbar.make(view, "Error: Filename Null", Snackbar.LENGTH_LONG).show();
-            return;
+            throw new IOException("Error: Filename Null");
         }
 
         if (!fileName.equals("YGO-DB.db")) {
-            Snackbar.make(view, "Error: Filename wrong", Snackbar.LENGTH_LONG).show();
-            return;
+            throw new IOException("Error: Filename wrong");
         }
 
+        activity.getContentResolver().takePersistableUriPermission (chosenURI,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+        return chosenURI;
+    }
+
+    public void exportDBFileToURI(Uri chosenURI) {
+
+        DrawerLayout view = activity.getBinding().getRoot();
         OutputStream file = null;
 
         try {
             file = activity.getContentResolver().openOutputStream(chosenURI);
-        } catch (FileNotFoundException e) {
-            Snackbar.make(view, "Error: Exception " + e.getMessage(), Snackbar.LENGTH_LONG).show();
-            return;
-        }
-
-        if (file == null) {
-            Snackbar.make(view, "Error: OutputStream Null", Snackbar.LENGTH_LONG).show();
-            return;
-        }
-
-        try {
             AndroidUtil.getDBInstance().copyDataBaseToURI(file);
 
-            file.close();
+            Snackbar.make(view, "DB Exported", BaseTransientBottomBar.LENGTH_LONG).show();
 
-            SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-
-            SharedPreferences.Editor editor = prefs.edit();
-
-            editor.putString("pref_db_location", chosenURI.toString());
-
-            editor.apply();
-
-            Snackbar.make(view, "DB Exported", Snackbar.LENGTH_LONG).show();
-
-        } catch (IOException e) {
-            Snackbar.make(view, "Error: Exception " + e.getMessage(), Snackbar.LENGTH_LONG).show();
+        } catch (Exception e) {
+            YGOLogger.logException(e);
+            Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+        }
+        finally{
+            if(file != null){
+                try {
+                    file.close();
+                } catch (IOException e) {
+                    YGOLogger.logException(e);
+                }
+            }
         }
     }
 }

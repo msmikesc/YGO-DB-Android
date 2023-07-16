@@ -1,8 +1,11 @@
 package com.example.ygodb;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,8 +38,9 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> copyDBInIntent = null;
-
+    private CopyDBInCallback copyDBInCallback = null;
     private ActivityResultLauncher<Intent> copyDBOutIntent = null;
+    private CopyDBOutCallback copyDBOutCallback = null;
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
@@ -74,13 +78,16 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
 
+        copyDBInCallback = new CopyDBInCallback(this);
+        copyDBOutCallback = new CopyDBOutCallback(this);
+
         copyDBInIntent = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new CopyDBInCallback(this));
+                copyDBInCallback);
 
         copyDBOutIntent = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new CopyDBOutCallback(this));
+                copyDBOutCallback);
 
         ViewCardSetViewModel viewCardSetViewModel =
                 new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
@@ -118,19 +125,46 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_import) {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("*/*");
 
-            copyDBInIntent.launch(intent);
+            SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
+            String savedURI = prefs.getString("pref_db_location", null);
+            Uri dbURI;
+            if(savedURI != null && !savedURI.isBlank()) {
+                dbURI = Uri.parse(savedURI);
+            } else {
+                dbURI = null;
+            }
+
+            if(AndroidUtil.checkForPermissionsToURI(this, dbURI)){
+                Executors.newSingleThreadExecutor().execute(() -> copyDBInCallback.importDBFromURI(dbURI));
+            }
+            else {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("*/*");
+                copyDBInIntent.launch(intent);
+            }
 
             return true;
         }
         else if (id == R.id.action_export) {
-            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-            intent.setType("*/*");
 
-            copyDBOutIntent.launch(intent);
+            SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
+            String savedURI = prefs.getString("pref_db_location", null);
+            Uri dbURI;
+            if(savedURI != null && !savedURI.isBlank()) {
+                dbURI = Uri.parse(savedURI);
+            } else {
+                dbURI = null;
+            }
 
+            if(AndroidUtil.checkForPermissionsToURI(this, dbURI)){
+                Executors.newSingleThreadExecutor().execute(() -> copyDBOutCallback.exportDBFileToURI(dbURI));
+            }
+            else {
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.setType("*/*");
+                copyDBOutIntent.launch(intent);
+            }
             return true;
         }
 

@@ -1,10 +1,14 @@
 package com.example.ygodb.abs;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.os.Process;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -97,6 +101,23 @@ public class AndroidUtil {
         ViewBoxSetViewModel viewBoxSetViewModel =
                 new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
         viewBoxSetViewModel.refreshViewDBUpdate();
+    }
+
+    public static boolean checkForPermissionsToURI(Activity activity, Uri uri){
+        if(activity == null || uri == null){
+            return false;
+        }
+
+        // Check read access permission
+        int readResult = activity.checkUriPermission(uri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        boolean hasReadPermission = (readResult == PackageManager.PERMISSION_GRANTED);
+
+        // Check write access permission
+        int writeResult = activity.checkUriPermission(uri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        boolean hasWritePermission = (writeResult == PackageManager.PERMISSION_GRANTED);
+
+        return hasReadPermission && hasWritePermission;
+
     }
 
 

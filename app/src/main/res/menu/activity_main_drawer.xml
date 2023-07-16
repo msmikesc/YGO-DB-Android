@@ -31,7 +31,7 @@
             android:title="@string/menu_soldCards" />
         <item
             android:id="@+id/nav_boxLookup"
-            android:icon="@drawable/dollar_sign"
+            android:icon="@drawable/box_icon"
             android:title="@string/menu_boxLookup" />
     </group>
 </menu>

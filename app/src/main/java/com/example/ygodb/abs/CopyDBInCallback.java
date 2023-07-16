@@ -36,75 +36,93 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 	public void onActivityResult(ActivityResult result) {
 
 		DrawerLayout view = activity.getBinding().getRoot();
+		Uri chosenURI = null;
+
+		try {
+			chosenURI = getFileURIFromActivityResult(result);
+		} catch (Exception e) {
+			YGOLogger.logException(e);
+			Snackbar.make(view, e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+			return;
+		}
+
+		Uri finalChosenURI = chosenURI;
+		Executors.newSingleThreadExecutor().execute(() -> importDBFromURI(finalChosenURI));
+	}
+
+	public Uri getFileURIFromActivityResult(ActivityResult result) throws IOException {
 
 		if (result == null) {
-			Snackbar.make(view, "Error: Result Null", BaseTransientBottomBar.LENGTH_LONG).show();
-			return;
+			throw new IOException("Error: Result Null");
 		}
 
 		Intent contentChosen = result.getData();
 
 		if (contentChosen == null) {
-			Snackbar.make(view, "Error: Intent Null", BaseTransientBottomBar.LENGTH_LONG).show();
-			return;
+			throw new IOException("Error: Intent Null");
 		}
 
 		Uri chosenURI = contentChosen.getData();
 
 		if (chosenURI == null) {
-			Snackbar.make(view, "Error: URI Null", BaseTransientBottomBar.LENGTH_LONG).show();
-			return;
+			throw new IOException("Error: URI Null");
 		}
 
 		String fileName = AndroidUtil.getFileName(chosenURI);
 
 		if (fileName == null) {
-			Snackbar.make(view, "Error: Filename Null", BaseTransientBottomBar.LENGTH_LONG).show();
-			return;
+			throw new IOException("Error: Filename Null");
 		}
 
 		if (!fileName.equals("YGO-DB.db")) {
-			Snackbar.make(view, "Error: Filename wrong", BaseTransientBottomBar.LENGTH_LONG).show();
-			return;
+			throw new IOException("Error: Filename wrong");
 		}
 
-		Executors.newSingleThreadExecutor().execute(() -> {
-			try {
+		activity.getContentResolver().takePersistableUriPermission (chosenURI,
+				Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+		return chosenURI;
+	}
 
-				File db = AndroidUtil.getDBInstance().getDatabaseFileReference();
+	public void importDBFromURI(Uri chosenURI){
+		DrawerLayout view = activity.getBinding().getRoot();
+		try {
 
-				YGOLogger.error("File modified time:" + dateFormat.format(new Date(db.lastModified())));
-				YGOLogger.error("File hashcode:" + getFileHash(db));
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
-				InputStream fileInputStream = activity.getContentResolver().openInputStream(chosenURI);
+			File db = AndroidUtil.getDBInstance().getDatabaseFileReference();
 
-				AndroidUtil.getDBInstance().copyDataBaseFromURI(fileInputStream);
+			YGOLogger.error("File URI from drive:" + chosenURI);
 
-				fileInputStream.close();
+			YGOLogger.error("File modified time:" + dateFormat.format(new Date(db.lastModified())));
+			YGOLogger.error("File hashcode:" + getFileHash(db));
 
-				db = AndroidUtil.getDBInstance().getDatabaseFileReference();
+			InputStream fileInputStream = activity.getContentResolver().openInputStream(chosenURI);
 
-				YGOLogger.error("File modified time:" + dateFormat.format(new Date(db.lastModified())));
-				YGOLogger.error("File hashcode:" + getFileHash(db));
+			AndroidUtil.getDBInstance().copyDataBaseFromURI(fileInputStream);
 
-				SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+			fileInputStream.close();
 
-				SharedPreferences.Editor editor = prefs.edit();
+			db = AndroidUtil.getDBInstance().getDatabaseFileReference();
 
-				editor.putString("pref_db_location", chosenURI.toString());
+			YGOLogger.error("File modified time:" + dateFormat.format(new Date(db.lastModified())));
+			YGOLogger.error("File hashcode:" + getFileHash(db));
 
-				editor.apply();
+			SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
-				AndroidUtil.updateViewsAfterDBLoad();
+			SharedPreferences.Editor editor = prefs.edit();
 
-				view.post(() -> Snackbar.make(view, "DB Imported", BaseTransientBottomBar.LENGTH_LONG).show());
-			} catch (Exception e) {
-				YGOLogger.logException(e);
-				view.post(() -> Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show());
-			}
-		});
+			editor.putString("pref_db_location", chosenURI.toString());
+
+			editor.apply();
+
+			AndroidUtil.updateViewsAfterDBLoad();
+
+			view.post(() -> Snackbar.make(view, "DB Imported", BaseTransientBottomBar.LENGTH_LONG).show());
+		} catch (Exception e) {
+			YGOLogger.logException(e);
+			view.post(() -> Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show());
+		}
 	}
 
 	public static String getFileHash(File file) throws NoSuchAlgorithmException, IOException {
