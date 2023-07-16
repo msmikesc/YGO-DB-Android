@@ -83,10 +83,9 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
         OwnedCard current = ownedCards.get(position);
 
+        LinearLayout buttonContainer = viewHolder.itemView.findViewById(R.id.incrementQuantityButtonContainer);
+
         if(addCardsViewModel != null) {
-
-            LinearLayout buttonContainer = viewHolder.itemView.findViewById(R.id.incrementQuantityButtonContainer);
-
             if(isManyPlusButtons){
                 viewHolder.plusButton.setVisibility(View.GONE);
                 buttonContainer.setVisibility(View.VISIBLE);
@@ -114,6 +113,10 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
                 ImageButton singleButton = viewHolder.itemView.findViewById(R.id.plusButton);
                 singleButton.setOnClickListener(view -> onPlusButtonClick(current, 1));
             }
+        }
+        else{
+            viewHolder.plusButton.setVisibility(View.GONE);
+            buttonContainer.setVisibility(View.GONE);
         }
 
         if(sellCardsViewModel != null){

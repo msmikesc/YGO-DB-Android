@@ -10,6 +10,7 @@ import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.FileHelper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1554,5 +1554,57 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			}
 		}
 		return -1;
+	}
+
+	private void getAllSetBoxesFieldsFromRS(Cursor rs, String[] col, SetBox current) {
+		current.setBoxLabel(rs.getString(getColumn(col, Const.BOX_LABEL)));
+		current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
+		current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
+	}
+
+	@Override
+	public List<SetBox> getAllSetBoxes() {
+
+		SQLiteDatabase connection = this.getInstance();
+
+		String setQuery = SQLConst.GET_ALL_SET_BOXES;
+
+		try (Cursor rs = connection.rawQuery(setQuery, null)) {
+
+			ArrayList<SetBox> resultsList = new ArrayList<>();
+
+			String[] col = rs.getColumnNames();
+
+			while (rs.moveToNext()) {
+				SetBox current = new SetBox();
+				getAllSetBoxesFieldsFromRS(rs, col, current);
+				resultsList.add(current);
+			}
+			return resultsList;
+		}
+	}
+
+	@Override
+	public List<SetBox> getSetBoxesByNameOrCode(String searchText) {
+
+		SQLiteDatabase connection = this.getInstance();
+
+		String setQuery = SQLConst.GET_SET_BOXES_BY_NAME_OR_CODE;
+
+		String[] params = new String[]{searchText, "%" + searchText + "%"};
+
+		try (Cursor rs = connection.rawQuery(setQuery, params)) {
+
+			ArrayList<SetBox> resultsList = new ArrayList<>();
+
+			String[] col = rs.getColumnNames();
+
+			while (rs.moveToNext()) {
+				SetBox current = new SetBox();
+				getAllSetBoxesFieldsFromRS(rs, col, current);
+				resultsList.add(current);
+			}
+			return resultsList;
+		}
 	}
 }

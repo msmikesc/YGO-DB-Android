@@ -14,6 +14,7 @@ import com.example.ygodb.ui.viewSoldCards.ViewSoldCardsViewModel;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
+import com.example.ygodb.ui.viewsetboxes.ViewBoxSetViewModel;
 
 import java.util.ArrayList;
 
@@ -92,6 +93,10 @@ public class AndroidUtil {
         ViewSoldCardsViewModel viewSoldCardsViewModel =
                 new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewSoldCardsViewModel.class);
         viewSoldCardsViewModel.refreshViewDBUpdate();
+
+        ViewBoxSetViewModel viewBoxSetViewModel =
+                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
+        viewBoxSetViewModel.refreshViewDBUpdate();
     }
 
 

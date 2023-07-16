@@ -28,7 +28,7 @@ public class ImportFromYGOPROAPI {
 
 	public static void main(String[] args) throws SQLException, IOException {
 
-		String setName = "Speed Duel GX: Duelists of Shadows";
+		String setName = "Wild Survivors";
 
 		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();
 

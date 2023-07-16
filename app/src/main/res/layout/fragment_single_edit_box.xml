@@ -1,0 +1,49 @@
+<!-- item_set_box.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <TextView
+            android:id="@+id/textViewSetCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#EC160E"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+    <TextView
+            android:id="@+id/textViewSetName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:text="Set Name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewSetCode"
+            app:layout_constraintWidth_percent="0.55" />
+
+    <EditText
+            android:id="@+id/editTextBoxLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Box"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:paddingHorizontal="5sp"
+            app:layout_constraintStart_toEndOf="@+id/textViewSetName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.12" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

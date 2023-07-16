@@ -17,4 +17,5 @@
     <string name="menu_addCards">Add Cards</string>
     <string name="menu_sellCards">Sell Cards</string>
     <string name="menu_soldCards">Sold Cards</string>
+    <string name="menu_boxLookup">Box Lookup</string>
 </resources>

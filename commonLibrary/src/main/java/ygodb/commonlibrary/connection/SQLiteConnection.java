@@ -9,6 +9,7 @@ import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
 
 public interface SQLiteConnection {
@@ -122,4 +123,8 @@ public interface SQLiteConnection {
     int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) throws SQLException;
 
     int getNewLowestPasscode() throws SQLException;
+
+	List<SetBox> getAllSetBoxes();
+
+	List<SetBox> getSetBoxesByNameOrCode(String searchText);
 }

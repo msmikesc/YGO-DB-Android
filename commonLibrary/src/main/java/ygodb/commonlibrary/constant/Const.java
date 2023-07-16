@@ -62,8 +62,9 @@ public class Const {
     public static final String SET_PRICE_UPDATE_TIME = "setPriceUpdateTime";
     public static final String SET_PRICE_FIRST = "setPriceFirst";
     public static final String SET_PRICE_FIRST_UPDATE_TIME = "setPriceFirstUpdateTime";
-
     public static final String RELEASE_DATE = "releaseDate";
+
+    public static final String BOX_LABEL = "boxLabel";
 
 
     //CSV keys

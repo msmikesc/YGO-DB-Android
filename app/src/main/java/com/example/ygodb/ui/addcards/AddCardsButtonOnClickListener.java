@@ -100,17 +100,7 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
 
                     view.post(adapter::notifyDataSetChanged);
 
-                    ViewCardsViewModel viewCardsViewModel =
-                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
-                    viewCardsViewModel.refreshViewDBUpdate();
-
-                    ViewCardSetViewModel viewCardSetViewModel =
-                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
-                    viewCardSetViewModel.refreshViewDBUpdate();
-
-                    ViewCardsSummaryViewModel viewCardsSummaryViewModel =
-                            new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
-                    viewCardsSummaryViewModel.refreshViewDBUpdate();
+                    AndroidUtil.updateViewsAfterDBLoad();
 
                 });
             }

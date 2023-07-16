@@ -73,7 +73,7 @@ public class ViewCardSetViewModel extends ViewModel {
 
         ArrayList<OwnedCard> results = null;
 
-        if(cardName == null || cardName.trim().equals("") || cardName.trim().length() < 3){
+        if(cardName == null || cardName.isBlank() || cardName.trim().length() < 3){
             return new ArrayList<>();
         }
 

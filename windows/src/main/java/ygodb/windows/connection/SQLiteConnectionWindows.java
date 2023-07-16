@@ -12,6 +12,7 @@ import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.SQLConst;
@@ -1270,6 +1271,16 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			}
 		}
 		return -1;
+	}
+
+	@Override
+	public List<SetBox> getAllSetBoxes() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<SetBox> getSetBoxesByNameOrCode(String searchText) {
+		throw new UnsupportedOperationException();
 	}
 
 }

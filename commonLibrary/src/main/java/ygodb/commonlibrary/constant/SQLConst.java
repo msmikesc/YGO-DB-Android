@@ -172,4 +172,10 @@ public class SQLConst {
 
 	public static final String GET_NEW_LOWEST_PASSCODE =
 			"select min(cast(passcode as INTEGER)) from gamePlayCard";
+
+	public static final String GET_ALL_SET_BOXES =
+			"select * from setBoxes order by boxLabel";
+
+	public static final String GET_SET_BOXES_BY_NAME_OR_CODE =
+			"select * from setBoxes where setCode = UPPER(?) or setName like ? order by boxLabel";
 }
