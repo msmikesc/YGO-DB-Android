@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.commonlibrary.connection.CsvConnection;

@@ -22,7 +22,7 @@ import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzeCompareToDragonShieldCSV {
 
-	private static Map<String, String> longRareMap = new HashMap<>();
+	private static final Map<String, String> longRareMap = new HashMap<>();
 
 	static {
 		longRareMap.put("SR","Super Rare");

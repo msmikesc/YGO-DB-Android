@@ -1,8 +1,6 @@
 package com.example.ygodb.abs;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 
 import androidx.activity.result.ActivityResult;
@@ -14,7 +12,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.Executors;
@@ -36,7 +33,13 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
             chosenURI = getFileURIFromActivityResult(result);
         } catch (Exception e) {
             YGOLogger.logException(e);
-            Snackbar.make(view, e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+
+            String message = e.getMessage();
+            if(message == null){
+                message = "Unknown error";
+            }
+
+            Snackbar.make(view, message, BaseTransientBottomBar.LENGTH_LONG).show();
             return;
         }
 

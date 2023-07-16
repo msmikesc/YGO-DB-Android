@@ -12,17 +12,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.Executors;
 
 public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> {
@@ -42,7 +32,13 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 			chosenURI = getFileURIFromActivityResult(result);
 		} catch (Exception e) {
 			YGOLogger.logException(e);
-			Snackbar.make(view, e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+
+			String message = e.getMessage();
+			if(message == null){
+				message = "Unknown error";
+			}
+
+			Snackbar.make(view, message, BaseTransientBottomBar.LENGTH_LONG).show();
 			return;
 		}
 

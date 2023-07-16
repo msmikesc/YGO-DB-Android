@@ -1,30 +1,16 @@
 package com.example.ygodb.ui.viewsetboxes;
 
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
-import com.example.ygodb.abs.AndroidUtil;
-import com.example.ygodb.ui.addcards.AddCardsViewModel;
-import com.example.ygodb.ui.sellcards.SellCardsViewModel;
-import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
-import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.io.InputStream;
 import java.util.List;
-import java.util.Locale;
 
 public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToListAdapter.ItemViewHolder> {
 	private List<SetBox> setBoxes;

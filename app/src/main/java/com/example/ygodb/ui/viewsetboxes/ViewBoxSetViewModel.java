@@ -7,7 +7,6 @@ import com.example.ygodb.abs.AndroidUtil;
 
 import ygodb.commonlibrary.bean.SetBox;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ViewBoxSetViewModel extends ViewModel {

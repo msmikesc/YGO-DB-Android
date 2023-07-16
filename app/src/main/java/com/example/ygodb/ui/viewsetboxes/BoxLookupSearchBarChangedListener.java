@@ -6,13 +6,9 @@ import android.widget.EditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ygodb.abs.TextChangedListener;
-import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
-import ygodb.commonlibrary.bean.OwnedCard;
-import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
@@ -34,6 +30,10 @@ class BoxLookupSearchBarChangedListener extends TextChangedListener<EditText> {
 	public void onTextChanged(EditText target, Editable s) {
 		String textSearch = s.toString().toLowerCase(Locale.ROOT);
 
+		if(textSearch.trim().length() < 3){
+			textSearch = "";
+		}
+
 		if(viewBoxSetViewModel.getCurrentSearchText().equals(textSearch)){
 			//nothing to update
 			return;
@@ -41,9 +41,10 @@ class BoxLookupSearchBarChangedListener extends TextChangedListener<EditText> {
 
 		viewBoxSetViewModel.setCurrentSearchText(textSearch);
 
+		String finalTextSearch = textSearch;
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
-				List<SetBox> results = viewBoxSetViewModel.getSearchData(textSearch);
+				List<SetBox> results = viewBoxSetViewModel.getSearchData(finalTextSearch);
 
 				handler.post(() -> {
 					viewBoxSetViewModel.setBoxList(results);

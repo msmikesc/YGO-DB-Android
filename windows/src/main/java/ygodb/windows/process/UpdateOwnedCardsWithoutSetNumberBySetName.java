@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
-import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
