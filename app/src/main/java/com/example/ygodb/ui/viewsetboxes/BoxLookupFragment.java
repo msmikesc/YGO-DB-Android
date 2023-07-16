@@ -25,6 +25,7 @@ public class BoxLookupFragment extends Fragment {
 							 ViewGroup container, Bundle savedInstanceState) {
 
 		//TODO support adding new by creating an entry by set code
+		//TODO save updated box label
 
 		ViewBoxSetViewModel viewBoxSetViewModel =
 				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
