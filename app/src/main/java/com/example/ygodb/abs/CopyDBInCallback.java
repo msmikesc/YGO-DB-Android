@@ -87,26 +87,7 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 	public void importDBFromURI(Uri chosenURI){
 		DrawerLayout view = activity.getBinding().getRoot();
 		try {
-
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-
-			File db = AndroidUtil.getDBInstance().getDatabaseFileReference();
-
-			YGOLogger.error("File URI from drive:" + chosenURI);
-
-			YGOLogger.error("File modified time:" + dateFormat.format(new Date(db.lastModified())));
-			YGOLogger.error("File hashcode:" + getFileHash(db));
-
-			InputStream fileInputStream = activity.getContentResolver().openInputStream(chosenURI);
-
-			AndroidUtil.getDBInstance().copyDataBaseFromURI(fileInputStream);
-
-			fileInputStream.close();
-
-			db = AndroidUtil.getDBInstance().getDatabaseFileReference();
-
-			YGOLogger.error("File modified time:" + dateFormat.format(new Date(db.lastModified())));
-			YGOLogger.error("File hashcode:" + getFileHash(db));
+			String responseMessage = AndroidUtil.getDBInstance().copyDataBaseFromURI(activity, chosenURI);
 
 			SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
@@ -118,27 +99,10 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 
 			AndroidUtil.updateViewsAfterDBLoad();
 
-			view.post(() -> Snackbar.make(view, "DB Imported", BaseTransientBottomBar.LENGTH_LONG).show());
+			view.post(() -> Snackbar.make(view, responseMessage, BaseTransientBottomBar.LENGTH_LONG).show());
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 			view.post(() -> Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show());
-		}
-	}
-
-	public static String getFileHash(File file) throws NoSuchAlgorithmException, IOException {
-		MessageDigest md = MessageDigest.getInstance("MD5");
-		byte[] buffer = new byte[4096];
-		try (FileInputStream fis = new FileInputStream(file);
-			 DigestInputStream dis = new DigestInputStream(fis, md)) {
-			while (dis.read(buffer) != -1) {
-				// Reading the file content to compute the hash
-			}
-			byte[] hashBytes = md.digest();
-			StringBuilder sb = new StringBuilder();
-			for (byte hashByte : hashBytes) {
-				sb.append(Integer.toString((hashByte & 0xff) + 0x100, 16).substring(1));
-			}
-			return sb.toString();
 		}
 	}
 }

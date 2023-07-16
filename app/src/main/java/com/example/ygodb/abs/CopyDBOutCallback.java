@@ -87,7 +87,7 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
 
         try {
             file = activity.getContentResolver().openOutputStream(chosenURI);
-            AndroidUtil.getDBInstance().copyDataBaseToURI(file);
+            AndroidUtil.getDBInstance().copyDataBaseToURI(activity, file);
 
             Snackbar.make(view, "DB Exported", BaseTransientBottomBar.LENGTH_LONG).show();
 

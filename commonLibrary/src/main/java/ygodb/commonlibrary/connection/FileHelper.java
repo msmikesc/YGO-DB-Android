@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.channels.FileChannel;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @author Danny Remington - MacroSolve
@@ -21,6 +24,23 @@ import java.nio.channels.FileChannel;
 public class FileHelper {
 
     private FileHelper(){}
+
+    public static String getFileHash(File file) throws NoSuchAlgorithmException, IOException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] buffer = new byte[4096];
+        try (FileInputStream fis = new FileInputStream(file);
+             DigestInputStream dis = new DigestInputStream(fis, md)) {
+            while (dis.read(buffer) != -1) {
+                // Reading the file content to compute the hash
+            }
+            byte[] hashBytes = md.digest();
+            StringBuilder sb = new StringBuilder();
+            for (byte hashByte : hashBytes) {
+                sb.append(Integer.toString((hashByte & 0xff) + 0x100, 16).substring(1));
+            }
+            return sb.toString();
+        }
+    }
 
     /**
      * Creates the specified <i><b>toFile</b></i> that is a byte for byte a copy

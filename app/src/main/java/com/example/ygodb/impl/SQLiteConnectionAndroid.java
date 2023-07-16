@@ -1,10 +1,14 @@
 package com.example.ygodb.impl;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.net.Uri;
+import com.example.ygodb.MainActivity;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonlibrary.bean.CardSet;
@@ -110,12 +114,76 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		getWritableDatabase().close();
 	}
 
-	public void copyDataBaseFromURI(InputStream myInput) throws IOException {
+	public String copyDataBaseFromURI(Activity activity, Uri myInput) throws IOException {
 		if (myInput == null) {
-			return;
+			return "Uri input was null";
 		}
 
 		close();
+
+		SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+
+		String prevLoadedDbHash = prefs.getString("loaded_db_hash", null);
+
+		InputStream fileInputStream = activity.getContentResolver().openInputStream(myInput);
+
+		writeURItoDB(fileInputStream);
+
+		fileInputStream.close();
+
+		String newFileHash = null;
+		try {
+			newFileHash = FileHelper.getFileHash(getDatabaseFileReference());
+		}
+		catch (Exception e){
+			throw new IOException(e);
+		}
+
+		SharedPreferences.Editor editor = prefs.edit();
+		String response;
+
+		if(prevLoadedDbHash == null || prevLoadedDbHash.isBlank() || !prevLoadedDbHash.equals(newFileHash)){
+			editor.putString("loaded_db_hash", newFileHash);
+			editor.apply();
+			response = "DB file loaded on first try";
+		}
+		else{
+			//loaded same file, try again
+			fileInputStream = activity.getContentResolver().openInputStream(myInput);
+
+			writeURItoDB(fileInputStream);
+
+			fileInputStream.close();
+
+			try {
+				newFileHash = FileHelper.getFileHash(getDatabaseFileReference());
+			}
+			catch (Exception e){
+				throw new IOException(e);
+			}
+
+			if(prevLoadedDbHash.equals(newFileHash)){
+				//same file loaded twice
+				response = "DB file hash the same on second try";
+			}
+			else{
+				//file loaded successfully on second try
+				editor.putString("loaded_db_hash", newFileHash);
+				editor.apply();
+				response = "DB file loaded on second try";
+			}
+		}
+
+		/*
+		 * Access the copied database so SQLiteHelper will cache it and mark it
+		 * as created.
+		 */
+		getWritableDatabase().close();
+
+		return response;
+	}
+
+	private void writeURItoDB(InputStream myInput) throws IOException {
 
 		/*
 		 * Open the empty db in internal storage as the output stream.
@@ -140,15 +208,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
-
-		/*
-		 * Access the copied database so SQLiteHelper will cache it and mark it
-		 * as created.
-		 */
-		getWritableDatabase().close();
 	}
 
-	public void copyDataBaseToURI(OutputStream output) throws IOException {
+	public void copyDataBaseToURI(Activity activity, OutputStream output) throws IOException {
 
 		if (output == null) {
 			return;
@@ -170,6 +232,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		FileHelper.copyFile(myInput, output);
 
 		myInput.close();
+
+		SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+
+		String newFileHash;
+		try {
+			newFileHash = FileHelper.getFileHash(getDatabaseFileReference());
+		}
+		catch (Exception e){
+			throw new IOException(e);
+		}
+		editor.putString("loaded_db_hash", newFileHash);
+		editor.apply();
 
 		/*
 		 * Access the copied database so SQLiteHelper will cache it and mark it
