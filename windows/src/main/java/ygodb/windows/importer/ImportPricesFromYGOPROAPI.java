@@ -3,20 +3,24 @@ package ygodb.windows.importer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class ImportPricesFromYGOPROAPI {
 
@@ -25,6 +29,9 @@ public class ImportPricesFromYGOPROAPI {
 	private static final String SEP = "\",\"";
 
 	private final HashMap<String, List<String>> nameUpdateMap = new HashMap<>();
+
+	private final HashSet<String> updatedKeysSet = new HashSet<>();
+	private final HashMap<String, Integer> updatedMoreThanOnceKeysMap = new HashMap<>();
 
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportPricesFromYGOPROAPI mainObj = new ImportPricesFromYGOPROAPI();
@@ -65,7 +72,14 @@ public class ImportPricesFromYGOPROAPI {
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
+				try (FileWriter writer = new FileWriter("C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadJSON.txt", false)) {
+					writer.write(inline);
+				}
+
 				YGOLogger.info("Finished reading from API");
+
+				//start timer
+				long startTime = System.currentTimeMillis();
 
 				JsonNode cards = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
@@ -96,10 +110,24 @@ public class ImportPricesFromYGOPROAPI {
 
 				}
 
+				//TODO address keys updated more than once
+				// often only difference is in set url
+				// color variants
+				// limited, unlimited, and first edition entries existing at same time
+				// card name erratas being wierd
+				// alt arts
+				for (String key : updatedMoreThanOnceKeysMap.keySet()) {
+					YGOLogger.info("Key updated more than once:" + key);
+				}
+
+				long endTime = System.currentTimeMillis();
+				YGOLogger.info("Time to load data to DB:" + Util.millisToShortDHMS(endTime - startTime));
+
 			}
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 		}
+		//end timer
 		return true;
 	}
 
@@ -117,18 +145,18 @@ public class ImportPricesFromYGOPROAPI {
 	}
 
 	private void insertSingleCardSet(String cardName, SQLiteConnection db, JsonNode setNode) throws SQLException {
-		String setCode = null;
+		String setNumber = null;
 		String setName = null;
 		String setRarity = null;
 		String setPrice = null;
 		String cardEdition = null;
 
 		try {
-			setCode = Util.getStringOrNull(setNode, Const.YGOPRO_SET_CODE);
+			setNumber = Util.getStringOrNull(setNode, Const.YGOPRO_SET_CODE);
 			setName = Util.getStringOrNull(setNode, Const.YGOPRO_SET_NAME);
 			setRarity = Util.getStringOrNull(setNode, Const.YGOPRO_SET_RARITY);
 			setPrice = Util.getStringOrNull(setNode, Const.YGOPRO_SET_PRICE);
-			cardEdition = Util.getStringOrNull(setNode,Const.YGOPRO_CARD_EDITION);
+			cardEdition = Util.getStringOrNull(setNode, Const.YGOPRO_CARD_EDITION);
 
 			//String set_rarity_code = Util.getStringOrNull(setNode,"set_rarity_code");
 			//String set_url = Util.getStringOrNull(setNode,"set_url");
@@ -136,7 +164,7 @@ public class ImportPricesFromYGOPROAPI {
 			YGOLogger.info("issue found on " + cardName);
 			return;
 		}
-		if(cardEdition == null){
+		if (cardEdition == null) {
 			cardEdition = "";
 		}
 
@@ -144,70 +172,122 @@ public class ImportPricesFromYGOPROAPI {
 
 		setRarity = Util.checkForTranslatedRarity(setRarity);
 		setName = Util.checkForTranslatedSetName(setName);
-		setCode = Util.checkForTranslatedSetNumber(setCode);
+		setNumber = Util.checkForTranslatedSetNumber(setNumber);
 
-		List<String> translatedList = Util.checkForTranslatedQuadKey(cardName, setCode, setRarity, setName);
+		List<String> translatedList = Util.checkForTranslatedQuadKey(cardName, setNumber, setRarity, setName);
 		cardName = translatedList.get(0);
-		setCode = translatedList.get(1);
+		setNumber = translatedList.get(1);
 		setRarity = translatedList.get(2);
 		setName = translatedList.get(3);
 
 		setPrice = Util.normalizePrice(setPrice);
 
 		if (setPrice != null && !setPrice.equals(Const.ZERO_PRICE_STRING)) {
-			int rowsUpdated = updatePriceUsingMultipleStrategies(cardName, db, setCode, setName, setRarity, setPrice, isFirstEdition);
+			int rowsUpdated = updatePriceUsingMultipleStrategiesWithHashmap(cardName, db, setNumber, setName, setRarity, setPrice, isFirstEdition);
 			if (rowsUpdated != 1) {
-				YGOLogger.info(OPEN + setCode + SEP + cardName + SEP + setRarity +
+				YGOLogger.info(OPEN + setNumber + SEP + cardName + SEP + setRarity +
 						SEP + setName + CLOSE + setPrice + "," + rowsUpdated + " rows updated");
 			}
 		}
 	}
 
-	private int updatePriceUsingMultipleStrategies(String cardName, SQLiteConnection db, String setCode, String setName,
-												   String setRarity, String setPrice, boolean isFirstEdition) throws SQLException {
-		int rowsUpdated = db.updateCardSetPriceWithCardAndSetName(setCode, setRarity, setPrice, setName, cardName, isFirstEdition);
-		if (rowsUpdated > 0) {
-			//All input was correct, no need to log
-			return rowsUpdated;
-		}
+	private int updatePriceUsingMultipleStrategiesWithHashmap(String cardName, SQLiteConnection db, String setNumber, String setName,
+															  String setRarity, String setPrice, boolean isFirstEdition) throws SQLException {
 
-		rowsUpdated = db.updateCardSetPriceWithSetName(setCode, setRarity, setPrice, setName, isFirstEdition);
-		if (rowsUpdated > 0) {
-			//card name was incorrect
-			YGOLogger.debug("Card name mismatch from price API:" + OPEN + setCode + SEP + cardName + SEP + setRarity +
-					SEP + setName + CLOSE + setPrice);
-			return rowsUpdated;
-		}
+		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
+		CardSet matcherInput = new CardSet();
+		matcherInput.setSetRarity(setRarity);
+		matcherInput.setSetNumber(setNumber);
+		matcherInput.setCardName(cardName);
+		matcherInput.setSetName(setName);
+		String cardLogIdentifier = OPEN + setNumber + SEP + cardName + SEP + setRarity + SEP + setName + CLOSE + setPrice;
 
-		rowsUpdated = db.updateCardSetPriceWithCardName(setCode, setRarity, setPrice, cardName, isFirstEdition);
-		if (rowsUpdated > 0) {
-			//set name was incorrect
-			List<String> setNamesList = nameUpdateMap.computeIfAbsent(setName, k -> new ArrayList<>());
-			setNamesList.add(cardName + " " + setCode);
-			return rowsUpdated;
-		}
-
-		rowsUpdated = db.updateCardSetPrice(setCode, setRarity, setPrice, isFirstEdition);
-		if (rowsUpdated > 0) {
-			//Card set name and card name was inaccurate
-			YGOLogger.debug("Card name mismatch from price API:" + OPEN + setCode + SEP + cardName + SEP + setRarity +
-					SEP + setName + CLOSE + setPrice);
-			List<String> setNamesList = nameUpdateMap.computeIfAbsent(setName, k -> new ArrayList<>());
-			setNamesList.add(cardName + " " + setCode);
-			return rowsUpdated;
-		}
-
-		ArrayList<CardSet> list = db.getAllCardSetsOfCardBySetNumber(setCode);
-		if (list.size() == 1) {
-			rowsUpdated = db.updateCardSetPrice(setCode, setPrice, isFirstEdition);
-			if (rowsUpdated > 0) {
-				//card rarity was inaccurate and only one option, so assume it is right
-				YGOLogger.debug("Card rarity mismatch from price API:" + OPEN + setCode + SEP + cardName + SEP + setRarity +
-						SEP + setName + CLOSE + setPrice);
-				return rowsUpdated;
+		List<CardSet> existingRows = rarityHashMap.get(DatabaseHashMap.getAllMatchingKey(matcherInput));
+		if (existingRows != null && !existingRows.isEmpty()) {
+			if (existingRows.size() > 1) {
+				YGOLogger.error("Somehow more than 1 matching row for an exact match???:" + cardLogIdentifier);
 			}
+
+			db.updateCardSetPriceBatchedWithCardAndSetName(setNumber, setRarity, setPrice, setName, cardName, isFirstEdition);
+
+			for (CardSet set : existingRows) {
+				addToSetAndMap(DatabaseHashMap.getAllMatchingKey(set) + isFirstEdition);
+			}
+			return existingRows.size();
 		}
-		//multiple options or zero are possible for setCode, so don't update anything
+
+		existingRows = rarityHashMap.get(DatabaseHashMap.getSetNameMismatchKey(matcherInput));
+		if (existingRows != null && !existingRows.isEmpty()) {
+			if (existingRows.size() > 1) {
+				YGOLogger.error("Multiple rows updated for set name mismatch from price API:" + cardLogIdentifier);
+			}
+			db.updateCardSetPriceBatchedWithCardName(setNumber, setRarity, setPrice, cardName, isFirstEdition);
+			List<String> setNamesList = nameUpdateMap.computeIfAbsent(setName, k -> new ArrayList<>());
+			setNamesList.add(cardName + " " + setNumber);
+
+			for (CardSet set : existingRows) {
+				addToSetAndMap(DatabaseHashMap.getAllMatchingKey(set) + isFirstEdition);
+			}
+			return existingRows.size();
+		}
+
+		existingRows = rarityHashMap.get(DatabaseHashMap.getCardNameMismatchKey(matcherInput));
+		if (existingRows != null && !existingRows.isEmpty()) {
+			if (existingRows.size() > 1) {
+				YGOLogger.error("Multiple rows updated for card name mismatch from price API:" + OPEN + setNumber + SEP + cardName + SEP + setRarity +
+						SEP + setName + CLOSE + setPrice);
+			}
+			YGOLogger.debug("Card name mismatch from price API:" + cardLogIdentifier);
+
+			int rowsUpdated = db.updateCardSetPriceWithSetName(setNumber, setRarity, setPrice, setName, isFirstEdition);
+			if (rowsUpdated != existingRows.size()) {
+				YGOLogger.error("Actual rows updated did not equal predicted for card name mismatch" + cardLogIdentifier);
+			}
+			for (CardSet set : existingRows) {
+				addToSetAndMap(DatabaseHashMap.getAllMatchingKey(set) + isFirstEdition);
+			}
+			return rowsUpdated;
+		}
+
+		existingRows = rarityHashMap.get(DatabaseHashMap.getCardAndSetNameMismatchKey(matcherInput));
+		if (existingRows != null && !existingRows.isEmpty()) {
+			if (existingRows.size() > 1) {
+				YGOLogger.error("Multiple rows updated for card and set name mismatch from price API:" + cardLogIdentifier);
+			}
+			int rowsUpdated = db.updateCardSetPrice(setNumber, setRarity, setPrice, isFirstEdition);
+			YGOLogger.info("Card name mismatch from price API:" + cardLogIdentifier);
+			List<String> setNamesList = nameUpdateMap.computeIfAbsent(setName, k -> new ArrayList<>());
+			setNamesList.add(cardName + " " + setNumber);
+			if (rowsUpdated != existingRows.size()) {
+				YGOLogger.error("Actual rows updated did not equal predicted for card and set name mismatch" + cardLogIdentifier);
+			}
+			for (CardSet set : existingRows) {
+				addToSetAndMap(DatabaseHashMap.getAllMatchingKey(set) + isFirstEdition);
+			}
+			return rowsUpdated;
+		}
+
+		existingRows = rarityHashMap.get(DatabaseHashMap.getSetNumberOnlyKey(matcherInput));
+		if (existingRows != null && existingRows.size() == 1) {
+			int rowsUpdated = db.updateCardSetPrice(setNumber, setPrice, isFirstEdition);
+			YGOLogger.info("Card rarity mismatch from price API:" + cardLogIdentifier);
+			if (rowsUpdated != 1) {
+				YGOLogger.error("Actual rows updated did not equal predicted for card rarity mismatch" + cardLogIdentifier);
+			}
+			for (CardSet set : existingRows) {
+				addToSetAndMap(DatabaseHashMap.getAllMatchingKey(set) + isFirstEdition);
+			}
+			return rowsUpdated;
+		}
+		//multiple options or zero are possible for setNumber, so don't update anything
 		return 0;
+	}
+
+	private void addToSetAndMap(String key) {
+		if (updatedKeysSet.contains(key)) {
+			updatedMoreThanOnceKeysMap.merge(key, 1, Integer::sum);
+		} else {
+			updatedKeysSet.add(key);
+		}
 	}
 }

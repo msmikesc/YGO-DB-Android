@@ -16,7 +16,7 @@ public interface SQLiteConnection {
 
     void closeInstance() throws SQLException;
 
-    HashMap<String, ArrayList<CardSet>> getAllCardRarities() throws SQLException;
+    HashMap<String, List<CardSet>> getAllCardRarities() throws SQLException;
 
     ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException;
 
@@ -50,7 +50,7 @@ public interface SQLiteConnection {
 
     ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException;
 
-    HashMap<String, ArrayList<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException;
+    HashMap<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException;
 
     ArrayList<OwnedCard> getRarityUnsureOwnedCards() throws SQLException;
 
@@ -127,4 +127,11 @@ public interface SQLiteConnection {
 	List<SetBox> getAllSetBoxes();
 
 	List<SetBox> getSetBoxesByNameOrCode(String searchText);
+
+    void updateCardSetPriceBatchedWithCardAndSetName(String setNumber, String rarity, String price, String setName,
+                                                     String cardName, boolean isFirstEdition)
+            throws SQLException;
+
+    void updateCardSetPriceBatchedWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+            throws SQLException;
 }

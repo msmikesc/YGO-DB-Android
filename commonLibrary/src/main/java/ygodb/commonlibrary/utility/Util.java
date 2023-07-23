@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class Util {
 
@@ -653,5 +654,22 @@ public class Util {
 			}
 		}
 		return new NameAndColor(name, colorVariant);
+	}
+
+	public static String millisToShortDHMS(long duration) {
+		String res = "";
+		long days = TimeUnit.MILLISECONDS.toDays(duration);
+		long hours = TimeUnit.MILLISECONDS.toHours(duration) -
+				TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(duration));
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(duration) -
+				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration));
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) -
+				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration));
+		long millis = TimeUnit.MILLISECONDS.toMillis(duration) -
+				TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration));
+
+		if (days == 0) res = String.format(Locale.ENGLISH, "%02d:%02d:%02d.%04d", hours, minutes, seconds, millis);
+		else res = String.format(Locale.ENGLISH, "%dd %02d:%02d:%02d.%04d", days, hours, minutes, seconds, millis);
+		return res;
 	}
 }

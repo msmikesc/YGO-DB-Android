@@ -13,11 +13,11 @@ public class DatabaseHashMap {
 
 	private DatabaseHashMap(){}
 
-	private static Map<String, ArrayList<CardSet>> allCardRarities = null;
+	private static Map<String, List<CardSet>> allCardRarities = null;
 
-	private static Map<String, ArrayList<OwnedCard>> allOwnedCards = null;
+	private static Map<String, List<OwnedCard>> allOwnedCards = null;
 
-	public static Map<String, ArrayList<CardSet>> getRaritiesInstance(SQLiteConnection db) throws SQLException {
+	public static Map<String, List<CardSet>> getRaritiesInstance(SQLiteConnection db) throws SQLException {
 		if (allCardRarities == null) {
 			allCardRarities = db.getAllCardRarities();
 		}
@@ -28,7 +28,7 @@ public class DatabaseHashMap {
 		allCardRarities = null;
 	}
 
-	public static Map<String, ArrayList<OwnedCard>> getOwnedInstance(SQLiteConnection db) throws SQLException {
+	public static Map<String, List<OwnedCard>> getOwnedInstance(SQLiteConnection db) throws SQLException {
 		if (allOwnedCards == null) {
 			allOwnedCards = db.getAllOwnedCardsForHashMap();
 		}
@@ -40,9 +40,9 @@ public class DatabaseHashMap {
 	}
 
 	public static List<CardSet> getRaritiesOfCardInSetFromHashMap(String setNumber, SQLiteConnection db) throws SQLException {
-		Map<String, ArrayList<CardSet>> data = DatabaseHashMap.getRaritiesInstance(db);
+		Map<String, List<CardSet>> data = DatabaseHashMap.getRaritiesInstance(db);
 
-		ArrayList<CardSet> list = data.get(setNumber);
+		List<CardSet> list = data.get(setNumber);
 
 		if (list == null) {
 			list = new ArrayList<>();
@@ -51,14 +51,46 @@ public class DatabaseHashMap {
 		return list;
 	}
 
+	public static List<String> getCardRarityKeys(CardSet input){
+		ArrayList<String> list = new ArrayList<>();
+
+		list.add(getAllMatchingKey(input));
+		list.add(getCardNameMismatchKey(input));
+		list.add(getSetNameMismatchKey(input));
+		list.add(getCardAndSetNameMismatchKey(input));
+		list.add(getSetNumberOnlyKey(input));
+
+		return list;
+	}
+
+	public static String getAllMatchingKey(CardSet input){
+		return input.getSetNumber() + input.getSetRarity() + input.getSetName() + input.getCardName();
+	}
+
+	public static String getCardNameMismatchKey(CardSet input){
+		return input.getSetNumber() + input.getSetRarity() + input.getSetName();
+	}
+
+	public static String getSetNameMismatchKey(CardSet input){
+		return input.getSetNumber() + input.getSetRarity() + input.getCardName();
+	}
+
+	public static String getCardAndSetNameMismatchKey(CardSet input){
+		return input.getSetNumber() + input.getSetRarity();
+	}
+
+	public static String getSetNumberOnlyKey(CardSet input){
+		return input.getSetNumber();
+	}
+
 	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(String setNumber, String priceBought,
 																			 String dateBought, String folderName, String condition, String editionPrinting, SQLiteConnection db) throws SQLException {
-		Map<String, ArrayList<OwnedCard>> data = DatabaseHashMap.getOwnedInstance(db);
+		Map<String, List<OwnedCard>> data = DatabaseHashMap.getOwnedInstance(db);
 
 		String key = setNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folderName +":"+ condition
 				+ editionPrinting;
 
-		ArrayList<OwnedCard> list = data.get(key);
+		List<OwnedCard> list = data.get(key);
 
 		if (list == null) {
 			list = new ArrayList<>();

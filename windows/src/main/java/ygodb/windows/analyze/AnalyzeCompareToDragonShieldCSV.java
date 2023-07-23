@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.csv.CSVParser;
@@ -66,7 +67,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 		Iterator<CSVRecord> it = parser.iterator();
 
-		Map<String, ArrayList<OwnedCard>> databaseList = DatabaseHashMap.getOwnedInstance(db);
+		Map<String, List<OwnedCard>> databaseList = DatabaseHashMap.getOwnedInstance(db);
 
 		while (it.hasNext()) {
 
@@ -99,7 +100,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 			String key = setNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folder +":"+ condition +":"+ printing;
 
-			ArrayList<OwnedCard> list = databaseList.get(key);
+			List<OwnedCard> list = databaseList.get(key);
 
 			if(list != null){
 				handleForCSVKey(databaseList, folder, name, quantity, setCode, setNumber, condition, printing, priceBought, dateBought, setName, colorCode, key, list, rarity);
@@ -140,7 +141,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 		parser.close();
 
-		for (ArrayList<OwnedCard> rarityList : databaseList.values()) {
+		for (List<OwnedCard> rarityList : databaseList.values()) {
 			for (OwnedCard card : rarityList) {
 
 				if (!card.getFolderName().equals(Const.FOLDER_MANUAL)) {
@@ -163,7 +164,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 
 
-	private static void handleForCSVKey(Map<String, ArrayList<OwnedCard>> databaseList, String folder, String name, String quantity, String setCode, String setNumber, String condition, String printing, String priceBought, String dateBought, String setName, String colorCode, String key, ArrayList<OwnedCard> list, String rarity) {
+	private static void handleForCSVKey(Map<String, List<OwnedCard>> databaseList, String folder, String name, String quantity, String setCode, String setNumber, String condition, String printing, String priceBought, String dateBought, String setName, String colorCode, String key, List<OwnedCard> list, String rarity) {
 
 		if (list.size() == 1) {
 			// exact 1 match

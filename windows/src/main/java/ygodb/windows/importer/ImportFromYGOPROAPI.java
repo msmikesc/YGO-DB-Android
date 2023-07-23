@@ -28,7 +28,7 @@ public class ImportFromYGOPROAPI {
 
 	public static void main(String[] args) throws SQLException, IOException {
 
-		String setName = "Wild Survivors";
+		String setName = "Duelist Nexus";
 
 		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();
 
@@ -272,7 +272,7 @@ public class ImportFromYGOPROAPI {
 				db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
 			}
 		}
-		if (isSpecificSet && inputSetName.equalsIgnoreCase(currentSetName)) {
+		if (isSpecificSet && inputSetName.equalsIgnoreCase(newSetName)) {
 			ArrayList<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
 
 			if (setMetaDataList.isEmpty()) {

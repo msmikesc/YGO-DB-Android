@@ -15,6 +15,7 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.FileHelper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +42,6 @@ import java.util.Locale;
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
 
 	private SQLiteDatabase connectionInstance = null;
-	private final Context cont;
 	private static final String DB_NAME = "database.sqlite";
 
 	private static final String DB_FILE_PATH = "database/YGO-DB.db";
@@ -51,14 +52,13 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	private boolean upgradeDatabase = false;
 
 	public File getDatabaseFileReference(){
-		return new File(cont.getFilesDir(), DB_NAME);
+		return new File(AndroidUtil.getAppContext().getFilesDir(), DB_NAME);
 	}
 
 	public SQLiteConnectionAndroid() {
 		super(AndroidUtil.getAppContext(),
 				AndroidUtil.getAppContext().getFilesDir().getAbsolutePath() + "/" + SQLiteConnectionAndroid.DB_NAME,
 				null, 1);
-		this.cont = AndroidUtil.getAppContext();
 		this.getWritableDatabase();
 
 		if (this.createDatabase) {
@@ -94,8 +94,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		 */
 		close();
 
-		try (InputStream myInput = cont.getAssets().open(DB_FILE_PATH);
-			 OutputStream myOutput = new FileOutputStream(new File(cont.getFilesDir(), DB_NAME))) {
+		try (InputStream myInput = AndroidUtil.getAppContext().getAssets().open(DB_FILE_PATH);
+			 OutputStream myOutput = new FileOutputStream(new File(AndroidUtil.getAppContext().getFilesDir(), DB_NAME))) {
 
 			/*
 			 * Copy over the empty db in internal storage with the database in the
@@ -122,7 +122,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
-		String prevLoadedDbHash = prefs.getString("loaded_db_hash", null);
+		String prevLoadedDbHash = prefs.getString(Const.LOADED_DB_HASH, null);
 
 		InputStream fileInputStream = activity.getContentResolver().openInputStream(myInput);
 
@@ -142,7 +142,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String response;
 
 		if(prevLoadedDbHash == null || prevLoadedDbHash.isBlank() || !prevLoadedDbHash.equals(newFileHash)){
-			editor.putString("loaded_db_hash", newFileHash);
+			editor.putString(Const.LOADED_DB_HASH, newFileHash);
 			editor.apply();
 			response = "DB file loaded on first try";
 		}
@@ -167,7 +167,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			}
 			else{
 				//file loaded successfully on second try
-				editor.putString("loaded_db_hash", newFileHash);
+				editor.putString(Const.LOADED_DB_HASH, newFileHash);
 				editor.apply();
 				response = "DB file loaded on second try";
 			}
@@ -242,7 +242,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		catch (Exception e){
 			throw new IOException(e);
 		}
-		editor.putString("loaded_db_hash", newFileHash);
+		editor.putString(Const.LOADED_DB_HASH, newFileHash);
 		editor.apply();
 
 		/*
@@ -284,7 +284,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public HashMap<String, ArrayList<CardSet>> getAllCardRarities() {
+	public HashMap<String, List<CardSet>> getAllCardRarities() {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -292,7 +292,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		try (Cursor rs = connection.rawQuery(setQuery, null)) {
 
-			HashMap<String, ArrayList<CardSet>> results = new HashMap<>();
+			HashMap<String, List<CardSet>> results = new HashMap<>();
 
 			String[] col = rs.getColumnNames();
 
@@ -300,9 +300,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				CardSet set = new CardSet();
 				getAllCardSetFieldsFromRS(rs, col, set);
 
-				ArrayList<CardSet> currentList = results.computeIfAbsent(set.getSetNumber(), k -> new ArrayList<>());
+				List<String> keysList = DatabaseHashMap.getCardRarityKeys(set);
 
-				currentList.add(set);
+				for (String key : keysList){
+					List<CardSet> currentList = results.computeIfAbsent(key, k -> new ArrayList<>());
+					currentList.add(set);
+				}
 			}
 
 			return results;
@@ -776,7 +779,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public HashMap<String, ArrayList<OwnedCard>> getAllOwnedCardsForHashMap() {
+	public HashMap<String, List<OwnedCard>> getAllOwnedCardsForHashMap() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
@@ -784,14 +787,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		try (Cursor rs = connection.rawQuery(setQuery, null)) {
 			String[] col = rs.getColumnNames();
 
-			HashMap<String, ArrayList<OwnedCard>> ownedCards = new HashMap<>();
+			HashMap<String, List<OwnedCard>> ownedCards = new HashMap<>();
 
 			while (rs.moveToNext()) {
 				OwnedCard current = new OwnedCard();
 				getAllOwnedCardFieldsFromRS(rs, col, current);
 				String key = current.getSetNumber() +":"+  current.getPriceBought() +":"+  current.getDateBought() +":"+  current.getFolderName()
 						+":"+  current.getCondition() +":"+ current.getEditionPrinting();
-				ArrayList<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
+				List<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
 				currentList.add(current);
 			}
 
@@ -1680,5 +1683,15 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			}
 			return resultsList;
 		}
+	}
+
+	@Override
+	public void updateCardSetPriceBatchedWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName, boolean isFirstEdition) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void updateCardSetPriceBatchedWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) throws SQLException {
+		throw new UnsupportedOperationException();
 	}
 }

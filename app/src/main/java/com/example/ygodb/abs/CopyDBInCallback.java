@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.ygodb.MainActivity;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.IOException;
@@ -86,11 +87,8 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 			String responseMessage = AndroidUtil.getDBInstance().copyDataBaseFromURI(activity, chosenURI);
 
 			SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-
 			SharedPreferences.Editor editor = prefs.edit();
-
-			editor.putString("pref_db_location", chosenURI.toString());
-
+			editor.putString(Const.PREF_DB_LOCATION, chosenURI.toString());
 			editor.apply();
 
 			AndroidUtil.updateViewsAfterDBLoad();

@@ -17,4 +17,4 @@ local.properties
 /.idea/deploymentTargetDropDown.xml
 
 /csv/
-/log/ygodb.log
+/log

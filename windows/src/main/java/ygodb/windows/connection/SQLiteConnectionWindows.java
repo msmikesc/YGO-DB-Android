@@ -14,6 +14,7 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.SQLConst;
 import ygodb.commonlibrary.utility.Util;
@@ -22,12 +23,15 @@ import ygodb.commonlibrary.utility.YGOLogger;
 
 public class SQLiteConnectionWindows implements SQLiteConnection {
 
+	public static final int BATCH_SIZE = 1000;
+
 	private Connection connectionInstance = null;
 
 	public Connection getInstance() throws SQLException {
 		if (connectionInstance == null) {
 			connectionInstance = DriverManager
 					.getConnection("jdbc:sqlite:C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\db\\YGO-DB.db");
+			connectionInstance.setAutoCommit(false);
 		}
 
 		return connectionInstance;
@@ -39,13 +43,27 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			return;
 		}
 
+		if(updateCardSetPriceBatchedWithCardAndSetNameFirstStatement != null){
+			updateCardSetPriceBatchedWithCardAndSetNameFirstStatement.executeBatch();
+		}
+		if(updateCardSetPriceBatchedWithCardAndSetNameStatement != null){
+			updateCardSetPriceBatchedWithCardAndSetNameStatement.executeBatch();
+		}
+		if(updateCardSetPriceBatchedWithCardNameFirstStatement != null){
+			updateCardSetPriceBatchedWithCardNameFirstStatement.executeBatch();
+		}
+		if(updateCardSetPriceBatchedWithCardNameStatement != null){
+			updateCardSetPriceBatchedWithCardNameStatement.executeBatch();
+		}
+
+		connectionInstance.commit();
 		connectionInstance.close();
 
 		connectionInstance = null;
 	}
 
 	@Override
-	public HashMap<String, ArrayList<CardSet>> getAllCardRarities() throws SQLException {
+	public HashMap<String, List<CardSet>> getAllCardRarities() throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -54,15 +72,18 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
 			 ResultSet rarities = statementSetQuery.executeQuery()) {
 
-			HashMap<String, ArrayList<CardSet>> setRarities = new HashMap<>();
+			HashMap<String, List<CardSet>> setRarities = new HashMap<>();
 
 			while (rarities.next()) {
 				CardSet set = new CardSet();
 				getAllCardSetFieldsFromRS(rarities, set);
 
-				ArrayList<CardSet> currentList = setRarities.computeIfAbsent(set.getSetNumber(), k -> new ArrayList<>());
+				List<String> keysList = DatabaseHashMap.getCardRarityKeys(set);
 
-				currentList.add(set);
+				for (String key : keysList){
+					List<CardSet> currentList = setRarities.computeIfAbsent(key, k -> new ArrayList<>());
+					currentList.add(set);
+				}
 			}
 			return setRarities;
 		}
@@ -384,14 +405,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public HashMap<String, ArrayList<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
+	public HashMap<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
 
 		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
 			 ResultSet rs = setQueryStatement.executeQuery()) {
 
-			HashMap<String, ArrayList<OwnedCard>> ownedCards = new HashMap<>();
+			HashMap<String, List<OwnedCard>> ownedCards = new HashMap<>();
 
 			while (rs.next()) {
 				OwnedCard current = new OwnedCard();
@@ -400,7 +421,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				String key = current.getSetNumber() +":"+ current.getPriceBought() +":"+ current.getDateBought() +":"+ current.getFolderName()
 						+":"+ current.getCondition() +":"+ current.getEditionPrinting();
 
-				ArrayList<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
+				List<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
 				currentList.add(current);
 			}
 
@@ -1283,4 +1304,108 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		throw new UnsupportedOperationException();
 	}
 
+
+	private PreparedStatement updateCardSetPriceBatchedWithCardAndSetNameFirstStatement = null;
+	private PreparedStatement updateCardSetPriceBatchedWithCardAndSetNameStatement = null;
+	private int updateCardSetPriceBatchedWithCardAndSetNameFirstCount = 0;
+	private int updateCardSetPriceBatchedWithCardAndSetNameCount = 0;
+
+	@Override
+	public void updateCardSetPriceBatchedWithCardAndSetName(String setNumber, String rarity, String price, String setName,
+															String cardName, boolean isFirstEdition)
+			throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		PreparedStatement statement = null;
+
+		if(isFirstEdition) {
+			if(updateCardSetPriceBatchedWithCardAndSetNameFirstStatement == null){
+				updateCardSetPriceBatchedWithCardAndSetNameFirstStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST);
+			}
+			statement =updateCardSetPriceBatchedWithCardAndSetNameFirstStatement;
+			updateCardSetPriceBatchedWithCardAndSetNameFirstCount++;
+		}
+		else{
+			if(updateCardSetPriceBatchedWithCardAndSetNameStatement == null) {
+				updateCardSetPriceBatchedWithCardAndSetNameStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME);
+			}
+			statement =updateCardSetPriceBatchedWithCardAndSetNameStatement;
+			updateCardSetPriceBatchedWithCardAndSetNameCount++;
+		}
+
+		statement.setString(1, price);
+		statement.setString(2, setNumber);
+		statement.setString(3, rarity);
+		statement.setString(4, setName);
+		statement.setString(5, cardName);
+
+		statement.addBatch();
+
+		if(isFirstEdition) {
+			if(updateCardSetPriceBatchedWithCardAndSetNameFirstCount > BATCH_SIZE){
+				statement.executeBatch();
+				updateCardSetPriceBatchedWithCardAndSetNameFirstCount = 0;
+				connection.commit();
+			}
+		}
+		else{
+			if(updateCardSetPriceBatchedWithCardAndSetNameCount > BATCH_SIZE){
+				statement.executeBatch();
+				updateCardSetPriceBatchedWithCardAndSetNameCount = 0;
+				connection.commit();
+			}
+		}
+	}
+
+	private PreparedStatement updateCardSetPriceBatchedWithCardNameFirstStatement = null;
+	private PreparedStatement updateCardSetPriceBatchedWithCardNameStatement = null;
+	private int updateCardSetPriceBatchedWithCardNameFirstCount = 0;
+	private int updateCardSetPriceBatchedWithCardNameCount = 0;
+
+	@Override
+	public void updateCardSetPriceBatchedWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+			throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		PreparedStatement statement = null;
+
+		if(isFirstEdition) {
+			if(updateCardSetPriceBatchedWithCardNameFirstStatement == null){
+				updateCardSetPriceBatchedWithCardNameFirstStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST);
+			}
+			statement =updateCardSetPriceBatchedWithCardNameFirstStatement;
+			updateCardSetPriceBatchedWithCardNameFirstCount++;
+		}
+		else{
+			if(updateCardSetPriceBatchedWithCardNameStatement == null) {
+				updateCardSetPriceBatchedWithCardNameStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME);
+			}
+			statement =updateCardSetPriceBatchedWithCardNameStatement;
+			updateCardSetPriceBatchedWithCardNameCount++;
+		}
+
+		statement.setString(1, price);
+		statement.setString(2, setNumber);
+		statement.setString(3, rarity);
+		statement.setString(4, cardName);
+
+		statement.addBatch();
+
+		if(isFirstEdition) {
+			if(updateCardSetPriceBatchedWithCardNameFirstCount > BATCH_SIZE){
+				statement.executeBatch();
+				updateCardSetPriceBatchedWithCardNameFirstCount = 0;
+				connection.commit();
+			}
+		}
+		else{
+			if(updateCardSetPriceBatchedWithCardNameCount > BATCH_SIZE){
+				statement.executeBatch();
+				updateCardSetPriceBatchedWithCardNameCount = 0;
+				connection.commit();
+			}
+		}
+	}
 }
