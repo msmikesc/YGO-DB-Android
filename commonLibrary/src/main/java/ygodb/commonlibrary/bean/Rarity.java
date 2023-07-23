@@ -39,6 +39,7 @@ public enum Rarity {
 	UltimateRare("Ultimate Rare"),
 	QuarterCenturySecretRare("Quarter Century Secret Rare"),
 	MillenniumSecretRare("Millennium Secret Rare"),
+	Oversized("Oversized"),
 	nullRarity("nullRarity");
 
 	private final String name;

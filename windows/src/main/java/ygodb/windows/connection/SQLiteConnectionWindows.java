@@ -63,7 +63,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public HashMap<String, List<CardSet>> getAllCardRarities() throws SQLException {
+	public HashMap<String, List<CardSet>> getAllCardRaritiesForHashMap() throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -86,6 +86,33 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				}
 			}
 			return setRarities;
+		}
+	}
+
+	@Override
+	public HashMap<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		String setQuery = SQLConst.GET_ALL_GAME_PLAY_CARD;
+
+		try (PreparedStatement statement = connection.prepareStatement(setQuery);
+			 ResultSet rs = statement.executeQuery()) {
+
+			HashMap<String, List<GamePlayCard>> cardMap = new HashMap<>();
+
+			while (rs.next()) {
+				GamePlayCard card = new GamePlayCard();
+				getAllGamePlayCardFieldsFromRS(rs, card);
+
+				List<String> keysList = DatabaseHashMap.getGamePlayCardKeys(card);
+
+				for (String key : keysList){
+					List<GamePlayCard> currentList = cardMap.computeIfAbsent(key, k -> new ArrayList<>());
+					currentList.add(card);
+				}
+			}
+			return cardMap;
 		}
 	}
 
@@ -1086,30 +1113,20 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
-													  String cardName) throws SQLException {
+	public void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID,
+										  String cardName) throws SQLException {
 
 		Connection connection = this.getInstance();
 
-		String setInsert = SQLConst.REPLACE_INTO_CARD_SET_WITH_SOFT_PRICE_UPDATE;
+		String setInsert = SQLConst.INSERT_OR_IGNORE_INTO_CARD_SETS;
 
 		try (PreparedStatement statementSetInsert = connection.prepareStatement(setInsert)) {
-
 			setStringOrNull(statementSetInsert, 1, gamePlayCardUUID);
 			setStringOrNull(statementSetInsert, 2, setNumber);
 			setStringOrNull(statementSetInsert, 3, setName);
 			setStringOrNull(statementSetInsert, 4, rarity);
 			setStringOrNull(statementSetInsert, 5, cardName);
 			statementSetInsert.execute();
-
-			if (price != null && !Util.normalizePrice(price).equals(Util.normalizePrice("0"))) {
-
-				List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
-
-				if (!list.isEmpty() && (list.get(0).getSetPrice() == null || Util.normalizePrice(price).equals(Util.normalizePrice("0")))) {
-					updateCardSetPriceWithSetName(setNumber, rarity, price, setName, false);
-				}
-			}
 		}
 	}
 

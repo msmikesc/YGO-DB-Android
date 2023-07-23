@@ -52,7 +52,7 @@ public class AddFromOwnedCards {
 			if (sets.isEmpty()) {
 				// add it
 				YGOLogger.info("No rarity entries found for " + card.getCardName() + ":" + card.getGamePlayCardUUID() + ":" + card.getSetName());
-				db.replaceIntoCardSetWithSoftPriceUpdate(card.getSetNumber(), card.getSetRarity(), card.getSetName(), card.getGamePlayCardUUID(), null,
+				db.insertOrIgnoreIntoCardSet(card.getSetNumber(), card.getSetRarity(), card.getSetName(), card.getGamePlayCardUUID(),
 						card.getCardName());
 			} else {
 				boolean match = false;
@@ -69,7 +69,7 @@ public class AddFromOwnedCards {
 					// add it
 					YGOLogger.info("No matching rarity entries found for " + card.getCardName() + ":" + card.getGamePlayCardUUID() + ":"
 							+ card.getSetName());
-					db.replaceIntoCardSetWithSoftPriceUpdate(card.getSetNumber(), card.getSetRarity(), card.getSetName(), card.getGamePlayCardUUID(), null,
+					db.insertOrIgnoreIntoCardSet(card.getSetNumber(), card.getSetRarity(), card.getSetName(), card.getGamePlayCardUUID(),
 							card.getCardName());
 				}
 			}

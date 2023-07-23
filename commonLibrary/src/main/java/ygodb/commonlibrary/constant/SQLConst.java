@@ -53,7 +53,7 @@ public class SQLConst {
 			"select setNumber from cardSets where setName = ?";
 	public static final String GET_DISTINCT_SET_NAMES =
 			"select distinct cardSets.setName from cardSets " +
-			"inner join setData on cardSets.setName = setData.setName " +
+			"left join setData on cardSets.setName = setData.setName " +
 			"order by setData.releaseDate desc";
 	public static final String GET_DISTINCT_SET_AND_ARCHETYPE_NAMES =
 			"select * from (select distinct cardSets.setName from " +
@@ -122,7 +122,7 @@ public class SQLConst {
 					+ ",priceBought,rarityUnsure, creationDate, modificationDate, UUID, passcode) "
 					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
 					+ "datetime('now','localtime'),datetime('now','localtime'),?,?)";
-	public static final String REPLACE_INTO_CARD_SET_WITH_SOFT_PRICE_UPDATE =
+	public static final String INSERT_OR_IGNORE_INTO_CARD_SETS =
 			"INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName,setRarity,cardName) values(?,?,?,?,?)";
 	public static final String UPDATE_CARD_SETS_SET_NAME =
 			"update cardSets set setName = ? where setName = ?";

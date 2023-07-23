@@ -494,7 +494,7 @@ public class CsvConnection {
 
 		}
 
-		db.replaceIntoCardSetWithSoftPriceUpdate(cardNumber, rarity, setName, gamePlayCardUUID, null, name);
+		db.insertOrIgnoreIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, name);
 	}
 
 	public void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {

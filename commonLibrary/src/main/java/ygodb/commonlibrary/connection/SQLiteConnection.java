@@ -16,7 +16,9 @@ public interface SQLiteConnection {
 
     void closeInstance() throws SQLException;
 
-    HashMap<String, List<CardSet>> getAllCardRarities() throws SQLException;
+    HashMap<String, List<CardSet>> getAllCardRaritiesForHashMap() throws SQLException;
+
+    HashMap<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException;
 
     ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException;
 
@@ -101,8 +103,8 @@ public interface SQLiteConnection {
 
     int insertIntoOwnedCards(OwnedCard card) throws SQLException;
 
-    void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
-                                               String cardName) throws SQLException;
+    void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID,
+                                   String cardName) throws SQLException;
 
     void updateSetName(String original, String newName) throws SQLException;
 

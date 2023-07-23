@@ -284,7 +284,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public HashMap<String, List<CardSet>> getAllCardRarities() {
+	public HashMap<String, List<CardSet>> getAllCardRaritiesForHashMap() {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -310,6 +310,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 			return results;
 		}
+	}
+
+	@Override
+	public HashMap<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException {
+		throw new UnsupportedOperationException();
 	}
 
 	private void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
@@ -1445,11 +1450,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void replaceIntoCardSetWithSoftPriceUpdate(String setNumber, String rarity, String setName, String gamePlayCardUUID, String price,
-													  String cardName) {
+	public void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID,
+										  String cardName) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String setInsert = SQLConst.REPLACE_INTO_CARD_SET_WITH_SOFT_PRICE_UPDATE;
+		String setInsert = SQLConst.INSERT_OR_IGNORE_INTO_CARD_SETS;
 
 		try (SQLiteStatement statementSetInsert = connection.compileStatement(setInsert)) {
 			statementSetInsert.bindString(1, gamePlayCardUUID);
@@ -1458,14 +1463,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			statementSetInsert.bindString(4, rarity);
 			statementSetInsert.bindString(5, cardName);
 			statementSetInsert.execute();
-
-			if (price != null && !Util.normalizePrice(price).equals(Util.normalizePrice("0"))) {
-				List<CardSet> list = getCardSetsForValues(setNumber, rarity, setName);
-
-				if (!list.isEmpty() && list.get(0).getSetPrice() != null) {
-					updateCardSetPriceWithSetName(setNumber, rarity, price, setName, false);
-				}
-			}
 		}
 	}
 

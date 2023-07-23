@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import ygodb.commonlibrary.bean.CardSet;
+import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.Util;
 
@@ -13,13 +14,26 @@ public class DatabaseHashMap {
 
 	private DatabaseHashMap(){}
 
+	private static Map<String, List<GamePlayCard>> allGamePlayCards = null;
+
 	private static Map<String, List<CardSet>> allCardRarities = null;
 
 	private static Map<String, List<OwnedCard>> allOwnedCards = null;
 
+	public static Map<String, List<GamePlayCard>> getGamePlayCardsInstance(SQLiteConnection db) throws SQLException {
+		if (allGamePlayCards == null) {
+			allGamePlayCards = db.getAllGamePlayCardsForHashMap();
+		}
+		return allGamePlayCards;
+	}
+
+	public static void closeGamePlayCardInstance() {
+		allGamePlayCards = null;
+	}
+
 	public static Map<String, List<CardSet>> getRaritiesInstance(SQLiteConnection db) throws SQLException {
 		if (allCardRarities == null) {
-			allCardRarities = db.getAllCardRarities();
+			allCardRarities = db.getAllCardRaritiesForHashMap();
 		}
 		return allCardRarities;
 	}
@@ -39,14 +53,11 @@ public class DatabaseHashMap {
 		allOwnedCards = null;
 	}
 
-	public static List<CardSet> getRaritiesOfCardInSetFromHashMap(String setNumber, SQLiteConnection db) throws SQLException {
-		Map<String, List<CardSet>> data = DatabaseHashMap.getRaritiesInstance(db);
+	public static List<String> getGamePlayCardKeys(GamePlayCard input){
+		ArrayList<String> list = new ArrayList<>();
 
-		List<CardSet> list = data.get(setNumber);
-
-		if (list == null) {
-			list = new ArrayList<>();
-		}
+		list.add(input.getCardName());
+		list.add(String.valueOf(input.getPasscode()));
 
 		return list;
 	}

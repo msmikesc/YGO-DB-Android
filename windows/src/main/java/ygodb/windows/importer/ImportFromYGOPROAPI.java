@@ -12,7 +12,6 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javafx.util.Pair;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetMetaData;
@@ -90,7 +89,7 @@ public class ImportFromYGOPROAPI {
 
 					JsonNode current = keySet.next();
 
-					GamePlayCard inserted = insertGameplayCardFromYGOPRO(current, ownedCardsToCheck, db);
+					GamePlayCard inserted = Util.insertGameplayCardFromYGOPRO(current, ownedCardsToCheck, db);
 
 					JsonNode sets = null;
 					Iterator<JsonNode> setIterator = null;
@@ -99,7 +98,7 @@ public class ImportFromYGOPROAPI {
 
 					if (sets != null) {
 						setIterator = sets.iterator();
-						insertCardSetsForOneCard(setIterator, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
+						Util.insertOrIgnoreCardSetsForOneCard(setIterator, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
 					}
 
 				}
@@ -112,99 +111,6 @@ public class ImportFromYGOPROAPI {
 			YGOLogger.logException(e);
 		}
 		return true;
-	}
-
-	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck, SQLiteConnection db) throws SQLException {
-
-		String name = Util.getStringOrNull(current, Const.YGOPRO_CARD_NAME);
-		String type = Util.getStringOrNull(current, Const.YGOPRO_CARD_TYPE);
-		Integer passcode = Util.getIntOrNegativeOne(current, Const.YGOPRO_CARD_PASSCODE);
-		String desc = Util.getStringOrNull(current, Const.YGOPRO_CARD_TEXT);
-		String attribute = Util.getStringOrNull(current, Const.YGOPRO_ATTRIBUTE);
-		String race = Util.getStringOrNull(current, Const.YGOPRO_RACE);
-		String linkValue = Util.getStringOrNull(current, Const.YGOPRO_LINK_VALUE);
-		String level = Util.getStringOrNull(current, Const.YGOPRO_LEVEL_RANK);
-		String scale = Util.getStringOrNull(current, Const.YGOPRO_PENDULUM_SCALE);
-		String atk = Util.getStringOrNull(current, Const.YGOPRO_ATTACK);
-		String def = Util.getStringOrNull(current, Const.YGOPRO_DEFENSE);
-		String archetype = Util.getStringOrNull(current, Const.YGOPRO_ARCHETYPE);
-
-		GamePlayCard gamePlayCard = new GamePlayCard();
-
-		name = Util.checkForTranslatedCardName(name);
-		passcode = Util.checkForTranslatedPasscode(passcode);
-
-		gamePlayCard.setCardName(name);
-		gamePlayCard.setCardType(type);
-		gamePlayCard.setArchetype(archetype);
-		gamePlayCard.setPasscode(passcode);
-
-		gamePlayCard.setGamePlayCardUUID(db.getGamePlayCardUUIDFromPasscode(passcode));
-
-		if (gamePlayCard.getGamePlayCardUUID() == null) {
-			Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(name, db);
-
-			gamePlayCard.setGamePlayCardUUID(uuidAndName.getKey());
-			gamePlayCard.setCardName(uuidAndName.getValue());
-		}
-
-		gamePlayCard.setDesc(desc);
-		gamePlayCard.setAttribute(attribute);
-		gamePlayCard.setRace(race);
-		gamePlayCard.setLinkVal(linkValue);
-		gamePlayCard.setScale(scale);
-		gamePlayCard.setLevel(level);
-		gamePlayCard.setAtk(atk);
-		gamePlayCard.setDef(def);
-
-		db.replaceIntoGamePlayCard(gamePlayCard);
-
-		for (OwnedCard currentOwnedCard : ownedCardsToCheck) {
-			if (currentOwnedCard.getGamePlayCardUUID().equals(gamePlayCard.getGamePlayCardUUID())) {
-				currentOwnedCard.setPasscode(passcode);
-				db.updateOwnedCardByUUID(currentOwnedCard);
-			}
-		}
-
-		return gamePlayCard;
-	}
-
-	public static void insertCardSetsForOneCard(Iterator<JsonNode> setIterator, String name, String gamePlayCardUUID, SQLiteConnection db)
-			throws SQLException {
-
-		while (setIterator.hasNext()) {
-
-			JsonNode currentSet = setIterator.next();
-
-			String setCode = null;
-			String setName = null;
-			String setRarity = null;
-			String setPrice = null;
-
-			try {
-				setCode = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_CODE);
-				setName = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_NAME);
-				setRarity = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_RARITY);
-				setPrice = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_PRICE);
-			} catch (Exception e) {
-				YGOLogger.error("issue found on " + name);
-				continue;
-			}
-
-			name = Util.checkForTranslatedCardName(name);
-			setRarity = Util.checkForTranslatedRarity(setRarity);
-			setName = Util.checkForTranslatedSetName(setName);
-			setCode = Util.checkForTranslatedSetNumber(setCode);
-
-			List<String> translatedList = Util.checkForTranslatedQuadKey(name, setCode, setRarity, setName);
-			name = translatedList.get(0);
-			setCode = translatedList.get(1);
-			setRarity = translatedList.get(2);
-			setName = translatedList.get(3);
-
-			db.replaceIntoCardSetWithSoftPriceUpdate(setCode, setRarity, setName, gamePlayCardUUID, setPrice, name);
-
-		}
 	}
 
 	public static boolean updateDBWithSetsFromAPI(String inputSetName, SQLiteConnection db) {
