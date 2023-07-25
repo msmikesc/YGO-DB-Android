@@ -64,6 +64,8 @@ public class Const {
     public static final String SET_PRICE_UPDATE_TIME = "setPriceUpdateTime";
     public static final String SET_PRICE_FIRST = "setPriceFirst";
     public static final String SET_PRICE_FIRST_UPDATE_TIME = "setPriceFirstUpdateTime";
+    public static final String SET_URL = "setURL";
+    public static final String COLOR_VARIANT = "colorVariant";
     public static final String RELEASE_DATE = "releaseDate";
 
     public static final String BOX_LABEL = "boxLabel";
@@ -138,6 +140,7 @@ public class Const {
     public static final String YGOPRO_SET_RARITY = "set_rarity";
     public static final String YGOPRO_SET_PRICE = "set_price";
     public static final String YGOPRO_CARD_EDITION = "set_edition";
+    public static final String YGOPRO_SET_URL = "set_url";
     public static final String YGOPRO_TOTAL_CARDS_IN_SET = "num_of_cards";
     public static final String YGOPRO_TCG_RELEASE_DATE = "tcg_date";
 

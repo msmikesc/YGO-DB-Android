@@ -303,8 +303,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				List<String> keysList = DatabaseHashMap.getCardRarityKeys(set);
 
 				for (String key : keysList){
-					List<CardSet> currentList = results.computeIfAbsent(key, k -> new ArrayList<>());
-					currentList.add(set);
+					if(key != null && !key.isBlank()) {
+						List<CardSet> currentList = results.computeIfAbsent(key, k -> new ArrayList<>());
+						currentList.add(set);
+					}
 				}
 			}
 
@@ -328,6 +330,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		set.setSetPriceFirst(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE_FIRST))));
 		set.setSetPriceFirstUpdateTime(rs.getString(getColumn(col, Const.SET_PRICE_FIRST_UPDATE_TIME)));
 		set.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
+		set.setSetUrl(rs.getString(getColumn(col, Const.SET_URL)));
+		set.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
 	}
 
 	@Override
@@ -1451,7 +1455,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	@Override
 	public void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID,
-										  String cardName) {
+										  String cardName, String colorVariant, String url) {
+
+		if(colorVariant == null || colorVariant.isBlank()){
+			colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
 		SQLiteDatabase connection = this.getInstance();
 
 		String setInsert = SQLConst.INSERT_OR_IGNORE_INTO_CARD_SETS;
@@ -1462,6 +1471,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			statementSetInsert.bindString(3, setName);
 			statementSetInsert.bindString(4, rarity);
 			statementSetInsert.bindString(5, cardName);
+			statementSetInsert.bindString(6, colorVariant);
+			statementSetInsert.bindString(7, url);
 			statementSetInsert.execute();
 		}
 	}
@@ -1689,6 +1700,21 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	@Override
 	public void updateCardSetPriceBatchedWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public int updateCardSetUrlAndColor(String setNumber, String rarity, String setName, String cardName, String setURL, String currentColorVariant, String newColorVariant) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void updateCardSetPriceBatchedByURL(String price, String setUrl, boolean isFirstEdition) throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 }

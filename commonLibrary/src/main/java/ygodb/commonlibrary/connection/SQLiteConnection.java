@@ -104,7 +104,7 @@ public interface SQLiteConnection {
     int insertIntoOwnedCards(OwnedCard card) throws SQLException;
 
     void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID,
-                                   String cardName) throws SQLException;
+                                   String cardName, String colorVariant, String url) throws SQLException;
 
     void updateSetName(String original, String newName) throws SQLException;
 
@@ -135,5 +135,16 @@ public interface SQLiteConnection {
             throws SQLException;
 
     void updateCardSetPriceBatchedWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+            throws SQLException;
+
+	int updateCardSetUrl(String setNumber, String rarity, String setName,
+						 String cardName, String setURL, String colorVariant)
+			throws SQLException;
+
+    int updateCardSetUrlAndColor(String setNumber, String rarity, String setName,
+                                 String cardName, String setURL, String currentColorVariant, String newColorVariant)
+            throws SQLException;
+
+    void updateCardSetPriceBatchedByURL(String price, String setUrl, boolean isFirstEdition)
             throws SQLException;
 }

@@ -23,10 +23,12 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +40,8 @@ public class Util {
 	private static KeyUpdateMap setNumberMap = null;
 	private static HashMap<Integer, Integer> passcodeMap = null;
 	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
+
+	private static Set<String> setUrlsThatDontExist = null;
 
 	private Util(){}
 
@@ -402,6 +406,26 @@ public class Util {
 		return passcodeMap;
 	}
 
+	public static Set<String> getSetUrlsThatDontExistInstance() {
+		if (setUrlsThatDontExist == null) {
+			setUrlsThatDontExist = new HashSet<>();
+
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/duelist-league-promo/enemy-controller?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/legendary-duelists-season-3/number-15-gimmick-puppet-giant-grinder?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/duelist-league-promo/axe-of-despair?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/tactical-evolution/gemini-summoner-taev-ensp1?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/colossal-fighter-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/gaia-knight-the-force-of-earth-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/dark-legends-promo-card/gorz-the-emissary-of-darkness?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			//setUrlsThatDontExist.add();
+		}
+
+		return setUrlsThatDontExist;
+	}
+
 	public static KeyUpdateMap getCardNameMapInstance() {
 		if (cardNameMap == null) {
 			try {
@@ -764,7 +788,7 @@ public class Util {
 			setRarity = translatedList.get(2);
 			setName = translatedList.get(3);
 
-			db.insertOrIgnoreIntoCardSet(setCode, setRarity, setName, gamePlayCardUUID, name);
+			db.insertOrIgnoreIntoCardSet(setCode, setRarity, setName, gamePlayCardUUID, name, null, null);
 		}
 	}
 }

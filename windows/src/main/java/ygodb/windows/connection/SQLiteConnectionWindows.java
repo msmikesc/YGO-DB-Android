@@ -55,6 +55,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		if(updateCardSetPriceBatchedWithCardNameStatement != null){
 			updateCardSetPriceBatchedWithCardNameStatement.executeBatch();
 		}
+		if(updateCardSetPriceBatchedByURLFirstStatement != null){
+			updateCardSetPriceBatchedByURLFirstStatement.executeBatch();
+		}
+		if(updateCardSetPriceBatchedByURLStatement != null){
+			updateCardSetPriceBatchedByURLStatement.executeBatch();
+		}
 
 		connectionInstance.commit();
 		connectionInstance.close();
@@ -81,8 +87,10 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				List<String> keysList = DatabaseHashMap.getCardRarityKeys(set);
 
 				for (String key : keysList){
-					List<CardSet> currentList = setRarities.computeIfAbsent(key, k -> new ArrayList<>());
-					currentList.add(set);
+					if(key != null && !key.isBlank()) {
+						List<CardSet> currentList = setRarities.computeIfAbsent(key, k -> new ArrayList<>());
+						currentList.add(set);
+					}
 				}
 			}
 			return setRarities;
@@ -149,6 +157,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		set.setSetPriceFirst(rarities.getString(Const.SET_PRICE_FIRST));
 		set.setSetPriceFirstUpdateTime(rarities.getString(Const.SET_PRICE_FIRST_UPDATE_TIME));
 		set.setSetCode(rarities.getString(Const.SET_CODE));
+		set.setSetUrl(rarities.getString(Const.SET_URL));
+		set.setColorVariant(rarities.getString(Const.COLOR_VARIANT));
 	}
 
 	@Override
@@ -1114,7 +1124,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	@Override
 	public void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID,
-										  String cardName) throws SQLException {
+										  String cardName, String colorVariant, String url) throws SQLException {
+
+		if(colorVariant == null || colorVariant.isBlank()){
+			colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
 
 		Connection connection = this.getInstance();
 
@@ -1126,6 +1140,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			setStringOrNull(statementSetInsert, 3, setName);
 			setStringOrNull(statementSetInsert, 4, rarity);
 			setStringOrNull(statementSetInsert, 5, cardName);
+			setStringOrNull(statementSetInsert, 6, colorVariant);
+			setStringOrNull(statementSetInsert, 7, url);
 			statementSetInsert.execute();
 		}
 	}
@@ -1421,6 +1437,112 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			if(updateCardSetPriceBatchedWithCardNameCount > BATCH_SIZE){
 				statement.executeBatch();
 				updateCardSetPriceBatchedWithCardNameCount = 0;
+				connection.commit();
+			}
+		}
+	}
+
+	@Override
+	public int updateCardSetUrl(String setNumber, String rarity, String setName,
+													String cardName, String setURL, String colorVariant)
+			throws SQLException {
+
+		if(colorVariant == null || colorVariant.isBlank()){
+			colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		Connection connection = this.getInstance();
+
+		String update = SQLConst.UPDATE_CARD_SET_URL;
+
+		try (PreparedStatement statement = connection.prepareStatement(update)) {
+
+			statement.setString(1, setURL);
+			statement.setString(2, setNumber);
+			statement.setString(3, rarity);
+			statement.setString(4, setName);
+			statement.setString(5, cardName);
+			statement.setString(6, colorVariant);
+
+			return statement.executeUpdate();
+		}
+	}
+
+	@Override
+	public int updateCardSetUrlAndColor(String setNumber, String rarity, String setName,
+										String cardName, String setURL, String currentColorVariant, String newColorVariant)
+			throws SQLException {
+
+		if(currentColorVariant == null || currentColorVariant.isBlank()){
+			currentColorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		if(newColorVariant == null || newColorVariant.isBlank()){
+			newColorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		Connection connection = this.getInstance();
+
+		String update = SQLConst.UPDATE_CARD_SET_URL_AND_COLOR;
+
+		try (PreparedStatement statement = connection.prepareStatement(update)) {
+
+			statement.setString(1, setURL);
+			statement.setString(2, newColorVariant);
+			statement.setString(3, setNumber);
+			statement.setString(4, rarity);
+			statement.setString(5, setName);
+			statement.setString(6, cardName);
+			statement.setString(7, currentColorVariant);
+
+			return statement.executeUpdate();
+		}
+	}
+
+	private PreparedStatement updateCardSetPriceBatchedByURLFirstStatement = null;
+	private PreparedStatement updateCardSetPriceBatchedByURLStatement = null;
+	private int updateCardSetPriceBatchedByURLFirstCount = 0;
+	private int updateCardSetPriceBatchedByURLCount = 0;
+
+	@Override
+	public void updateCardSetPriceBatchedByURL(String price, String setUrl, boolean isFirstEdition)
+			throws SQLException {
+
+		Connection connection = this.getInstance();
+
+		PreparedStatement statement = null;
+
+		if(isFirstEdition) {
+			if(updateCardSetPriceBatchedByURLFirstStatement == null){
+				updateCardSetPriceBatchedByURLFirstStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST);
+			}
+			statement = updateCardSetPriceBatchedByURLFirstStatement;
+			updateCardSetPriceBatchedByURLFirstCount++;
+		}
+		else{
+			if(updateCardSetPriceBatchedByURLStatement == null) {
+				updateCardSetPriceBatchedByURLStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL);
+			}
+			statement = updateCardSetPriceBatchedByURLStatement;
+			updateCardSetPriceBatchedByURLCount++;
+		}
+
+		statement.setString(1, price);
+		statement.setString(2, setUrl);
+
+		statement.addBatch();
+
+		if(isFirstEdition) {
+			if(updateCardSetPriceBatchedByURLFirstCount > BATCH_SIZE){
+				statement.executeBatch();
+				updateCardSetPriceBatchedByURLFirstCount = 0;
+				connection.commit();
+			}
+		}
+		else{
+			if(updateCardSetPriceBatchedByURLCount > BATCH_SIZE){
+				statement.executeBatch();
+				updateCardSetPriceBatchedByURLCount = 0;
 				connection.commit();
 			}
 		}

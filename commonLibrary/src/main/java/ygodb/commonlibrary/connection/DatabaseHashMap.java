@@ -70,8 +70,15 @@ public class DatabaseHashMap {
 		list.add(getSetNameMismatchKey(input));
 		list.add(getCardAndSetNameMismatchKey(input));
 		list.add(getSetNumberOnlyKey(input));
+		list.add(getSetUrlKey(input));
+		list.add(getAllMatchingKeyWithUrl(input));
+		list.add(getSetNameMismatchKeyWithUrl(input));
 
 		return list;
+	}
+
+	public static String getAllMatchingKeyWithUrl(CardSet input){
+		return input.getSetNumber() + input.getSetRarity() + input.getSetName() + input.getCardName() + input.getSetUrl();
 	}
 
 	public static String getAllMatchingKey(CardSet input){
@@ -86,8 +93,16 @@ public class DatabaseHashMap {
 		return input.getSetNumber() + input.getSetRarity() + input.getCardName();
 	}
 
+	public static String getSetNameMismatchKeyWithUrl(CardSet input){
+		return input.getSetNumber() + input.getSetRarity() + input.getCardName() + input.getSetUrl();
+	}
+
 	public static String getCardAndSetNameMismatchKey(CardSet input){
 		return input.getSetNumber() + input.getSetRarity();
+	}
+
+	public static String getSetUrlKey(CardSet input){
+		return input.getSetUrl();
 	}
 
 	public static String getSetNumberOnlyKey(CardSet input){

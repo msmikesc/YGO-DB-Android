@@ -123,7 +123,7 @@ public class SQLConst {
 					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
 					+ "datetime('now','localtime'),datetime('now','localtime'),?,?)";
 	public static final String INSERT_OR_IGNORE_INTO_CARD_SETS =
-			"INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName,setRarity,cardName) values(?,?,?,?,?)";
+			"INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName,setRarity,cardName,colorVariant,setURL) values(?,?,?,?,?,?,?)";
 	public static final String UPDATE_CARD_SETS_SET_NAME =
 			"update cardSets set setName = ? where setName = ?";
 	public static final String UPDATE_OWNED_CARDS_SET_NAME =
@@ -178,4 +178,22 @@ public class SQLConst {
 
 	public static final String GET_SET_BOXES_BY_NAME_OR_CODE =
 			"select * from setBoxes where setCode = UPPER(?) or setName like ? order by boxLabel";
+
+	public static final String UPDATE_CARD_SET_URL =
+			"update cardSets set setURL = ?"
+					+ " where setNumber = ? and setRarity = ? and setName = ? and UPPER(cardName) = UPPER(?)" +
+					" and colorVariant = ?";
+
+	public static final String UPDATE_CARD_SET_URL_AND_COLOR =
+			"update cardSets set setURL = ?, colorVariant = ?"
+					+ " where setNumber = ? and setRarity = ? and setName = ? and UPPER(cardName) = UPPER(?)" +
+					" and colorVariant = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_BATCHED_BY_URL =
+			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
+					+ " where setURL = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST =
+			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime')"
+					+ " where setURL = ?";
 }

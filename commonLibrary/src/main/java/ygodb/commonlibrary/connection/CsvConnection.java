@@ -494,7 +494,7 @@ public class CsvConnection {
 
 		}
 
-		db.insertOrIgnoreIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, name);
+		db.insertOrIgnoreIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, name, null, null);
 	}
 
 	public void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {

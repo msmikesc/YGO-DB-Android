@@ -17,6 +17,7 @@ public class CardSet {
 	private String setPriceFirst;
 	private String setPriceFirstUpdateTime;
 	private String colorVariant;
+	private String setUrl;
 	private int rarityUnsure;
 	private String setCode;
 
@@ -146,5 +147,13 @@ public class CardSet {
 
 	public void setSetPriceFirstUpdateTime(String setPriceFirstUpdateTime) {
 		this.setPriceFirstUpdateTime = setPriceFirstUpdateTime;
+	}
+
+	public String getSetUrl() {
+		return setUrl;
+	}
+
+	public void setSetUrl(String setUrl) {
+		this.setUrl = setUrl;
 	}
 }
