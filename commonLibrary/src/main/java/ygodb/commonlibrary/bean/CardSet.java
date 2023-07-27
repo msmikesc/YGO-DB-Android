@@ -20,6 +20,7 @@ public class CardSet {
 	private String setUrl;
 	private int rarityUnsure;
 	private String setCode;
+	private String editionPrinting;
 
 	public String getLowestExistingPrice(){
 		return Util.getLowestPriceString(getSetPrice(), getSetPriceFirst());
@@ -155,5 +156,13 @@ public class CardSet {
 
 	public void setSetUrl(String setUrl) {
 		this.setUrl = setUrl;
+	}
+
+	public String getEditionPrinting() {
+		return editionPrinting;
+	}
+
+	public void setEditionPrinting(String editionPrinting) {
+		this.editionPrinting = editionPrinting;
 	}
 }

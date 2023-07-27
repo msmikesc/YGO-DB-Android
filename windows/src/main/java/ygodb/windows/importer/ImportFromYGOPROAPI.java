@@ -89,7 +89,7 @@ public class ImportFromYGOPROAPI {
 
 					JsonNode current = keySet.next();
 
-					GamePlayCard inserted = Util.insertGameplayCardFromYGOPRO(current, ownedCardsToCheck, db);
+					GamePlayCard inserted = Util.replaceIntoGameplayCardFromYGOPRO(current, ownedCardsToCheck, db);
 
 					JsonNode sets = null;
 					Iterator<JsonNode> setIterator = null;

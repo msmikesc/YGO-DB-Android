@@ -700,7 +700,7 @@ public class Util {
 		return res;
 	}
 
-	public static GamePlayCard insertGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck, SQLiteConnection db) throws SQLException {
+	public static GamePlayCard replaceIntoGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck, SQLiteConnection db) throws SQLException {
 
 		String name = getStringOrNull(current, Const.YGOPRO_CARD_NAME);
 		String type = getStringOrNull(current, Const.YGOPRO_CARD_TYPE);
@@ -755,40 +755,37 @@ public class Util {
 		return gamePlayCard;
 	}
 
-	public static void insertOrIgnoreCardSetsForOneCard(Iterator<JsonNode> setIterator, String name, String gamePlayCardUUID, SQLiteConnection db)
+	public static void insertOrIgnoreCardSetsForOneCard(Iterator<JsonNode> setIterator, String cardName, String gamePlayCardUUID, SQLiteConnection db)
 			throws SQLException {
 
 		while (setIterator.hasNext()) {
-
 			JsonNode currentSet = setIterator.next();
 
 			String setCode = null;
 			String setName = null;
 			String setRarity = null;
-			//String setPrice = null;
 
 			try {
 				setCode = getStringOrNull(currentSet, Const.YGOPRO_SET_CODE);
 				setName = getStringOrNull(currentSet, Const.YGOPRO_SET_NAME);
 				setRarity = getStringOrNull(currentSet, Const.YGOPRO_SET_RARITY);
-				//setPrice = Util.getStringOrNull(currentSet, Const.YGOPRO_SET_PRICE);
 			} catch (Exception e) {
-				YGOLogger.error("issue found on " + name);
+				YGOLogger.error("issue found on " + cardName);
 				continue;
 			}
 
-			name = checkForTranslatedCardName(name);
+			cardName = checkForTranslatedCardName(cardName);
 			setRarity = checkForTranslatedRarity(setRarity);
 			setName = checkForTranslatedSetName(setName);
 			setCode = checkForTranslatedSetNumber(setCode);
 
-			List<String> translatedList = checkForTranslatedQuadKey(name, setCode, setRarity, setName);
-			name = translatedList.get(0);
+			List<String> translatedList = checkForTranslatedQuadKey(cardName, setCode, setRarity, setName);
+			cardName = translatedList.get(0);
 			setCode = translatedList.get(1);
 			setRarity = translatedList.get(2);
 			setName = translatedList.get(3);
 
-			db.insertOrIgnoreIntoCardSet(setCode, setRarity, setName, gamePlayCardUUID, name, null, null);
+			db.insertOrIgnoreIntoCardSet(setCode, setRarity, setName, gamePlayCardUUID, cardName, null, null);
 		}
 	}
 }
