@@ -22,6 +22,14 @@ public class CardSet {
 	private String setCode;
 	private String editionPrinting;
 
+	private static final String OPEN = "\"";
+	private static final String CLOSE = "\",";
+	private static final String SEP = "\",\"";
+
+	public String getCardLogIdentifier(){
+		return OPEN + getSetNumber() + SEP + getCardName() + SEP + getSetRarity() + SEP + getSetName() + CLOSE + getSetPrice();
+	}
+
 	public String getLowestExistingPrice(){
 		return Util.getLowestPriceString(getSetPrice(), getSetPriceFirst());
 	}

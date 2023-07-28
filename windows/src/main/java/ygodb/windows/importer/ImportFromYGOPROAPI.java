@@ -1,17 +1,7 @@
 package ygodb.windows.importer;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetMetaData;
@@ -21,7 +11,14 @@ import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImportFromYGOPROAPI {
 
@@ -81,24 +78,15 @@ public class ImportFromYGOPROAPI {
 
 				JsonNode cards = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
-				Iterator<JsonNode> keySet = cards.iterator();
-
 				ArrayList<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
 
-				while (keySet.hasNext()) {
+				for (JsonNode currentGamePlayCard: cards) {
 
-					JsonNode current = keySet.next();
+					GamePlayCard inserted = Util.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCard, ownedCardsToCheck, db);
+					JsonNode setListNode = currentGamePlayCard.get(Const.YGOPRO_CARD_SETS);
 
-					GamePlayCard inserted = Util.replaceIntoGameplayCardFromYGOPRO(current, ownedCardsToCheck, db);
-
-					JsonNode sets = null;
-					Iterator<JsonNode> setIterator = null;
-					sets = current.get(Const.YGOPRO_CARD_SETS);
-
-
-					if (sets != null) {
-						setIterator = sets.iterator();
-						Util.insertOrIgnoreCardSetsForOneCard(setIterator, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
+					if (setListNode != null) {
+						Util.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
 					}
 
 				}

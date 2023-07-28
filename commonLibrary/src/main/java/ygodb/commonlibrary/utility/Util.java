@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -755,20 +754,19 @@ public class Util {
 		return gamePlayCard;
 	}
 
-	public static void insertOrIgnoreCardSetsForOneCard(Iterator<JsonNode> setIterator, String cardName, String gamePlayCardUUID, SQLiteConnection db)
+	public static void insertOrIgnoreCardSetsForOneCard(JsonNode setListNode, String cardName, String gamePlayCardUUID, SQLiteConnection db)
 			throws SQLException {
 
-		while (setIterator.hasNext()) {
-			JsonNode currentSet = setIterator.next();
+		for (JsonNode currentSetNode : setListNode) {
 
 			String setCode = null;
 			String setName = null;
 			String setRarity = null;
 
 			try {
-				setCode = getStringOrNull(currentSet, Const.YGOPRO_SET_CODE);
-				setName = getStringOrNull(currentSet, Const.YGOPRO_SET_NAME);
-				setRarity = getStringOrNull(currentSet, Const.YGOPRO_SET_RARITY);
+				setCode = getStringOrNull(currentSetNode, Const.YGOPRO_SET_CODE);
+				setName = getStringOrNull(currentSetNode, Const.YGOPRO_SET_NAME);
+				setRarity = getStringOrNull(currentSetNode, Const.YGOPRO_SET_RARITY);
 			} catch (Exception e) {
 				YGOLogger.error("issue found on " + cardName);
 				continue;
