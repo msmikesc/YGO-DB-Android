@@ -147,4 +147,7 @@ public interface SQLiteConnection {
 
     void updateCardSetPriceBatchedByURL(String price, String setUrl, boolean isFirstEdition)
             throws SQLException;
+
+    PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetter setter)
+            throws SQLException;
 }

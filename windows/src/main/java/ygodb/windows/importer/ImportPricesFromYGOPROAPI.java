@@ -6,8 +6,10 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.constant.SQLConst;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
@@ -32,6 +34,33 @@ public class ImportPricesFromYGOPROAPI {
 	private final HashMap<String, Integer> updatedMoreThanOnceKeysMap = new HashMap<>();
 
 	private final Map<String, Set<String>> updatedURLsMap = new HashMap<>();
+
+	private final Map<String, PreparedStatementBatchWrapper> editionToPreparedStatementMap = new HashMap<>();
+
+	private PreparedStatementBatchWrapper getStatementForEdition(String edition, SQLiteConnection db) throws SQLException {
+		PreparedStatementBatchWrapper value = editionToPreparedStatementMap.get(edition);
+
+		if(value == null){
+			if(edition.equals(Const.CARD_PRINTING_FIRST_EDITION)){
+
+				value = db.getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST, (stmt, params) -> {
+					stmt.setString(1, (String) params[0]);
+					stmt.setString(2, (String) params[1]);
+				});
+
+				editionToPreparedStatementMap.put(edition, value);
+			}
+			else{
+				value = db.getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL, (stmt, params) -> {
+					stmt.setString(1, (String) params[0]);
+					stmt.setString(2, (String) params[1]);
+				});
+
+				editionToPreparedStatementMap.put(edition, value);
+			}
+		}
+		return value;
+	}
 
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportPricesFromYGOPROAPI mainObj = new ImportPricesFromYGOPROAPI();
@@ -111,6 +140,10 @@ public class ImportPricesFromYGOPROAPI {
 				// limited, unlimited, and first edition entries existing at same time
 				for (String key : updatedMoreThanOnceKeysMap.keySet()) {
 					YGOLogger.info("Key updated more than once:" + key);
+				}
+
+				for(PreparedStatementBatchWrapper statement :editionToPreparedStatementMap.values()){
+					statement.finalizeBatches();
 				}
 
 				long endTime = System.currentTimeMillis();
@@ -462,7 +495,7 @@ public class ImportPricesFromYGOPROAPI {
 
 	private int updatePriceUsingMultipleStrategiesWithHashmap(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 
-		Integer rowsUpdated1 = attemptPriceUpdateUsingURL(currentSetFromAPI, db);
+		Integer rowsUpdated1 = attemptPriceUpdateUsingURLNewBatching(currentSetFromAPI, db);
 		if (rowsUpdated1 != null) return rowsUpdated1;
 
 		Integer rowsUpdated2 = attemptPriceUpdateUsingAllProperties(currentSetFromAPI, db);
@@ -622,6 +655,30 @@ public class ImportPricesFromYGOPROAPI {
 				}
 
 				db.updateCardSetPriceBatchedByURL(currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetUrl(), isFirstEdition);
+
+				for (CardSet set : existingRows) {
+					addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + isFirstEdition);
+				}
+				return existingRows.size();
+			}
+		}
+		return null;
+	}
+
+	private Integer attemptPriceUpdateUsingURLNewBatching(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
+		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
+		boolean isFirstEdition = currentSetFromAPI.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
+
+		if(currentSetFromAPI.getSetUrl() != null && !currentSetFromAPI.getSetUrl().isBlank()) {
+			List<CardSet> existingRows = rarityHashMap.get(currentSetFromAPI.getSetUrl());
+			if (existingRows != null && !existingRows.isEmpty()) {
+				if (existingRows.size() > 1) {
+					// more than 1 exact match, color or art variant
+					YGOLogger.error("more than 1 exact match for set url:" + currentSetFromAPI.getSetUrl());
+				}
+
+				PreparedStatementBatchWrapper statement = getStatementForEdition(currentSetFromAPI.getEditionPrinting(), db);
+				statement.addSingleValuesSet(List.of(currentSetFromAPI.getSetPrice(),currentSetFromAPI.getSetUrl()));
 
 				for (CardSet set : existingRows) {
 					addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + isFirstEdition);

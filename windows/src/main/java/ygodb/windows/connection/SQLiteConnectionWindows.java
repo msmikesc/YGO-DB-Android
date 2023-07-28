@@ -14,6 +14,7 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.BatchSetter;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.SQLConst;
@@ -31,7 +32,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		if (connectionInstance == null) {
 			connectionInstance = DriverManager
 					.getConnection("jdbc:sqlite:C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\db\\YGO-DB.db");
-			connectionInstance.setAutoCommit(false);
 		}
 
 		return connectionInstance;
@@ -62,7 +62,10 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			updateCardSetPriceBatchedByURLStatement.executeBatch();
 		}
 
-		connectionInstance.commit();
+		if(!connectionInstance.getAutoCommit()){
+			connectionInstance.commit();
+		}
+
 		connectionInstance.close();
 
 		connectionInstance = null;
@@ -1546,5 +1549,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				connection.commit();
 			}
 		}
+	}
+
+	@Override
+	public PreparedStatementBatchWrapperWindows getBatchedPreparedStatement(String input, BatchSetter setter)
+			throws SQLException {
+		Connection connection = this.getInstance();
+		return new PreparedStatementBatchWrapperWindows(connection, input, BATCH_SIZE, setter);
 	}
 }
