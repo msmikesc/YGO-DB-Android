@@ -43,19 +43,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			return;
 		}
 
-		if(updateCardSetPriceBatchedWithCardAndSetNameFirstStatement != null){
-			updateCardSetPriceBatchedWithCardAndSetNameFirstStatement.executeBatch();
-		}
-		if(updateCardSetPriceBatchedWithCardAndSetNameStatement != null){
-			updateCardSetPriceBatchedWithCardAndSetNameStatement.executeBatch();
-		}
-		if(updateCardSetPriceBatchedWithCardNameFirstStatement != null){
-			updateCardSetPriceBatchedWithCardNameFirstStatement.executeBatch();
-		}
-		if(updateCardSetPriceBatchedWithCardNameStatement != null){
-			updateCardSetPriceBatchedWithCardNameStatement.executeBatch();
-		}
-
 		if(!connectionInstance.getAutoCommit()){
 			connectionInstance.commit();
 		}
@@ -1332,111 +1319,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	@Override
 	public List<SetBox> getSetBoxesByNameOrCode(String searchText) {
 		throw new UnsupportedOperationException();
-	}
-
-
-	private PreparedStatement updateCardSetPriceBatchedWithCardAndSetNameFirstStatement = null;
-	private PreparedStatement updateCardSetPriceBatchedWithCardAndSetNameStatement = null;
-	private int updateCardSetPriceBatchedWithCardAndSetNameFirstCount = 0;
-	private int updateCardSetPriceBatchedWithCardAndSetNameCount = 0;
-
-	@Override
-	public void updateCardSetPriceBatchedWithCardAndSetName(String setNumber, String rarity, String price, String setName,
-															String cardName, boolean isFirstEdition)
-			throws SQLException {
-
-		Connection connection = this.getInstance();
-
-		PreparedStatement statement = null;
-
-		if(isFirstEdition) {
-			if(updateCardSetPriceBatchedWithCardAndSetNameFirstStatement == null){
-				updateCardSetPriceBatchedWithCardAndSetNameFirstStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST);
-			}
-			statement =updateCardSetPriceBatchedWithCardAndSetNameFirstStatement;
-			updateCardSetPriceBatchedWithCardAndSetNameFirstCount++;
-		}
-		else{
-			if(updateCardSetPriceBatchedWithCardAndSetNameStatement == null) {
-				updateCardSetPriceBatchedWithCardAndSetNameStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME);
-			}
-			statement =updateCardSetPriceBatchedWithCardAndSetNameStatement;
-			updateCardSetPriceBatchedWithCardAndSetNameCount++;
-		}
-
-		statement.setString(1, price);
-		statement.setString(2, setNumber);
-		statement.setString(3, rarity);
-		statement.setString(4, setName);
-		statement.setString(5, cardName);
-
-		statement.addBatch();
-
-		if(isFirstEdition) {
-			if(updateCardSetPriceBatchedWithCardAndSetNameFirstCount > BATCH_SIZE){
-				statement.executeBatch();
-				updateCardSetPriceBatchedWithCardAndSetNameFirstCount = 0;
-				connection.commit();
-			}
-		}
-		else{
-			if(updateCardSetPriceBatchedWithCardAndSetNameCount > BATCH_SIZE){
-				statement.executeBatch();
-				updateCardSetPriceBatchedWithCardAndSetNameCount = 0;
-				connection.commit();
-			}
-		}
-	}
-
-	private PreparedStatement updateCardSetPriceBatchedWithCardNameFirstStatement = null;
-	private PreparedStatement updateCardSetPriceBatchedWithCardNameStatement = null;
-	private int updateCardSetPriceBatchedWithCardNameFirstCount = 0;
-	private int updateCardSetPriceBatchedWithCardNameCount = 0;
-
-	@Override
-	public void updateCardSetPriceBatchedWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
-			throws SQLException {
-
-		Connection connection = this.getInstance();
-
-		PreparedStatement statement = null;
-
-		if(isFirstEdition) {
-			if(updateCardSetPriceBatchedWithCardNameFirstStatement == null){
-				updateCardSetPriceBatchedWithCardNameFirstStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST);
-			}
-			statement =updateCardSetPriceBatchedWithCardNameFirstStatement;
-			updateCardSetPriceBatchedWithCardNameFirstCount++;
-		}
-		else{
-			if(updateCardSetPriceBatchedWithCardNameStatement == null) {
-				updateCardSetPriceBatchedWithCardNameStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME);
-			}
-			statement =updateCardSetPriceBatchedWithCardNameStatement;
-			updateCardSetPriceBatchedWithCardNameCount++;
-		}
-
-		statement.setString(1, price);
-		statement.setString(2, setNumber);
-		statement.setString(3, rarity);
-		statement.setString(4, cardName);
-
-		statement.addBatch();
-
-		if(isFirstEdition) {
-			if(updateCardSetPriceBatchedWithCardNameFirstCount > BATCH_SIZE){
-				statement.executeBatch();
-				updateCardSetPriceBatchedWithCardNameFirstCount = 0;
-				connection.commit();
-			}
-		}
-		else{
-			if(updateCardSetPriceBatchedWithCardNameCount > BATCH_SIZE){
-				statement.executeBatch();
-				updateCardSetPriceBatchedWithCardNameCount = 0;
-				connection.commit();
-			}
-		}
 	}
 
 	@Override

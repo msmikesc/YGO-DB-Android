@@ -130,13 +130,6 @@ public interface SQLiteConnection {
 
 	List<SetBox> getSetBoxesByNameOrCode(String searchText);
 
-    void updateCardSetPriceBatchedWithCardAndSetName(String setNumber, String rarity, String price, String setName,
-                                                     String cardName, boolean isFirstEdition)
-            throws SQLException;
-
-    void updateCardSetPriceBatchedWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
-            throws SQLException;
-
 	int updateCardSetUrl(String setNumber, String rarity, String setName,
 						 String cardName, String setURL, String colorVariant)
 			throws SQLException;
