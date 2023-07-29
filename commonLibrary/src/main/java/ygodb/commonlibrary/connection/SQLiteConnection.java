@@ -145,9 +145,12 @@ public interface SQLiteConnection {
                                  String cardName, String setURL, String currentColorVariant, String newColorVariant)
             throws SQLException;
 
-    void updateCardSetPriceBatchedByURL(String price, String setUrl, boolean isFirstEdition)
+    PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetter setter)
             throws SQLException;
 
-    PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetter setter)
+    PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst()
+            throws SQLException;
+
+    PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited()
             throws SQLException;
 }

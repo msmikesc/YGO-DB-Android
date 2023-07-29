@@ -9,7 +9,6 @@ import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.constant.SQLConst;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
@@ -43,18 +42,12 @@ public class ImportPricesFromYGOPROAPI {
 		if(value == null){
 			if(edition.equals(Const.CARD_PRINTING_FIRST_EDITION)){
 
-				value = db.getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST, (stmt, params) -> {
-					stmt.setString(1, (String) params[0]);
-					stmt.setString(2, (String) params[1]);
-				});
+				value = db.getBatchedPreparedStatementUrlFirst();
 
 				editionToPreparedStatementMap.put(edition, value);
 			}
 			else{
-				value = db.getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL, (stmt, params) -> {
-					stmt.setString(1, (String) params[0]);
-					stmt.setString(2, (String) params[1]);
-				});
+				value = db.getBatchedPreparedStatementUrlUnlimited();
 
 				editionToPreparedStatementMap.put(edition, value);
 			}
@@ -638,29 +631,6 @@ public class ImportPricesFromYGOPROAPI {
 				addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + isFirstEdition);
 			}
 			return existingRows.size();
-		}
-		return null;
-	}
-
-	private Integer attemptPriceUpdateUsingURL(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
-		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
-		boolean isFirstEdition = currentSetFromAPI.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
-
-		if(currentSetFromAPI.getSetUrl() != null && !currentSetFromAPI.getSetUrl().isBlank()) {
-			List<CardSet> existingRows = rarityHashMap.get(currentSetFromAPI.getSetUrl());
-			if (existingRows != null && !existingRows.isEmpty()) {
-				if (existingRows.size() > 1) {
-					// more than 1 exact match, color or art variant
-					YGOLogger.error("more than 1 exact match for set url:" + currentSetFromAPI.getSetUrl());
-				}
-
-				db.updateCardSetPriceBatchedByURL(currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetUrl(), isFirstEdition);
-
-				for (CardSet set : existingRows) {
-					addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + isFirstEdition);
-				}
-				return existingRows.size();
-			}
 		}
 		return null;
 	}

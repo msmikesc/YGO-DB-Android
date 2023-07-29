@@ -10,5 +10,7 @@ public interface PreparedStatementBatchWrapper {
 
 	void finalizeBatches() throws SQLException;
 
+	boolean isFinalized();
+
 	boolean isAboveBatchMaximum();
 }

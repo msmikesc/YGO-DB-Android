@@ -13,8 +13,10 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 	private final PreparedStatement statement;
 	private final Connection connection;
 	private final int batchedLinesMax;
-	private int currentBatchedLinesCount = 0;
 	private final BatchSetter batchSetter;
+
+	private int currentBatchedLinesCount = 0;
+	private boolean isFinalized = false;
 
 	public PreparedStatementBatchWrapperWindows(Connection connection, String input, int maximum, BatchSetter setter) throws SQLException {
 		this.connection = connection;
@@ -26,6 +28,11 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 
 	@Override
 	public void addSingleValuesSet(List<Object> params) throws SQLException {
+
+		if(isFinalized){
+			return;
+		}
+
 		batchSetter.setParams(statement, params.toArray());
 		currentBatchedLinesCount++;
 		statement.addBatch();
@@ -37,6 +44,11 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 
 	@Override
 	public void executeBatch() throws SQLException {
+
+		if(isFinalized){
+			return;
+		}
+
 		statement.executeBatch();
 		connection.commit();
 		currentBatchedLinesCount = 0;
@@ -44,8 +56,19 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 
 	@Override
 	public void finalizeBatches() throws SQLException {
+
+		if(isFinalized){
+			return;
+		}
+
 		executeBatch();
 		statement.close();
+		isFinalized = true;
+	}
+
+	@Override
+	public boolean isFinalized(){
+		return isFinalized;
 	}
 
 	@Override

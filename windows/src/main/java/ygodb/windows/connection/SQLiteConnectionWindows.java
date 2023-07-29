@@ -55,12 +55,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		if(updateCardSetPriceBatchedWithCardNameStatement != null){
 			updateCardSetPriceBatchedWithCardNameStatement.executeBatch();
 		}
-		if(updateCardSetPriceBatchedByURLFirstStatement != null){
-			updateCardSetPriceBatchedByURLFirstStatement.executeBatch();
-		}
-		if(updateCardSetPriceBatchedByURLStatement != null){
-			updateCardSetPriceBatchedByURLStatement.executeBatch();
-		}
 
 		if(!connectionInstance.getAutoCommit()){
 			connectionInstance.commit();
@@ -1502,59 +1496,30 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
-	private PreparedStatement updateCardSetPriceBatchedByURLFirstStatement = null;
-	private PreparedStatement updateCardSetPriceBatchedByURLStatement = null;
-	private int updateCardSetPriceBatchedByURLFirstCount = 0;
-	private int updateCardSetPriceBatchedByURLCount = 0;
-
-	@Override
-	public void updateCardSetPriceBatchedByURL(String price, String setUrl, boolean isFirstEdition)
-			throws SQLException {
-
-		Connection connection = this.getInstance();
-
-		PreparedStatement statement = null;
-
-		if(isFirstEdition) {
-			if(updateCardSetPriceBatchedByURLFirstStatement == null){
-				updateCardSetPriceBatchedByURLFirstStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST);
-			}
-			statement = updateCardSetPriceBatchedByURLFirstStatement;
-			updateCardSetPriceBatchedByURLFirstCount++;
-		}
-		else{
-			if(updateCardSetPriceBatchedByURLStatement == null) {
-				updateCardSetPriceBatchedByURLStatement = connection.prepareStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL);
-			}
-			statement = updateCardSetPriceBatchedByURLStatement;
-			updateCardSetPriceBatchedByURLCount++;
-		}
-
-		statement.setString(1, price);
-		statement.setString(2, setUrl);
-
-		statement.addBatch();
-
-		if(isFirstEdition) {
-			if(updateCardSetPriceBatchedByURLFirstCount > BATCH_SIZE){
-				statement.executeBatch();
-				updateCardSetPriceBatchedByURLFirstCount = 0;
-				connection.commit();
-			}
-		}
-		else{
-			if(updateCardSetPriceBatchedByURLCount > BATCH_SIZE){
-				statement.executeBatch();
-				updateCardSetPriceBatchedByURLCount = 0;
-				connection.commit();
-			}
-		}
-	}
-
 	@Override
 	public PreparedStatementBatchWrapperWindows getBatchedPreparedStatement(String input, BatchSetter setter)
 			throws SQLException {
 		Connection connection = this.getInstance();
 		return new PreparedStatementBatchWrapperWindows(connection, input, BATCH_SIZE, setter);
+	}
+
+	@Override
+	public PreparedStatementBatchWrapperWindows getBatchedPreparedStatementUrlFirst()
+			throws SQLException {
+
+		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST, (stmt, params) -> {
+			stmt.setString(1, (String) params[0]);
+			stmt.setString(2, (String) params[1]);
+		});
+	}
+
+	@Override
+	public PreparedStatementBatchWrapperWindows getBatchedPreparedStatementUrlUnlimited()
+			throws SQLException {
+
+		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL, (stmt, params) -> {
+			stmt.setString(1, (String) params[0]);
+			stmt.setString(2, (String) params[1]);
+		});
 	}
 }
