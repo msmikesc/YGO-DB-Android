@@ -7,6 +7,7 @@ import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
@@ -69,7 +70,7 @@ public class ImportFromYGOPROAPI {
 				return false;
 			} else {
 
-				String inline = Util.getApiResponseFromURL(url);
+				String inline = ApiUtil.getApiResponseFromURL(url);
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
@@ -82,11 +83,11 @@ public class ImportFromYGOPROAPI {
 
 				for (JsonNode currentGamePlayCard: cards) {
 
-					GamePlayCard inserted = Util.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCard, ownedCardsToCheck, db);
+					GamePlayCard inserted = ApiUtil.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCard, ownedCardsToCheck, db);
 					JsonNode setListNode = currentGamePlayCard.get(Const.YGOPRO_CARD_SETS);
 
 					if (setListNode != null) {
-						Util.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
+						ApiUtil.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
 					}
 
 				}
@@ -118,7 +119,7 @@ public class ImportFromYGOPROAPI {
 				YGOLogger.error("HttpResponseCode: " + responseCode);
 				return false;
 			} else {
-				String inline = Util.getApiResponseFromURL(url);
+				String inline = ApiUtil.getApiResponseFromURL(url);
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
@@ -146,10 +147,10 @@ public class ImportFromYGOPROAPI {
 											List<String> dbSetNames, JsonNode setNode) throws SQLException {
 
 		boolean isSpecificSet = inputSetName != null && !inputSetName.isBlank();
-		String currentSetName = Util.getStringOrNull(setNode, Const.YGOPRO_SET_NAME);
-		String setCode = Util.getStringOrNull(setNode, Const.YGOPRO_SET_CODE);
-		int numOfCards = Util.getIntOrNegativeOne(setNode, Const.YGOPRO_TOTAL_CARDS_IN_SET);
-		String tcgDate = Util.getStringOrNull(setNode, Const.YGOPRO_TCG_RELEASE_DATE);
+		String currentSetName = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_NAME);
+		String setCode = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_CODE);
+		int numOfCards = ApiUtil.getIntOrNegativeOne(setNode, Const.YGOPRO_TOTAL_CARDS_IN_SET);
+		String tcgDate = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_TCG_RELEASE_DATE);
 
 		String newSetName = Util.checkForTranslatedSetName(currentSetName);
 

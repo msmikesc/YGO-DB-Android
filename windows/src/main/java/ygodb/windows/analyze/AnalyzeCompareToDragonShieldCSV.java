@@ -73,18 +73,18 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 			CSVRecord current = it.next();
 
-			String folder = current.get(Const.FOLDER_NAME_CSV).trim();
-			String name = current.get(Const.CARD_NAME_CSV).trim();
-			String quantity = current.get(Const.QUANTITY_CSV).trim();
-			String setCode = current.get(Const.SET_CODE_CSV).trim();
-			String setNumber = current.get(Const.CARD_NUMBER_CSV).trim();
-			String condition = current.get(Const.CONDITION_CSV).trim();
-			String printing = current.get(Const.PRINTING_CSV).trim();
-			String priceBought = Util.normalizePrice(current.get(Const.PRICE_BOUGHT_CSV));
-			String dateBought = current.get(Const.DATE_BOUGHT_CSV).trim();
-			String setName = current.get(Const.SET_NAME_CSV).trim();
+			String folder = csvConnection.getStringOrNull(current, Const.FOLDER_NAME_CSV);
+			String name = csvConnection.getStringOrNull(current, Const.CARD_NAME_CSV);
+			String quantity = csvConnection.getStringOrNull(current, Const.QUANTITY_CSV);
+			String setCode = csvConnection.getStringOrNull(current, Const.SET_CODE_CSV);
+			String setNumber = csvConnection.getStringOrNull(current, Const.CARD_NUMBER_CSV);
+			String condition = csvConnection.getStringOrNull(current, Const.CONDITION_CSV);
+			String printing = csvConnection.getStringOrNull(current, Const.PRINTING_CSV);
+			String priceBought = Util.normalizePrice(csvConnection.getStringOrNull(current, Const.PRICE_BOUGHT_CSV));
+			String dateBought = csvConnection.getStringOrNull(current, Const.DATE_BOUGHT_CSV);
+			String setName = csvConnection.getStringOrNull(current, Const.SET_NAME_CSV);
 
-			String rarity = current.get("Rarity").trim();
+			String rarity = csvConnection.getStringOrNull(current, "Rarity");
 
 			rarity = convertRarityToLongForm(rarity);
 
@@ -98,16 +98,16 @@ public class AnalyzeCompareToDragonShieldCSV {
 				printing = Const.CARD_PRINTING_FIRST_EDITION;
 			}
 
-			String key = setNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folder +":"+ condition +":"+ printing;
+			CardSet setIdentified = new CardSet("", setNumber, name, rarity, setName, colorCode, setCode);
+			OwnedCard csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
+
+			String key = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
 
 			List<OwnedCard> existingOwnedCardsList = ownedCardsMap.get(key);
 
 			if (existingOwnedCardsList != null) {
 
-				CardSet setIdentified = new CardSet("", setNumber, name, rarity, setName, colorCode, setCode);
-				OwnedCard csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
-
-				handleForCSVKey(ownedCardsMap, csvOwnedcard, key, existingOwnedCardsList);
+				handleForCSVKey(ownedCardsMap, csvOwnedcard, existingOwnedCardsList);
 			}
 
 			if (existingOwnedCardsList == null) {
@@ -115,15 +115,14 @@ public class AnalyzeCompareToDragonShieldCSV {
 				String newColorCode = setNumber.substring(setNumber.length() - 1);
 				String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
 
-				String newKey = newSetNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folder +":"+ condition +":"+ printing;
+				setIdentified = new CardSet("", newSetNumber, name, rarity, setName, newColorCode, setCode);
+				csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
+
+				String newKey = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
 
 				existingOwnedCardsList = ownedCardsMap.get(newKey);
 				if(existingOwnedCardsList != null){
-
-					CardSet setIdentified = new CardSet("", newSetNumber, name, rarity, setName, newColorCode, setCode);
-					OwnedCard csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
-
-					handleForCSVKey(ownedCardsMap, csvOwnedcard, newKey, existingOwnedCardsList);
+					handleForCSVKey(ownedCardsMap, csvOwnedcard, existingOwnedCardsList);
 				}
 			}
 
@@ -133,14 +132,14 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 				if(brokenSetNumber.length == 2){
 					String newSetNumber = brokenSetNumber[0] + "-EN" + brokenSetNumber[1];
-					String newKey = setNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folder +":"+ condition +":"+ printing;
+
+					setIdentified = new CardSet("", newSetNumber, name, rarity, setName, colorCode, setCode);
+					csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
+
+					String newKey = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
 					existingOwnedCardsList = ownedCardsMap.get(newKey);
 					if(existingOwnedCardsList != null){
-
-						CardSet setIdentified = new CardSet("", newSetNumber, name, rarity, setName, colorCode, setCode);
-						OwnedCard csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
-
-						handleForCSVKey(ownedCardsMap, csvOwnedcard, newKey, existingOwnedCardsList);
+						handleForCSVKey(ownedCardsMap, csvOwnedcard, existingOwnedCardsList);
 					}
 				}
 			}
@@ -176,7 +175,9 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 
 	private static void handleForCSVKey(Map<String, List<OwnedCard>> ownedCardsMap, OwnedCard csvOwnedcard,
-										String key, List<OwnedCard> existingOwnedCardsList) {
+										List<OwnedCard> existingOwnedCardsList) {
+
+		String key = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);;
 
 		if (existingOwnedCardsList.size() == 1) {
 			// exact 1 match
