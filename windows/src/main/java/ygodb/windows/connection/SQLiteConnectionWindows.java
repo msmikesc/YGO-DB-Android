@@ -193,7 +193,17 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy) {
+	public List<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<OwnedCard> getAllPossibleCardsBySetName(String setName, String orderBy) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<OwnedCard> getAllPossibleCardsByArchetype(String archetype, String orderBy) {
 		throw new UnsupportedOperationException();
 	}
 

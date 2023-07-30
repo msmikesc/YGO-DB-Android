@@ -127,45 +127,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_import) {
 
-            SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
-            String savedURI = prefs.getString(Const.PREF_DB_LOCATION, null);
-            Uri dbURI;
-            if(savedURI != null && !savedURI.isBlank()) {
-                dbURI = Uri.parse(savedURI);
-            } else {
-                dbURI = null;
-            }
-
-            //if(AndroidUtil.checkForPermissionsToURI(this, dbURI)){
-            //    Executors.newSingleThreadExecutor().execute(() -> copyDBInCallback.importDBFromURI(dbURI));
-           // }
-            //else {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.setType("*/*");
-                copyDBInIntent.launch(intent);
-            //}
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.setType("*/*");
+            copyDBInIntent.launch(intent);
 
             return true;
         }
         else if (id == R.id.action_export) {
 
-            SharedPreferences prefs = this.getPreferences(Context.MODE_PRIVATE);
-            String savedURI = prefs.getString(Const.PREF_DB_LOCATION, null);
-            Uri dbURI;
-            if(savedURI != null && !savedURI.isBlank()) {
-                dbURI = Uri.parse(savedURI);
-            } else {
-                dbURI = null;
-            }
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.setType("*/*");
+            copyDBOutIntent.launch(intent);
 
-            //if(AndroidUtil.checkForPermissionsToURI(this, dbURI)){
-            //    Executors.newSingleThreadExecutor().execute(() -> copyDBOutCallback.exportDBFileToURI(dbURI));
-            //}
-           // else {
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.setType("*/*");
-                copyDBOutIntent.launch(intent);
-           // }
             return true;
         }
 

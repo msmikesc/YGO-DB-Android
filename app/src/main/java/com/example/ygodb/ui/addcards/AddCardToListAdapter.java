@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
@@ -244,9 +245,38 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         String[] rarities = current.getSetRarity().split(", ");
 
         if(rarities.length == 1){
-            viewHolder.cardRarity.setText(current.getSetRarity());
+
             viewHolder.cardRarity.setVisibility(View.VISIBLE);
             viewHolder.cardRarityDropdown.setVisibility(View.INVISIBLE);
+
+            String setRarityText = current.getSetRarity();
+
+            if(current.getColorVariant() != null && !current.getColorVariant().equals("") && !current.getColorVariant().equals("-1")){
+                if(current.getColorVariant().equalsIgnoreCase("a")){
+                    setRarityText = "Alt Art " + setRarityText;
+                    viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold));
+                }
+                else{
+                    setRarityText = current.getColorVariant().toUpperCase(Locale.ROOT) + " " + setRarityText;
+                    switch (current.getColorVariant().toUpperCase(Locale.ROOT)) {
+                        case "R" ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson));
+                        case "G" ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen));
+                        case "B" ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue));
+                        case "P" ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet));
+                        default ->
+                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
+                    }
+                }
+            }
+            else{
+                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
+            }
+
+            viewHolder.cardRarity.setText(setRarityText);
         }
         else{
             viewHolder.cardRarityDropdown.setVisibility(View.VISIBLE);

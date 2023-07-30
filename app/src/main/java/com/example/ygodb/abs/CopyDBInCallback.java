@@ -75,9 +75,6 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 			throw new IOException("Error: Filename wrong");
 		}
 
-		activity.getContentResolver().takePersistableUriPermission (chosenURI,
-				Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
 		return chosenURI;
 	}
 
@@ -85,11 +82,6 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 		DrawerLayout view = activity.getBinding().getRoot();
 		try {
 			String responseMessage = AndroidUtil.getDBInstance().copyDataBaseFromURI(activity, chosenURI);
-
-			SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putString(Const.PREF_DB_LOCATION, chosenURI.toString());
-			editor.apply();
 
 			AndroidUtil.updateViewsAfterDBLoad();
 

@@ -2,19 +2,12 @@ package com.example.ygodb.ui.viewcardset;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.ygodb.abs.AndroidUtil;
-import com.example.ygodb.abs.OwnedCardQuantityComparator;
-
-import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
-import ygodb.commonlibrary.bean.AnalyzeData;
-import ygodb.commonlibrary.bean.CardSet;
+import com.example.ygodb.abs.OwnedCardSetNumberComparator;
 import ygodb.commonlibrary.bean.OwnedCard;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,8 +26,8 @@ public class ViewCardSetViewModel extends ViewModel {
     private final List<String> setNamesDropdownList = new ArrayList<>();
 
     public ViewCardSetViewModel() {
-        currentComparator = new OwnedCardQuantityComparator();
-        sortOption = "Quantity";
+        currentComparator = new OwnedCardSetNumberComparator();
+        sortOption = "Set Number";
         cardsList = new ArrayList<>();
         filteredCardsList = new ArrayList<>();
         isCardNameMode = true;
@@ -71,70 +64,36 @@ public class ViewCardSetViewModel extends ViewModel {
 
     public List<OwnedCard> getInitialCardNameData(String cardName) {
 
-        ArrayList<OwnedCard> results = null;
-
         if(cardName == null || cardName.isBlank() || cardName.trim().length() < 3){
             return new ArrayList<>();
         }
 
-        results = AndroidUtil.getDBInstance().getAllPossibleCardsByNameSearch(cardName,
-                "a.cardName asc, a.setNumber asc, a.setRarity asc");
+        List<OwnedCard> results = AndroidUtil.getDBInstance().getAllPossibleCardsByNameSearch(cardName,
+                null);
 
         if(!results.isEmpty()){
             isCardNameMode = true;
         }
-        sortOption = "Default";
 
         return results;
     }
 
     public List<OwnedCard> getInitialData(String setName) {
 
-        AnalyzeCardsInSet runner = new AnalyzeCardsInSet();
-
-        List<AnalyzeData> results = null;
-        ArrayList<OwnedCard> newList = new ArrayList<>();
-
-        if(setName == null || setName.equals("") || setName.trim().length() < 4){
-            cardsList.clear();
-            filteredCardsList.clear();
+        if(setName == null || setName.equals("") || setName.trim().length() < 3) {
             isCardNameMode = true;
-            if(cardNameSearch != null && cardNameSearch.length() > 0){
-                return getInitialCardNameData(cardNameSearch);
-            }
-            return newList;
+            return getInitialCardNameData(cardNameSearch);
         }
 
-        try {
-            results = runner.runFor(setName, AndroidUtil.getDBInstance());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        setName = setName.trim();
+
+        List<OwnedCard> newList = AndroidUtil.getDBInstance().getAllPossibleCardsBySetName(setName,
+                null);
+
+        if(newList.isEmpty()){
+            newList = AndroidUtil.getDBInstance().getAllPossibleCardsByArchetype(setName,
+                    null);
         }
-
-        for(AnalyzeData current: results){
-            OwnedCard currentCard = new OwnedCard();
-            currentCard.setCardName(current.getCardName());
-            currentCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
-            currentCard.setQuantity(current.getQuantity());
-            currentCard.setPriceBought(current.getDisplaySummaryPrice());
-            currentCard.setPasscode(current.getPasscode());
-
-            currentCard.setAnalyzeResultsCardSets(current.getCardSets());
-            currentCard.setSetRarity(current.getStringOfRarities());
-            currentCard.setSetName(current.getStringOfSetNames());
-            currentCard.setSetNumber(current.getStringOfSetNumbers());
-
-            HashSet<String> setNamesHashSet = new HashSet<>();
-            for(CardSet cardSet: current.getCardSets()){
-                setNamesHashSet.add(cardSet.getSetName());
-            }
-            List<String> setNames = new ArrayList<>(setNamesHashSet);
-            currentCard.setSetNamesOptions(setNames);
-
-            newList.add(currentCard);
-        }
-
-        sortData(newList, currentComparator);
 
         if(!newList.isEmpty()){
             isCardNameMode = false;
@@ -156,8 +115,8 @@ public class ViewCardSetViewModel extends ViewModel {
         return newList;
     }
 
-    public void sortData(List<OwnedCard> cardsList, Comparator<OwnedCard> currentComparator){
-        cardsList.sort(currentComparator);
+    public void sortData(List<OwnedCard> cardsList, Comparator<OwnedCard> cardComparator){
+        cardsList.sort(cardComparator);
     }
 
     public List<OwnedCard> getCardsList() {

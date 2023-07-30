@@ -29,6 +29,15 @@ public class AddCardsViewModel extends ViewModel {
         keyToPosition = new HashMap<>();
     }
 
+    private String getKeyForOwnedCard(OwnedCard input){
+
+        if(input.getSetNamesOptions() != null){
+            return input.getSetNumber() + input.getSetRarity() + input.getColorVariant() + input.getSetNamesOptions().toString();
+        }
+
+        return input.getSetNumber() + input.getSetRarity() + input.getColorVariant();
+    }
+
 
     public void saveToDB(){
         for(OwnedCard current: cardsList){
@@ -91,11 +100,7 @@ public class AddCardsViewModel extends ViewModel {
             return;
         }
 
-        String key = current.getSetNumber() + current.getSetRarity();
-
-        if(current.getSetNamesOptions() != null){
-            key = current.getSetNumber() + current.getSetRarity() + current.getSetNamesOptions().toString();
-        }
+        String key = getKeyForOwnedCard(current);
 
         Integer position = keyToPosition.get(key);
 
@@ -120,7 +125,7 @@ public class AddCardsViewModel extends ViewModel {
             newCard.setSetCode(current.getSetCode());
             newCard.setFolderName(Const.FOLDER_UNSYNCED);
             newCard.setSetNumber(current.getSetNumber());
-            newCard.setColorVariant("-1");
+            newCard.setColorVariant(current.getColorVariant());
             newCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
             newCard.setPasscode(current.getPasscode());
 
@@ -152,7 +157,7 @@ public class AddCardsViewModel extends ViewModel {
 
             newCard.setPriceBought(getAPIPriceFromRarity(newCard.getSetRarity(),
                     newCard.getAnalyzeResultsCardSets(), newCard.getSetName(),
-                    newCard.getGamePlayCardUUID(), newCard.getSetNumber(), isFirstEdition));
+                    newCard.getGamePlayCardUUID(), newCard.getSetNumber(), isFirstEdition, newCard.getColorVariant()));
 
             if(current.getCondition() == null || current.getCondition().equals("")){
                 newCard.setCondition("NearMint");
@@ -184,7 +189,7 @@ public class AddCardsViewModel extends ViewModel {
             boolean isFirstEdition = current.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
 
             current.setPriceBought(getAPIPriceFromRarity(rarity, current.getAnalyzeResultsCardSets(),
-                    setName, current.getGamePlayCardUUID(), setNumber, isFirstEdition));
+                    setName, current.getGamePlayCardUUID(), setNumber, isFirstEdition, current.getColorVariant()));
         }
     }
 
@@ -220,7 +225,7 @@ public class AddCardsViewModel extends ViewModel {
     }
 
     public String getAPIPriceFromRarity(String rarity, List<CardSet> analyzeResultsCardSets,
-                                        String setName, String gamePlayCardUUID, String setNumber, boolean isFirstEdition){
+                                        String setName, String gamePlayCardUUID, String setNumber, boolean isFirstEdition, String colorVariant){
 
         if(analyzeResultsCardSets == null){
             analyzeResultsCardSets = AndroidUtil.getDBInstance().
@@ -252,7 +257,8 @@ public class AddCardsViewModel extends ViewModel {
         for (CardSet cardSet : analyzeResultsCardSets) {
             if (cardSet.getSetRarity().equalsIgnoreCase(assumedRarity) &&
                     cardSet.getSetNumber().equalsIgnoreCase(assumedNumber) &&
-                    cardSet.getSetName().equalsIgnoreCase(assumedSet)) {
+                    cardSet.getSetName().equalsIgnoreCase(assumedSet) &&
+                    cardSet.getColorVariant().equalsIgnoreCase(colorVariant)) {
                 return cardSet.getBestExistingPrice(isFirstEdition);
             }
         }
@@ -262,11 +268,7 @@ public class AddCardsViewModel extends ViewModel {
 
     public void removeNewFromOwnedCard(OwnedCard current){
 
-        String key = current.getSetNumber() + current.getSetRarity();
-
-        if(current.getSetNamesOptions() != null){
-            key = current.getSetNumber() + current.getSetRarity() + current.getSetNamesOptions().toString();
-        }
+        String key = getKeyForOwnedCard(current);
 
         Integer position = keyToPosition.get(key);
         OwnedCard newCard = null;

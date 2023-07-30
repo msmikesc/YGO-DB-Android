@@ -77,9 +77,6 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
             throw new IOException("Error: Filename wrong");
         }
 
-        activity.getContentResolver().takePersistableUriPermission (chosenURI,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
         return chosenURI;
     }
 

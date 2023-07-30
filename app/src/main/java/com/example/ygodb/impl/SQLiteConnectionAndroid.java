@@ -392,7 +392,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy) {
+	public List<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy) {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -400,16 +400,17 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
 				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "sum(b.quantity) as quantity",
-				"MAX(b.dateBought) as maxDate, c.setCode", "d.passcode"};
+				"MAX(b.dateBought) as maxDate, c.setCode", "d.passcode, colorVariant"};
 
 		String selection = "a.cardName like ?";
 		String[] selectionArgs = new String[]{'%' + cardName.trim() + '%'};
 
-		String groupBy = "cardNameCol, setNumberCol, setRarityCol";
+		String groupBy = "cardNameCol, setNumberCol, setRarityCol, colorVariant";
 
 		try (Cursor rs = connection.query("cardSets a left outer join ownedCards b " +
 						"on a.gamePlayCardUUID = b.gamePlayCardUUID and b.cardName = a.cardName " +
 						"and a.setNumber = b.setNumber and a.setRarity = b.setRarity " +
+						"and a.colorVariant = b.setRarityColorVariant " +
 						"left outer join setData c on a.setName = c.setName " +
 						"left outer join gamePlayCard d on a.gamePlayCardUUID = d.gamePlayCardUUID",
 				columns, selection, selectionArgs, groupBy, null, orderBy, null)) {
@@ -433,6 +434,111 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));
 				current.setDateBought(rs.getString(getColumn(col, "maxDate")));
 				current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
+				current.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
+
+				results.add(current);
+			}
+
+			return results;
+		}
+	}
+
+	@Override
+	public List<OwnedCard> getAllPossibleCardsBySetName(String setName, String orderBy) {
+
+		SQLiteDatabase connection = this.getInstance();
+
+		ArrayList<OwnedCard> results = new ArrayList<>();
+
+		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
+				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "sum(b.quantity) as quantity",
+				"MAX(b.dateBought) as maxDate, c.setCode", "d.passcode, colorVariant"};
+
+		String selection = "a.setName = ? OR UPPER(c.setCode) = UPPER(?)";
+		String[] selectionArgs = new String[]{setName,setName};
+
+		String groupBy = "cardNameCol, setNumberCol, setRarityCol, colorVariant";
+
+		try (Cursor rs = connection.query("cardSets a left outer join ownedCards b " +
+						"on a.gamePlayCardUUID = b.gamePlayCardUUID and b.cardName = a.cardName " +
+						"and a.setNumber = b.setNumber and a.setRarity = b.setRarity " +
+						"and a.colorVariant = b.setRarityColorVariant " +
+						"left outer join setData c on a.setName = c.setName " +
+						"left outer join gamePlayCard d on a.gamePlayCardUUID = d.gamePlayCardUUID",
+				columns, selection, selectionArgs, groupBy, null, orderBy, null)) {
+
+			String[] col = rs.getColumnNames();
+
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
+				current.setCardName(rs.getString(getColumn(col, "cardNameCol")));
+				current.setSetNumber(rs.getString(getColumn(col, "setNumberCol")));
+				current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
+				current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
+				current.setSetRarity(rs.getString(getColumn(col, "setRarityCol")));
+
+				String lowestPrice = Util.getLowestPriceString(rs.getString(getColumn(col, Const.SET_PRICE)),
+						rs.getString(getColumn(col, Const.SET_PRICE_FIRST)));
+
+				current.setPriceBought(Util.normalizePrice(lowestPrice));
+
+				current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));
+				current.setDateBought(rs.getString(getColumn(col, "maxDate")));
+				current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
+				current.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
+
+				results.add(current);
+			}
+
+			return results;
+		}
+	}
+
+	@Override
+	public List<OwnedCard> getAllPossibleCardsByArchetype(String archetype, String orderBy) {
+
+		SQLiteDatabase connection = this.getInstance();
+
+		ArrayList<OwnedCard> results = new ArrayList<>();
+
+		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
+				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "sum(b.quantity) as quantity",
+				"MAX(b.dateBought) as maxDate, c.setCode", "d.passcode, colorVariant"};
+
+		String selection = "a.cardName like ? OR UPPER(d.archetype) = UPPER(?)";
+		String[] selectionArgs = new String[]{"%"+archetype+"%",archetype};
+
+		String groupBy = "cardNameCol, setNumberCol, setRarityCol, colorVariant";
+
+		try (Cursor rs = connection.query("cardSets a left outer join ownedCards b " +
+						"on a.gamePlayCardUUID = b.gamePlayCardUUID and b.cardName = a.cardName " +
+						"and a.setNumber = b.setNumber and a.setRarity = b.setRarity " +
+						"and a.colorVariant = b.setRarityColorVariant " +
+						"left outer join setData c on a.setName = c.setName " +
+						"left outer join gamePlayCard d on a.gamePlayCardUUID = d.gamePlayCardUUID",
+				columns, selection, selectionArgs, groupBy, null, orderBy, null)) {
+
+			String[] col = rs.getColumnNames();
+
+			while (rs.moveToNext()) {
+				OwnedCard current = new OwnedCard();
+				current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
+				current.setCardName(rs.getString(getColumn(col, "cardNameCol")));
+				current.setSetNumber(rs.getString(getColumn(col, "setNumberCol")));
+				current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
+				current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
+				current.setSetRarity(rs.getString(getColumn(col, "setRarityCol")));
+
+				String lowestPrice = Util.getLowestPriceString(rs.getString(getColumn(col, Const.SET_PRICE)),
+						rs.getString(getColumn(col, Const.SET_PRICE_FIRST)));
+
+				current.setPriceBought(Util.normalizePrice(lowestPrice));
+
+				current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));
+				current.setDateBought(rs.getString(getColumn(col, "maxDate")));
+				current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
+				current.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
 
 				results.add(current);
 			}

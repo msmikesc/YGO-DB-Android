@@ -26,7 +26,11 @@ public interface SQLiteConnection {
 
     ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) throws SQLException;
 
-    ArrayList<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy);
+    List<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy);
+
+    List<OwnedCard> getAllPossibleCardsBySetName(String setName, String orderBy);
+
+    List<OwnedCard> getAllPossibleCardsByArchetype(String archetype, String orderBy);
 
     String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
