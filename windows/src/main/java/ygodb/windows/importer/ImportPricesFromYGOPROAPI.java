@@ -275,7 +275,7 @@ public class ImportPricesFromYGOPROAPI {
 		Map<String, String> urlColors = new HashMap<>();
 
 		for (String url : urlsList) {
-			String color = extractColorFromUrl(url);
+			String color = Util.extractColorFromUrl(url);
 			colorCount.put(color, colorCount.getOrDefault(color, 0) + 1);
 			if (colorCount.get(color) > 1) {
 				YGOLogger.error("Multiple URLs with the same color found. Cannot proceed.");
@@ -352,34 +352,6 @@ public class ImportPricesFromYGOPROAPI {
 
 	}
 
-	// Helper method to extract color information from the URL.
-	private static String extractColorFromUrl(String url) {
-		String tester = url.replace("blue-eyes","").replace("red-eyes","").replace("eyes-of-blue","");
-
-		if(tester.contains("-red?")){
-			return "r";
-		}
-		if(tester.contains("-blue?")){
-			return "b";
-		}
-		if(tester.contains("-green?")){
-			return "g";
-		}
-		if(tester.contains("-purple?")){
-			return "p";
-		}
-		if(tester.contains("-bronze?")){
-			return "brz";
-		}
-		if(tester.contains("-silver?")){
-			return "s";
-		}
-		if(tester.contains("-alternate-art?")){
-			return "a";
-		}
-		return Const.DEFAULT_COLOR_VARIANT;
-	}
-
 	public void updateCardSetPricesForOneCard(JsonNode setsListNode, String cardName, SQLiteConnection db)
 			throws SQLException {
 
@@ -393,7 +365,7 @@ public class ImportPricesFromYGOPROAPI {
 
 	private void updateSingleCardSetPrice(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 
-		if(Util.getSetUrlsThatDontExistInstance().contains(currentSetFromAPI.getSetUrl())){
+		if(Util.getSetUrlsThatDoNotExistInstance().contains(currentSetFromAPI.getSetUrl())){
 			return;
 		}
 
@@ -455,7 +427,7 @@ public class ImportPricesFromYGOPROAPI {
 		//bow out early if we don't have a set url to test
 		if(currentSetFromAPI == null || currentSetFromAPI.getSetUrl() == null ||
 				currentSetFromAPI.getSetUrl().isBlank() ||
-				Util.getSetUrlsThatDontExistInstance().contains(currentSetFromAPI.getSetUrl())){
+				Util.getSetUrlsThatDoNotExistInstance().contains(currentSetFromAPI.getSetUrl())){
 			return;
 		}
 
@@ -474,7 +446,7 @@ public class ImportPricesFromYGOPROAPI {
 	}
 
 	private void recordEntryWithConfirmedMissingDBURL(CardSet currentSetFromAPI, Map<String, List<CardSet>> rarityHashMap) {
-		CardSet matcherInput = getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
+		CardSet matcherInput = DatabaseHashMap.getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
 
 		String allMatchUrlKey = DatabaseHashMap.getAllMatchingKeyWithUrl(matcherInput);
 
@@ -529,19 +501,10 @@ public class ImportPricesFromYGOPROAPI {
 		return 0;
 	}
 
-	private static CardSet getRarityHashMapMatcherInputNoURL(CardSet currentSetFromAPI) {
-		CardSet matcherInput = new CardSet();
-		matcherInput.setSetRarity(currentSetFromAPI.getSetRarity());
-		matcherInput.setSetNumber(currentSetFromAPI.getSetNumber());
-		matcherInput.setCardName(currentSetFromAPI.getCardName());
-		matcherInput.setSetName(currentSetFromAPI.getSetName());
-		return matcherInput;
-	}
-
 	private Integer attemptPriceUpdateSetNumberOnly(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
 		boolean isFirstEdition = currentSetFromAPI.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
-		CardSet matcherInput = getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
+		CardSet matcherInput = DatabaseHashMap.getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
 
 		List<CardSet> existingRows = rarityHashMap.get(DatabaseHashMap.getSetNumberOnlyKey(matcherInput));
 		if (existingRows != null && existingRows.size() == 1) {
@@ -561,7 +524,7 @@ public class ImportPricesFromYGOPROAPI {
 	private Integer attemptPriceUpdateCardAndSetNameMismatch(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
 		boolean isFirstEdition = currentSetFromAPI.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
-		CardSet matcherInput = getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
+		CardSet matcherInput = DatabaseHashMap.getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
 
 		List<CardSet> existingRows;
 		existingRows = rarityHashMap.get(DatabaseHashMap.getCardAndSetNameMismatchKey(matcherInput));
@@ -586,7 +549,7 @@ public class ImportPricesFromYGOPROAPI {
 	private Integer attemptPriceUpdateCardNameMismatch(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
 		boolean isFirstEdition = currentSetFromAPI.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
-		CardSet matcherInput = getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
+		CardSet matcherInput = DatabaseHashMap.getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
 
 		List<CardSet> existingRows;
 		existingRows = rarityHashMap.get(DatabaseHashMap.getCardNameMismatchKey(matcherInput));
@@ -611,7 +574,7 @@ public class ImportPricesFromYGOPROAPI {
 	private Integer attemptPriceUpdateSetNameMismatch(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 		boolean isFirstEdition = currentSetFromAPI.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
-		CardSet matcherInput = getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
+		CardSet matcherInput = DatabaseHashMap.getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
 
 		List<CardSet> existingRows;
 		existingRows = rarityHashMap.get(DatabaseHashMap.getSetNameMismatchKey(matcherInput));
@@ -637,7 +600,7 @@ public class ImportPricesFromYGOPROAPI {
 	private Integer attemptPriceUpdateUsingAllProperties(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
 		boolean isFirstEdition = currentSetFromAPI.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
-		CardSet matcherInput = getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
+		CardSet matcherInput = DatabaseHashMap.getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
 
 		List<CardSet> existingRows = rarityHashMap.get(DatabaseHashMap.getAllMatchingKey(matcherInput));
 		if (existingRows != null && !existingRows.isEmpty()) {

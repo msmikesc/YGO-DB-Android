@@ -109,12 +109,15 @@ public class DatabaseHashMap {
 		return input.getSetNumber();
 	}
 
-	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(String setNumber, String priceBought,
-																			 String dateBought, String folderName, String condition, String editionPrinting, SQLiteConnection db) throws SQLException {
+	public static String getOwnedCardHashMapKey(OwnedCard input) {
+		return input.getSetNumber() + ":" + Util.normalizePrice(input.getPriceBought()) + ":" + input.getDateBought()
+				+ ":" + input.getFolderName() + ":" + input.getCondition() + ":" + input.getEditionPrinting();
+	}
+
+	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(OwnedCard comparison, SQLiteConnection db) throws SQLException {
 		Map<String, List<OwnedCard>> data = DatabaseHashMap.getOwnedInstance(db);
 
-		String key = setNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folderName +":"+ condition
-				+ editionPrinting;
+		String key = getOwnedCardHashMapKey(comparison);
 
 		List<OwnedCard> list = data.get(key);
 
@@ -125,4 +128,12 @@ public class DatabaseHashMap {
 		return list;
 	}
 
+	public static CardSet getRarityHashMapMatcherInputNoURL(CardSet currentSetFromAPI) {
+		CardSet matcherInput = new CardSet();
+		matcherInput.setSetRarity(currentSetFromAPI.getSetRarity());
+		matcherInput.setSetNumber(currentSetFromAPI.getSetNumber());
+		matcherInput.setCardName(currentSetFromAPI.getCardName());
+		matcherInput.setSetName(currentSetFromAPI.getSetName());
+		return matcherInput;
+	}
 }

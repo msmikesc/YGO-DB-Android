@@ -281,7 +281,7 @@ public class CsvConnection {
 		setIdentified.setGamePlayCardUUID(gamePlayCardUUID);
 		setIdentified.setSetCode(setCode);
 		
-		OwnedCard card = Util.formOwnedCard(folder, name, quantity, condition, printing, priceBought,
+		OwnedCard card = new OwnedCard(folder, name, quantity, condition, printing, priceBought,
 				dateBought, setIdentified, passcode);
 		
 		card.setUuid(uuid);
@@ -338,7 +338,7 @@ public class CsvConnection {
 		CardSet setIdentified = getCardSet(db, name, setName, colorVariant, rarity);
 		int passcode = getPasscodeOrNegativeOne(db, name, setIdentified.getGamePlayCardUUID());
 
-		return Util.formOwnedCard(folder, name, quantity, condition, printing, priceBought,
+		return new OwnedCard(folder, name, quantity, condition, printing, priceBought,
 				dateBought, setIdentified, passcode);
 	}
 

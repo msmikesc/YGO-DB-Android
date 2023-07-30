@@ -40,50 +40,9 @@ public class Util {
 	private static HashMap<Integer, Integer> passcodeMap = null;
 	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
 
-	private static Set<String> setUrlsThatDontExist = null;
+	private static Set<String> setUrlsThatDoNotExist = null;
 
 	private Util(){}
-
-	public static OwnedCard formOwnedCard(String folder, String name, String quantity, String condition,
-			String printing, String priceBought, String dateBought, CardSet setIdentified, int passcode) {
-		OwnedCard card = new OwnedCard();
-		
-		card.setFolderName(folder);
-		card.setCardName(name);
-		card.setQuantity(Integer.parseInt(quantity));
-		card.setSetCode(setIdentified.getSetCode());
-		card.setCondition(condition);
-		card.setEditionPrinting(printing);
-		card.setPriceBought(normalizePrice(priceBought));
-		card.setDateBought(dateBought);
-		card.setSetRarity(setIdentified.getSetRarity());
-		card.setGamePlayCardUUID(setIdentified.getGamePlayCardUUID());
-		card.setColorVariant(setIdentified.getColorVariant());
-		card.setSetName(setIdentified.getSetName());
-		card.setSetNumber(setIdentified.getSetNumber());
-		card.setRarityUnsure(setIdentified.getRarityUnsure());
-		card.setPasscode(passcode);
-		
-		return card;
-	}
-	
-	public static boolean doesCardExactlyMatchWithColor(String folder, String name, String setCode, String setNumber,
-			String condition, String printing, String priceBought, String dateBought, String colorVariant, String rarity,
-			String setName, int passcode, String gamePlayCardUUID, OwnedCard existingCard) {
-		try{
-			return setNumber.equals(existingCard.getSetNumber()) && priceBought.equals(existingCard.getPriceBought())
-					&& dateBought.equals(existingCard.getDateBought()) && folder.equals(existingCard.getFolderName())
-					&& condition.equals(existingCard.getCondition()) && printing.equals(existingCard.getEditionPrinting())
-					&& name.equals(existingCard.getCardName()) && setCode.equals(existingCard.getSetCode())
-					&& colorVariant.equals(existingCard.getColorVariant()) && rarity.equals(existingCard.getSetRarity())
-					&& setName.equals(existingCard.getSetName()) && passcode == existingCard.getPasscode()
-					&& gamePlayCardUUID.equals(existingCard.getGamePlayCardUUID()
-			);
-		}catch (Exception e){
-			YGOLogger.logException(e);
-			throw e;
-		}
-    }
 
 	public static void checkSetCounts(SQLiteConnection db) throws SQLException {
 		ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
@@ -242,20 +201,13 @@ public class Util {
 	}
 
 	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(String name, SQLiteConnection db) throws SQLException {
-		String gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
-		// try skill card
-		if (gamePlayCardUUID == null) {
-			gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name + Const.SKILL_CARD_NAME_APPEND);
-			if (gamePlayCardUUID != null) {
-				name = name + Const.SKILL_CARD_NAME_APPEND;
-			}
+		Pair<String, String> data = getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
+
+		if (data.getKey() == null) {
+			return new Pair<>(UUID.randomUUID().toString(), data.getValue());
 		}
 
-		if (gamePlayCardUUID == null) {
-			gamePlayCardUUID = UUID.randomUUID().toString();
-		}
-
-		return new Pair<>(gamePlayCardUUID, name);
+		return data;
 	}
 
 	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(String name, SQLiteConnection db) throws SQLException {
@@ -405,24 +357,24 @@ public class Util {
 		return passcodeMap;
 	}
 
-	public static Set<String> getSetUrlsThatDontExistInstance() {
-		if (setUrlsThatDontExist == null) {
-			setUrlsThatDontExist = new HashSet<>();
+	public static Set<String> getSetUrlsThatDoNotExistInstance() {
+		if (setUrlsThatDoNotExist == null) {
+			setUrlsThatDoNotExist = new HashSet<>();
 
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/duelist-league-promo/enemy-controller?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/legendary-duelists-season-3/number-15-gimmick-puppet-giant-grinder?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/duelist-league-promo/axe-of-despair?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/tactical-evolution/gemini-summoner-taev-ensp1?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/colossal-fighter-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/gaia-knight-the-force-of-earth-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDontExist.add("https://store.tcgplayer.com/yugioh/dark-legends-promo-card/gorz-the-emissary-of-darkness?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			//setUrlsThatDontExist.add();
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/duelist-league-promo/enemy-controller?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/legendary-duelists-season-3/number-15-gimmick-puppet-giant-grinder?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/duelist-league-promo/axe-of-despair?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/tactical-evolution/gemini-summoner-taev-ensp1?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/colossal-fighter-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/gaia-knight-the-force-of-earth-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/dark-legends-promo-card/gorz-the-emissary-of-darkness?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			//setUrlsThatDoNotExist.add();
 		}
 
-		return setUrlsThatDontExist;
+		return setUrlsThatDoNotExist;
 	}
 
 	public static KeyUpdateMap getCardNameMapInstance() {
@@ -640,7 +592,7 @@ public class Util {
 	public static CardSet createUnknownCardSet(String name, String setName, SQLiteConnection db) throws SQLException {
 		YGOLogger.error("Unknown setCode for card name and set: " + name + ":" + setName);
 		CardSet setIdentified = new CardSet();
-		setIdentified.setRarityUnsure(1);
+		setIdentified.setRarityUnsure(Const.RARITY_UNSURE_TRUE);
 		setIdentified.setColorVariant(Const.DEFAULT_COLOR_VARIANT);
 		setIdentified.setSetName(setName);
 		setIdentified.setSetNumber(null);
@@ -651,7 +603,7 @@ public class Util {
 
 	public static NameAndColor getNameAndColor(String name) {
 		String colorVariant = Const.DEFAULT_COLOR_VARIANT;
-		String[] colorVariants = {"(Red)", "(Blue)", "(Green)", "(Purple)", "(Alternate Art)"};
+		String[] colorVariants = {"(Red)", "(Blue)", "(Green)", "(Purple)", "(Bronze)", "(Silver)", "(Alternate Art)"};
 
 		for (String variant : colorVariants) {
 			if (name.contains(variant)) {
@@ -670,6 +622,12 @@ public class Util {
 					case "(Purple)":
 						colorVariant = "p";
 						break;
+					case "(Bronze)":
+						colorVariant = "brz";
+						break;
+					case "(Silver)":
+						colorVariant = "s";
+						break;
 					case "(Alternate Art)":
 						colorVariant = "a";
 						break;
@@ -680,6 +638,33 @@ public class Util {
 			}
 		}
 		return new NameAndColor(name, colorVariant);
+	}
+
+	public static String extractColorFromUrl(String url) {
+		String tester = url.replace("blue-eyes","").replace("red-eyes","").replace("eyes-of-blue","");
+
+		if(tester.contains("-red?")){
+			return "r";
+		}
+		if(tester.contains("-blue?")){
+			return "b";
+		}
+		if(tester.contains("-green?")){
+			return "g";
+		}
+		if(tester.contains("-purple?")){
+			return "p";
+		}
+		if(tester.contains("-bronze?")){
+			return "brz";
+		}
+		if(tester.contains("-silver?")){
+			return "s";
+		}
+		if(tester.contains("-alternate-art?")){
+			return "a";
+		}
+		return Const.DEFAULT_COLOR_VARIANT;
 	}
 
 	public static String millisToShortDHMS(long duration) {

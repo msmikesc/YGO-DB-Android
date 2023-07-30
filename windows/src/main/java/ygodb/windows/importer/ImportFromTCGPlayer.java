@@ -136,35 +136,30 @@ public class ImportFromTCGPlayer {
 
 	private static int addCSVRecordToImportMap(CsvConnection csvConnection, SQLiteConnection db, HashMap<String, OwnedCard> map, CSVRecord current) throws SQLException {
 
-		OwnedCard card = csvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
+		OwnedCard csvOwnedCard = csvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
 
-		if (card != null) {
+		if (csvOwnedCard != null) {
 
-			String key = card.getSetNumber() + Util.normalizePrice(card.getPriceBought()) + card.getDateBought() + card.getFolderName()
-					+ card.getCondition() + card.getEditionPrinting();
+			String key = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedCard);
 
-			int currentRowQuantity = card.getQuantity();
+			int currentRowQuantity = csvOwnedCard.getQuantity();
 
 			if (map.containsKey(key)) {
-				map.get(key).setQuantity(map.get(key).getQuantity() + card.getQuantity());
+				map.get(key).setQuantity(map.get(key).getQuantity() + csvOwnedCard.getQuantity());
 			} else {
 
 				List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(
-						card.getSetNumber(), card.getPriceBought(), card.getDateBought(), card.getFolderName(), card.getCondition(),
-						card.getEditionPrinting(), db);
+						csvOwnedCard, db);
 
 				for (OwnedCard existingCard : ownedRarities) {
-					if (Util.doesCardExactlyMatchWithColor(card.getFolderName(), card.getCardName(), card.getSetCode(),
-							card.getSetNumber(), card.getCondition(), card.getEditionPrinting(), card.getPriceBought(), card.getDateBought(),
-							card.getColorVariant(), card.getSetRarity(), card.getSetName(), card.getPasscode(), card.getGamePlayCardUUID(),
-							existingCard)) {
-						card.setQuantity(card.getQuantity() + existingCard.getQuantity());
-						card.setUuid(existingCard.getUuid());
+					if (existingCard.equals(csvOwnedCard)) {
+						csvOwnedCard.setQuantity(csvOwnedCard.getQuantity() + existingCard.getQuantity());
+						csvOwnedCard.setUuid(existingCard.getUuid());
 						break;
 					}
 				}
 
-				map.put(key, card);
+				map.put(key, csvOwnedCard);
 			}
 			return currentRowQuantity;
 		} else {

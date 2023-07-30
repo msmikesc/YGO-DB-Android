@@ -15,8 +15,10 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.BatchSetter;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.FileHelper;
+import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.constant.SQLConst;
@@ -801,8 +803,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			while (rs.moveToNext()) {
 				OwnedCard current = new OwnedCard();
 				getAllOwnedCardFieldsFromRS(rs, col, current);
-				String key = current.getSetNumber() +":"+  current.getPriceBought() +":"+  current.getDateBought() +":"+  current.getFolderName()
-						+":"+  current.getCondition() +":"+ current.getEditionPrinting();
+
+				String key = DatabaseHashMap.getOwnedCardHashMapKey(current);
+
 				List<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
 				currentList.add(current);
 			}
@@ -1302,8 +1305,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		SQLiteDatabase connection = this.getInstance();
 
-		if (rarityUnsure != 1) {
-			rarityUnsure = 0;
+		if (rarityUnsure != Const.RARITY_UNSURE_TRUE) {
+			rarityUnsure = Const.RARITY_UNSURE_FALSE;
 		}
 
 		if (colorVariant == null) {
@@ -1419,8 +1422,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		SQLiteDatabase connection = this.getInstance();
 
-		if (rarityUnsure != 1) {
-			rarityUnsure = 0;
+		if (rarityUnsure != Const.RARITY_UNSURE_TRUE) {
+			rarityUnsure = Const.RARITY_UNSURE_FALSE;
 		}
 
 		if (colorVariant == null) {
@@ -1694,16 +1697,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void updateCardSetPriceBatchedWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName, boolean isFirstEdition) throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void updateCardSetPriceBatchedWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant) throws SQLException {
 		throw new UnsupportedOperationException();
 	}
@@ -1714,7 +1707,17 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void updateCardSetPriceBatchedByURL(String price, String setUrl, boolean isFirstEdition) throws SQLException {
-		throw new UnsupportedOperationException();
+	public PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetter setter) throws SQLException {
+		return null;
+	}
+
+	@Override
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst() throws SQLException {
+		return null;
+	}
+
+	@Override
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited() throws SQLException {
+		return null;
 	}
 }

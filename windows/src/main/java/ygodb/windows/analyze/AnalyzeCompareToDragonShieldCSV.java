@@ -3,7 +3,6 @@ package ygodb.windows.analyze;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.commonlibrary.connection.CsvConnection;
@@ -67,7 +67,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 		Iterator<CSVRecord> it = parser.iterator();
 
-		Map<String, List<OwnedCard>> databaseList = DatabaseHashMap.getOwnedInstance(db);
+		Map<String, List<OwnedCard>> ownedCardsMap = DatabaseHashMap.getOwnedInstance(db);
 
 		while (it.hasNext()) {
 
@@ -100,40 +100,52 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 			String key = setNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folder +":"+ condition +":"+ printing;
 
-			List<OwnedCard> list = databaseList.get(key);
+			List<OwnedCard> existingOwnedCardsList = ownedCardsMap.get(key);
 
-			if(list != null){
-				handleForCSVKey(databaseList, folder, name, quantity, setCode, setNumber, condition, printing, priceBought, dateBought, setName, colorCode, key, list, rarity);
+			if (existingOwnedCardsList != null) {
+
+				CardSet setIdentified = new CardSet("", setNumber, name, rarity, setName, colorCode, setCode);
+				OwnedCard csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
+
+				handleForCSVKey(ownedCardsMap, csvOwnedcard, key, existingOwnedCardsList);
 			}
 
-			if (list == null) {
+			if (existingOwnedCardsList == null) {
 				// try removing color code
 				String newColorCode = setNumber.substring(setNumber.length() - 1);
 				String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
 
 				String newKey = newSetNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folder +":"+ condition +":"+ printing;
 
-				list = databaseList.get(newKey);
-				if(list != null){
-					handleForCSVKey(databaseList, folder, name, quantity, setCode, newSetNumber, condition, printing, priceBought, dateBought, setName, newColorCode, newKey, list, rarity);
+				existingOwnedCardsList = ownedCardsMap.get(newKey);
+				if(existingOwnedCardsList != null){
+
+					CardSet setIdentified = new CardSet("", newSetNumber, name, rarity, setName, newColorCode, setCode);
+					OwnedCard csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
+
+					handleForCSVKey(ownedCardsMap, csvOwnedcard, newKey, existingOwnedCardsList);
 				}
 			}
 
-			if (list == null) {
+			if (existingOwnedCardsList == null) {
 				// try adding EN to set number
 				String[] brokenSetNumber = setNumber.split("-");
 
 				if(brokenSetNumber.length == 2){
 					String newSetNumber = brokenSetNumber[0] + "-EN" + brokenSetNumber[1];
 					String newKey = setNumber +":"+ Util.normalizePrice(priceBought) +":"+ dateBought +":"+ folder +":"+ condition +":"+ printing;
-					list = databaseList.get(newKey);
-					if(list != null){
-						handleForCSVKey(databaseList, folder, name, quantity, setCode, newSetNumber, condition, printing, priceBought, dateBought, setName, colorCode, newKey, list, rarity);
+					existingOwnedCardsList = ownedCardsMap.get(newKey);
+					if(existingOwnedCardsList != null){
+
+						CardSet setIdentified = new CardSet("", newSetNumber, name, rarity, setName, colorCode, setCode);
+						OwnedCard csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
+
+						handleForCSVKey(ownedCardsMap, csvOwnedcard, newKey, existingOwnedCardsList);
 					}
 				}
 			}
 
-			if (list == null) {
+			if (existingOwnedCardsList == null) {
 				YGOLogger.info("no match in DB found for key : " + key);
 			}
 
@@ -141,7 +153,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 		parser.close();
 
-		for (List<OwnedCard> rarityList : databaseList.values()) {
+		for (List<OwnedCard> rarityList : ownedCardsMap.values()) {
 			for (OwnedCard card : rarityList) {
 
 				if (!card.getFolderName().equals(Const.FOLDER_MANUAL)) {
@@ -163,62 +175,57 @@ public class AnalyzeCompareToDragonShieldCSV {
 	}
 
 
+	private static void handleForCSVKey(Map<String, List<OwnedCard>> ownedCardsMap, OwnedCard csvOwnedcard,
+										String key, List<OwnedCard> existingOwnedCardsList) {
 
-	private static void handleForCSVKey(Map<String, List<OwnedCard>> databaseList, String folder, String name, String quantity, String setCode, String setNumber, String condition, String printing, String priceBought, String dateBought, String setName, String colorCode, String key, List<OwnedCard> list, String rarity) {
-
-		if (list.size() == 1) {
+		if (existingOwnedCardsList.size() == 1) {
 			// exact 1 match
 
-			OwnedCard card = list.get(0);
+			OwnedCard existingCard = existingOwnedCardsList.get(0);
 
-			if (!colorCode.equalsIgnoreCase(list.get(0).getColorVariant())
-					&& !Const.setColorVariantUnsupportedDragonShield.contains(card.getSetName())) {
+			if (!csvOwnedcard.getColorVariant().equalsIgnoreCase(existingOwnedCardsList.get(0).getColorVariant())
+					&& !Const.setColorVariantUnsupportedDragonShield.contains(existingCard.getSetName())) {
 				YGOLogger.info(
-						"Color Code Mismatch on: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity()
-								+ " " + card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
+						"Color Code Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity()
+								+ " " + existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
 			}
 
-			if (card.getQuantity() != Integer.parseInt(quantity)) {
+			if (existingCard.getQuantity() != csvOwnedcard.getQuantity()) {
 				YGOLogger.info(
-						"Quantity Mismatch on: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity() + " "
-								+ card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
+						"Quantity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity() + " "
+								+ existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
 			}
 
-			if (!card.getSetRarity().equals(rarity)) {
+			if (!existingCard.getSetRarity().equals(csvOwnedcard.getSetRarity())) {
 				YGOLogger.info(
-						"Rarity Mismatch on: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity() + " "
-								+ card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
+						"Rarity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity() + " "
+								+ existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
 			}
 
-			databaseList.remove(key);
+			ownedCardsMap.remove(key);
 		} else {
 
 			boolean foundMatch = false;
 
-			for (int i = 0; i < list.size(); i++) {
+			for (int i = 0; i < existingOwnedCardsList.size(); i++) {
 
-				OwnedCard card = list.get(i);
+				OwnedCard existingCard = existingOwnedCardsList.get(i);
 
-				if (Util.doesCardExactlyMatchWithColor(folder, name, setCode, setNumber, condition, printing,
-						priceBought, dateBought, colorCode, card.getSetRarity(), setName, card.getPasscode(),
-						card.getGamePlayCardUUID(), card)) {
+				csvOwnedcard.setGamePlayCardUUID(existingCard.getGamePlayCardUUID());
+				csvOwnedcard.setPasscode(existingCard.getPasscode());
+
+				if (existingCard.equals(csvOwnedcard)) {
 					foundMatch = true;
-					list.remove(i);
+					existingOwnedCardsList.remove(i);
 
-					if (card.getQuantity() != Integer.parseInt(quantity)) {
-						YGOLogger.info("Quantity Mismatch on: " + card.getCardName() + " " + card.getSetNumber() + " "
-								+ card.getSetRarity() + " " + card.getColorVariant() + " " + card.getPriceBought() + " "
-								+ card.getDateBought());
+					if (existingCard.getQuantity() != csvOwnedcard.getQuantity()) {
+						YGOLogger.info("Quantity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " "
+								+ existingCard.getSetRarity() + " " + existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " "
+								+ existingCard.getDateBought());
 					}
 
-					if (!card.getSetRarity().equals(rarity)) {
-						YGOLogger.info(
-								"Rarity Mismatch on: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity() + " "
-										+ card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
-					}
-
-					if (list.isEmpty()) {
-						databaseList.remove(key);
+					if (existingOwnedCardsList.isEmpty()) {
+						ownedCardsMap.remove(key);
 					}
 					break;
 

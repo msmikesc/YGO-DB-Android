@@ -145,6 +145,8 @@ public class Const {
     public static final String YGOPRO_TCG_RELEASE_DATE = "tcg_date";
 
     public static final String DEFAULT_COLOR_VARIANT = "-1";
+    public static final int RARITY_UNSURE_FALSE = 0;
+    public static final int RARITY_UNSURE_TRUE = 1;
 	public static final List<String> setColorVariantUnsupportedDragonShield = List.of("Legendary Duelists: Season 2");
 
     public static final Set<String> IGNORED_MISSING_SETS = new HashSet<>(

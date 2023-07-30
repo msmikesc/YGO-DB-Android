@@ -439,8 +439,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 				OwnedCard current = new OwnedCard();
 				getAllOwnedCardFieldsFromRS(rs, current);
 
-				String key = current.getSetNumber() +":"+ current.getPriceBought() +":"+ current.getDateBought() +":"+ current.getFolderName()
-						+":"+ current.getCondition() +":"+ current.getEditionPrinting();
+				String key = DatabaseHashMap.getOwnedCardHashMapKey(current);
 
 				List<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
 				currentList.add(current);
@@ -1001,8 +1000,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		Connection connection = this.getInstance();
 
-		if (rarityUnsure != 1) {
-			rarityUnsure = 0;
+		if (rarityUnsure != Const.RARITY_UNSURE_TRUE) {
+			rarityUnsure = Const.RARITY_UNSURE_FALSE;
 		}
 
 		if (colorVariant == null) {
@@ -1072,8 +1071,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		Connection connection = this.getInstance();
 
-		if (rarityUnsure != 1) {
-			rarityUnsure = 0;
+		if (rarityUnsure != Const.RARITY_UNSURE_TRUE) {
+			rarityUnsure = Const.RARITY_UNSURE_FALSE;
 		}
 
 		if (colorVariant == null) {

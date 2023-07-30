@@ -15,7 +15,6 @@ import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
-import ygodb.commonlibrary.utility.Util;
 import ygodb.windows.utility.WindowsUtil;
 
 public class ImportOwnedCardFromExportedCSV {
@@ -46,31 +45,27 @@ public class ImportOwnedCardFromExportedCSV {
 
 			CSVRecord current = it.next();
 
-			OwnedCard card = csvConnection.getOwnedCardFromExportedCSV(current, db);
+			OwnedCard csvOwnedCard = csvConnection.getOwnedCardFromExportedCSV(current, db);
 			
-			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(card.getSetNumber(), card.getPriceBought(),
-					card.getDateBought(), card.getFolderName(), card.getCondition(), card.getEditionPrinting(), db);
+			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(csvOwnedCard, db);
 
 			for (OwnedCard existingCard : ownedRarities) {
-				if (Util.doesCardExactlyMatchWithColor(card.getFolderName(), card.getCardName(), card.getSetCode(), card.getSetNumber(),
-						card.getCondition(), card.getEditionPrinting(), card.getPriceBought(), card.getDateBought(), card.getColorVariant(),
-						card.getSetRarity(), card.getSetName(), card.getPasscode(), card.getGamePlayCardUUID(),
-						existingCard)) {
+				if (existingCard.equals(csvOwnedCard)) {
 					// exact match found
-					if (existingCard.getQuantity() == card.getQuantity() && existingCard.getRarityUnsure() == card.getRarityUnsure()) {
+					if (existingCard.getQuantity() == csvOwnedCard.getQuantity() && existingCard.getRarityUnsure() == csvOwnedCard.getRarityUnsure()) {
 						// nothing to update
-						card = null;
+						csvOwnedCard = null;
 					} else {
 						// something to update
-						card.setUuid(existingCard.getUuid());
+						csvOwnedCard.setUuid(existingCard.getUuid());
 					}
 					break;
 				}
 			}
 
-			if (card != null) {
-				count += card.getQuantity();
-				db.insertOrUpdateOwnedCardByUUID(card);
+			if (csvOwnedCard != null) {
+				count += csvOwnedCard.getQuantity();
+				db.insertOrUpdateOwnedCardByUUID(csvOwnedCard);
 			}
 		}
 

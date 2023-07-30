@@ -26,6 +26,21 @@ public class CardSet {
 	private static final String CLOSE = "\",";
 	private static final String SEP = "\",\"";
 
+	public CardSet() {
+	}
+
+	public CardSet(String gamePlayCardUUID, String setNumber, String cardName, String setRarity, String setName,
+				   String colorVariant, String setCode) {
+		this.gamePlayCardUUID = gamePlayCardUUID;
+		this.setNumber = setNumber;
+		this.cardName = cardName;
+		this.setRarity = setRarity;
+		this.setName = setName;
+		this.colorVariant = colorVariant;
+		this.setCode = setCode;
+		this.rarityUnsure = Const.RARITY_UNSURE_FALSE;
+	}
+
 	public String getCardLogIdentifier(){
 		return OPEN + getSetNumber() + SEP + getCardName() + SEP + getSetRarity() + SEP + getSetName() + CLOSE + getSetPrice();
 	}
