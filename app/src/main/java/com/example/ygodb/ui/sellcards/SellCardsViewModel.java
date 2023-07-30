@@ -8,6 +8,7 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,7 +48,6 @@ public class SellCardsViewModel extends ViewModel {
     public void addNewFromOwnedCard(OwnedCard current){
 
         //TODO move around multiple buttons to add different amounts
-        //TODO simplify addcards set names models
 
         if(current.getSetNumber() == null || current.getSetRarity() == null ||
                 current.getSetName() == null || current.getCardName() == null){
@@ -81,7 +81,7 @@ public class SellCardsViewModel extends ViewModel {
             sellingCard.setSetName(current.getSetName());
             sellingCard.setQuantity(current.getQuantity());
             sellingCard.setSellQuantity(1);
-            sellingCard.setRarityUnsure(0);
+            sellingCard.setRarityUnsure(Const.RARITY_UNSURE_FALSE);
             sellingCard.setSetCode(current.getSetCode());
             sellingCard.setSetNumber(current.getSetNumber());
             sellingCard.setColorVariant(current.getColorVariant());
@@ -98,13 +98,9 @@ public class SellCardsViewModel extends ViewModel {
                 sellingCard.setEditionPrinting(current.getEditionPrinting());
             }
 
-            boolean isFirstEdition = sellingCard.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
-
             sellingCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
 
-            sellingCard.setPriceSold(getAPIPriceFromRarity(sellingCard.getSetRarity(),
-                    sellingCard.getAnalyzeResultsCardSets(), sellingCard.getSetName(),
-                    sellingCard.getGamePlayCardUUID(), sellingCard.getSetNumber(), isFirstEdition));
+            sellingCard.setPriceSold(Util.getAPIPriceFromRarity(sellingCard, AndroidUtil.getDBInstance()));
 
             sellingCard.setCreationDate(current.getCreationDate());
 
@@ -119,24 +115,13 @@ public class SellCardsViewModel extends ViewModel {
 
     public void setAllPricesEstimate(){
         for(OwnedCard current: cardsList){
-
-            String rarity = (current.getDropdownSelectedRarity() == null) ? current.getSetRarity() : current.getDropdownSelectedRarity();
-
-            current.setPriceSold(getEstimatePriceFromRarity(rarity));
+            current.setPriceSold(Util.getEstimatePriceFromRarity(current.getSetRarity()));
         }
     }
 
     public void setAllPricesAPI(){
         for(OwnedCard current: cardsList){
-
-            String rarity = (current.getDropdownSelectedRarity() == null) ? current.getSetRarity() : current.getDropdownSelectedRarity();
-
-            String setNumber = (current.getDropdownSelectedSetNumber() == null) ? current.getSetNumber() : current.getDropdownSelectedSetNumber();
-
-            boolean isFirstEdition = current.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
-
-            current.setPriceSold(getAPIPriceFromRarity(rarity, current.getAnalyzeResultsCardSets(),
-                    current.getSetName(), current.getGamePlayCardUUID(), setNumber, isFirstEdition));
+            current.setPriceSold(Util.getAPIPriceFromRarity(current, AndroidUtil.getDBInstance()));
         }
     }
 
@@ -144,54 +129,6 @@ public class SellCardsViewModel extends ViewModel {
         for(OwnedCard current: cardsList){
             current.setPriceSold(Const.ZERO_PRICE_STRING);
         }
-    }
-
-    public String getEstimatePriceFromRarity(String rarity){
-        String[] rarities = rarity.split(", ");
-
-        String assumedRarity = rarity.trim();
-
-        if(rarities.length > 1){
-            assumedRarity = rarities[0].trim();
-        }
-
-        if(assumedRarity.equalsIgnoreCase(Rarity.Common.toString())){
-            return "0.15";
-        }
-
-        if(assumedRarity.equalsIgnoreCase(Rarity.Rare.toString())){
-            return "0.15";
-        }
-
-        if(assumedRarity.equalsIgnoreCase(Rarity.SuperRare.toString())){
-            return "0.25";
-        }
-
-        return "1.00";
-
-    }
-
-    public String getAPIPriceFromRarity(String rarity, List<CardSet> analyzeResultsCardSets,
-                                        String setName, String gamePlayCardUUID, String setNumber, boolean isFirstEdition){
-
-        if(analyzeResultsCardSets == null){
-            analyzeResultsCardSets = AndroidUtil.getDBInstance().
-                    getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
-        }
-
-        if(analyzeResultsCardSets.size() == 1){
-            return analyzeResultsCardSets.get(0).getBestExistingPrice(isFirstEdition);
-        }
-
-        for (CardSet cardSet : analyzeResultsCardSets) {
-            if (cardSet.getSetRarity().equalsIgnoreCase(rarity) &&
-                    cardSet.getSetNumber().equalsIgnoreCase(setNumber)) {
-                return cardSet.getBestExistingPrice(isFirstEdition);
-            }
-        }
-
-        return getEstimatePriceFromRarity(rarity);
-
     }
 
     public void removeNewFromOwnedCard(OwnedCard current){

@@ -109,10 +109,15 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         ImageButton button2 = viewHolder.itemView.findViewById(R.id.minusButton);
         button2.setOnClickListener(view -> onMinusButtonClick(current));
 
-        viewHolder.title.setText(current.getCardName());
         viewHolder.setCode.setText(current.getSetNumber());
         viewHolder.setName.setText(current.getSetName());
-        viewHolder.cardRarity.setText(current.getSetRarity());
+
+        viewHolder.title.setText(current.getCardName());
+        int textColor = AndroidUtil.getColorByColorVariant(current.getColorVariant());
+        viewHolder.title.setTextColor(textColor);
+
+        String setRarityText = AndroidUtil.getSetRarityDisplayWithColorText(current);
+        viewHolder.cardRarity.setText(setRarityText);
 
         if(current.getPriceSold() != null) {
             double price = Double.parseDouble(current.getPriceSold());
@@ -182,8 +187,6 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
         final ImageView cardImage;
         final ImageView firstEdition;
         final EditText cardPriceTextBox;
-        final Spinner cardRarityDropdown;
-        final Spinner cardSetCodeDropdown;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
@@ -198,8 +201,6 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
             cardImage = view.findViewById(R.id.cardImage);
             firstEdition = view.findViewById(R.id.firststEditionIcon);
             cardPriceTextBox = view.findViewById(R.id.cardPriceTextBox);
-            cardRarityDropdown = view.findViewById(R.id.cardRarityDropdown);
-            cardSetCodeDropdown = view.findViewById(R.id.cardSetCodeDropdown);
 
         }
 

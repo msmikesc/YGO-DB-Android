@@ -138,185 +138,16 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         ImageButton button3 = viewHolder.itemView.findViewById(R.id.firstButton);
         button3.setOnClickListener(view -> onFirstButtonClick(viewHolder, current));
 
+        viewHolder.setCode.setText(current.getSetNumber());
+        viewHolder.setName.setText(current.getSetName());
+
         viewHolder.title.setText(current.getCardName());
+        int textColor = AndroidUtil.getColorByColorVariant(current.getColorVariant());
+        viewHolder.title.setTextColor(textColor);
 
-        String[] setNumbers = current.getSetNumber().split(", ");
+        String setRarityText = AndroidUtil.getSetRarityDisplayWithColorText(current);
+        viewHolder.cardRarity.setText(setRarityText);
 
-        if(setNumbers.length == 1){
-            viewHolder.setCode.setText(current.getSetNumber());
-            viewHolder.setCode.setVisibility(View.VISIBLE);
-            viewHolder.cardSetCodeDropdown.setVisibility(View.INVISIBLE);
-        }
-        else{
-            viewHolder.cardSetCodeDropdown.setVisibility(View.VISIBLE);
-            viewHolder.setCode.setVisibility(View.INVISIBLE);
-
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>
-                    (viewHolder.itemView.getContext(),
-                            R.layout.spinner_text_red, setNumbers);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            viewHolder.cardSetCodeDropdown.setAdapter(adapter);
-
-            viewHolder.cardSetCodeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    current.setDropdownSelectedSetNumber(setNumbers[position]);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-
-            if(current.getDropdownSelectedSetNumber() == null){
-                current.setDropdownSelectedSetNumber(setNumbers[0]);
-            }
-            else{
-                boolean done = false;
-                for(int i = 0; i < setNumbers.length; i++){
-                    if(current.getDropdownSelectedSetNumber().equals(setNumbers[i])) {
-                        viewHolder.cardSetCodeDropdown.setSelection(i);
-                        done = true;
-                        break;
-                    }
-                }
-                if(!done){
-                    current.setDropdownSelectedSetNumber(setNumbers[0]);
-                }
-            }
-
-        }
-
-        List<String> setNames = current.getSetNamesOptions();
-
-        if(setNames == null){
-            viewHolder.setCode.setText(current.getSetNumber());
-            viewHolder.setName.setText(current.getSetName());
-            viewHolder.cardSetNameDropdown.setVisibility(View.INVISIBLE);
-            viewHolder.setName.setVisibility(View.VISIBLE);
-        }
-        else if(setNames.size() == 1){
-            viewHolder.setCode.setText(current.getSetNumber());
-            viewHolder.setName.setText(setNames.get(0));
-            viewHolder.cardSetNameDropdown.setVisibility(View.INVISIBLE);
-            viewHolder.setName.setVisibility(View.VISIBLE);
-        }
-        else{
-            viewHolder.cardSetNameDropdown.setVisibility(View.VISIBLE);
-            viewHolder.setName.setVisibility(View.INVISIBLE);
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>
-                    (viewHolder.itemView.getContext(),
-                            R.layout.spinner_text, setNames);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            viewHolder.cardSetNameDropdown.setAdapter(adapter);
-
-            viewHolder.cardSetNameDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    current.setDropdownSelectedSetName(setNames.get(position));
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-
-            if(current.getDropdownSelectedSetName() == null){
-                current.setDropdownSelectedSetName(setNames.get(0));
-            }
-            else{
-                boolean done = false;
-                for(int i = 0; i < setNames.size(); i++){
-                    if(current.getDropdownSelectedSetName().equals(setNames.get(i))) {
-                        viewHolder.cardSetNameDropdown.setSelection(i);
-                        done = true;
-                        break;
-                    }
-                }
-                if(!done){
-                    current.setDropdownSelectedSetName(setNames.get(0));
-                }
-            }
-        }
-
-        String[] rarities = current.getSetRarity().split(", ");
-
-        if(rarities.length == 1){
-
-            viewHolder.cardRarity.setVisibility(View.VISIBLE);
-            viewHolder.cardRarityDropdown.setVisibility(View.INVISIBLE);
-
-            String setRarityText = current.getSetRarity();
-
-            if(current.getColorVariant() != null && !current.getColorVariant().equals("") && !current.getColorVariant().equals("-1")){
-                if(current.getColorVariant().equalsIgnoreCase("a")){
-                    setRarityText = "Alt Art " + setRarityText;
-                    viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold));
-                }
-                else{
-                    setRarityText = current.getColorVariant().toUpperCase(Locale.ROOT) + " " + setRarityText;
-                    switch (current.getColorVariant().toUpperCase(Locale.ROOT)) {
-                        case "R" ->
-                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson));
-                        case "G" ->
-                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen));
-                        case "B" ->
-                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue));
-                        case "P" ->
-                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet));
-                        default ->
-                                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
-                    }
-                }
-            }
-            else{
-                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
-            }
-
-            viewHolder.cardRarity.setText(setRarityText);
-        }
-        else{
-            viewHolder.cardRarityDropdown.setVisibility(View.VISIBLE);
-            viewHolder.cardRarity.setVisibility(View.INVISIBLE);
-
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>
-                    (viewHolder.itemView.getContext(),
-                            R.layout.spinner_text, rarities);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            viewHolder.cardRarityDropdown.setAdapter(adapter);
-
-            viewHolder.cardRarityDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    current.setDropdownSelectedRarity(rarities[position]);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-
-            if(current.getDropdownSelectedRarity() == null){
-                current.setDropdownSelectedRarity(rarities[0]);
-            }
-            else{
-                boolean done = false;
-                for(int i = 0; i < rarities.length; i++){
-                    if(current.getDropdownSelectedRarity().equals(rarities[i])) {
-                        viewHolder.cardRarityDropdown.setSelection(i);
-                        done = true;
-                        break;
-                    }
-                }
-                if(!done){
-                    current.setDropdownSelectedRarity(rarities[0]);
-                }
-            }
-        }
 
         if(current.getPriceBought() != null) {
             double price = Double.parseDouble(current.getPriceBought());
@@ -391,9 +222,6 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
         final ImageView cardImage;
         final ImageView firstEdition;
         final EditText cardPriceTextBox;
-        final Spinner cardRarityDropdown;
-        final Spinner cardSetCodeDropdown;
-        final Spinner cardSetNameDropdown;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
@@ -408,9 +236,6 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
             cardImage = view.findViewById(R.id.cardImage);
             firstEdition = view.findViewById(R.id.firststEditionIcon);
             cardPriceTextBox = view.findViewById(R.id.cardPriceTextBox);
-            cardRarityDropdown = view.findViewById(R.id.cardRarityDropdown);
-            cardSetCodeDropdown = view.findViewById(R.id.cardSetCodeDropdown);
-            cardSetNameDropdown = view.findViewById(R.id.cardSetNameDropdown);
 
         }
 

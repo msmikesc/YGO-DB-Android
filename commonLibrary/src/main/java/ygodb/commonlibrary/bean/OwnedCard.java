@@ -27,10 +27,6 @@ public class OwnedCard {
 	private String uuid;
 	private int passcode;
 
-	private List<String> setNamesOptions;
-	private String dropdownSelectedSetNumber;
-	private String dropdownSelectedRarity;
-	private String dropdownSelectedSetName;
 	private List<CardSet> analyzeResultsCardSets;
 	private int sellQuantity;
 	private String priceSold;
@@ -222,39 +218,6 @@ public class OwnedCard {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-
-
-	public List<String> getSetNamesOptions() {
-		return setNamesOptions;
-	}
-
-	public void setSetNamesOptions(List<String> setNamesOptions) {
-		this.setNamesOptions = setNamesOptions;
-	}
-
-	public String getDropdownSelectedSetNumber() {
-		return dropdownSelectedSetNumber;
-	}
-
-	public void setDropdownSelectedSetNumber(String dropdownSelectedSetNumber) {
-		this.dropdownSelectedSetNumber = dropdownSelectedSetNumber;
-	}
-
-	public String getDropdownSelectedRarity() {
-		return dropdownSelectedRarity;
-	}
-
-	public void setDropdownSelectedRarity(String dropdownSelectedRarity) {
-		this.dropdownSelectedRarity = dropdownSelectedRarity;
-	}
-
-	public String getDropdownSelectedSetName() {
-		return dropdownSelectedSetName;
-	}
-
-	public void setDropdownSelectedSetName(String dropdownSelectedSetName) {
-		this.dropdownSelectedSetName = dropdownSelectedSetName;
 	}
 
 	public List<CardSet> getAnalyzeResultsCardSets() {

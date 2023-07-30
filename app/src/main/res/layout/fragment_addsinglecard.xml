@@ -68,21 +68,6 @@
         app:layout_constraintStart_toEndOf="@+id/cardImage"
         app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
 
-    <Spinner
-        android:id="@+id/cardSetCodeDropdown"
-        android:layout_width="0sp"
-        android:layout_height="0sp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAlignment="textStart"
-        android:textColor="#EC160E"
-        android:textSize="15sp"
-        android:background="@null"
-        app:layout_constraintStart_toStartOf="@+id/cardSetCode"
-        app:layout_constraintEnd_toEndOf="@+id/cardSetCode"
-        app:layout_constraintTop_toTopOf="@+id/cardSetCode"
-        app:layout_constraintBottom_toBottomOf="@+id/cardSetCode" />
-
     <TextView
         android:id="@+id/cardDateBought"
         android:layout_width="wrap_content"
@@ -108,21 +93,6 @@
         app:layout_constraintStart_toEndOf="@+id/firststEditionIcon"
         app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
 
-    <Spinner
-        android:id="@+id/cardRarityDropdown"
-        android:layout_width="0sp"
-        android:layout_height="0sp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAlignment="textStart"
-        android:textColor="#DCDCDC"
-        android:textSize="15sp"
-        android:background="@null"
-        app:layout_constraintEnd_toEndOf="@+id/cardRarity"
-        app:layout_constraintStart_toStartOf="@+id/cardRarity"
-        app:layout_constraintTop_toTopOf="@+id/cardRarity"
-        app:layout_constraintBottom_toBottomOf="@+id/cardRarity"/>
-
     <TextView
         android:id="@+id/cardSetName"
         android:layout_width="0sp"
@@ -136,21 +106,6 @@
         app:layout_constraintEnd_toStartOf="@+id/firstButton"
         app:layout_constraintStart_toEndOf="@+id/cardQuantity"
         app:layout_constraintTop_toTopOf="@+id/cardQuantity" />
-
-    <Spinner
-            android:id="@+id/cardSetNameDropdown"
-            android:layout_width="0sp"
-            android:layout_height="0sp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:textColor="#DCDCDC"
-            android:textSize="15sp"
-            android:background="@null"
-            app:layout_constraintBottom_toBottomOf="@+id/cardQuantity"
-            app:layout_constraintEnd_toStartOf="@+id/firstButton"
-            app:layout_constraintStart_toEndOf="@+id/cardQuantity"
-            app:layout_constraintTop_toTopOf="@+id/cardQuantity" />
 
     <TextView
         android:id="@+id/cardQuantity"

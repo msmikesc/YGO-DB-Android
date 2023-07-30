@@ -125,38 +125,13 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
         }
 
         viewHolder.title.setText(current.getCardName());
+        int textColor = AndroidUtil.getColorByColorVariant(current.getColorVariant());
+        viewHolder.title.setTextColor(textColor);
 
-        String setRarityText = current.getSetRarity();
-
-        if(current.getColorVariant() != null && !current.getColorVariant().equals("") && !current.getColorVariant().equals("-1")){
-            if(current.getColorVariant().equalsIgnoreCase("a")){
-                setRarityText = "Alt Art " + setRarityText;
-                viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold));
-            }
-            else{
-                setRarityText = current.getColorVariant().toUpperCase(Locale.ROOT) + " " + setRarityText;
-                switch (current.getColorVariant().toUpperCase(Locale.ROOT)) {
-                    case "R" ->
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson));
-                    case "G" ->
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen));
-                    case "B" ->
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue));
-                    case "P" ->
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet));
-                    default ->
-                            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
-                }
-            }
-        }
-        else{
-            viewHolder.title.setTextColor(ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White));
-        }
+        String setRarityText = AndroidUtil.getSetRarityDisplayWithColorText(current);
+        viewHolder.cardRarity.setText(setRarityText);
 
         viewHolder.setCode.setText(current.getSetNumber());
-        viewHolder.cardRarity.setText(setRarityText);
-        viewHolder.setCode.setVisibility(View.VISIBLE);
-        viewHolder.cardRarity.setVisibility(View.VISIBLE);
         viewHolder.setName.setMaxLines(2);
 
         if(sellCardsViewModel == null){

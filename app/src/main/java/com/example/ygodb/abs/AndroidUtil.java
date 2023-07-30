@@ -12,15 +12,20 @@ import android.os.Process;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import com.example.ygodb.R;
 import com.example.ygodb.impl.SQLiteConnectionAndroid;
 import com.example.ygodb.ui.viewSoldCards.ViewSoldCardsViewModel;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
 import com.example.ygodb.ui.viewsetboxes.ViewBoxSetViewModel;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class AndroidUtil {
 
@@ -103,22 +108,41 @@ public class AndroidUtil {
         viewBoxSetViewModel.refreshViewDBUpdate();
     }
 
-    public static boolean checkForPermissionsToURI(Activity activity, Uri uri){
-        if(activity == null || uri == null){
-            return false;
+    // Method to get the color based on the color variant
+    public static int getColorByColorVariant(String colorVariant) {
+        if (colorVariant != null && !colorVariant.isEmpty() && !colorVariant.equals(Const.DEFAULT_COLOR_VARIANT)) {
+            if (colorVariant.equalsIgnoreCase("a")) {
+                return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold);
+            } else {
+                return switch (colorVariant.toUpperCase(Locale.ROOT)) {
+                    case "R" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson);
+                    case "G" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen);
+                    case "B" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue);
+                    case "P" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet);
+                    case "S" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.AMCSilver);
+                    case "BRZ" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Bronze);
+                    default -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
+                };
+            }
+        } else {
+            return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
+        }
+    }
+
+    public static String getSetRarityDisplayWithColorText(OwnedCard current) {
+        String setRarityText = current.getSetRarity();
+
+        if (current.getColorVariant() != null && !current.getColorVariant().isEmpty() && !current.getColorVariant().equals("-1")) {
+            if (current.getColorVariant().equalsIgnoreCase("a")) {
+                setRarityText = "Alt Art " + setRarityText;
+            } else {
+                setRarityText = current.getColorVariant().toUpperCase(Locale.ROOT) + " " + setRarityText;
+            }
         }
 
-        // Check read access permission
-        int readResult = activity.checkUriPermission(uri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        boolean hasReadPermission = (readResult == PackageManager.PERMISSION_GRANTED);
-
-        // Check write access permission
-        int writeResult = activity.checkUriPermission(uri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        boolean hasWritePermission = (writeResult == PackageManager.PERMISSION_GRANTED);
-
-        return hasReadPermission && hasWritePermission;
-
+        return setRarityText;
     }
+
 
 
 }

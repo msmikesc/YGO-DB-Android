@@ -4,6 +4,7 @@ package ygodb.commonlibrary.utility;
 import javafx.util.Pair;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.NameAndColor;
+import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -634,4 +635,52 @@ public class Util {
 		return res;
 	}
 
+	public static String getEstimatePriceFromRarity(String rarity){
+		String trimmed = rarity.trim();
+
+		if(trimmed.equalsIgnoreCase(Rarity.Common.toString())){
+			return "0.15";
+		}
+
+		if(trimmed.equalsIgnoreCase(Rarity.Rare.toString())){
+			return "0.15";
+		}
+
+		if(trimmed.equalsIgnoreCase(Rarity.SuperRare.toString())){
+			return "0.25";
+		}
+
+		return Const.ZERO_PRICE_STRING;
+	}
+
+	public static String getAPIPriceFromRarity(OwnedCard card, SQLiteConnection db){
+
+		boolean isFirstEdition = card.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
+
+		try{
+			if(card.getAnalyzeResultsCardSets() == null){
+				card.setAnalyzeResultsCardSets(db.getRaritiesOfCardInSetByGamePlayCardUUID(card.getGamePlayCardUUID(), card.getSetName()));
+			}
+		}catch (Exception e){
+			YGOLogger.error("Error getting getRaritiesOfCardInSetByGamePlayCardUUID");
+			YGOLogger.logException(e);
+			return Const.ZERO_PRICE_STRING;
+		}
+		List<CardSet> analyzeResultsCardSets = card.getAnalyzeResultsCardSets();
+
+		if(analyzeResultsCardSets.size() == 1){
+			return analyzeResultsCardSets.get(0).getBestExistingPrice(isFirstEdition);
+		}
+
+		for (CardSet cardSet : analyzeResultsCardSets) {
+			if (cardSet.getSetRarity().equalsIgnoreCase(card.getSetRarity()) &&
+					cardSet.getSetNumber().equalsIgnoreCase(card.getSetNumber()) &&
+					cardSet.getSetName().equalsIgnoreCase(card.getSetName()) &&
+					cardSet.getColorVariant().equalsIgnoreCase(card.getColorVariant())) {
+				return cardSet.getBestExistingPrice(isFirstEdition);
+			}
+		}
+
+		return getEstimatePriceFromRarity(card.getSetRarity());
+	}
 }
