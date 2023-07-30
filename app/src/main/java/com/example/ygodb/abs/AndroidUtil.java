@@ -108,22 +108,18 @@ public class AndroidUtil {
         viewBoxSetViewModel.refreshViewDBUpdate();
     }
 
-    // Method to get the color based on the color variant
     public static int getColorByColorVariant(String colorVariant) {
         if (colorVariant != null && !colorVariant.isEmpty() && !colorVariant.equals(Const.DEFAULT_COLOR_VARIANT)) {
-            if (colorVariant.equalsIgnoreCase("a")) {
-                return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold);
-            } else {
-                return switch (colorVariant.toUpperCase(Locale.ROOT)) {
-                    case "R" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson);
-                    case "G" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen);
-                    case "B" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue);
-                    case "P" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet);
-                    case "S" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.AMCSilver);
-                    case "BRZ" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Bronze);
-                    default -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
-                };
-            }
+            return switch (colorVariant.toUpperCase(Locale.ROOT)) {
+                case "A" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold);
+                case "R" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson);
+                case "G" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen);
+                case "B" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue);
+                case "P" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet);
+                case "S" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.AMCSilver);
+                case "BRZ" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Bronze);
+                default -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
+            };
         } else {
             return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
         }
@@ -132,7 +128,8 @@ public class AndroidUtil {
     public static String getSetRarityDisplayWithColorText(OwnedCard current) {
         String setRarityText = current.getSetRarity();
 
-        if (current.getColorVariant() != null && !current.getColorVariant().isEmpty() && !current.getColorVariant().equals("-1")) {
+        if (current.getColorVariant() != null && !current.getColorVariant().isEmpty()
+                && !current.getColorVariant().equals(Const.DEFAULT_COLOR_VARIANT)) {
             if (current.getColorVariant().equalsIgnoreCase("a")) {
                 setRarityText = "Alt Art " + setRarityText;
             } else {
