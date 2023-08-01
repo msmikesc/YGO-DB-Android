@@ -1,11 +1,8 @@
 package com.example.ygodb;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,9 +27,13 @@ import com.example.ygodb.databinding.ActivityMainBinding;
 
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.google.android.material.navigation.NavigationView;
-import ygodb.commonlibrary.constant.Const;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+import ygodb.commonlibrary.importer.ImportPricesFromYGOPROAPI;
 import ygodb.commonlibrary.utility.YGOLogger;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
@@ -54,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
         AndroidUtil.setViewModelOwner(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -138,6 +136,23 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.setType("*/*");
             copyDBOutIntent.launch(intent);
+
+            return true;
+        }
+
+        else if (id == R.id.action_price_import) {
+
+            ImportPricesFromYGOPROAPI runner = new ImportPricesFromYGOPROAPI();
+
+            Executors.newSingleThreadExecutor().execute(() -> {
+                try {
+                    runner.run(AndroidUtil.getDBInstance(), null, false);
+                    binding.navView.post(() -> Snackbar.make( binding.navView, "Price Import Finished", BaseTransientBottomBar.LENGTH_LONG).show());
+                } catch (Exception e) {
+                    YGOLogger.error("Issue trying to import prices");
+                    YGOLogger.logException(e);
+                }
+            });
 
             return true;
         }

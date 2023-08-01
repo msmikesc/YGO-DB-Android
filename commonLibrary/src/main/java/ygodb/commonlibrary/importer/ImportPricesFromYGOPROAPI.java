@@ -1,4 +1,4 @@
-package ygodb.windows.importer;
+package ygodb.commonlibrary.importer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +12,6 @@ import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.windows.utility.WindowsUtil;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -36,7 +35,13 @@ public class ImportPricesFromYGOPROAPI {
 
 	private final HashSet<String> updatedKeysSet = new HashSet<>();
 	private final HashMap<String, Integer> updatedMoreThanOnceKeysMap = new HashMap<>();
+	private boolean shouldAddToUpdatedKeySetAndMap = true;
 	private void addToSetAndMap(String key) {
+
+		if(!shouldAddToUpdatedKeySetAndMap){
+			return;
+		}
+
 		if (updatedKeysSet.contains(key)) {
 			updatedMoreThanOnceKeysMap.merge(key, 1, Integer::sum);
 		} else {
@@ -56,6 +61,10 @@ public class ImportPricesFromYGOPROAPI {
 	private PreparedStatementBatchWrapper getStatementForEdition(String edition, SQLiteConnection db) throws SQLException {
 		PreparedStatementBatchWrapper value = editionToPreparedStatementMap.get(edition);
 
+		if(!edition.equals(Const.CARD_PRINTING_FIRST_EDITION)){
+			edition = Const.CARD_PRINTING_UNLIMITED;
+		}
+
 		if(value == null){
 			if(edition.equals(Const.CARD_PRINTING_FIRST_EDITION)){
 
@@ -72,21 +81,7 @@ public class ImportPricesFromYGOPROAPI {
 		return value;
 	}
 
-	public static void main(String[] args) throws SQLException, IOException {
-		ImportPricesFromYGOPROAPI mainObj = new ImportPricesFromYGOPROAPI();
-
-		SQLiteConnection db = WindowsUtil.getDBInstance();
-
-		boolean successful = mainObj.run(db);
-		if (!successful) {
-			YGOLogger.info("Import Failed");
-		} else {
-			YGOLogger.info("Import Finished");
-		}
-		db.closeInstance();
-	}
-
-	public boolean run(SQLiteConnection db) throws SQLException, IOException {
+	public boolean run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports) throws SQLException, IOException {
 
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardinfo.php?tcgplayer_data=true";
 
@@ -110,9 +105,13 @@ public class ImportPricesFromYGOPROAPI {
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
-				try (FileWriter writer = new FileWriter("C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadJSON.txt", false)) {
-					writer.write(inline);
+				if(lastPriceLoadFilename != null) {
+					try (FileWriter writer = new FileWriter(lastPriceLoadFilename, false)) {
+						writer.write(inline);
+					}
 				}
+
+				inline = null;
 
 				YGOLogger.info("Finished reading from API");
 
@@ -121,9 +120,12 @@ public class ImportPricesFromYGOPROAPI {
 
 				JsonNode gamePlayCardsNode = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
-				addAllMissingGamePlayCards(db, gamePlayCardsNode);
+				shouldAddToUpdatedKeySetAndMap = handleOptionalDBImports;
 
-				addAllMissingSetUrls(db, gamePlayCardsNode);
+				if(handleOptionalDBImports) {
+					addAllMissingGamePlayCards(db, gamePlayCardsNode);
+					addAllMissingSetUrls(db, gamePlayCardsNode);
+				}
 
 				updateAllPricesForAllCards(db, gamePlayCardsNode);
 
@@ -145,6 +147,7 @@ public class ImportPricesFromYGOPROAPI {
 				long endTime = System.currentTimeMillis();
 				YGOLogger.info("Time to load data to DB:" + Util.millisToShortDHMS(endTime - startTime));
 
+				emptyMaps();
 			}
 		} catch (Exception e) {
 			YGOLogger.logException(e);
@@ -152,6 +155,14 @@ public class ImportPricesFromYGOPROAPI {
 		return true;
 	}
 
+	private void emptyMaps(){
+		setNameUpdateMap.clear();
+		updatedKeysSet.clear();
+		updatedMoreThanOnceKeysMap.clear();
+		updatedURLsMap.clear();
+		editionToPreparedStatementMap.clear();
+		DatabaseHashMap.closeRaritiesInstance();
+	}
 	private void updateAllPricesForAllCards(SQLiteConnection db, JsonNode gamePlayCardsNode) throws SQLException {
 		for (JsonNode currentGamePlayCardNode : gamePlayCardsNode) {
 
@@ -425,7 +436,6 @@ public class ImportPricesFromYGOPROAPI {
 	}
 
 	private void recordEntriesWithMissingDBURL(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
-		//bow out early if we don't have a set url to test
 		if(currentSetFromAPI == null || currentSetFromAPI.getSetUrl() == null ||
 				currentSetFromAPI.getSetUrl().isBlank() ||
 				Util.getSetUrlsThatDoNotExistInstance().contains(currentSetFromAPI.getSetUrl())){
@@ -473,7 +483,7 @@ public class ImportPricesFromYGOPROAPI {
 					size = existingRows.size();
 				}
 
-				YGOLogger.error("Found "+size+" matches for all matching url key:" + allMatchUrlKey + ":"+currentSetFromAPI.getCardLogIdentifier());
+				YGOLogger.info("Found "+size+" matches for all matching url key:" + allMatchUrlKey + ":"+currentSetFromAPI.getCardLogIdentifier());
 			}
 		}
 	}

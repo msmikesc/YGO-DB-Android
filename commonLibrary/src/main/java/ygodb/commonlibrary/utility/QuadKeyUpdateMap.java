@@ -2,10 +2,10 @@ package ygodb.commonlibrary.utility;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.commonlibrary.connection.CsvConnection;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;

@@ -1,14 +1,10 @@
 package com.example.ygodb.abs;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
-import android.os.Process;
 
 import androidx.appcompat.app.AppCompatActivity;
 

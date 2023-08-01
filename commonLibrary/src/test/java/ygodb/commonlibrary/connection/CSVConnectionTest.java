@@ -7,6 +7,7 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
 
 import java.sql.SQLException;
 
@@ -74,42 +75,42 @@ class CSVConnectionTest {
 	@Test
 	void testGetPrinting_FirstEdition() {
 		CsvConnection obj = new CsvConnection();
-		String result = obj.getPrinting("Card Name (1st Edition)");
+		String result = Util.identifyEditionPrinting("Card Name (1st Edition)");
 		assertEquals(Const.CARD_PRINTING_FIRST_EDITION, result);
 	}
 
 	@Test
 	void testGetPrinting_Unlimited() {
 		CsvConnection obj = new CsvConnection();
-		String result = obj.getPrinting("Card Name (Unlimited)");
+		String result = Util.identifyEditionPrinting("Card Name (Unlimited)");
 		assertEquals(Const.CARD_PRINTING_UNLIMITED, result);
 	}
 
 	@Test
 	void testGetPrinting_Limited() {
 		CsvConnection obj = new CsvConnection();
-		String result = obj.getPrinting("Card Name");
+		String result = Util.identifyEditionPrinting("Card Name");
 		assertEquals(Const.CARD_PRINTING_LIMITED, result);
 	}
 
 	@Test
 	void testGetPrinting_MultiplePrintings_FirstEdition() {
 		CsvConnection obj = new CsvConnection();
-		String result = obj.getPrinting("Card Name (1st Edition) (Unlimited)");
+		String result = Util.identifyEditionPrinting("Card Name (1st Edition) (Unlimited)");
 		assertEquals(Const.CARD_PRINTING_FIRST_EDITION, result);
 	}
 
 	@Test
 	void testGetPrinting_MultiplePrintings_Unlimited() {
 		CsvConnection obj = new CsvConnection();
-		String result = obj.getPrinting("Card Name (Unlimited) (1st Edition)");
+		String result = Util.identifyEditionPrinting("Card Name (Unlimited) (1st Edition)");
 		assertEquals(Const.CARD_PRINTING_FIRST_EDITION, result);
 	}
 
 	@Test
 	void testGetPrinting_NoPrinting() {
 		CsvConnection obj = new CsvConnection();
-		String result = obj.getPrinting("Card Name");
+		String result = Util.identifyEditionPrinting("Card Name");
 		assertEquals(Const.CARD_PRINTING_LIMITED, result);
 	}
 
@@ -176,7 +177,7 @@ class CSVConnectionTest {
 		setIdentified.setSetRarity("Secret Rare");
 
 		// Mock specific methods of the CsvConnection class
-		doReturn(setIdentified).when(csvConnectionSpy).getCardSet(any(), any(), any(), any(), any());
+		doReturn(setIdentified).when(csvConnectionSpy).getCardSetMatchingDetails(any(), any(), any(), any(), any());
 
 		doReturn(-1).when(csvConnectionSpy).getPasscodeOrNegativeOne(any(), any(), any());
 

@@ -683,4 +683,18 @@ public class Util {
 
 		return getEstimatePriceFromRarity(card.getSetRarity());
 	}
+
+	public static String identifyEditionPrinting(String input) {
+
+		if(input == null){
+			return Const.CARD_PRINTING_UNLIMITED;
+		}
+
+		if (input.contains(Const.CARD_PRINTING_FIRST_EDITION)) {
+			return Const.CARD_PRINTING_FIRST_EDITION;
+		} else if (input.contains(Const.CARD_PRINTING_UNLIMITED)) {
+			return Const.CARD_PRINTING_UNLIMITED;
+		}
+		return Const.CARD_PRINTING_LIMITED;
+	}
 }

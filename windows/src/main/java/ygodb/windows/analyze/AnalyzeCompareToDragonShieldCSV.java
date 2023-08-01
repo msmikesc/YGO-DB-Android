@@ -83,8 +83,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 			String priceBought = Util.normalizePrice(csvConnection.getStringOrNull(current, Const.PRICE_BOUGHT_CSV));
 			String dateBought = csvConnection.getStringOrNull(current, Const.DATE_BOUGHT_CSV);
 			String setName = csvConnection.getStringOrNull(current, Const.SET_NAME_CSV);
-
-			String rarity = csvConnection.getStringOrNull(current, "Rarity");
+			String rarity = csvConnection.getStringOrNull(current, Const.RARITY_CSV);
 
 			rarity = convertRarityToLongForm(rarity);
 
@@ -177,7 +176,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 	private static void handleForCSVKey(Map<String, List<OwnedCard>> ownedCardsMap, OwnedCard csvOwnedcard,
 										List<OwnedCard> existingOwnedCardsList) {
 
-		String key = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);;
+		String key = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
 
 		if (existingOwnedCardsList.size() == 1) {
 			// exact 1 match

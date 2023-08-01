@@ -1,6 +1,5 @@
 package ygodb.windows.connection;
 
-import ygodb.commonlibrary.connection.BatchSetter;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 
 import java.sql.Connection;
@@ -13,17 +12,17 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 	private final PreparedStatement statement;
 	private final Connection connection;
 	private final int batchedLinesMax;
-	private final BatchSetter batchSetter;
+	private final BatchSetterWindows batchSetterWindows;
 
 	private int currentBatchedLinesCount = 0;
 	private boolean isFinalized = false;
 
-	public PreparedStatementBatchWrapperWindows(Connection connection, String input, int maximum, BatchSetter setter) throws SQLException {
+	public PreparedStatementBatchWrapperWindows(Connection connection, String input, int maximum, BatchSetterWindows setter) throws SQLException {
 		this.connection = connection;
 		connection.setAutoCommit(false);
 		statement = connection.prepareStatement(input);
 		batchedLinesMax = maximum;
-		this.batchSetter = setter;
+		this.batchSetterWindows = setter;
 	}
 
 	@Override
@@ -33,7 +32,7 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 			return;
 		}
 
-		batchSetter.setParams(statement, params.toArray());
+		batchSetterWindows.setParams(statement, params);
 		currentBatchedLinesCount++;
 		statement.addBatch();
 
@@ -73,7 +72,7 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 
 	@Override
 	public boolean isAboveBatchMaximum(){
-		return currentBatchedLinesCount > batchedLinesMax;
+		return currentBatchedLinesCount >= batchedLinesMax;
 	}
 
 }

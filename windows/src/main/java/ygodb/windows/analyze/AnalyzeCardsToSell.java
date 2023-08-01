@@ -18,7 +18,7 @@ import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzeCardsToSell {
 	
-	BigDecimal minPrice = new BigDecimal("2.00");
+	private final BigDecimal minPrice = new BigDecimal("2.00");
 
 
 	public static void main(String[] args) throws SQLException, IOException {
@@ -30,6 +30,8 @@ public class AnalyzeCardsToSell {
 	}
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
+
+		//TODO update this to use api prices
 
 		 ArrayList<OwnedCard> cards = db.getAllOwnedCards();
 		 

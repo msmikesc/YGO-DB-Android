@@ -325,7 +325,7 @@ public class CsvConnection {
 			return null;
 		}
 		String rarity = rarityConditionPrinting[0].replace("Rarity:", "").trim();
-		String printing = getPrinting(rarityConditionPrinting[1]);
+		String printing = Util.identifyEditionPrinting(rarityConditionPrinting[1]);
 		String condition = getCondition(rarityConditionPrinting[1]);
 
 		name = Util.checkForTranslatedCardName(name);
@@ -335,7 +335,7 @@ public class CsvConnection {
 		String priceBought = Util.normalizePrice(price);
 		String dateBought = dateFormat.format(new Date());
 
-		CardSet setIdentified = getCardSet(db, name, setName, colorVariant, rarity);
+		CardSet setIdentified = getCardSetMatchingDetails(db, name, setName, colorVariant, rarity);
 		int passcode = getPasscodeOrNegativeOne(db, name, setIdentified.getGamePlayCardUUID());
 
 		return new OwnedCard(folder, name, quantity, condition, printing, priceBought,
@@ -354,15 +354,6 @@ public class CsvConnection {
 				.replace("Damaged", "Poor");
 	}
 
-	public String getPrinting(String input) {
-		if (input.contains(Const.CARD_PRINTING_FIRST_EDITION)) {
-			return Const.CARD_PRINTING_FIRST_EDITION;
-		} else if (input.contains(Const.CARD_PRINTING_UNLIMITED)) {
-			return Const.CARD_PRINTING_UNLIMITED;
-		}
-		return Const.CARD_PRINTING_LIMITED;
-	}
-
 	public int getPasscodeOrNegativeOne(SQLiteConnection db, String name, String uuid) throws SQLException {
 		GamePlayCard gpc = db.getGamePlayCardByUUID(uuid);
 		if (gpc != null) {
@@ -373,7 +364,7 @@ public class CsvConnection {
 		return -1;
 	}
 
-	public CardSet getCardSet(SQLiteConnection db, String name, String setName, String colorVariant, String rarity) throws SQLException {
+	public CardSet getCardSetMatchingDetails(SQLiteConnection db, String name, String setName, String colorVariant, String rarity) throws SQLException {
 		CardSet setIdentified = db.getFirstCardSetForCardInSet(name, setName);
 		if (setIdentified == null) {
 			setIdentified = Util.createUnknownCardSet(name, setName, db);

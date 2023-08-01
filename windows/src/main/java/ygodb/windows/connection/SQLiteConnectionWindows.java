@@ -14,8 +14,8 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
-import ygodb.commonlibrary.connection.BatchSetter;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.SQLConst;
 import ygodb.commonlibrary.utility.Util;
@@ -62,7 +62,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
 			 ResultSet rarities = statementSetQuery.executeQuery()) {
 
-			HashMap<String, List<CardSet>> setRarities = new HashMap<>();
+			HashMap<String, List<CardSet>> setRarities = new HashMap<>(300000, 0.75f);
 
 			while (rarities.next()) {
 				CardSet set = new CardSet();
@@ -1387,30 +1387,29 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
-	@Override
-	public PreparedStatementBatchWrapperWindows getBatchedPreparedStatement(String input, BatchSetter setter)
+	public PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetterWindows setter)
 			throws SQLException {
 		Connection connection = this.getInstance();
 		return new PreparedStatementBatchWrapperWindows(connection, input, BATCH_SIZE, setter);
 	}
 
 	@Override
-	public PreparedStatementBatchWrapperWindows getBatchedPreparedStatementUrlFirst()
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst()
 			throws SQLException {
 
 		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST, (stmt, params) -> {
-			stmt.setString(1, (String) params[0]);
-			stmt.setString(2, (String) params[1]);
+			stmt.setString(1, (String) params.get(0));
+			stmt.setString(2, (String) params.get(1));
 		});
 	}
 
 	@Override
-	public PreparedStatementBatchWrapperWindows getBatchedPreparedStatementUrlUnlimited()
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited()
 			throws SQLException {
 
 		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL, (stmt, params) -> {
-			stmt.setString(1, (String) params[0]);
-			stmt.setString(2, (String) params[1]);
+			stmt.setString(1, (String) params.get(0));
+			stmt.setString(2, (String) params.get(1));
 		});
 	}
 }

@@ -142,9 +142,6 @@ public interface SQLiteConnection {
                                  String cardName, String setURL, String currentColorVariant, String newColorVariant)
             throws SQLException;
 
-    PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetter setter)
-            throws SQLException;
-
     PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst()
             throws SQLException;
 

@@ -15,7 +15,6 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
-import ygodb.commonlibrary.connection.BatchSetter;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.FileHelper;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
@@ -43,6 +42,7 @@ import java.util.Locale;
 
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
 
+	public static final int BATCH_SIZE = 1000;
 	private SQLiteDatabase connectionInstance = null;
 	private static final String DB_NAME = "database.sqlite";
 
@@ -271,6 +271,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			return;
 		}
 
+		if(connectionInstance.inTransaction()){
+			connectionInstance.setTransactionSuccessful();
+			connectionInstance.endTransaction();
+		}
+
 		connectionInstance.close();
 
 		connectionInstance = null;
@@ -294,7 +299,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		try (Cursor rs = connection.rawQuery(setQuery, null)) {
 
-			HashMap<String, List<CardSet>> results = new HashMap<>();
+			HashMap<String, List<CardSet>> results = new HashMap<>(300000, 0.75f);
 
 			String[] col = rs.getColumnNames();
 
@@ -317,8 +322,30 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public HashMap<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException {
-		throw new UnsupportedOperationException();
+	public HashMap<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() {
+		SQLiteDatabase connection = this.getInstance();
+
+		String setQuery = SQLConst.GET_ALL_GAME_PLAY_CARD;
+
+		try (Cursor rs = connection.rawQuery(setQuery, null)) {
+
+			HashMap<String, List<GamePlayCard>> cardMap = new HashMap<>();
+
+			String[] col = rs.getColumnNames();
+
+			while (rs.moveToNext()) {
+				GamePlayCard card = new GamePlayCard();
+				getAllGamePlayCardFieldsFromRS(rs, col, card);
+
+				List<String> keysList = DatabaseHashMap.getGamePlayCardKeys(card);
+
+				for (String key : keysList){
+					List<GamePlayCard> currentList = cardMap.computeIfAbsent(key, k -> new ArrayList<>());
+					currentList.add(card);
+				}
+			}
+			return cardMap;
+		}
 	}
 
 	private void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
@@ -1812,18 +1839,24 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetter setter) throws SQLException {
-		return null;
+	public PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetterAndroid setter) {
+		SQLiteDatabase connection = this.getInstance();
+		return new PreparedStatementBatchWrapperAndroid(connection, input, BATCH_SIZE, setter);
 	}
 
 	@Override
-	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst() throws SQLException {
-		return null;
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst() {
+		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST, (stmt, params) -> {
+			stmt.bindString(1, (String) params.get(0));
+			stmt.bindString(2, (String) params.get(1));
+		});
 	}
 
 	@Override
-	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited() throws SQLException {
-		return null;
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited() {
+		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL, (stmt, params) -> {
+			stmt.bindString(1, (String) params.get(0));
+			stmt.bindString(2, (String) params.get(1));
+		});
 	}
 }

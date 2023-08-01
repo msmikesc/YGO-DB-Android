@@ -8,7 +8,6 @@ import ygodb.commonlibrary.bean.ReadCSVRecord;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.windows.utility.WindowsUtil;
