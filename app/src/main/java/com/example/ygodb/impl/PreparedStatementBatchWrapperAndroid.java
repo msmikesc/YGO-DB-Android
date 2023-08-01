@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteStatement;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

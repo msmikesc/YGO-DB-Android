@@ -47,7 +47,11 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 			return;
 		}
 
+		boolean isAutoCommit = connection.getAutoCommit();
+		connection.setAutoCommit(false);
 		statement.executeBatch();
+		connection.commit();
+		connection.setAutoCommit(isAutoCommit);
 		currentBatchedLinesCount = 0;
 	}
 

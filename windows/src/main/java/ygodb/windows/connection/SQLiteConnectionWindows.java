@@ -14,7 +14,9 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.CommonDatabaseQueries;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.DatabaseUpdateQuery;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.SQLConst;
@@ -865,29 +867,10 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public void replaceIntoGamePlayCard(GamePlayCard input) throws SQLException {
-		Connection connection = this.getInstance();
+	public int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
 
-		String gamePlayCard = SQLConst.REPLACE_INTO_GAME_PLAY_CARD;
-
-		try (PreparedStatement statementGamePlayCard = connection.prepareStatement(gamePlayCard)) {
-
-			setStringOrNull(statementGamePlayCard, 1, input.getGamePlayCardUUID());
-			setStringOrNull(statementGamePlayCard, 2, input.getCardName());
-			setStringOrNull(statementGamePlayCard, 3, input.getCardType());
-			setIntegerOrNull(statementGamePlayCard, 4, input.getPasscode());
-			setStringOrNull(statementGamePlayCard, 5, input.getDesc());
-			setStringOrNull(statementGamePlayCard, 6, input.getAttribute());
-			setStringOrNull(statementGamePlayCard, 7, input.getRace());
-			setStringOrNull(statementGamePlayCard, 8, input.getLinkVal());
-			setStringOrNull(statementGamePlayCard, 9, input.getLevel());
-			setStringOrNull(statementGamePlayCard, 10, input.getScale());
-			setStringOrNull(statementGamePlayCard, 11, input.getAtk());
-			setStringOrNull(statementGamePlayCard, 12, input.getDef());
-			setStringOrNull(statementGamePlayCard, 13, input.getArchetype());
-
-			statementGamePlayCard.execute();
-		}
+		return CommonDatabaseQueries.replaceIntoGamePlayCard(query, input);
 	}
 
 	@Override
@@ -1244,28 +1227,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	@Override
 	public int updateCardSetUrl(String setNumber, String rarity, String setName,
-													String cardName, String setURL, String colorVariant)
-			throws SQLException {
+								String cardName, String setURL, String colorVariant) throws SQLException {
 
-		if(colorVariant == null || colorVariant.isBlank()){
-			colorVariant = Const.DEFAULT_COLOR_VARIANT;
-		}
-
-		Connection connection = this.getInstance();
-
-		String update = SQLConst.UPDATE_CARD_SET_URL;
-
-		try (PreparedStatement statement = connection.prepareStatement(update)) {
-
-			statement.setString(1, setURL);
-			statement.setString(2, setNumber);
-			statement.setString(3, rarity);
-			statement.setString(4, setName);
-			statement.setString(5, cardName);
-			statement.setString(6, colorVariant);
-
-			return statement.executeUpdate();
-		}
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
+		return CommonDatabaseQueries.updateCardSetUrl(query, setNumber, rarity, setName,
+				cardName, setURL, colorVariant);
 	}
 
 	@Override

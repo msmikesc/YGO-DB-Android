@@ -15,7 +15,9 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.CommonDatabaseQueries;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.DatabaseUpdateQuery;
 import ygodb.commonlibrary.connection.FileHelper;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -1340,28 +1342,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void replaceIntoGamePlayCard(GamePlayCard input) {
-		SQLiteDatabase connection = this.getInstance();
+	public int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
 
-		String gamePlayCard = SQLConst.REPLACE_INTO_GAME_PLAY_CARD;
-
-		try (SQLiteStatement statement = connection.compileStatement(gamePlayCard)) {
-			setStringOrNull(statement, 1, input.getGamePlayCardUUID());
-			setStringOrNull(statement, 2, input.getCardName());
-			setStringOrNull(statement, 3, input.getCardType());
-			setIntegerOrNull(statement, 4, input.getPasscode());
-			setStringOrNull(statement, 5, input.getDesc());
-			setStringOrNull(statement, 6, input.getAttribute());
-			setStringOrNull(statement, 7, input.getRace());
-			setStringOrNull(statement, 8, input.getLinkVal());
-			setStringOrNull(statement, 9, input.getLevel());
-			setStringOrNull(statement, 10, input.getScale());
-			setStringOrNull(statement, 11, input.getAtk());
-			setStringOrNull(statement, 12, input.getDef());
-			setStringOrNull(statement, 13, input.getArchetype());
-
-			statement.execute();
-		}
+		return CommonDatabaseQueries.replaceIntoGamePlayCard(query, input);
 	}
 
 	@Override
@@ -1787,25 +1771,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	@Override
 	public int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant) throws SQLException {
-		if(colorVariant == null || colorVariant.isBlank()){
-			colorVariant = Const.DEFAULT_COLOR_VARIANT;
-		}
-
-		SQLiteDatabase connection = this.getInstance();
-
-		String update = SQLConst.UPDATE_CARD_SET_URL;
-
-		try (SQLiteStatement statement = connection.compileStatement(update)) {
-
-			statement.bindString(1, setURL);
-			statement.bindString(2, setNumber);
-			statement.bindString(3, rarity);
-			statement.bindString(4, setName);
-			statement.bindString(5, cardName);
-			statement.bindString(6, colorVariant);
-
-			return statement.executeUpdateDelete();
-		}
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.updateCardSetUrl(query, setNumber, rarity, setName,
+				cardName, setURL, colorVariant);
 	}
 
 	@Override

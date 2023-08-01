@@ -90,7 +90,7 @@ public interface SQLiteConnection {
 
     GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException;
 
-    void replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
+    int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 
     void insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException;
 

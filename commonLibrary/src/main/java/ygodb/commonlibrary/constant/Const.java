@@ -152,5 +152,7 @@ public class Const {
     public static final Set<String> IGNORED_MISSING_SETS = new HashSet<>(
             Set.of("Speed Duel: Trials of the Kingdom Sneak Peek participation cards",
                     "Yu-Gi-Oh! 5D's Tag Force 5 promotional cards",
-                    "Yu-Gi-Oh! Advent Calendar"));
+                    "Yu-Gi-Oh! Advent Calendar",
+                    "Duel Terminal - Preview Wave 1",
+                    "Duel Terminal - Preview Wave 2"));
 }
