@@ -10,9 +10,6 @@ public class SQLConst {
 			"Select cardSets.*, setData.setCode from cardSets left join setData on cardSets.setName = setData.setName";
 
 	public static final String GET_ALL_CARD_RARITIES = SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE;
-	public static final String GET_ALL_CARD_SETS_OF_CARD_BY_SET_NUMBER =
-			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
-			" where setNumber = ?";
 	public static final String GET_RARITIES_OF_CARD_BY_GAME_PLAY_CARD_UUID =
 			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
 			" where gamePlayCardUUID=?";
@@ -70,9 +67,6 @@ public class SQLConst {
 	public static final String GET_FIRST_CARD_SET_FOR_CARD_IN_SET =
 			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
 			" where UPPER(cardSets.setName) = UPPER(?) and UPPER(cardName) = UPPER(?)";
-	public static final String GET_CARD_SETS_FOR_VALUES =
-			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE +
-			" where UPPER(cardSets.setName) = UPPER(?) and UPPER(setNumber) = UPPER(?) and UPPER(setRarity) = UPPER(?)";
 	public static final String GET_SET_META_DATA_FROM_SET_NAME =
 			"select setName,setCode,numOfCards,releaseDate from setData where UPPER(setName) = UPPER(?)";
 	public static final String GET_SET_META_DATA_FROM_SET_CODE =
@@ -136,8 +130,6 @@ public class SQLConst {
 	public static final String UPDATE_CARD_SET_PRICE_WITH_RARITY_FIRST =
 			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime')"
 					+ " where setNumber = ? and setRarity = ?";
-	public static final String GET_UPDATED_ROW_COUNT =
-			"select changes()";
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME =
 			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime')"
 			+ " where setNumber = ? and setRarity = ? and setName = ?";

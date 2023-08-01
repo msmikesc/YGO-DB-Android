@@ -20,8 +20,6 @@ public interface SQLiteConnection {
 
     HashMap<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException;
 
-    ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) throws SQLException;
-
     ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
     ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) throws SQLException;
@@ -80,9 +78,6 @@ public interface SQLiteConnection {
 
     CardSet getFirstCardSetForCardInSet(String cardName, String setName) throws SQLException;
 
-    List<CardSet> getCardSetsForValues(String setNumber, String rarity, String setName)
-            throws SQLException;
-
     ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName) throws SQLException;
 
     ArrayList<SetMetaData> getSetMetaDataFromSetCode(String setCode) throws SQLException;
@@ -94,8 +89,6 @@ public interface SQLiteConnection {
     void replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) throws SQLException;
 
     GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException;
-
-    List<GamePlayCard> getAllGamePlayCard() throws SQLException;
 
     void replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 
@@ -116,8 +109,6 @@ public interface SQLiteConnection {
 
     int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition)
             throws SQLException;
-
-    int getUpdatedRowCount() throws SQLException;
 
     int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName,
                                              String cardName, boolean isFirstEdition)

@@ -364,11 +364,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<CardSet> getAllCardSetsOfCardBySetNumber(String setNumber) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) {
 
 		SQLiteDatabase connection = this.getInstance();
@@ -1160,28 +1155,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public List<CardSet> getCardSetsForValues(String setNumber, String rarity, String setName) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_CARD_SETS_FOR_VALUES;
-
-		String[] params = new String[]{setName, setNumber, rarity};
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-			String[] col = rs.getColumnNames();
-
-			List<CardSet> results = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				CardSet set = new CardSet();
-				getAllCardSetFieldsFromRS(rs, col, set);
-				results.add(set);
-			}
-
-			return results;
-		}
-	}
-
-	@Override
 	public ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
@@ -1364,11 +1337,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		current.setDef(rs.getString(getColumn(col, Const.DEFENSE)));
 		current.setArchetype(rs.getString(getColumn(col, Const.ARCHETYPE)));
 		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
-	}
-
-	@Override
-	public List<GamePlayCard> getAllGamePlayCard() {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -1691,18 +1659,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int getUpdatedRowCount() {
-		SQLiteDatabase connection = this.getInstance();
-
-		String query = SQLConst.GET_UPDATED_ROW_COUNT;
-
-		try (Cursor rs = connection.rawQuery(query, null)) {
-			rs.moveToNext();
-			return rs.getInt(1);
-		}
-	}
-
-	@Override
 	public int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName, boolean isFirstEdition) {
 		SQLiteDatabase connection = this.getInstance();
 
@@ -1831,12 +1787,53 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	@Override
 	public int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant) throws SQLException {
-		throw new UnsupportedOperationException();
+		if(colorVariant == null || colorVariant.isBlank()){
+			colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		SQLiteDatabase connection = this.getInstance();
+
+		String update = SQLConst.UPDATE_CARD_SET_URL;
+
+		try (SQLiteStatement statement = connection.compileStatement(update)) {
+
+			statement.bindString(1, setURL);
+			statement.bindString(2, setNumber);
+			statement.bindString(3, rarity);
+			statement.bindString(4, setName);
+			statement.bindString(5, cardName);
+			statement.bindString(6, colorVariant);
+
+			return statement.executeUpdateDelete();
+		}
 	}
 
 	@Override
 	public int updateCardSetUrlAndColor(String setNumber, String rarity, String setName, String cardName, String setURL, String currentColorVariant, String newColorVariant) throws SQLException {
-		throw new UnsupportedOperationException();
+		if(currentColorVariant == null || currentColorVariant.isBlank()){
+			currentColorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		if(newColorVariant == null || newColorVariant.isBlank()){
+			newColorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		SQLiteDatabase connection = this.getInstance();
+
+		String update = SQLConst.UPDATE_CARD_SET_URL_AND_COLOR;
+
+		try (SQLiteStatement statement = connection.compileStatement(update)) {
+
+			statement.bindString(1, setURL);
+			statement.bindString(2, newColorVariant);
+			statement.bindString(3, setNumber);
+			statement.bindString(4, rarity);
+			statement.bindString(5, setName);
+			statement.bindString(6, cardName);
+			statement.bindString(7, currentColorVariant);
+
+			return statement.executeUpdateDelete();
+		}
 	}
 
 	public PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetterAndroid setter) {

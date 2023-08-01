@@ -8,13 +8,14 @@ import ygodb.windows.utility.WindowsUtil;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class ImportPricesFromYGOPROAPIRunner {
+public class RunImportPricesFromYGOPROAPI {
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportPricesFromYGOPROAPI mainObj = new ImportPricesFromYGOPROAPI();
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
-		boolean successful = mainObj.run(db, "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadJSON.txt"
+		boolean successful = mainObj.run(db,
+				"C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadJSON.txt"
 				,true);
 		if (!successful) {
 			YGOLogger.info("Import Failed");
