@@ -19,7 +19,6 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 
 	public PreparedStatementBatchWrapperWindows(Connection connection, String input, int maximum, BatchSetterWindows setter) throws SQLException {
 		this.connection = connection;
-		connection.setAutoCommit(false);
 		statement = connection.prepareStatement(input);
 		batchedLinesMax = maximum;
 		this.batchSetterWindows = setter;
@@ -49,7 +48,6 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 		}
 
 		statement.executeBatch();
-		connection.commit();
 		currentBatchedLinesCount = 0;
 	}
 
