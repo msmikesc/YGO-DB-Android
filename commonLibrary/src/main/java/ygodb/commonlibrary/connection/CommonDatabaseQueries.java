@@ -4,6 +4,7 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
+import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.constant.SQLConst;
 import ygodb.commonlibrary.utility.Util;
@@ -89,6 +90,15 @@ public class CommonDatabaseQueries {
 		}
 
 		return null;
+	}
+
+	public static <R> List<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String gamePlayCardUUID,
+			DatabaseSelectQuery<OwnedCard, R> query, SelectQueryResultMapper<OwnedCard, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_ANALYZE_DATA_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID);
+
+		query.bindString(1, gamePlayCardUUID);
+
+		return query.executeQuery(mapper);
 	}
 
 	public static <R> List<String> getDistinctGamePlayCardUUIDsInSetByName(String setName, DatabaseSelectQuery<String, R> query,
@@ -199,6 +209,31 @@ public class CommonDatabaseQueries {
 		}
 
 		return null;
+	}
+
+	public static <R> List<SetMetaData> getSetMetaDataFromSetName(String setName, DatabaseSelectQuery<SetMetaData, R> query,
+			SelectQueryResultMapper<SetMetaData, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_SET_META_DATA_FROM_SET_NAME);
+
+		query.bindString(1, setName);
+
+		return query.executeQuery(mapper);
+	}
+
+	public static <R> List<SetMetaData> getSetMetaDataFromSetCode(String setCode, DatabaseSelectQuery<SetMetaData, R> query,
+			SelectQueryResultMapper<SetMetaData, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_SET_META_DATA_FROM_SET_CODE);
+
+		query.bindString(1, setCode);
+
+		return query.executeQuery(mapper);
+	}
+
+	public static <R> List<SetMetaData> getAllSetMetaDataFromSetData(DatabaseSelectQuery<SetMetaData, R> query,
+			SelectQueryResultMapper<SetMetaData, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_ALL_SET_META_DATA_FROM_SET_DATA);
+
+		return query.executeQuery(mapper);
 	}
 
 	public static <R> GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID, DatabaseSelectQuery<GamePlayCard, R> query,

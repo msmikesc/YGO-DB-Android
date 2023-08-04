@@ -136,6 +136,22 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		current.setModificationDate(rs.getString(Const.MODIFICATION_DATE));
 	}
 
+	public static class SetMetaDataMapperSelectQuery implements SelectQueryResultMapper<SetMetaData, ResultSet> {
+		@Override
+		public SetMetaData mapRow(ResultSet resultSet) throws SQLException {
+			SetMetaData entity = new SetMetaData();
+			getAllSetMetaDataFieldsFromRS(resultSet, entity);
+			return entity;
+		}
+
+		private static void getAllSetMetaDataFieldsFromRS(ResultSet rarities, SetMetaData set) throws SQLException {
+			set.setSetName(rarities.getString(Const.SET_NAME));
+			set.setSetCode(rarities.getString(Const.SET_CODE));
+			set.setNumOfCards(rarities.getInt(Const.SET_NUM_OF_CARDS));
+			set.setTcgDate(rarities.getString(Const.SET_TCG_DATE));
+		}
+	}
+
 	public static class SetBoxMapperSelectQuery implements SelectQueryResultMapper<SetBox, ResultSet> {
 		@Override
 		public SetBox mapRow(ResultSet resultSet) throws SQLException {
@@ -143,12 +159,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			getAllSetBoxesFieldsFromRS(resultSet, entity);
 			return entity;
 		}
-	}
 
-	private static void getAllSetBoxesFieldsFromRS(ResultSet rs, SetBox current) throws SQLException {
-		current.setBoxLabel(rs.getString(Const.BOX_LABEL));
-		current.setSetCode(rs.getString(Const.SET_CODE));
-		current.setSetName(rs.getString(Const.SET_NAME));
+		private static void getAllSetBoxesFieldsFromRS(ResultSet rs, SetBox current) throws SQLException {
+			current.setBoxLabel(rs.getString(Const.BOX_LABEL));
+			current.setSetCode(rs.getString(Const.SET_CODE));
+			current.setSetName(rs.getString(Const.SET_NAME));
+		}
 	}
 
 	public static class GamePlayCardNameMapperSelectQuery implements SelectQueryResultMapper<String, ResultSet> {
@@ -241,6 +257,29 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
+	@Override
+	public Map<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
+		Connection connection = this.getInstance();
+		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
+
+		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs =
+				setQueryStatement.executeQuery()) {
+
+			HashMap<String, List<OwnedCard>> ownedCards = new HashMap<>();
+
+			while (rs.next()) {
+				OwnedCard current = new OwnedCard();
+				getAllOwnedCardFieldsFromRS(rs, current);
+
+				String key = DatabaseHashMap.getOwnedCardHashMapKey(current);
+
+				List<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
+				currentList.add(current);
+			}
+
+			return ownedCards;
+		}
+	}
 
 	@Override
 	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
@@ -253,21 +292,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		DatabaseSelectQuery<CardSet, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
 		return CommonDatabaseQueries.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName, query,
 																			  new CardSetMapperSelectQuery());
-	}
-
-	@Override
-	public List<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<OwnedCard> getAllPossibleCardsBySetName(String setName, String orderBy) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<OwnedCard> getAllPossibleCardsByArchetype(String archetype, String orderBy) {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -295,33 +319,26 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		return CommonDatabaseQueries.getGamePlayCardUUIDFromPasscode(passcode, query, new GamePlayCardUUIDMapperSelectQuery());
 	}
 
+	public static class AnalyzeDataOwnedCardSummaryMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, ResultSet> {
+		@Override
+		public OwnedCard mapRow(ResultSet resultSet) throws SQLException {
+			OwnedCard entity = new OwnedCard();
+
+			entity.setQuantity(resultSet.getInt(1));
+			entity.setCardName(resultSet.getString(2));
+			entity.setSetName(resultSet.getString(3));
+			entity.setDateBought(resultSet.getString(4));
+			entity.setPriceBought(resultSet.getString(5));
+			entity.setGamePlayCardUUID(resultSet.getString(6));
+			return entity;
+		}
+	}
+
 	@Override
 	public List<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
-		Connection connection = this.getInstance();
-		String setQuery = SQLConst.GET_ANALYZE_DATA_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID;
-
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery)) {
-
-			setQueryStatement.setString(1, gamePlayCardUUID);
-
-			try (ResultSet rs = setQueryStatement.executeQuery()) {
-				ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
-
-				while (rs.next()) {
-					OwnedCard current = new OwnedCard();
-					current.setGamePlayCardUUID(rs.getString(6));
-					current.setQuantity(rs.getInt(1));
-					current.setCardName(rs.getString(2));
-					current.setSetName(rs.getString(3));
-					current.setDateBought(rs.getString(4));
-					current.setPriceBought(rs.getString(5));
-
-					cardsInSetList.add(current);
-				}
-
-				return cardsInSetList;
-			}
-		}
+		DatabaseSelectQuery<OwnedCard, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(gamePlayCardUUID, query,
+																					  new AnalyzeDataOwnedCardSummaryMapperSelectQuery());
 	}
 
 	@Override
@@ -330,27 +347,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS);
 
 		return query.executeQuery(new OwnedCardMapperSelectQuery());
-	}
-
-
-	@Override
-	public OwnedCard getExistingOwnedCardByObject(OwnedCard query) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch) {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -367,30 +363,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE);
 
 		return query.executeQuery(new OwnedCardMapperSelectQuery());
-	}
-
-	@Override
-	public Map<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
-		Connection connection = this.getInstance();
-		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
-
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs =
-				setQueryStatement.executeQuery()) {
-
-			HashMap<String, List<OwnedCard>> ownedCards = new HashMap<>();
-
-			while (rs.next()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, current);
-
-				String key = DatabaseHashMap.getOwnedCardHashMapKey(current);
-
-				List<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
-				currentList.add(current);
-			}
-
-			return ownedCards;
-		}
 	}
 
 	@Override
@@ -443,7 +415,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		return CommonDatabaseQueries.getCountDistinctCardsInSet(query, new FirstIntMapperSelectQuery());
 	}
 
-
 	@Override
 	public int getCountQuantity() throws SQLException {
 		DatabaseSelectQuery<Integer, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
@@ -456,7 +427,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		return CommonDatabaseQueries.getCountQuantityManual(query, new FirstIntMapperSelectQuery());
 	}
 
-
 	@Override
 	public CardSet getFirstCardSetForCardInSet(String cardName, String setName) throws SQLException {
 		DatabaseSelectQuery<CardSet, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
@@ -465,89 +435,20 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	@Override
 	public List<SetMetaData> getSetMetaDataFromSetName(String setName) throws SQLException {
-
-		Connection connection = this.getInstance();
-
-		String distinctQuery = SQLConst.GET_SET_META_DATA_FROM_SET_NAME;
-
-		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(distinctQuery)) {
-
-			distinctQueryStatement.setString(1, setName);
-
-			try (ResultSet rs = distinctQueryStatement.executeQuery()) {
-
-				ArrayList<SetMetaData> setsList = new ArrayList<>();
-
-				while (rs.next()) {
-
-					SetMetaData current = new SetMetaData();
-					current.setSetName(rs.getString(1));
-					current.setSetCode(rs.getString(2));
-					current.setNumOfCards(rs.getInt(3));
-					current.setTcgDate(rs.getString(4));
-
-					setsList.add(current);
-				}
-
-				return setsList;
-			}
-		}
+		DatabaseSelectQuery<SetMetaData, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getSetMetaDataFromSetName(setName, query, new SetMetaDataMapperSelectQuery());
 	}
 
 	@Override
 	public List<SetMetaData> getSetMetaDataFromSetCode(String setCode) throws SQLException {
-
-		Connection connection = this.getInstance();
-
-		String distinctQuery = SQLConst.GET_SET_META_DATA_FROM_SET_CODE;
-
-		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(distinctQuery)) {
-			distinctQueryStatement.setString(1, setCode);
-			try (ResultSet rs = distinctQueryStatement.executeQuery()) {
-
-				ArrayList<SetMetaData> setsList = new ArrayList<>();
-
-				while (rs.next()) {
-
-					SetMetaData current = new SetMetaData();
-					current.setSetName(rs.getString(1));
-					current.setSetCode(rs.getString(2));
-					current.setNumOfCards(rs.getInt(3));
-					current.setTcgDate(rs.getString(4));
-
-					setsList.add(current);
-				}
-
-				return setsList;
-			}
-		}
+		DatabaseSelectQuery<SetMetaData, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getSetMetaDataFromSetCode(setCode, query, new SetMetaDataMapperSelectQuery());
 	}
 
 	@Override
 	public List<SetMetaData> getAllSetMetaDataFromSetData() throws SQLException {
-
-		Connection connection = this.getInstance();
-
-		String distinctQuery = SQLConst.GET_ALL_SET_META_DATA_FROM_SET_DATA;
-
-		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(distinctQuery);
-			 ResultSet rs = distinctQueryStatement.executeQuery()) {
-
-			ArrayList<SetMetaData> setsList = new ArrayList<>();
-
-			while (rs.next()) {
-
-				SetMetaData current = new SetMetaData();
-				current.setSetName(rs.getString(1));
-				current.setSetCode(rs.getString(2));
-				current.setNumOfCards(rs.getInt(3));
-				current.setTcgDate(rs.getString(4));
-
-				setsList.add(current);
-			}
-
-			return setsList;
-		}
+		DatabaseSelectQuery<SetMetaData, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getAllSetMetaDataFromSetData(query, new SetMetaDataMapperSelectQuery());
 	}
 
 	@Override
@@ -632,23 +533,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		return CommonDatabaseQueries.replaceIntoCardSetMetaData(query, setName, setCode, numOfCards, tcgDate);
 	}
 
-
-	public static void setStringOrNull(PreparedStatement p, int index, String s) throws SQLException {
-		if (s == null) {
-			p.setNull(index, Types.VARCHAR);
-		} else {
-			p.setString(index, s);
-		}
-	}
-
-	public static void setIntegerOrNull(PreparedStatement p, int index, Integer value) throws SQLException {
-		if (value == null) {
-			p.setNull(index, Types.INTEGER);
-		} else {
-			p.setInt(index, value);
-		}
-	}
-
 	@Override
 	public int insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
@@ -659,11 +543,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	public int updateOwnedCardByUUID(OwnedCard card) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
 		return CommonDatabaseQueries.updateOwnedCardByUUID(query, card);
-	}
-
-	@Override
-	public void sellCards(OwnedCard card, int quantity, String priceSold) {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -793,5 +672,45 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			stmt.setString(1, (String) params.get(0));
 			stmt.setString(2, (String) params.get(1));
 		});
+	}
+
+	@Override
+	public List<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<OwnedCard> getAllPossibleCardsBySetName(String setName, String orderBy) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<OwnedCard> getAllPossibleCardsByArchetype(String archetype, String orderBy) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public OwnedCard getExistingOwnedCardByObject(OwnedCard query) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void sellCards(OwnedCard card, int quantity, String priceSold) {
+		throw new UnsupportedOperationException();
 	}
 }

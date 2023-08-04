@@ -71,6 +71,9 @@ public class Const {
 
 	public static final String BOX_LABEL = "boxLabel";
 
+	public static final String SET_NUM_OF_CARDS = "numOfCards";
+	public static final String SET_TCG_DATE = "releaseDate";
+
 
 	//CSV keys
 	public static final String CSV_IMPORT_FOLDER = "csv/import/";
