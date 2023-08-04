@@ -35,8 +35,8 @@ public class AnalyzeCardsInSet {
 		return new ArrayList<>(analyzeDataHashMap.values());
 	}
 
-	public void addInitialAnalyzeDataForSet(Map<String, AnalyzeData> analyzeDataHashMap, String requestedSetName,
-			SQLiteConnection db) throws SQLException {
+	public void addInitialAnalyzeDataForSet(Map<String, AnalyzeData> analyzeDataHashMap, String requestedSetName, SQLiteConnection db)
+			throws SQLException {
 		List<GamePlayCard> list = db.getDistinctGamePlayCardsInSetByName(requestedSetName);
 		boolean archetypeMode = false;
 

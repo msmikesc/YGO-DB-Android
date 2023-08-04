@@ -49,7 +49,8 @@ public class SellCardsViewModel extends ViewModel {
 		//TODO add android implementation of batch wrapper
 		//TODO try functional programming for all sql queries
 
-		if (current.getSetNumber() == null || current.getSetRarity() == null || current.getSetName() == null || current.getCardName() == null) {
+		if (current.getSetNumber() == null || current.getSetRarity() == null || current.getSetName() == null ||
+				current.getCardName() == null) {
 			return;
 		}
 

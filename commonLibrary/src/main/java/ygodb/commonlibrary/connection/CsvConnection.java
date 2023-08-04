@@ -151,13 +151,14 @@ public class CsvConnection {
 
 		String outputSetNumber = current.getSetNumber();
 
-		if (!current.getColorVariant().equalsIgnoreCase(
-				Const.DEFAULT_COLOR_VARIANT) && !Const.setColorVariantUnsupportedDragonShield.contains(current.getSetName())) {
+		if (!current.getColorVariant().equalsIgnoreCase(Const.DEFAULT_COLOR_VARIANT) &&
+				!Const.setColorVariantUnsupportedDragonShield.contains(current.getSetName())) {
 			outputSetNumber += current.getColorVariant();
 		}
 
 		p.printRecord(current.getFolderName(), current.getQuantity(), 0, current.getCardName(), current.getSetCode(), current.getSetName(),
-					  outputSetNumber, current.getCondition(), printing, "English", current.getPriceBought(), current.getDateBought(), 0, 0,
+					  outputSetNumber, current.getCondition(), printing, "English", current.getPriceBought(), current.getDateBought(), 0
+				, 0,
 					  0);
 
 	}
@@ -336,10 +337,10 @@ public class CsvConnection {
 	}
 
 	public String getCondition(String input) {
-		return input.replace(Const.CARD_PRINTING_UNLIMITED, "").replace(Const.CARD_PRINTING_LIMITED, "").replace(
-				Const.CARD_PRINTING_FIRST_EDITION, "").replace("Condition:", "").replaceAll("\\s", "").replace("LightlyPlayed",
-																											   "LightPlayed").replace(
-				"ModeratelyPlayed", "Played").replace("HeavilyPlayed", "Poor").replace("Damaged", "Poor");
+		return input.replace(Const.CARD_PRINTING_UNLIMITED, "").replace(Const.CARD_PRINTING_LIMITED, "")
+				.replace(Const.CARD_PRINTING_FIRST_EDITION, "").replace("Condition:", "").replaceAll("\\s", "")
+				.replace("LightlyPlayed", "LightPlayed").replace("ModeratelyPlayed", "Played").replace("HeavilyPlayed", "Poor")
+				.replace("Damaged", "Poor");
 	}
 
 	public int getPasscodeOrNegativeOne(SQLiteConnection db, String name, String uuid) throws SQLException {
@@ -352,8 +353,8 @@ public class CsvConnection {
 		return -1;
 	}
 
-	public CardSet getCardSetMatchingDetails(SQLiteConnection db, String name, String setName, String colorVariant, String rarity) throws
-			SQLException {
+	public CardSet getCardSetMatchingDetails(SQLiteConnection db, String name, String setName, String colorVariant, String rarity)
+			throws SQLException {
 		CardSet setIdentified = db.getFirstCardSetForCardInSet(name, setName);
 		if (setIdentified == null) {
 			setIdentified = Util.createUnknownCardSet(name, setName, db);

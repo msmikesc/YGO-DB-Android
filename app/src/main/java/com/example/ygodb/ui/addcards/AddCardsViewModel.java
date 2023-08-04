@@ -76,7 +76,8 @@ public class AddCardsViewModel extends ViewModel {
 
 	public void addNewFromOwnedCard(OwnedCard current, int quantity) {
 
-		if (current.getSetNumber() == null || current.getSetRarity() == null || current.getSetName() == null || current.getCardName() == null) {
+		if (current.getSetNumber() == null || current.getSetRarity() == null || current.getSetName() == null ||
+				current.getCardName() == null) {
 			return;
 		}
 

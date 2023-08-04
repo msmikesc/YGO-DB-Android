@@ -132,8 +132,8 @@ public class CommonDatabaseQueries {
 		return resultsFound;
 	}
 
-	public static <R> List<String> getDistinctSetNames(DatabaseSelectQuery<String, R> query,
-			SelectQueryResultMapper<String, R> mapper) throws SQLException {
+	public static <R> List<String> getDistinctSetNames(DatabaseSelectQuery<String, R> query, SelectQueryResultMapper<String, R> mapper)
+			throws SQLException {
 		query.prepareStatement(SQLConst.GET_DISTINCT_SET_NAMES);
 
 		return query.executeQuery(mapper);
@@ -146,8 +146,8 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static <R> Integer getCountDistinctCardsInSet(DatabaseSelectQuery<Integer, R> query,
-			SelectQueryResultMapper<Integer, R> mapper) throws SQLException {
+	public static <R> Integer getCountDistinctCardsInSet(DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper)
+			throws SQLException {
 		query.prepareStatement(SQLConst.GET_COUNT_DISTINCT_CARDS_IN_SET);
 
 		List<Integer> resultsFound = query.executeQuery(mapper);
@@ -159,8 +159,8 @@ public class CommonDatabaseQueries {
 		return -1;
 	}
 
-	public static <R> Integer getCountQuantity(DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper) throws
-			SQLException {
+	public static <R> Integer getCountQuantity(DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper)
+			throws SQLException {
 		query.prepareStatement(SQLConst.GET_COUNT_QUANTITY);
 
 		List<Integer> resultsFound = query.executeQuery(mapper);
@@ -172,8 +172,8 @@ public class CommonDatabaseQueries {
 		return -1;
 	}
 
-	public static <R> Integer getCountQuantityManual(DatabaseSelectQuery<Integer, R> query,
-			SelectQueryResultMapper<Integer, R> mapper) throws SQLException {
+	public static <R> Integer getCountQuantityManual(DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper)
+			throws SQLException {
 		query.prepareStatement(SQLConst.GET_COUNT_QUANTITY_MANUAL);
 
 		List<Integer> resultsFound = query.executeQuery(mapper);
@@ -216,8 +216,8 @@ public class CommonDatabaseQueries {
 		return null;
 	}
 
-	public static <R> Integer getNewLowestPasscode(DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper) throws
-			SQLException {
+	public static <R> Integer getNewLowestPasscode(DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper)
+			throws SQLException {
 		query.prepareStatement(SQLConst.GET_NEW_LOWEST_PASSCODE);
 
 		List<Integer> resultsFound = query.executeQuery(mapper);
@@ -230,8 +230,8 @@ public class CommonDatabaseQueries {
 		return -1;
 	}
 
-	public static <R> List<SetBox> getAllSetBoxes(DatabaseSelectQuery<SetBox, R> query, SelectQueryResultMapper<SetBox, R> mapper) throws
-			SQLException {
+	public static <R> List<SetBox> getAllSetBoxes(DatabaseSelectQuery<SetBox, R> query, SelectQueryResultMapper<SetBox, R> mapper)
+			throws SQLException {
 		query.prepareStatement(SQLConst.GET_ALL_SET_BOXES);
 
 		return query.executeQuery(mapper);
@@ -269,8 +269,8 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static int replaceIntoCardSetMetaData(DatabaseUpdateQuery query, String setName, String setCode, int numOfCards,
-			String tcgDate) throws SQLException {
+	public static int replaceIntoCardSetMetaData(DatabaseUpdateQuery query, String setName, String setCode, int numOfCards, String tcgDate)
+			throws SQLException {
 
 		String gamePlayCard = SQLConst.REPLACE_INTO_CARD_SET_META_DATA;
 		query.prepareStatement(gamePlayCard);
@@ -431,8 +431,8 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String rarity, String price,
-			boolean isFirstEdition) throws SQLException {
+	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String rarity, String price, boolean isFirstEdition)
+			throws SQLException {
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY;
 
@@ -507,8 +507,8 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String price, boolean isFirstEdition) throws
-			SQLException {
+	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String price, boolean isFirstEdition)
+			throws SQLException {
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE;
 

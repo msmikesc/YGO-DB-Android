@@ -59,8 +59,8 @@ public class AddFromOwnedCards {
 				boolean match = false;
 
 				for (CardSet set : sets) {
-					if (set.getSetRarity().equalsIgnoreCase(card.getSetRarity()) && set.getSetNumber().equalsIgnoreCase(
-							card.getSetNumber())) {
+					if (set.getSetRarity().equalsIgnoreCase(card.getSetRarity()) &&
+							set.getSetNumber().equalsIgnoreCase(card.getSetNumber())) {
 						match = true;
 						break;
 					}
@@ -68,8 +68,8 @@ public class AddFromOwnedCards {
 
 				if (!match) {
 					// add it
-					YGOLogger.info(
-							"No matching rarity entries found for " + card.getCardName() + ":" + card.getGamePlayCardUUID() + ":" + card.getSetName());
+					YGOLogger.info("No matching rarity entries found for " + card.getCardName() + ":" + card.getGamePlayCardUUID() + ":" +
+										   card.getSetName());
 					db.insertOrIgnoreIntoCardSet(card.getSetNumber(), card.getSetRarity(), card.getSetName(), card.getGamePlayCardUUID(),
 												 card.getCardName(), card.getColorVariant(), null);
 				}

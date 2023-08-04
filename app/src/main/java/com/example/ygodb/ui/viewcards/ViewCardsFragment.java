@@ -39,8 +39,8 @@ public class ViewCardsFragment extends Fragment {
 
 		RecyclerView cardsListView = binding.viewList;
 
-		SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewCardsViewModel.getCardsList(), addCardsViewModel,
-																	  sellCardsViewModel, false);
+		SingleCardToListAdapter adapter =
+				new SingleCardToListAdapter(viewCardsViewModel.getCardsList(), addCardsViewModel, sellCardsViewModel, false);
 
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 		layout = linearLayoutManager;
@@ -59,8 +59,9 @@ public class ViewCardsFragment extends Fragment {
 		if (viewCardsViewModel.getCardsList().isEmpty()) {
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
-					viewCardsViewModel.getCardsList().addAll(
-							viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT, 0, null));
+					viewCardsViewModel.getCardsList()
+							.addAll(viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT, 0,
+																	null));
 
 					root.post(adapter::notifyDataSetChanged);
 				} catch (Exception e) {

@@ -103,8 +103,8 @@ public class ViewCardSetViewModel extends ViewModel {
 		ArrayList<OwnedCard> newList = new ArrayList<>();
 
 		for (OwnedCard current : inputList) {
-			if (filter == null || filter.equals("") || current.getCardName().toLowerCase(Locale.ROOT).contains(
-					filter.toLowerCase(Locale.ROOT))) {
+			if (filter == null || filter.equals("") ||
+					current.getCardName().toLowerCase(Locale.ROOT).contains(filter.toLowerCase(Locale.ROOT))) {
 				newList.add(current);
 			}
 		}

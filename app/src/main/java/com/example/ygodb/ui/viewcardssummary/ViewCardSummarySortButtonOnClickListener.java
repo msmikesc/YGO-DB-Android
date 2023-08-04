@@ -23,7 +23,8 @@ class ViewCardSummarySortButtonOnClickListener implements View.OnClickListener {
 	private final FloatingActionButton fab;
 	private final Context context;
 
-	public ViewCardSummarySortButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardsSummaryViewModel viewCardsViewModel,
+	public ViewCardSummarySortButtonOnClickListener(FloatingActionButton fab, Context context,
+			ViewCardsSummaryViewModel viewCardsViewModel,
 			SummaryCardToListAdapter adapter, LinearLayoutManager layout) {
 		this.viewCardsViewModel = viewCardsViewModel;
 		this.adapter = adapter;
@@ -63,8 +64,9 @@ class ViewCardSummarySortButtonOnClickListener implements View.OnClickListener {
 				Executors.newSingleThreadExecutor().execute(() -> {
 					try {
 						cardsList.clear();
-						List<OwnedCard> moreCards = viewCardsViewModel.loadMoreData(finalSortOrder, ViewCardsSummaryViewModel.LOADING_LIMIT,
-																					0, viewCardsViewModel.getCardNameSearch());
+						List<OwnedCard> moreCards =
+								viewCardsViewModel.loadMoreData(finalSortOrder, ViewCardsSummaryViewModel.LOADING_LIMIT, 0,
+																viewCardsViewModel.getCardNameSearch());
 						cardsList.addAll(moreCards);
 
 						view.post(() -> {

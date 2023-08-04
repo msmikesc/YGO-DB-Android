@@ -52,7 +52,8 @@ public class ImportOwnedCardFromExportedCSV {
 			for (OwnedCard existingCard : ownedRarities) {
 				if (existingCard.equals(csvOwnedCard)) {
 					// exact match found
-					if (existingCard.getQuantity() == csvOwnedCard.getQuantity() && existingCard.getRarityUnsure() == csvOwnedCard.getRarityUnsure()) {
+					if (existingCard.getQuantity() == csvOwnedCard.getQuantity() &&
+							existingCard.getRarityUnsure() == csvOwnedCard.getRarityUnsure()) {
 						// nothing to update
 						csvOwnedCard = null;
 					} else {

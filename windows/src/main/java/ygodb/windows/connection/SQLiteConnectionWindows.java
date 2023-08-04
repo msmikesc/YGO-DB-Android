@@ -34,8 +34,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	public Connection getInstance() throws SQLException {
 		if (connectionInstance == null) {
-			connectionInstance = DriverManager.getConnection(
-					"jdbc:sqlite:C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\db\\YGO-DB.db");
+			connectionInstance =
+					DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\db\\YGO-DB.db");
 		}
 
 		return connectionInstance;
@@ -193,8 +193,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String setQuery = SQLConst.GET_ALL_CARD_RARITIES;
 
-		try (PreparedStatement statementSetQuery = connection.prepareStatement(
-				setQuery); ResultSet rarities = statementSetQuery.executeQuery()) {
+		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
+			 ResultSet rarities = statementSetQuery.executeQuery()) {
 
 			HashMap<String, List<CardSet>> setRarities = new HashMap<>(300000, 0.75f);
 
@@ -374,7 +374,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
 
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs = setQueryStatement.executeQuery()) {
+		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs =
+				setQueryStatement.executeQuery()) {
 
 			HashMap<String, List<OwnedCard>> ownedCards = new HashMap<>();
 
@@ -529,8 +530,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String distinctQuery = SQLConst.GET_ALL_SET_META_DATA_FROM_SET_DATA;
 
-		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(
-				distinctQuery); ResultSet rs = distinctQueryStatement.executeQuery()) {
+		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(distinctQuery);
+			 ResultSet rs = distinctQueryStatement.executeQuery()) {
 
 			ArrayList<SetMetaData> setsList = new ArrayList<>();
 
@@ -556,8 +557,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String distinctQuery = SQLConst.GET_CARDS_ONLY_PRINTED_ONCE;
 
-		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(
-				distinctQuery); ResultSet rs = distinctQueryStatement.executeQuery()) {
+		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(distinctQuery);
+			 ResultSet rs = distinctQueryStatement.executeQuery()) {
 
 			HashMap<String, AnalyzePrintedOnceData> setsList = new HashMap<>();
 
@@ -728,8 +729,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition) throws
-			SQLException {
+	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition)
+			throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
 		return CommonDatabaseQueries.updateCardSetPriceWithSetName(query, setNumber, rarity, price, setName, isFirstEdition);
 	}
@@ -743,8 +744,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) throws
-			SQLException {
+	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+			throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
 		return CommonDatabaseQueries.updateCardSetPriceWithCardName(query, setNumber, rarity, price, cardName, isFirstEdition);
 	}
@@ -756,8 +757,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant) throws
-			SQLException {
+	public int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant)
+			throws SQLException {
 
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
 		return CommonDatabaseQueries.updateCardSetUrl(query, setNumber, rarity, setName, cardName, setURL, colorVariant);

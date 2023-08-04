@@ -17,8 +17,8 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 	private int currentBatchedLinesCount = 0;
 	private boolean isFinalized = false;
 
-	public PreparedStatementBatchWrapperWindows(Connection connection, String input, int maximum, BatchSetterWindows setter) throws
-			SQLException {
+	public PreparedStatementBatchWrapperWindows(Connection connection, String input, int maximum, BatchSetterWindows setter)
+			throws SQLException {
 		this.connection = connection;
 		statement = connection.prepareStatement(input);
 		batchedLinesMax = maximum;

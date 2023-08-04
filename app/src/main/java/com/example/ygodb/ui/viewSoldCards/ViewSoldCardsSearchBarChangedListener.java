@@ -37,8 +37,9 @@ class ViewSoldCardsSearchBarChangedListener extends TextChangedListener<EditText
 
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
-				List<OwnedCard> newList = viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(),
-																			  ViewSoldCardsViewModel.LOADING_LIMIT, 0, cardNameSearch);
+				List<OwnedCard> newList =
+						viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(), ViewSoldCardsViewModel.LOADING_LIMIT, 0,
+															cardNameSearch);
 
 				handler.post(() -> {
 					viewSoldCardsViewModel.setCardsList(newList);

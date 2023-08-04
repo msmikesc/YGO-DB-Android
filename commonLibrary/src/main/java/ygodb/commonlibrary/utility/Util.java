@@ -192,8 +192,8 @@ public class Util {
 		}
 	}
 
-	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(String name, SQLiteConnection db) throws
-			SQLException {
+	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(String name, SQLiteConnection db)
+			throws SQLException {
 		Pair<String, String> data = getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
 
 		if (data.getKey() == null) {
@@ -203,8 +203,8 @@ public class Util {
 		return data;
 	}
 
-	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(String name, SQLiteConnection db) throws
-			SQLException {
+	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(String name, SQLiteConnection db)
+			throws SQLException {
 		String gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
 		// try skill card
 		if (gamePlayCardUUID == null) {
@@ -312,25 +312,35 @@ public class Util {
 			setUrlsThatDoNotExist = new HashSet<>();
 
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/duelist-league-promo/enemy-controller?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/duelist-league-promo/enemy-controller?partner=YGOPRODeck&utm_campaign=affiliate" +
+							"&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/legendary-duelists-season-3/number-15-gimmick-puppet-giant-grinder?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/legendary-duelists-season-3/number-15-gimmick-puppet-giant-grinder?partner" +
+							"=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/duelist-league-promo/axe-of-despair?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/duelist-league-promo/axe-of-despair?partner=YGOPRODeck&utm_campaign=affiliate" +
+							"&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/tactical-evolution/gemini-summoner-taev-ensp1?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/tactical-evolution/gemini-summoner-taev-ensp1?partner=YGOPRODeck&utm_campaign" +
+							"=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/colossal-fighter-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/colossal-fighter-common?partner=YGOPRODeck&utm_campaign" +
+							"=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/gaia-knight-the-force-of-earth-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/gaia-knight-the-force-of-earth-common?partner=YGOPRODeck" +
+							"&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign" +
+							"=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium" +
+							"=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate" +
+							"&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/dark-legends-promo-card/gorz-the-emissary-of-darkness?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://store.tcgplayer.com/yugioh/dark-legends-promo-card/gorz-the-emissary-of-darkness?partner=YGOPRODeck" +
+							"&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			//setUrlsThatDoNotExist.add();
 		}
 
@@ -632,8 +642,11 @@ public class Util {
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration));
 		long millis = TimeUnit.MILLISECONDS.toMillis(duration) - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration));
 
-		if (days == 0) res = String.format(Locale.ENGLISH, "%02d:%02d:%02d.%04d", hours, minutes, seconds, millis);
-		else res = String.format(Locale.ENGLISH, "%dd %02d:%02d:%02d.%04d", days, hours, minutes, seconds, millis);
+		if (days == 0) {
+			res = String.format(Locale.ENGLISH, "%02d:%02d:%02d.%04d", hours, minutes, seconds, millis);
+		} else {
+			res = String.format(Locale.ENGLISH, "%dd %02d:%02d:%02d.%04d", days, hours, minutes, seconds, millis);
+		}
 		return res;
 	}
 
@@ -675,9 +688,10 @@ public class Util {
 		}
 
 		for (CardSet cardSet : analyzeResultsCardSets) {
-			if (cardSet.getSetRarity().equalsIgnoreCase(card.getSetRarity()) && cardSet.getSetNumber().equalsIgnoreCase(
-					card.getSetNumber()) && cardSet.getSetName().equalsIgnoreCase(
-					card.getSetName()) && cardSet.getColorVariant().equalsIgnoreCase(card.getColorVariant())) {
+			if (cardSet.getSetRarity().equalsIgnoreCase(card.getSetRarity()) &&
+					cardSet.getSetNumber().equalsIgnoreCase(card.getSetNumber()) &&
+					cardSet.getSetName().equalsIgnoreCase(card.getSetName()) &&
+					cardSet.getColorVariant().equalsIgnoreCase(card.getColorVariant())) {
 				return cardSet.getBestExistingPrice(isFirstEdition);
 			}
 		}

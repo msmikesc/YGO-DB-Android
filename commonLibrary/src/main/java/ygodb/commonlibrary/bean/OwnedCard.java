@@ -64,20 +64,25 @@ public class OwnedCard {
 	public boolean equals(Object other) {
 		//Quantity and card UUId are ignored since they may change or be unavailable
 
-		if (other == null) return false;
-		if (other == this) return true;
-		if (!(other instanceof OwnedCard)) return false;
+		if (other == null) {
+			return false;
+		}
+		if (other == this) {
+			return true;
+		}
+		if (!(other instanceof OwnedCard)) {
+			return false;
+		}
 		OwnedCard otherOwnedCard = (OwnedCard) other;
 
 		try {
-			return setNumber.equals(otherOwnedCard.getSetNumber()) && priceBought.equals(
-					otherOwnedCard.getPriceBought()) && dateBought.equals(otherOwnedCard.getDateBought()) && folderName.equals(
-					otherOwnedCard.getFolderName()) && condition.equals(otherOwnedCard.getCondition()) && editionPrinting.equals(
-					otherOwnedCard.getEditionPrinting()) && cardName.equals(otherOwnedCard.getCardName()) && setCode.equals(
-					otherOwnedCard.getSetCode()) && colorVariant.equals(otherOwnedCard.getColorVariant()) && setRarity.equals(
-					otherOwnedCard.getSetRarity()) && setName.equals(
-					otherOwnedCard.getSetName()) && passcode == otherOwnedCard.getPasscode() && gamePlayCardUUID.equals(
-					otherOwnedCard.getGamePlayCardUUID());
+			return setNumber.equals(otherOwnedCard.getSetNumber()) && priceBought.equals(otherOwnedCard.getPriceBought()) &&
+					dateBought.equals(otherOwnedCard.getDateBought()) && folderName.equals(otherOwnedCard.getFolderName()) &&
+					condition.equals(otherOwnedCard.getCondition()) && editionPrinting.equals(otherOwnedCard.getEditionPrinting()) &&
+					cardName.equals(otherOwnedCard.getCardName()) && setCode.equals(otherOwnedCard.getSetCode()) &&
+					colorVariant.equals(otherOwnedCard.getColorVariant()) && setRarity.equals(otherOwnedCard.getSetRarity()) &&
+					setName.equals(otherOwnedCard.getSetName()) && passcode == otherOwnedCard.getPasscode() &&
+					gamePlayCardUUID.equals(otherOwnedCard.getGamePlayCardUUID());
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 			throw e;

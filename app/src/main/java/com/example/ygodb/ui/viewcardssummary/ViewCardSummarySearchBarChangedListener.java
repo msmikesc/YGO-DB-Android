@@ -40,8 +40,9 @@ class ViewCardSummarySearchBarChangedListener extends TextChangedListener<EditTe
 
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
-				List<OwnedCard> newList = viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
-																		  ViewCardsViewModel.LOADING_LIMIT, 0, cardNameSearch);
+				List<OwnedCard> newList =
+						viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT, 0,
+														cardNameSearch);
 
 				handler.post(() -> {
 					viewCardsViewModel.setCardsList(newList);

@@ -61,9 +61,9 @@ class ViewSoldCardsSortButtonOnClickListener implements View.OnClickListener {
 				Executors.newSingleThreadExecutor().execute(() -> {
 					try {
 						cardsList.clear();
-						List<OwnedCard> moreCards = viewSoldCardsViewModel.loadMoreData(finalSortOrder,
-																						ViewSoldCardsViewModel.LOADING_LIMIT, 0,
-																						viewSoldCardsViewModel.getCardNameSearch());
+						List<OwnedCard> moreCards =
+								viewSoldCardsViewModel.loadMoreData(finalSortOrder, ViewSoldCardsViewModel.LOADING_LIMIT, 0,
+																	viewSoldCardsViewModel.getCardNameSearch());
 						cardsList.addAll(moreCards);
 
 						view.post(() -> {

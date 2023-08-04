@@ -64,8 +64,8 @@ public class ApiUtil {
 		return inline;
 	}
 
-	public static GamePlayCard replaceIntoGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck,
-			SQLiteConnection db) throws SQLException {
+	public static GamePlayCard replaceIntoGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck, SQLiteConnection db)
+			throws SQLException {
 
 		String name = getStringOrNull(current, Const.YGOPRO_CARD_NAME);
 		String type = getStringOrNull(current, Const.YGOPRO_CARD_TYPE);
@@ -121,7 +121,8 @@ public class ApiUtil {
 	}
 
 	public static void insertOrIgnoreCardSetsForOneCard(JsonNode setListNode, String cardName, String gamePlayCardUUID,
-			SQLiteConnection db) throws SQLException {
+			SQLiteConnection db)
+			throws SQLException {
 
 		for (JsonNode currentSetNode : setListNode) {
 

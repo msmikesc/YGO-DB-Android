@@ -143,8 +143,8 @@ public class ImportFromYGOPROAPI {
 		return true;
 	}
 
-	private static void handleSingleSetNode(String inputSetName, SQLiteConnection db, List<String> dbSetNames, JsonNode setNode) throws
-			SQLException {
+	private static void handleSingleSetNode(String inputSetName, SQLiteConnection db, List<String> dbSetNames, JsonNode setNode)
+			throws SQLException {
 
 		boolean isSpecificSet = inputSetName != null && !inputSetName.isBlank();
 		String currentSetName = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_NAME);
@@ -154,8 +154,8 @@ public class ImportFromYGOPROAPI {
 
 		String newSetName = Util.checkForTranslatedSetName(currentSetName);
 
-		if (!dbSetNames.contains(newSetName) && (newSetName == null || !newSetName.equalsIgnoreCase(
-				inputSetName)) && (!Const.IGNORED_MISSING_SETS.contains(newSetName))) {
+		if (!dbSetNames.contains(newSetName) && (newSetName == null || !newSetName.equalsIgnoreCase(inputSetName)) &&
+				(!Const.IGNORED_MISSING_SETS.contains(newSetName))) {
 			YGOLogger.info("Missing Set: " + newSetName);
 		}
 

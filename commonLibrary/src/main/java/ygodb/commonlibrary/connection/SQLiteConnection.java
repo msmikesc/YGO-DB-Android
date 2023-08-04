@@ -106,14 +106,14 @@ public interface SQLiteConnection {
 
 	int updateCardSetPrice(String setNumber, String rarity, String price, boolean isFirstEdition) throws SQLException;
 
-	int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition) throws
-			SQLException;
+	int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition)
+			throws SQLException;
 
 	int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName,
 			boolean isFirstEdition) throws SQLException;
 
-	int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) throws
-			SQLException;
+	int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+			throws SQLException;
 
 	int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) throws SQLException;
 
@@ -123,8 +123,8 @@ public interface SQLiteConnection {
 
 	List<SetBox> getSetBoxesByNameOrCode(String searchText) throws SQLException;
 
-	int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant) throws
-			SQLException;
+	int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant)
+			throws SQLException;
 
 	int updateCardSetUrlAndColor(String setNumber, String rarity, String setName, String cardName, String setURL,
 			String currentColorVariant, String newColorVariant) throws SQLException;

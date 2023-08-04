@@ -24,8 +24,8 @@ public class ViewSoldCardsFragment extends Fragment {
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		ViewSoldCardsViewModel viewSoldCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(
-				ViewSoldCardsViewModel.class);
+		ViewSoldCardsViewModel viewSoldCardsViewModel =
+				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewSoldCardsViewModel.class);
 
 		binding = FragmentViewcardsBinding.inflate(inflater, container, false);
 		View root = binding.getRoot();
@@ -39,7 +39,8 @@ public class ViewSoldCardsFragment extends Fragment {
 		cardsListView.setLayoutManager(linearLayoutManager);
 		cardsListView.setAdapter(adapter);
 
-		EndlessScrollListener scrollListener = new ViewSoldCardsEndlessScrollListener(linearLayoutManager, viewSoldCardsViewModel, adapter);
+		EndlessScrollListener scrollListener = new ViewSoldCardsEndlessScrollListener(linearLayoutManager, viewSoldCardsViewModel,
+																					  adapter);
 		cardsListView.addOnScrollListener(scrollListener);
 
 		binding.fab.setOnClickListener(
@@ -51,9 +52,9 @@ public class ViewSoldCardsFragment extends Fragment {
 		if (viewSoldCardsViewModel.getCardsList().isEmpty()) {
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
-					viewSoldCardsViewModel.getCardsList().addAll(
-							viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(), ViewSoldCardsViewModel.LOADING_LIMIT,
-																0, null));
+					viewSoldCardsViewModel.getCardsList().addAll(viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(),
+																									 ViewSoldCardsViewModel.LOADING_LIMIT,
+																									 0, null));
 
 					root.post(adapter::notifyDataSetChanged);
 				} catch (Exception e) {

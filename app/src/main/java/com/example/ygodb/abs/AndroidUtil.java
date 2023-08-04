@@ -97,12 +97,12 @@ public class AndroidUtil {
 		ViewCardsViewModel viewCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
 		viewCardsViewModel.refreshViewDBUpdate();
 
-		ViewCardsSummaryViewModel viewCardsSummaryViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(
-				ViewCardsSummaryViewModel.class);
+		ViewCardsSummaryViewModel viewCardsSummaryViewModel =
+				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
 		viewCardsSummaryViewModel.refreshViewDBUpdate();
 
-		ViewSoldCardsViewModel viewSoldCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(
-				ViewSoldCardsViewModel.class);
+		ViewSoldCardsViewModel viewSoldCardsViewModel =
+				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewSoldCardsViewModel.class);
 		viewSoldCardsViewModel.refreshViewDBUpdate();
 
 		ViewBoxSetViewModel viewBoxSetViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
@@ -129,8 +129,8 @@ public class AndroidUtil {
 	public static String getSetRarityDisplayWithColorText(OwnedCard current) {
 		String setRarityText = current.getSetRarity();
 
-		if (current.getColorVariant() != null && !current.getColorVariant().isEmpty() && !current.getColorVariant().equals(
-				Const.DEFAULT_COLOR_VARIANT)) {
+		if (current.getColorVariant() != null && !current.getColorVariant().isEmpty() &&
+				!current.getColorVariant().equals(Const.DEFAULT_COLOR_VARIANT)) {
 			if (current.getColorVariant().equalsIgnoreCase("a")) {
 				setRarityText = "Alt Art " + setRarityText;
 			} else {

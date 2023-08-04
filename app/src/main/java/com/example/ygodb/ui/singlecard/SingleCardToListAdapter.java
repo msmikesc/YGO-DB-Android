@@ -90,8 +90,8 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 				buttonContainer.removeAllViews();
 
 				for (int i = 1; i <= 6; i++) {
-					FrameLayout buttonLayout = (FrameLayout) inflater.inflate(R.layout.labeled_increment_quantity_button, buttonContainer,
-																			  false);
+					FrameLayout buttonLayout =
+							(FrameLayout) inflater.inflate(R.layout.labeled_increment_quantity_button, buttonContainer, false);
 					ImageButton button = buttonLayout.findViewById(R.id.incrementButton);
 					TextView incrementLabel = buttonLayout.findViewById(R.id.incrementLabel);
 

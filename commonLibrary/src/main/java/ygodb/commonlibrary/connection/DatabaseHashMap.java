@@ -111,12 +111,12 @@ public class DatabaseHashMap {
 	}
 
 	public static String getOwnedCardHashMapKey(OwnedCard input) {
-		return input.getSetNumber() + ":" + Util.normalizePrice(
-				input.getPriceBought()) + ":" + input.getDateBought() + ":" + input.getFolderName() + ":" + input.getCondition() + ":" + input.getEditionPrinting();
+		return input.getSetNumber() + ":" + Util.normalizePrice(input.getPriceBought()) + ":" + input.getDateBought() + ":" +
+				input.getFolderName() + ":" + input.getCondition() + ":" + input.getEditionPrinting();
 	}
 
-	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(OwnedCard comparison, SQLiteConnection db) throws
-			SQLException {
+	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(OwnedCard comparison, SQLiteConnection db)
+			throws SQLException {
 		Map<String, List<OwnedCard>> data = DatabaseHashMap.getOwnedInstance(db);
 
 		String key = getOwnedCardHashMapKey(comparison);

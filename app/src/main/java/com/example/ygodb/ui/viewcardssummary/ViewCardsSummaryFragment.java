@@ -27,8 +27,8 @@ public class ViewCardsSummaryFragment extends Fragment {
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		ViewCardsSummaryViewModel viewCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(
-				ViewCardsSummaryViewModel.class);
+		ViewCardsSummaryViewModel viewCardsViewModel =
+				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
 
 		binding = FragmentViewcardsSummaryBinding.inflate(inflater, container, false);
 		View root = binding.getRoot();
@@ -55,8 +55,9 @@ public class ViewCardsSummaryFragment extends Fragment {
 		if (viewCardsViewModel.getCardsList().isEmpty()) {
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
-					viewCardsViewModel.getCardsList().addAll(
-							viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT, 0, null));
+					viewCardsViewModel.getCardsList()
+							.addAll(viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT, 0,
+																	null));
 
 					root.post(adapter::notifyDataSetChanged);
 				} catch (Exception e) {

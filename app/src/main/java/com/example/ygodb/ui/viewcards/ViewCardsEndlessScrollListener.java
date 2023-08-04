@@ -27,10 +27,9 @@ class ViewCardsEndlessScrollListener extends EndlessScrollListener {
 
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
-				List<OwnedCard> moreCards = viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
-																			ViewCardsViewModel.LOADING_LIMIT,
-																			page * ViewCardsViewModel.LOADING_LIMIT,
-																			viewCardsViewModel.getCardNameSearch());
+				List<OwnedCard> moreCards =
+						viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT,
+														page * ViewCardsViewModel.LOADING_LIMIT, viewCardsViewModel.getCardNameSearch());
 				int curSize = adapter.getItemCount();
 
 				List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
