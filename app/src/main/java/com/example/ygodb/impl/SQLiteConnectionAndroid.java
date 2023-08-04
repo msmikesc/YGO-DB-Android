@@ -295,6 +295,89 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		return -1;
 	}
 
+	public static class OwnedCardMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, Cursor> {
+		@Override
+		public OwnedCard mapRow(Cursor resultSet) throws SQLException {
+			OwnedCard entity = new OwnedCard();
+			String[] col = resultSet.getColumnNames();
+			getAllOwnedCardFieldsFromRS(resultSet, col, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllOwnedCardFieldsFromRS(Cursor rs, String[] col, OwnedCard current) {
+		current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
+		current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));
+		current.setCardName(rs.getString(getColumn(col, Const.CARD_NAME)));
+		current.setSetNumber(rs.getString(getColumn(col, Const.SET_NUMBER)));
+		current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
+		current.setSetRarity(rs.getString(getColumn(col, Const.SET_RARITY)));
+		current.setColorVariant(rs.getString(getColumn(col, Const.SET_RARITY_COLOR_VARIANT)));
+		current.setEditionPrinting(rs.getString(getColumn(col, Const.EDITION_PRINTING)));
+		current.setDateBought(rs.getString(getColumn(col, Const.DATE_BOUGHT)));
+		current.setPriceBought(rs.getString(getColumn(col, Const.PRICE_BOUGHT)));
+		current.setUuid(rs.getString(getColumn(col, Const.UUID)));
+		current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
+		current.setFolderName(rs.getString(getColumn(col, Const.FOLDER_NAME)));
+		current.setRarityUnsure(rs.getInt(getColumn(col, Const.RARITY_UNSURE)));
+		current.setCondition(rs.getString(getColumn(col, Const.CONDITION)));
+		current.setCreationDate(rs.getString(getColumn(col, Const.CREATION_DATE)));
+		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
+		current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
+	}
+
+	public static class CardSetMapperSelectQuery implements SelectQueryResultMapper<CardSet, Cursor> {
+		@Override
+		public CardSet mapRow(Cursor resultSet) throws SQLException {
+			CardSet entity = new CardSet();
+			String[] col = resultSet.getColumnNames();
+			getAllCardSetFieldsFromRS(resultSet, col, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
+		set.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
+		set.setCardName(rs.getString(getColumn(col, Const.CARD_NAME)));
+		set.setSetNumber(rs.getString(getColumn(col, Const.SET_NUMBER)));
+		set.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
+		set.setSetRarity(rs.getString(getColumn(col, Const.SET_RARITY)));
+		set.setSetPrice(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE))));
+		set.setSetPriceUpdateTime(rs.getString(getColumn(col, Const.SET_PRICE_UPDATE_TIME)));
+		set.setSetPriceFirst(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE_FIRST))));
+		set.setSetPriceFirstUpdateTime(rs.getString(getColumn(col, Const.SET_PRICE_FIRST_UPDATE_TIME)));
+		set.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
+		set.setSetUrl(rs.getString(getColumn(col, Const.SET_URL)));
+		set.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
+	}
+
+	public static class GamePlayCardMapperSelectQuery implements SelectQueryResultMapper<GamePlayCard, Cursor> {
+		@Override
+		public GamePlayCard mapRow(Cursor resultSet) throws SQLException {
+			GamePlayCard entity = new GamePlayCard();
+			String[] col = resultSet.getColumnNames();
+			getAllGamePlayCardFieldsFromRS(resultSet, col, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllGamePlayCardFieldsFromRS(Cursor rs, String[] col, GamePlayCard current) {
+		current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
+		current.setCardName(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_NAME)));
+		current.setCardType(rs.getString(getColumn(col, Const.TYPE)));
+		current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
+		current.setDesc(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_TEXT)));
+		current.setAttribute(rs.getString(getColumn(col, Const.ATTRIBUTE)));
+		current.setRace(rs.getString(getColumn(col, Const.RACE)));
+		current.setLinkVal(rs.getString(getColumn(col, Const.LINK_VALUE)));
+		current.setLevel(rs.getString(getColumn(col, Const.LEVEL_RANK)));
+		current.setScale(rs.getString(getColumn(col, Const.PENDULUM_SCALE)));
+		current.setAtk(rs.getString(getColumn(col, Const.ATTACK)));
+		current.setDef(rs.getString(getColumn(col, Const.DEFENSE)));
+		current.setArchetype(rs.getString(getColumn(col, Const.ARCHETYPE)));
+		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
+	}
+
 	@Override
 	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() {
 
@@ -353,30 +436,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		}
 	}
 
-	public static class CardSetMapperSelectQuery implements SelectQueryResultMapper<CardSet, Cursor> {
-		@Override
-		public CardSet mapRow(Cursor resultSet) throws SQLException {
-			CardSet entity = new CardSet();
-			String[] col = resultSet.getColumnNames();
-			getAllCardSetFieldsFromRS(resultSet, col, entity);
-			return entity;
-		}
-	}
 
-	private static void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
-		set.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
-		set.setCardName(rs.getString(getColumn(col, Const.CARD_NAME)));
-		set.setSetNumber(rs.getString(getColumn(col, Const.SET_NUMBER)));
-		set.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
-		set.setSetRarity(rs.getString(getColumn(col, Const.SET_RARITY)));
-		set.setSetPrice(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE))));
-		set.setSetPriceUpdateTime(rs.getString(getColumn(col, Const.SET_PRICE_UPDATE_TIME)));
-		set.setSetPriceFirst(Util.normalizePrice(rs.getString(getColumn(col, Const.SET_PRICE_FIRST))));
-		set.setSetPriceFirstUpdateTime(rs.getString(getColumn(col, Const.SET_PRICE_FIRST_UPDATE_TIME)));
-		set.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
-		set.setSetUrl(rs.getString(getColumn(col, Const.SET_URL)));
-		set.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
-	}
 
 	@Override
 	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) {
@@ -795,38 +855,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 			return cardsInSetList;
 		}
-	}
-
-	public static class OwnedCardMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, Cursor> {
-		@Override
-		public OwnedCard mapRow(Cursor resultSet) throws SQLException {
-			OwnedCard entity = new OwnedCard();
-			String[] col = resultSet.getColumnNames();
-			getAllOwnedCardFieldsFromRS(resultSet, col, entity);
-			return entity;
-		}
-	}
-
-	private static void getAllOwnedCardFieldsFromRS(Cursor rs, String[] col, OwnedCard current) {
-		current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
-		current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));
-		current.setCardName(rs.getString(getColumn(col, Const.CARD_NAME)));
-		current.setSetNumber(rs.getString(getColumn(col, Const.SET_NUMBER)));
-		current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
-		current.setSetRarity(rs.getString(getColumn(col, Const.SET_RARITY)));
-		current.setColorVariant(rs.getString(getColumn(col, Const.SET_RARITY_COLOR_VARIANT)));
-		current.setEditionPrinting(rs.getString(getColumn(col, Const.EDITION_PRINTING)));
-		current.setDateBought(rs.getString(getColumn(col, Const.DATE_BOUGHT)));
-		current.setPriceBought(rs.getString(getColumn(col, Const.PRICE_BOUGHT)));
-		current.setUuid(rs.getString(getColumn(col, Const.UUID)));
-		current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
-		current.setFolderName(rs.getString(getColumn(col, Const.FOLDER_NAME)));
-		current.setRarityUnsure(rs.getInt(getColumn(col, Const.RARITY_UNSURE)));
-		current.setCondition(rs.getString(getColumn(col, Const.CONDITION)));
-		current.setCreationDate(rs.getString(getColumn(col, Const.CREATION_DATE)));
-		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
-		current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
-
 	}
 
 	@Override
@@ -1313,23 +1341,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 			return current;
 		}
-	}
-
-	private void getAllGamePlayCardFieldsFromRS(Cursor rs, String[] col, GamePlayCard current) {
-		current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
-		current.setCardName(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_NAME)));
-		current.setCardType(rs.getString(getColumn(col, Const.TYPE)));
-		current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
-		current.setDesc(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_TEXT)));
-		current.setAttribute(rs.getString(getColumn(col, Const.ATTRIBUTE)));
-		current.setRace(rs.getString(getColumn(col, Const.RACE)));
-		current.setLinkVal(rs.getString(getColumn(col, Const.LINK_VALUE)));
-		current.setLevel(rs.getString(getColumn(col, Const.LEVEL_RANK)));
-		current.setScale(rs.getString(getColumn(col, Const.PENDULUM_SCALE)));
-		current.setAtk(rs.getString(getColumn(col, Const.ATTACK)));
-		current.setDef(rs.getString(getColumn(col, Const.DEFENSE)));
-		current.setArchetype(rs.getString(getColumn(col, Const.ARCHETYPE)));
-		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
 	}
 
 	@Override

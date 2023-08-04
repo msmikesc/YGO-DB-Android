@@ -56,6 +56,86 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		connectionInstance = null;
 	}
 
+	public static class OwnedCardMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, ResultSet> {
+		@Override
+		public OwnedCard mapRow(ResultSet resultSet) throws SQLException {
+			OwnedCard entity = new OwnedCard();
+			getAllOwnedCardFieldsFromRS(resultSet, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllOwnedCardFieldsFromRS(ResultSet rs, OwnedCard current) throws SQLException {
+		current.setGamePlayCardUUID(rs.getString(Const.GAME_PLAY_CARD_UUID));
+		current.setRarityUnsure(rs.getInt(Const.RARITY_UNSURE));
+		current.setQuantity(rs.getInt(Const.QUANTITY));
+		current.setCardName(rs.getString(Const.CARD_NAME));
+		current.setSetCode(rs.getString(Const.SET_CODE));
+		current.setSetNumber(rs.getString(Const.SET_NUMBER));
+		current.setSetName(rs.getString(Const.SET_NAME));
+		current.setSetRarity(rs.getString(Const.SET_RARITY));
+		current.setColorVariant(rs.getString(Const.SET_RARITY_COLOR_VARIANT));
+		current.setFolderName(rs.getString(Const.FOLDER_NAME));
+		current.setCondition(rs.getString(Const.CONDITION));
+		current.setEditionPrinting(rs.getString(Const.EDITION_PRINTING));
+		current.setDateBought(rs.getString(Const.DATE_BOUGHT));
+		current.setPriceBought(Util.normalizePrice(rs.getString(Const.PRICE_BOUGHT)));
+		current.setCreationDate(rs.getString(Const.CREATION_DATE));
+		current.setModificationDate(rs.getString(Const.MODIFICATION_DATE));
+		current.setUuid(rs.getString(Const.UUID));
+		current.setPasscode(rs.getInt(Const.PASSCODE));
+	}
+
+	public static class CardSetMapperSelectQuery implements SelectQueryResultMapper<CardSet, ResultSet> {
+		@Override
+		public CardSet mapRow(ResultSet resultSet) throws SQLException {
+			CardSet entity = new CardSet();
+			getAllCardSetFieldsFromRS(resultSet, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllCardSetFieldsFromRS(ResultSet rarities, CardSet set) throws SQLException {
+		set.setGamePlayCardUUID(rarities.getString(Const.GAME_PLAY_CARD_UUID));
+		set.setCardName(rarities.getString(Const.CARD_NAME));
+		set.setSetNumber(rarities.getString(Const.SET_NUMBER));
+		set.setSetName(rarities.getString(Const.SET_NAME));
+		set.setSetRarity(rarities.getString(Const.SET_RARITY));
+		set.setSetPrice(rarities.getString(Const.SET_PRICE));
+		set.setSetPriceUpdateTime(rarities.getString(Const.SET_PRICE_UPDATE_TIME));
+		set.setSetPriceFirst(rarities.getString(Const.SET_PRICE_FIRST));
+		set.setSetPriceFirstUpdateTime(rarities.getString(Const.SET_PRICE_FIRST_UPDATE_TIME));
+		set.setSetCode(rarities.getString(Const.SET_CODE));
+		set.setSetUrl(rarities.getString(Const.SET_URL));
+		set.setColorVariant(rarities.getString(Const.COLOR_VARIANT));
+	}
+
+	public static class GamePlayCardMapperSelectQuery implements SelectQueryResultMapper<GamePlayCard, ResultSet> {
+		@Override
+		public GamePlayCard mapRow(ResultSet resultSet) throws SQLException {
+			GamePlayCard entity = new GamePlayCard();
+			getAllGamePlayCardFieldsFromRS(resultSet, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllGamePlayCardFieldsFromRS(ResultSet rs, GamePlayCard current) throws SQLException {
+		current.setGamePlayCardUUID(rs.getString(Const.GAME_PLAY_CARD_UUID));
+		current.setCardName(rs.getString(Const.GAME_PLAY_CARD_NAME));
+		current.setCardType(rs.getString(Const.TYPE));
+		current.setPasscode(rs.getInt(Const.PASSCODE));
+		current.setDesc(rs.getString(Const.GAME_PLAY_CARD_TEXT));
+		current.setAttribute(rs.getString(Const.ATTRIBUTE));
+		current.setRace(rs.getString(Const.RACE));
+		current.setLinkVal(rs.getString(Const.LINK_VALUE));
+		current.setLevel(rs.getString(Const.LEVEL_RANK));
+		current.setScale(rs.getString(Const.PENDULUM_SCALE));
+		current.setAtk(rs.getString(Const.ATTACK));
+		current.setDef(rs.getString(Const.DEFENSE));
+		current.setArchetype(rs.getString(Const.ARCHETYPE));
+		current.setModificationDate(rs.getString(Const.MODIFICATION_DATE));
+	}
+
 	@Override
 	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() throws SQLException {
 
@@ -112,29 +192,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
-	public static class CardSetMapperSelectQuery implements SelectQueryResultMapper<CardSet, ResultSet> {
-		@Override
-		public CardSet mapRow(ResultSet resultSet) throws SQLException {
-			CardSet entity = new CardSet();
-			getAllCardSetFieldsFromRS(resultSet, entity);
-			return entity;
-		}
-	}
 
-	private static void getAllCardSetFieldsFromRS(ResultSet rarities, CardSet set) throws SQLException {
-		set.setGamePlayCardUUID(rarities.getString(Const.GAME_PLAY_CARD_UUID));
-		set.setCardName(rarities.getString(Const.CARD_NAME));
-		set.setSetNumber(rarities.getString(Const.SET_NUMBER));
-		set.setSetName(rarities.getString(Const.SET_NAME));
-		set.setSetRarity(rarities.getString(Const.SET_RARITY));
-		set.setSetPrice(rarities.getString(Const.SET_PRICE));
-		set.setSetPriceUpdateTime(rarities.getString(Const.SET_PRICE_UPDATE_TIME));
-		set.setSetPriceFirst(rarities.getString(Const.SET_PRICE_FIRST));
-		set.setSetPriceFirstUpdateTime(rarities.getString(Const.SET_PRICE_FIRST_UPDATE_TIME));
-		set.setSetCode(rarities.getString(Const.SET_CODE));
-		set.setSetUrl(rarities.getString(Const.SET_URL));
-		set.setColorVariant(rarities.getString(Const.COLOR_VARIANT));
-	}
 
 	@Override
 	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
@@ -316,35 +374,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		return query.executeQuery(new OwnedCardMapperSelectQuery());
 	}
 
-	public static class OwnedCardMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, ResultSet> {
-		@Override
-		public OwnedCard mapRow(ResultSet resultSet) throws SQLException {
-			OwnedCard entity = new OwnedCard();
-			getAllOwnedCardFieldsFromRS(resultSet, entity);
-			return entity;
-		}
-	}
 
-	private static void getAllOwnedCardFieldsFromRS(ResultSet rs, OwnedCard current) throws SQLException {
-		current.setGamePlayCardUUID(rs.getString(Const.GAME_PLAY_CARD_UUID));
-		current.setRarityUnsure(rs.getInt(Const.RARITY_UNSURE));
-		current.setQuantity(rs.getInt(Const.QUANTITY));
-		current.setCardName(rs.getString(Const.CARD_NAME));
-		current.setSetCode(rs.getString(Const.SET_CODE));
-		current.setSetNumber(rs.getString(Const.SET_NUMBER));
-		current.setSetName(rs.getString(Const.SET_NAME));
-		current.setSetRarity(rs.getString(Const.SET_RARITY));
-		current.setColorVariant(rs.getString(Const.SET_RARITY_COLOR_VARIANT));
-		current.setFolderName(rs.getString(Const.FOLDER_NAME));
-		current.setCondition(rs.getString(Const.CONDITION));
-		current.setEditionPrinting(rs.getString(Const.EDITION_PRINTING));
-		current.setDateBought(rs.getString(Const.DATE_BOUGHT));
-		current.setPriceBought(Util.normalizePrice(rs.getString(Const.PRICE_BOUGHT)));
-		current.setCreationDate(rs.getString(Const.CREATION_DATE));
-		current.setModificationDate(rs.getString(Const.MODIFICATION_DATE));
-		current.setUuid(rs.getString(Const.UUID));
-		current.setPasscode(rs.getInt(Const.PASSCODE));
-	}
 
 	@Override
 	public OwnedCard getExistingOwnedCardByObject(OwnedCard query) {
@@ -840,22 +870,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
-	private void getAllGamePlayCardFieldsFromRS(ResultSet rs, GamePlayCard current) throws SQLException {
-		current.setGamePlayCardUUID(rs.getString(Const.GAME_PLAY_CARD_UUID));
-		current.setCardName(rs.getString(Const.GAME_PLAY_CARD_NAME));
-		current.setCardType(rs.getString(Const.TYPE));
-		current.setPasscode(rs.getInt(Const.PASSCODE));
-		current.setDesc(rs.getString(Const.GAME_PLAY_CARD_TEXT));
-		current.setAttribute(rs.getString(Const.ATTRIBUTE));
-		current.setRace(rs.getString(Const.RACE));
-		current.setLinkVal(rs.getString(Const.LINK_VALUE));
-		current.setLevel(rs.getString(Const.LEVEL_RANK));
-		current.setScale(rs.getString(Const.PENDULUM_SCALE));
-		current.setAtk(rs.getString(Const.ATTACK));
-		current.setDef(rs.getString(Const.DEFENSE));
-		current.setArchetype(rs.getString(Const.ARCHETYPE));
-		current.setModificationDate(rs.getString(Const.MODIFICATION_DATE));
-	}
+
 
 	@Override
 	public int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException {
