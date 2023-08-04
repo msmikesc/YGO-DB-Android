@@ -1,7 +1,7 @@
 package ygodb.windows.process;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.utility.Util;
@@ -22,7 +22,7 @@ public class CheckDBForIssues {
 
 	public void run(SQLiteConnection db) throws SQLException {
 
-		ArrayList<String> setsList = db.getDistinctSetNames();
+		List<String> setsList = db.getDistinctSetNames();
 
 		for (String setName : setsList) {
 

@@ -20,7 +20,7 @@ import com.example.ygodb.ui.viewsetboxes.ViewBoxSetViewModel;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class AndroidUtil {
@@ -82,7 +82,7 @@ public class AndroidUtil {
         ViewCardSetViewModel viewCardSetViewModel =
                 new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
-        ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+        List<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
         viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
 
         viewCardSetViewModel.refreshViewDBUpdate();

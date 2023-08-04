@@ -16,7 +16,6 @@ import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +39,7 @@ public class Util {
 	private Util(){}
 
 	public static void checkSetCounts(SQLiteConnection db) throws SQLException {
-		ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
+		List<SetMetaData> list = db.getAllSetMetaDataFromSetData();
 
 		for (SetMetaData setData : list) {
 			int countCardsInList = db.getCountDistinctCardsInSet(setData.getSetName());
@@ -57,7 +56,7 @@ public class Util {
 			setMetaDataHashMap.put(s.getSetName(), s);
 		}
 
-		ArrayList<String> setNames = db.getDistinctSetNames();
+		List<String> setNames = db.getDistinctSetNames();
 
 		for (String setName : setNames) {
 			
@@ -103,7 +102,7 @@ public class Util {
 	}
 
 	public static void checkForIssuesWithCardNamesInSet(String setName, SQLiteConnection db) throws SQLException {
-		ArrayList<String> list = db.getDistinctGamePlayCardUUIDsInSetByName(setName);
+		List<String> list = db.getDistinctGamePlayCardUUIDsInSetByName(setName);
 		for (String i : list) {
 			String title = db.getCardTitleFromGamePlayCardUUID(i);
 
@@ -126,7 +125,7 @@ public class Util {
 
 	public static void checkForIssuesWithSet(String setName, SQLiteConnection db) throws SQLException {
 
-		ArrayList<String> cardsInSetList = db.getSortedCardsInSetByName(setName);
+		List<String> cardsInSetList = db.getSortedCardsInSetByName(setName);
 
 		String lastPrefix = null;
 		String lastLang = null;

@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +43,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
 
@@ -296,7 +296,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public HashMap<String, List<CardSet>> getAllCardRaritiesForHashMap() {
+	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -327,7 +327,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public HashMap<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() {
+	public Map<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_ALL_GAME_PLAY_CARD;
@@ -379,7 +379,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) {
+	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -594,7 +594,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) {
+	public List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -655,7 +655,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String name) {
+	public List<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String name) {
 
 		SQLiteDatabase connection = this.getInstance();
 
@@ -732,7 +732,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID, Const.QUANTITY, Const.CARD_NAME, Const.SET_NUMBER, Const.SET_NAME,
@@ -764,7 +764,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID, Const.QUANTITY, Const.CARD_NAME, Const.SET_NUMBER,
@@ -830,7 +830,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID, "sum(quantity) as totalQuantity", Const.CARD_NAME,
@@ -869,7 +869,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCardsWithoutSetNumber() {
+	public List<OwnedCard> getAllOwnedCardsWithoutSetNumber() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_SET_NUMBER;
@@ -890,7 +890,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() {
+	public List<OwnedCard> getAllOwnedCardsWithoutPasscode() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE;
@@ -911,7 +911,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public HashMap<String, List<OwnedCard>> getAllOwnedCardsForHashMap() {
+	public Map<String, List<OwnedCard>> getAllOwnedCardsForHashMap() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
@@ -936,7 +936,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getRarityUnsureOwnedCards() {
+	public List<OwnedCard> getRarityUnsureOwnedCards() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_RARITY_UNSURE_OWNED_CARDS;
@@ -957,7 +957,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) {
+	public List<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME;
@@ -975,7 +975,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<GamePlayCard> getDistinctGamePlayCardsInSetByName(String setName) {
+	public List<GamePlayCard> getDistinctGamePlayCardsInSetByName(String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME;
@@ -997,7 +997,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) {
+	public List<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_DISTINCT_GAMEPLAYCARDS_BY_ARCHETYPE;
@@ -1019,7 +1019,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<String> getSortedCardsInSetByName(String setName) {
+	public List<String> getSortedCardsInSetByName(String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String setQuery = SQLConst.GET_SORTED_CARDS_IN_SET_BY_NAME;
@@ -1040,7 +1040,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<String> getDistinctSetNames() {
+	public List<String> getDistinctSetNames() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_DISTINCT_SET_NAMES;
@@ -1059,7 +1059,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<String> getDistinctSetAndArchetypeNames() {
+	public List<String> getDistinctSetAndArchetypeNames() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_DISTINCT_SET_AND_ARCHETYPE_NAMES;
@@ -1148,7 +1148,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName) {
+	public List<SetMetaData> getSetMetaDataFromSetName(String setName) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_SET_META_DATA_FROM_SET_NAME;
@@ -1172,7 +1172,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<SetMetaData> getSetMetaDataFromSetCode(String setCode) {
+	public List<SetMetaData> getSetMetaDataFromSetCode(String setCode) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_SET_META_DATA_FROM_SET_CODE;
@@ -1196,7 +1196,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<SetMetaData> getAllSetMetaDataFromSetData() {
+	public List<SetMetaData> getAllSetMetaDataFromSetData() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_ALL_SET_META_DATA_FROM_SET_DATA;
@@ -1219,7 +1219,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public HashMap<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() {
+	public Map<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() {
 		SQLiteDatabase connection = this.getInstance();
 
 		String query = SQLConst.GET_CARDS_ONLY_PRINTED_ONCE;

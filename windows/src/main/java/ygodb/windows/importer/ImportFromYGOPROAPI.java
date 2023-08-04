@@ -79,7 +79,7 @@ public class ImportFromYGOPROAPI {
 
 				JsonNode cards = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
-				ArrayList<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
+				List<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
 
 				for (JsonNode currentGamePlayCard: cards) {
 
@@ -124,7 +124,7 @@ public class ImportFromYGOPROAPI {
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
-				ArrayList<SetMetaData> list = db.getAllSetMetaDataFromSetData();
+				List<SetMetaData> list = db.getAllSetMetaDataFromSetData();
 				ArrayList<String> dbSetNames = new ArrayList<>();
 
 				for (SetMetaData current : list) {
@@ -161,14 +161,14 @@ public class ImportFromYGOPROAPI {
 		}
 
 		if (!isSpecificSet) {
-			ArrayList<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
+			List<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
 
 			if (setMetaDataList.isEmpty()) {
 				db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
 			}
 		}
 		if (isSpecificSet && inputSetName.equalsIgnoreCase(newSetName)) {
-			ArrayList<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
+			List<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
 
 			if (setMetaDataList.isEmpty()) {
 				db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);

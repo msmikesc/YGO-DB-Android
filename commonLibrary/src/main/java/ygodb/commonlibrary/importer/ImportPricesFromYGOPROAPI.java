@@ -225,7 +225,7 @@ public class ImportPricesFromYGOPROAPI {
 	}
 
 	private void addAllMissingGamePlayCards(SQLiteConnection db, JsonNode gamePlayCardsNode) throws SQLException {
-		ArrayList<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
+		List<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
 		for (JsonNode currentGamePlayCardNode : gamePlayCardsNode) {
 			checkAndInsertMissingGamePlayCard(db, ownedCardsToCheck, currentGamePlayCardNode);
 		}
@@ -233,7 +233,7 @@ public class ImportPricesFromYGOPROAPI {
 		DatabaseHashMap.closeGamePlayCardInstance();
 	}
 
-	private void checkAndInsertMissingGamePlayCard(SQLiteConnection db, ArrayList<OwnedCard> ownedCardsToCheck, JsonNode currentGamePlayCardNode) throws SQLException {
+	private void checkAndInsertMissingGamePlayCard(SQLiteConnection db, List<OwnedCard> ownedCardsToCheck, JsonNode currentGamePlayCardNode) throws SQLException {
 
 		Map<String, List<GamePlayCard>> gamePlayCardMap = DatabaseHashMap.getGamePlayCardsInstance(db);
 

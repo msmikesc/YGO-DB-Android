@@ -36,11 +36,11 @@ public class AnalyzeCardsInSet {
 	}
 
 	public void addInitialAnalyzeDataForSet(Map<String, AnalyzeData> analyzeDataHashMap, String requestedSetName, SQLiteConnection db) throws SQLException {
-		ArrayList<GamePlayCard> list = db.getDistinctGamePlayCardsInSetByName(requestedSetName);
+		List<GamePlayCard> list = db.getDistinctGamePlayCardsInSetByName(requestedSetName);
 		boolean archetypeMode = false;
 
 		if (list.isEmpty()) {
-			ArrayList<SetMetaData> setNames = db.getSetMetaDataFromSetCode(requestedSetName.toUpperCase(Locale.ROOT));
+			List<SetMetaData> setNames = db.getSetMetaDataFromSetCode(requestedSetName.toUpperCase(Locale.ROOT));
 
 			if (setNames == null || setNames.isEmpty() ) {
 
@@ -103,7 +103,7 @@ public class AnalyzeCardsInSet {
 		}
 		setPriceSummaryToLowestFromRarityList(analyzeData, rarityList);
 
-		ArrayList<OwnedCard> cardsList = db.getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(analyzeData.getGamePlayCardUUID());
+		List<OwnedCard> cardsList = db.getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(analyzeData.getGamePlayCardUUID());
 
 		if (cardsList.isEmpty()) {
 			analyzeData.setQuantity(0);

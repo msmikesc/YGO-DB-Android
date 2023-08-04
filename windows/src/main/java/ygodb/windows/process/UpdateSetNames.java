@@ -1,7 +1,7 @@
 package ygodb.windows.process;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
@@ -23,9 +23,9 @@ public class UpdateSetNames {
 
 	public void run(SQLiteConnection db) throws SQLException {
 
-		ArrayList<String> setsList = db.getDistinctSetNames();
+		List<String> setsList = db.getDistinctSetNames();
 		
-		ArrayList<SetMetaData> metaData = db.getAllSetMetaDataFromSetData();
+		List<SetMetaData> metaData = db.getAllSetMetaDataFromSetData();
 		
 		for(SetMetaData meta: metaData) {
 			if(!setsList.contains(meta.getSetName())) {

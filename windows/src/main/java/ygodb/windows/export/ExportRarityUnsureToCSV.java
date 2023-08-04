@@ -2,7 +2,8 @@ package ygodb.windows.export;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.csv.CSVPrinter;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
@@ -25,7 +26,7 @@ public class ExportRarityUnsureToCSV {
 		String filename = "rarity-unsure-export.csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 		
-		ArrayList<OwnedCard> list = db.getRarityUnsureOwnedCards();
+		List<OwnedCard> list = db.getRarityUnsureOwnedCards();
 
 		CsvConnection csvConnection = new CsvConnection();
 		

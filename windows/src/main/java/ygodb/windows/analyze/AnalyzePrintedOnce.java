@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.csv.CSVPrinter;
 
@@ -26,7 +26,7 @@ public class AnalyzePrintedOnce {
 
 	public void run(SQLiteConnection db) throws SQLException, IOException {
 
-		HashMap<String, AnalyzePrintedOnceData> h = db.getCardsOnlyPrintedOnce();
+		Map<String, AnalyzePrintedOnceData> h = db.getCardsOnlyPrintedOnce();
 
 		ArrayList<AnalyzePrintedOnceData> array = new ArrayList<>(h.values());
 

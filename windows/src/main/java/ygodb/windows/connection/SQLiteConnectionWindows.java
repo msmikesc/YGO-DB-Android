@@ -57,7 +57,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public HashMap<String, List<CardSet>> getAllCardRaritiesForHashMap() throws SQLException {
+	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -86,7 +86,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public HashMap<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException {
+	public Map<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -137,7 +137,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_RARITIES_OF_CARD_BY_GAME_PLAY_CARD_UUID;
 
@@ -207,7 +207,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+	public List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID;
 
@@ -280,7 +280,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+	public List<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ANALYZE_DATA_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID;
 
@@ -352,22 +352,22 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ArrayList<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ArrayList<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCardsWithoutSetNumber() throws SQLException {
+	public List<OwnedCard> getAllOwnedCardsWithoutSetNumber() throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_SET_NUMBER;
 
@@ -387,7 +387,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException {
+	public List<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE;
 
@@ -407,7 +407,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public HashMap<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
+	public Map<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
 
@@ -431,7 +431,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getRarityUnsureOwnedCards() throws SQLException {
+	public List<OwnedCard> getRarityUnsureOwnedCards() throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_RARITY_UNSURE_OWNED_CARDS;
 
@@ -451,7 +451,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) throws SQLException {
+	public List<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME;
 
@@ -472,7 +472,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<GamePlayCard> getDistinctGamePlayCardsInSetByName(String setName) throws SQLException {
+	public List<GamePlayCard> getDistinctGamePlayCardsInSetByName(String setName) throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME;
 
@@ -495,7 +495,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) throws SQLException {
+	public List<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_DISTINCT_GAMEPLAYCARDS_BY_ARCHETYPE;
 
@@ -518,7 +518,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<String> getSortedCardsInSetByName(String setName) throws SQLException {
+	public List<String> getSortedCardsInSetByName(String setName) throws SQLException {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_SORTED_CARDS_IN_SET_BY_NAME;
 
@@ -540,7 +540,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<String> getDistinctSetNames() throws SQLException {
+	public List<String> getDistinctSetNames() throws SQLException {
 		Connection connection = this.getInstance();
 		String distinctQuery = SQLConst.GET_DISTINCT_SET_NAMES;
 
@@ -558,7 +558,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<String> getDistinctSetAndArchetypeNames() {
+	public List<String> getDistinctSetAndArchetypeNames() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -649,7 +649,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<SetMetaData> getSetMetaDataFromSetName(String setName) throws SQLException {
+	public List<SetMetaData> getSetMetaDataFromSetName(String setName) throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -680,7 +680,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<SetMetaData> getSetMetaDataFromSetCode(String setCode) throws SQLException {
+	public List<SetMetaData> getSetMetaDataFromSetCode(String setCode) throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -709,7 +709,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<SetMetaData> getAllSetMetaDataFromSetData() throws SQLException {
+	public List<SetMetaData> getAllSetMetaDataFromSetData() throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -736,7 +736,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public HashMap<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() throws SQLException {
+	public Map<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() throws SQLException {
 
 		Connection connection = this.getInstance();
 

@@ -32,7 +32,7 @@ import com.google.android.material.snackbar.Snackbar;
 import ygodb.commonlibrary.importer.ImportPricesFromYGOPROAPI;
 import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                ArrayList<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+                List<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
                 viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
             } catch (Exception e) {
                 YGOLogger.logException(e);

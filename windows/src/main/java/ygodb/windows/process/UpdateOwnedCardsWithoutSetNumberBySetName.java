@@ -1,7 +1,7 @@
 package ygodb.windows.process;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
@@ -23,7 +23,7 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 
 	public void run(SQLiteConnection db) throws SQLException {
 
-		ArrayList<OwnedCard> cards = db.getAllOwnedCardsWithoutSetNumber();
+		List<OwnedCard> cards = db.getAllOwnedCardsWithoutSetNumber();
 		
 		int count = 0;
 

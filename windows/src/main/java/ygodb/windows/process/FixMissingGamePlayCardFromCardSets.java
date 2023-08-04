@@ -1,7 +1,6 @@
 package ygodb.windows.process;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ygodb.commonlibrary.bean.CardSet;
@@ -25,7 +24,7 @@ public class FixMissingGamePlayCardFromCardSets {
 
 	public void run(SQLiteConnection db) throws SQLException {
 
-		ArrayList<String> setsList = db.getDistinctSetNames();
+		List<String> setsList = db.getDistinctSetNames();
 
 		for (String setName : setsList) {
 
@@ -33,9 +32,9 @@ public class FixMissingGamePlayCardFromCardSets {
 				continue;
 			}
 
-			ArrayList<String> list = db.getDistinctGamePlayCardUUIDsInSetByName(setName);
+			List<String> list = db.getDistinctGamePlayCardUUIDsInSetByName(setName);
 			for (String gamePlayCardUUID : list) {
-				ArrayList<String> titles = db.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID);
+				List<String> titles = db.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID);
 				
 				List<CardSet> cardSets = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
 				

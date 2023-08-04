@@ -27,20 +27,12 @@ public class DatabaseSelectQueryAndroid<T> implements DatabaseSelectQuery<T, Cur
 
 	@Override
 	public void bindString(int index, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("Cannot bind null value to a string parameter");
-		} else {
-			bindArgs.put(index, value);
-		}
+		bindArgs.put(index, value);
 	}
 
 	@Override
 	public void bindInteger(int index, Integer value) {
-		if (value == null) {
-			throw new IllegalArgumentException("Cannot bind null value to an integer parameter");
-		} else {
-			bindArgs.put(index, String.valueOf(value));
-		}
+		bindArgs.put(index, String.valueOf(value));
 	}
 
 	@Override
