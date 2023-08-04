@@ -136,6 +136,13 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		current.setModificationDate(rs.getString(Const.MODIFICATION_DATE));
 	}
 
+	public static class GamePlayCardNameMapperSelectQuery implements SelectQueryResultMapper<String, ResultSet> {
+		@Override
+		public String mapRow(ResultSet resultSet) throws SQLException {
+			return resultSet.getString(Const.GAME_PLAY_CARD_NAME);
+		}
+	}
+
 	@Override
 	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() throws SQLException {
 
@@ -196,29 +203,13 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	@Override
 	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
-		Connection connection = this.getInstance();
-		String setQuery = SQLConst.GET_RARITIES_OF_CARD_BY_GAME_PLAY_CARD_UUID;
-
-		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery)) {
-
-			statementSetQuery.setString(1, gamePlayCardUUID);
-			try (ResultSet rarities = statementSetQuery.executeQuery()) {
-				ArrayList<CardSet> results = new ArrayList<>();
-
-				while (rarities.next()) {
-					CardSet set = new CardSet();
-					getAllCardSetFieldsFromRS(rarities, set);
-					results.add(set);
-				}
-
-				return results;
-			}
-		}
+		DatabaseSelectQuery<CardSet, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID,
+				query, new CardSetMapperSelectQuery());
 	}
 
 	@Override
-	public List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName)
-			throws SQLException {
+	public List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) throws SQLException {
 		DatabaseSelectQuery<CardSet, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
 		return CommonDatabaseQueries.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName,
 				query, new CardSetMapperSelectQuery());
@@ -241,48 +232,17 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	@Override
 	public String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
-		Connection connection = this.getInstance();
-		String setQuery = SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID;
-
-		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery)) {
-
-			statementSetQuery.setString(1, gamePlayCardUUID);
-
-			try (ResultSet rarities = statementSetQuery.executeQuery()) {
-				ArrayList<String> titlesFound = new ArrayList<>();
-
-				while (rarities.next()) {
-					titlesFound.add(rarities.getString(Const.GAME_PLAY_CARD_NAME));
-				}
-
-				if (titlesFound.size() == 1) {
-					return titlesFound.get(0);
-				}
-			}
-		}
-
-		return null;
+		DatabaseSelectQuery<String, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getCardTitleFromGamePlayCardUUID(gamePlayCardUUID,
+				query, new GamePlayCardNameMapperSelectQuery());
 	}
 
 	@Override
 	public List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
-		Connection connection = this.getInstance();
-		String setQuery = SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID;
 
-		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery)) {
-
-			statementSetQuery.setString(1, gamePlayCardUUID);
-
-			try (ResultSet rarities = statementSetQuery.executeQuery()) {
-				ArrayList<String> titlesFound = new ArrayList<>();
-
-				while (rarities.next()) {
-					titlesFound.add(rarities.getString(Const.GAME_PLAY_CARD_NAME));
-				}
-
-				return titlesFound;
-			}
-		}
+		DatabaseSelectQuery<String, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID,
+				query, new GamePlayCardNameMapperSelectQuery());
 	}
 
 	@Override

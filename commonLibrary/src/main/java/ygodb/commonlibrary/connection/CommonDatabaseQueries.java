@@ -10,13 +10,57 @@ import java.util.List;
 
 public class CommonDatabaseQueries {
 
-	private CommonDatabaseQueries(){}
+	private CommonDatabaseQueries() {
+	}
+
+	public static <R> List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID,
+			DatabaseSelectQuery<CardSet, R> query, SelectQueryResultMapper<CardSet, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_RARITIES_OF_CARD_BY_GAME_PLAY_CARD_UUID);
+
+		query.bindString(1, gamePlayCardUUID);
+
+		return query.executeQuery(mapper);
+	}
+
+	public static <R> List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName,
+			DatabaseSelectQuery<CardSet, R> query, SelectQueryResultMapper<CardSet, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID);
+
+		query.bindString(1, gamePlayCardUUID);
+		query.bindString(2, setName);
+
+		return query.executeQuery(mapper);
+	}
+
+	public static <R> String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID,
+			DatabaseSelectQuery<String, R> query, SelectQueryResultMapper<String, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID);
+
+		query.bindString(1, gamePlayCardUUID);
+
+		List<String> titlesFound = query.executeQuery(mapper);
+
+		if (titlesFound.size() == 1) {
+			return titlesFound.get(0);
+		}
+
+		return null;
+	}
+
+	public static <R> List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID,
+			DatabaseSelectQuery<String, R> query, SelectQueryResultMapper<String, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID);
+
+		query.bindString(1, gamePlayCardUUID);
+
+		return query.executeQuery(mapper);
+	}
 
 	public static int updateCardSetUrl(DatabaseUpdateQuery query, String setNumber, String rarity, String setName,
-								String cardName, String setURL, String colorVariant)
+			String cardName, String setURL, String colorVariant)
 			throws SQLException {
 
-		if(colorVariant == null || colorVariant.isBlank()){
+		if (colorVariant == null || colorVariant.isBlank()) {
 			colorVariant = Const.DEFAULT_COLOR_VARIANT;
 		}
 
@@ -55,13 +99,5 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static <R> List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName,
-			DatabaseSelectQuery <CardSet, R> query, SelectQueryResultMapper<CardSet, R> cardSetMapperSelectQuery) throws SQLException {
-		query.prepareStatement(SQLConst.GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID);
 
-		query.bindString(1, gamePlayCardUUID);
-		query.bindString(2, setName);
-
-		return query.executeQuery(cardSetMapperSelectQuery);
-	}
 }

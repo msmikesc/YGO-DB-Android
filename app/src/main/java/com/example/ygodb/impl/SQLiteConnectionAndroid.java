@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -378,6 +379,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
 	}
 
+	public static class GamePlayCardNameMapperSelectQuery implements SelectQueryResultMapper<String, Cursor> {
+		@Override
+		public String mapRow(Cursor resultSet) throws SQLException {
+			String[] col = resultSet.getColumnNames();
+			return resultSet.getString(getColumn(col, Const.GAME_PLAY_CARD_NAME));
+		}
+	}
+
 	@Override
 	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() {
 
@@ -439,28 +448,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 
 	@Override
-	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) {
+	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_RARITIES_OF_CARD_BY_GAME_PLAY_CARD_UUID;
-
-		String[] params = new String[]{gamePlayCardUUID};
-
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-
-			String[] col = rs.getColumnNames();
-
-			ArrayList<CardSet> results = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				CardSet set = new CardSet();
-				getAllCardSetFieldsFromRS(rs, col, set);
-				results.add(set);
-			}
-
-			return results;
-		}
+		DatabaseSelectQuery<CardSet, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID,
+				query, new CardSetMapperSelectQuery());
 	}
 
 	@Override
@@ -627,35 +619,18 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) {
+	public String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID;
-
-		String[] params = new String[]{gamePlayCardUUID};
-
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-
-			ArrayList<String> titlesFound = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				titlesFound.add(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_NAME)));
-			}
-
-			if (titlesFound.size() == 1) {
-				return titlesFound.get(0);
-			}
-
-			return null;
-		}
+		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getCardTitleFromGamePlayCardUUID(gamePlayCardUUID,
+				query, new GamePlayCardNameMapperSelectQuery());
 	}
 
 	@Override
-	public List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) {
-		throw new UnsupportedOperationException();
+	public List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID,
+				query, new GamePlayCardNameMapperSelectQuery());
 	}
 
 	@Override
