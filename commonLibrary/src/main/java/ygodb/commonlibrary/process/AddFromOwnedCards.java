@@ -2,6 +2,7 @@ package ygodb.commonlibrary.process;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
@@ -13,7 +14,7 @@ import ygodb.commonlibrary.utility.YGOLogger;
 public class AddFromOwnedCards {
 
 	public void run(SQLiteConnection db) throws SQLException {
-		ArrayList<OwnedCard> cards = db.getAllOwnedCards();
+		List<OwnedCard> cards = db.getAllOwnedCards();
 
 		for (OwnedCard card : cards) {
 

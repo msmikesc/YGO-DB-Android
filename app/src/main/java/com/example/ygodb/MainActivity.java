@@ -32,8 +32,6 @@ import com.google.android.material.snackbar.Snackbar;
 import ygodb.commonlibrary.importer.ImportPricesFromYGOPROAPI;
 import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 

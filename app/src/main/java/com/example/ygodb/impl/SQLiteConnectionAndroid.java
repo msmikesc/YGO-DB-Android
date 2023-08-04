@@ -17,10 +17,12 @@ import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.CommonDatabaseQueries;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.DatabaseSelectQuery;
 import ygodb.commonlibrary.connection.DatabaseUpdateQuery;
 import ygodb.commonlibrary.connection.FileHelper;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.connection.SelectQueryResultMapper;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.constant.SQLConst;
 import ygodb.commonlibrary.utility.Util;
@@ -283,7 +285,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		connectionInstance = null;
 	}
 
-	private int getColumn(String[] col, String columnName) {
+	private static int getColumn(String[] col, String columnName) {
 		for (int i = 0; i < col.length; i++) {
 			if (col[i].equals(columnName)) {
 				return i;
@@ -688,25 +690,11 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCards() {
-		SQLiteDatabase connection = this.getInstance();
+	public List<OwnedCard> getAllOwnedCards() throws SQLException {
+		DatabaseSelectQuery<OwnedCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS);
 
-		String setQuery = SQLConst.GET_ALL_OWNED_CARDS;
-
-		try (Cursor rs = connection.rawQuery(setQuery, null)) {
-
-			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, col, current);
-				cardsInSetList.add(current);
-			}
-
-			return cardsInSetList;
-		}
+		return query.executeQuery(new OwnedCardMapperSelectQuery());
 	}
 
 	@Override
@@ -816,7 +804,17 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		}
 	}
 
-	private void getAllOwnedCardFieldsFromRS(Cursor rs, String[] col, OwnedCard current) {
+	public static class OwnedCardMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, Cursor> {
+		@Override
+		public OwnedCard mapRow(Cursor resultSet) throws SQLException {
+			OwnedCard entity = new OwnedCard();
+			String[] col = resultSet.getColumnNames();
+			getAllOwnedCardFieldsFromRS(resultSet, col, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllOwnedCardFieldsFromRS(Cursor rs, String[] col, OwnedCard current) {
 		current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
 		current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));
 		current.setCardName(rs.getString(getColumn(col, Const.CARD_NAME)));

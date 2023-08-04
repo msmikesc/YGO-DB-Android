@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.csv.CSVPrinter;
@@ -33,7 +34,7 @@ public class AnalyzeCardsToSell {
 
 		//TODO update this to use api prices
 
-		 ArrayList<OwnedCard> cards = db.getAllOwnedCards();
+		 List<OwnedCard> cards = db.getAllOwnedCards();
 		 
 		 HashMap <String, ArrayList<String>> priceMap = new HashMap<>();
 		 

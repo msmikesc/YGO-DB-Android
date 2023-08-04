@@ -16,9 +16,11 @@ import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.CommonDatabaseQueries;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.DatabaseSelectQuery;
 import ygodb.commonlibrary.connection.DatabaseUpdateQuery;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.connection.SelectQueryResultMapper;
 import ygodb.commonlibrary.constant.SQLConst;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.constant.Const;
@@ -315,22 +317,19 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<OwnedCard> getAllOwnedCards() throws SQLException {
-		Connection connection = this.getInstance();
-		String setQuery = SQLConst.GET_ALL_OWNED_CARDS;
+	public List<OwnedCard> getAllOwnedCards() throws SQLException {
+		DatabaseSelectQuery<OwnedCard, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS);
 
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
-			 ResultSet rs = setQueryStatement.executeQuery()) {
+		return query.executeQuery(new OwnedCardMapperSelectQuery());
+	}
 
-			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
-
-			while (rs.next()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, current);
-				cardsInSetList.add(current);
-			}
-
-			return cardsInSetList;
+	public static class OwnedCardMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, ResultSet> {
+		@Override
+		public OwnedCard mapRow(ResultSet resultSet) throws SQLException {
+			OwnedCard entity = new OwnedCard();
+			getAllOwnedCardFieldsFromRS(resultSet, entity);
+			return entity;
 		}
 	}
 

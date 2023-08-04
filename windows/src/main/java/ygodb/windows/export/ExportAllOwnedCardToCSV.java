@@ -2,7 +2,8 @@ package ygodb.windows.export;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.csv.CSVPrinter;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
@@ -26,7 +27,7 @@ public class ExportAllOwnedCardToCSV {
 		String filename = "all-export.csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 		
-		ArrayList<OwnedCard> list = db.getAllOwnedCards();
+		List<OwnedCard> list = db.getAllOwnedCards();
 
 		CsvConnection csvConnection = new CsvConnection();
 		

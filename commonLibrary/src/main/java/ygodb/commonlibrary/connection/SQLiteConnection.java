@@ -40,7 +40,7 @@ public interface SQLiteConnection {
 
     ArrayList<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String name) throws SQLException;
 
-    ArrayList<OwnedCard> getAllOwnedCards() throws SQLException;
+    List<OwnedCard> getAllOwnedCards() throws SQLException;
 
     OwnedCard getExistingOwnedCardByObject(OwnedCard query);
 

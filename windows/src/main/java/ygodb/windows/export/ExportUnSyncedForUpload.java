@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.csv.CSVPrinter;
@@ -33,7 +33,7 @@ public class ExportUnSyncedForUpload {
 		String filename = "all-upload.csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
-		ArrayList<OwnedCard> list = db.getAllOwnedCards();
+		List<OwnedCard> list = db.getAllOwnedCards();
 
 		CsvConnection csvConnection = new CsvConnection();
 
