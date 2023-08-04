@@ -19,7 +19,9 @@ import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
 import com.example.ygodb.ui.viewsetboxes.ViewBoxSetViewModel;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.YGOLogger;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,7 +83,13 @@ public class AndroidUtil {
 	public static void updateViewsAfterDBLoad() {
 		ViewCardSetViewModel viewCardSetViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
-		List<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+		List<String> setNamesArrayList = null;
+		try {
+			setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+		} catch (SQLException e) {
+			YGOLogger.logException(e);
+			throw new RuntimeException(e);
+		}
 		viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
 
 		viewCardSetViewModel.refreshViewDBUpdate();

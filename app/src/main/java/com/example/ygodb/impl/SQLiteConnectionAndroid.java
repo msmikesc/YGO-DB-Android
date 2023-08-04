@@ -39,7 +39,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -373,11 +372,58 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
 	}
 
+	public static class SetBoxMapperSelectQuery implements SelectQueryResultMapper<SetBox, Cursor> {
+		@Override
+		public SetBox mapRow(Cursor resultSet) throws SQLException {
+			SetBox entity = new SetBox();
+			String[] col = resultSet.getColumnNames();
+			getAllSetBoxesFieldsFromRS(resultSet, col, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllSetBoxesFieldsFromRS(Cursor rs, String[] col, SetBox current) {
+		current.setBoxLabel(rs.getString(getColumn(col, Const.BOX_LABEL)));
+		current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
+		current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
+	}
+
 	public static class GamePlayCardNameMapperSelectQuery implements SelectQueryResultMapper<String, Cursor> {
 		@Override
 		public String mapRow(Cursor resultSet) throws SQLException {
 			String[] col = resultSet.getColumnNames();
 			return resultSet.getString(getColumn(col, Const.GAME_PLAY_CARD_NAME));
+		}
+	}
+
+	public static class GamePlayCardUUIDMapperSelectQuery implements SelectQueryResultMapper<String, Cursor> {
+		@Override
+		public String mapRow(Cursor resultSet) throws SQLException {
+			String[] col = resultSet.getColumnNames();
+			return resultSet.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID));
+		}
+	}
+
+	public static class SetNumberMapperSelectQuery implements SelectQueryResultMapper<String, Cursor> {
+		@Override
+		public String mapRow(Cursor resultSet) throws SQLException {
+			String[] col = resultSet.getColumnNames();
+			return resultSet.getString(getColumn(col, Const.SET_NUMBER));
+		}
+	}
+
+	public static class SetNameMapperSelectQuery implements SelectQueryResultMapper<String, Cursor> {
+		@Override
+		public String mapRow(Cursor resultSet) throws SQLException {
+			String[] col = resultSet.getColumnNames();
+			return resultSet.getString(getColumn(col, Const.SET_NAME));
+		}
+	}
+
+	public static class FirstIntMapperSelectQuery implements SelectQueryResultMapper<Integer, Cursor> {
+		@Override
+		public Integer mapRow(Cursor resultSet) throws SQLException {
+			return resultSet.getInt(0);
 		}
 	}
 
@@ -594,7 +640,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	@Override
 	public String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
-
 		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
 		return CommonDatabaseQueries.getCardTitleFromGamePlayCardUUID(gamePlayCardUUID, query, new GamePlayCardNameMapperSelectQuery());
 	}
@@ -607,59 +652,15 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public String getGamePlayCardUUIDFromTitle(String title) {
-
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_GAME_PLAY_CARD_UUID_FROM_TITLE;
-
-		String[] params = new String[]{title};
-
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-
-			ArrayList<String> idsFound = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				idsFound.add(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
-			}
-
-			if (idsFound.size() == 1) {
-				return idsFound.get(0);
-			}
-
-			return null;
-		}
+	public String getGamePlayCardUUIDFromTitle(String title) throws SQLException {
+		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getGamePlayCardUUIDFromTitle(title, query, new GamePlayCardUUIDMapperSelectQuery());
 	}
 
 	@Override
-	public String getGamePlayCardUUIDFromPasscode(int passcode) {
-
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_GAME_PLAY_CARD_UUID_FROM_PASSCODE;
-
-		String[] params = new String[]{String.valueOf(passcode)};
-
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-
-			ArrayList<String> idsFound = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				idsFound.add(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
-			}
-
-			if (idsFound.size() == 1) {
-				return idsFound.get(0);
-			} else if (idsFound.size() > 1) {
-				YGOLogger.error("More than 1 GamePlayCard found for passcode:" + passcode);
-			}
-
-			return null;
-		}
+	public String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException {
+		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getGamePlayCardUUIDFromPasscode(passcode, query, new GamePlayCardUUIDMapperSelectQuery());
 	}
 
 	@Override
@@ -825,45 +826,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public List<OwnedCard> getAllOwnedCardsWithoutSetNumber() {
-		SQLiteDatabase connection = this.getInstance();
+	public List<OwnedCard> getAllOwnedCardsWithoutSetNumber() throws SQLException {
+		DatabaseSelectQuery<OwnedCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_SET_NUMBER);
 
-		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_SET_NUMBER;
-
-		try (Cursor rs = connection.rawQuery(setQuery, null)) {
-			String[] col = rs.getColumnNames();
-
-			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, col, current);
-				cardsInSetList.add(current);
-			}
-
-			return cardsInSetList;
-		}
+		return query.executeQuery(new OwnedCardMapperSelectQuery());
 	}
 
 	@Override
-	public List<OwnedCard> getAllOwnedCardsWithoutPasscode() {
-		SQLiteDatabase connection = this.getInstance();
+	public List<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException {
+		DatabaseSelectQuery<OwnedCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE);
 
-		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE;
-
-		try (Cursor rs = connection.rawQuery(setQuery, null)) {
-			String[] col = rs.getColumnNames();
-
-			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, col, current);
-				cardsInSetList.add(current);
-			}
-
-			return cardsInSetList;
-		}
+		return query.executeQuery(new OwnedCardMapperSelectQuery());
 	}
 
 	@Override
@@ -892,215 +867,71 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public List<OwnedCard> getRarityUnsureOwnedCards() {
-		SQLiteDatabase connection = this.getInstance();
+	public List<OwnedCard> getRarityUnsureOwnedCards() throws SQLException {
+		DatabaseSelectQuery<OwnedCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		query.prepareStatement(SQLConst.GET_RARITY_UNSURE_OWNED_CARDS);
 
-		String setQuery = SQLConst.GET_RARITY_UNSURE_OWNED_CARDS;
-
-		try (Cursor rs = connection.rawQuery(setQuery, null)) {
-			String[] col = rs.getColumnNames();
-
-			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, col, current);
-				cardsInSetList.add(current);
-			}
-
-			return cardsInSetList;
-		}
+		return query.executeQuery(new OwnedCardMapperSelectQuery());
 	}
 
 	@Override
-	public List<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME;
-
-		String[] params = new String[]{setName};
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-			ArrayList<String> cardsInSetList = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				cardsInSetList.add(rs.getString(0));
-			}
-
-			return cardsInSetList;
-		}
+	public List<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) throws SQLException {
+		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getDistinctGamePlayCardUUIDsInSetByName(setName, query, new GamePlayCardUUIDMapperSelectQuery());
 	}
 
 	@Override
-	public List<GamePlayCard> getDistinctGamePlayCardsInSetByName(String setName) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME;
-
-		String[] params = new String[]{setName};
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-			ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				GamePlayCard current = new GamePlayCard();
-				getAllGamePlayCardFieldsFromRS(rs, col, current);
-				cardsInSetList.add(current);
-			}
-
-			return cardsInSetList;
-		}
+	public List<GamePlayCard> getDistinctGamePlayCardsInSetByName(String setName) throws SQLException {
+		DatabaseSelectQuery<GamePlayCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getDistinctGamePlayCardsInSetByName(setName, query, new GamePlayCardMapperSelectQuery());
 	}
 
 	@Override
-	public List<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_DISTINCT_GAMEPLAYCARDS_BY_ARCHETYPE;
-
-		String[] params = new String[]{archetype, "%" + archetype + "%"};
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-			ArrayList<GamePlayCard> cardsInSetList = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				GamePlayCard current = new GamePlayCard();
-				getAllGamePlayCardFieldsFromRS(rs, col, current);
-				cardsInSetList.add(current);
-			}
-
-			return cardsInSetList;
-		}
+	public List<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) throws SQLException {
+		DatabaseSelectQuery<GamePlayCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getDistinctGamePlayCardsByArchetype(archetype, query, new GamePlayCardMapperSelectQuery());
 	}
 
 	@Override
-	public List<String> getSortedCardsInSetByName(String setName) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_SORTED_CARDS_IN_SET_BY_NAME;
-
-		String[] params = new String[]{setName};
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-			String[] col = rs.getColumnNames();
-
-			ArrayList<String> cardsInSetList = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				cardsInSetList.add(rs.getString(getColumn(col, Const.SET_NUMBER)));
-			}
-
-			Collections.sort(cardsInSetList);
-			return cardsInSetList;
-		}
+	public List<String> getSortedSetNumbersInSetByName(String setName) throws SQLException {
+		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getSortedSetNumbersInSetByName(setName, query, new SetNumberMapperSelectQuery());
 	}
 
 	@Override
-	public List<String> getDistinctSetNames() {
-		SQLiteDatabase connection = this.getInstance();
-
-		String query = SQLConst.GET_DISTINCT_SET_NAMES;
-
-		try (Cursor rs = connection.rawQuery(query, null)) {
-			String[] col = rs.getColumnNames();
-
-			ArrayList<String> setsList = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				setsList.add(rs.getString(getColumn(col, Const.SET_NAME)));
-			}
-
-			return setsList;
-		}
+	public List<String> getDistinctSetNames() throws SQLException {
+		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getDistinctSetNames(query, new SetNameMapperSelectQuery());
 	}
 
 	@Override
-	public List<String> getDistinctSetAndArchetypeNames() {
-		SQLiteDatabase connection = this.getInstance();
-
-		String query = SQLConst.GET_DISTINCT_SET_AND_ARCHETYPE_NAMES;
-
-		try (Cursor rs = connection.rawQuery(query, null)) {
-			String[] col = rs.getColumnNames();
-
-			ArrayList<String> setsList = new ArrayList<>();
-
-			while (rs.moveToNext()) {
-				setsList.add(rs.getString(getColumn(col, Const.SET_NAME)));
-			}
-
-			return setsList;
-		}
+	public List<String> getDistinctSetAndArchetypeNames() throws SQLException {
+		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getDistinctSetAndArchetypeNames(query, new SetNameMapperSelectQuery());
 	}
 
 	@Override
-	public int getCountDistinctCardsInSet(String setName) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String query = SQLConst.GET_COUNT_DISTINCT_CARDS_IN_SET;
-
-		String[] params = new String[]{setName};
-		try (Cursor rs = connection.rawQuery(query, params)) {
-			int results = -1;
-
-			while (rs.moveToNext()) {
-				results = rs.getInt(0);
-			}
-
-			return results;
-		}
+	public int getCountDistinctCardsInSet(String setName) throws SQLException {
+		DatabaseSelectQuery<Integer, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getCountDistinctCardsInSet(query, new FirstIntMapperSelectQuery());
 	}
 
 	@Override
-	public int getCountQuantity() {
-		SQLiteDatabase connection = this.getInstance();
-
-		String query = SQLConst.GET_COUNT_QUANTITY;
-
-		try (Cursor rs = connection.rawQuery(query, null)) {
-			int results = -1;
-
-			while (rs.moveToNext()) {
-				results = rs.getInt(0);
-			}
-
-			return results;
-		}
+	public int getCountQuantity() throws SQLException {
+		DatabaseSelectQuery<Integer, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getCountQuantity(query, new FirstIntMapperSelectQuery());
 	}
 
 	@Override
-	public int getCountQuantityManual() {
-		SQLiteDatabase connection = this.getInstance();
-
-		String query = SQLConst.GET_COUNT_QUANTITY_MANUAL;
-
-		try (Cursor rs = connection.rawQuery(query, null)) {
-			int results = -1;
-
-			while (rs.moveToNext()) {
-				results = rs.getInt(0);
-			}
-
-			return results;
-		}
+	public int getCountQuantityManual() throws SQLException {
+		DatabaseSelectQuery<Integer, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getCountQuantityManual(query, new FirstIntMapperSelectQuery());
 	}
 
 	@Override
-	public CardSet getFirstCardSetForCardInSet(String cardName, String setName) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String query = SQLConst.GET_FIRST_CARD_SET_FOR_CARD_IN_SET;
-
-		String[] params = new String[]{setName, cardName};
-		try (Cursor rs = connection.rawQuery(query, params)) {
-			String[] col = rs.getColumnNames();
-			CardSet set = null;
-			if (rs.moveToNext()) {
-				set = new CardSet();
-				getAllCardSetFieldsFromRS(rs, col, set);
-			}
-			return set;
-		}
+	public CardSet getFirstCardSetForCardInSet(String cardName, String setName) throws SQLException {
+		DatabaseSelectQuery<CardSet, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getFirstCardSetForCardInSet(cardName, setName, query, new CardSetMapperSelectQuery());
 	}
 
 	@Override
@@ -1218,19 +1049,39 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public void replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) {
-		SQLiteDatabase connection = this.getInstance();
+	public GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException {
+		DatabaseSelectQuery<GamePlayCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getGamePlayCardByUUID(gamePlayCardUUID, query, new GamePlayCardMapperSelectQuery());
+	}
 
-		String cardSets = SQLConst.REPLACE_INTO_CARD_SET_META_DATA;
+	@Override
+	public int getNewLowestPasscode() throws SQLException {
+		DatabaseSelectQuery<Integer, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getNewLowestPasscode(query, new FirstIntMapperSelectQuery());
+	}
 
-		try (SQLiteStatement statementInsertSets = connection.compileStatement(cardSets)) {
-			statementInsertSets.bindString(1, setName);
-			statementInsertSets.bindString(2, setCode);
-			statementInsertSets.bindLong(3, numOfCards);
-			statementInsertSets.bindString(4, tcgDate);
+	@Override
+	public List<SetBox> getAllSetBoxes() throws SQLException {
+		DatabaseSelectQuery<SetBox, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getAllSetBoxes(query, new SetBoxMapperSelectQuery());
+	}
 
-			statementInsertSets.execute();
-		}
+	@Override
+	public List<SetBox> getSetBoxesByNameOrCode(String searchText) throws SQLException {
+		DatabaseSelectQuery<SetBox, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getSetBoxesByNameOrCode(searchText, query, new SetBoxMapperSelectQuery());
+	}
+
+	@Override
+	public int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.replaceIntoGamePlayCard(query, input);
+	}
+
+	@Override
+	public int replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.replaceIntoCardSetMetaData(query, setName, setCode, numOfCards, tcgDate);
 	}
 
 	public void setStringOrNull(SQLiteStatement p, int index, String s) {
@@ -1250,107 +1101,15 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String gamePlayCard = SQLConst.GET_GAME_PLAY_CARD_BY_UUID;
-		String[] params = new String[]{gamePlayCardUUID};
-
-		try (Cursor rs = connection.rawQuery(gamePlayCard, params)) {
-			String[] col = rs.getColumnNames();
-
-			GamePlayCard current = new GamePlayCard();
-
-			if (!rs.moveToNext()) {
-				return null;
-			}
-
-			getAllGamePlayCardFieldsFromRS(rs, col, current);
-
-			return current;
-		}
-	}
-
-	@Override
-	public int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException {
+	public int insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
-
-		return CommonDatabaseQueries.replaceIntoGamePlayCard(query, input);
+		return CommonDatabaseQueries.insertOrUpdateOwnedCardByUUID(query, card);
 	}
 
 	@Override
-	public void insertOrUpdateOwnedCardByUUID(OwnedCard card) {
-		if (card.getUuid() == null || card.getUuid().equals("")) {
-			int rowsInserted = insertIntoOwnedCards(card);
-			if (rowsInserted != 1) {
-				YGOLogger.error(rowsInserted + " rows inserted for insert for:" + card);
-			}
-		} else {
-			int rowsUpdated = updateOwnedCardByUUID(card);
-			if (rowsUpdated != 1) {
-				YGOLogger.error(rowsUpdated + " rows updated for update for:" + card);
-			}
-		}
-	}
-
-	@Override
-	public int updateOwnedCardByUUID(OwnedCard card) {
-		String gamePlayCardUUID = card.getGamePlayCardUUID();
-		String folder = card.getFolderName();
-		String name = card.getCardName();
-		int quantity = card.getQuantity();
-		String setCode = card.getSetCode();
-		String condition = card.getCondition();
-		String printing = card.getEditionPrinting();
-		String priceBought = card.getPriceBought();
-		String dateBought = card.getDateBought();
-		int rarityUnsure = card.getRarityUnsure();
-		String colorVariant = card.getColorVariant();
-		String setNumber = card.getSetNumber();
-		String setName = card.getSetName();
-		String setRarity = card.getSetRarity();
-		int passcode = card.getPasscode();
-		String uuid = card.getUuid();
-
-		if (uuid == null || uuid.equals("")) {
-			YGOLogger.error("UUID null on updated owned card");
-			return 0;
-		}
-
-		SQLiteDatabase connection = this.getInstance();
-
-		if (rarityUnsure != Const.RARITY_UNSURE_TRUE) {
-			rarityUnsure = Const.RARITY_UNSURE_FALSE;
-		}
-
-		if (colorVariant == null) {
-			colorVariant = Const.DEFAULT_COLOR_VARIANT;
-		}
-
-		String normalizedPrice = Util.normalizePrice(priceBought);
-
-		String ownedInsert = SQLConst.UPDATE_OWNED_CARD_BY_UUID;
-
-		try (SQLiteStatement statement = connection.compileStatement(ownedInsert)) {
-			setStringOrNull(statement, 1, gamePlayCardUUID);
-			setStringOrNull(statement, 2, folder);
-			setStringOrNull(statement, 3, name);
-			setIntegerOrNull(statement, 4, quantity);
-			setStringOrNull(statement, 5, setCode);
-			setStringOrNull(statement, 6, setNumber);
-			setStringOrNull(statement, 7, setName);
-			setStringOrNull(statement, 8, setRarity);
-			setStringOrNull(statement, 9, colorVariant);
-			setStringOrNull(statement, 10, condition);
-			setStringOrNull(statement, 11, printing);
-			setStringOrNull(statement, 12, dateBought);
-			setStringOrNull(statement, 13, normalizedPrice);
-			setIntegerOrNull(statement, 14, rarityUnsure);
-			setIntegerOrNull(statement, 15, passcode);
-			setStringOrNull(statement, 16, uuid);
-
-			return statement.executeUpdateDelete();
-		}
+	public int updateOwnedCardByUUID(OwnedCard card) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.updateOwnedCardByUUID(query, card);
 	}
 
 	@Override
@@ -1408,89 +1167,17 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int insertIntoOwnedCards(OwnedCard card) {
-		String gamePlayCardUUID = card.getGamePlayCardUUID();
-		String folder = card.getFolderName();
-		String name = card.getCardName();
-		int quantity = card.getQuantity();
-		String setCode = card.getSetCode();
-		String condition = card.getCondition();
-		String printing = card.getEditionPrinting();
-		String priceBought = card.getPriceBought();
-		String dateBought = card.getDateBought();
-		int rarityUnsure = card.getRarityUnsure();
-		String colorVariant = card.getColorVariant();
-		String setNumber = card.getSetNumber();
-		String setName = card.getSetName();
-		String setRarity = card.getSetRarity();
-		String uuid = card.getUuid();
-		int passcode = card.getPasscode();
-
-		if (uuid == null || uuid.equals("")) {
-			uuid = java.util.UUID.randomUUID().toString();
-		} else {
-			YGOLogger.error("UUID not null on an insert owned card:" + uuid);
-			return 0;
-		}
-
-		SQLiteDatabase connection = this.getInstance();
-
-		if (rarityUnsure != Const.RARITY_UNSURE_TRUE) {
-			rarityUnsure = Const.RARITY_UNSURE_FALSE;
-		}
-
-		if (colorVariant == null) {
-			colorVariant = Const.DEFAULT_COLOR_VARIANT;
-		}
-
-		String normalizedPrice = Util.normalizePrice(priceBought);
-
-		String ownedInsert = SQLConst.INSERT_OR_IGNORE_INTO_OWNED_CARDS;
-
-		try (SQLiteStatement statement = connection.compileStatement(ownedInsert)) {
-			setStringOrNull(statement, 1, gamePlayCardUUID);
-			setStringOrNull(statement, 2, folder);
-			setStringOrNull(statement, 3, name);
-			setIntegerOrNull(statement, 4, quantity);
-			setStringOrNull(statement, 5, setCode);
-			setStringOrNull(statement, 6, setNumber);
-			setStringOrNull(statement, 7, setName);
-			setStringOrNull(statement, 8, setRarity);
-			setStringOrNull(statement, 9, colorVariant);
-			setStringOrNull(statement, 10, condition);
-			setStringOrNull(statement, 11, printing);
-			setStringOrNull(statement, 12, dateBought);
-			setStringOrNull(statement, 13, normalizedPrice);
-			setIntegerOrNull(statement, 14, rarityUnsure);
-			setStringOrNull(statement, 15, uuid);
-			setIntegerOrNull(statement, 16, passcode);
-
-			return statement.executeUpdateDelete();
-		}
+	public int insertIntoOwnedCards(OwnedCard card) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.insertIntoOwnedCards(query, card);
 	}
 
 	@Override
-	public void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String cardName,
-			String colorVariant, String url) {
-
-		if (colorVariant == null || colorVariant.isBlank()) {
-			colorVariant = Const.DEFAULT_COLOR_VARIANT;
-		}
-
-		SQLiteDatabase connection = this.getInstance();
-
-		String setInsert = SQLConst.INSERT_OR_IGNORE_INTO_CARD_SETS;
-
-		try (SQLiteStatement statementSetInsert = connection.compileStatement(setInsert)) {
-			statementSetInsert.bindString(1, gamePlayCardUUID);
-			statementSetInsert.bindString(2, setNumber);
-			statementSetInsert.bindString(3, setName);
-			statementSetInsert.bindString(4, rarity);
-			statementSetInsert.bindString(5, cardName);
-			statementSetInsert.bindString(6, colorVariant);
-			statementSetInsert.bindString(7, url);
-			statementSetInsert.execute();
-		}
+	public int insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String cardName,
+			String colorVariant, String url) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.insertOrIgnoreIntoCardSet(query, setNumber, rarity, setName, gamePlayCardUUID, cardName, colorVariant,
+															   url);
 	}
 
 	@Override
@@ -1532,170 +1219,37 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String rarity, String price, boolean isFirstEdition) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY;
-
-		if (isFirstEdition) {
-			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY_FIRST;
-		}
-
-		try (SQLiteStatement statement = connection.compileStatement(update)) {
-			statement.bindString(1, price);
-			statement.bindString(2, setNumber);
-			statement.bindString(3, rarity);
-
-			return statement.executeUpdateDelete();
-		}
+	public int updateCardSetPrice(String setNumber, String rarity, String price, boolean isFirstEdition) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.updateCardSetPrice(query, setNumber, rarity, price, isFirstEdition);
 	}
 
 	@Override
-	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME;
-
-		if (isFirstEdition) {
-			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_FIRST;
-		}
-
-		try (SQLiteStatement statement = connection.compileStatement(update)) {
-			statement.bindString(1, price);
-			statement.bindString(2, setNumber);
-			statement.bindString(3, rarity);
-			statement.bindString(4, setName);
-
-			return statement.executeUpdateDelete();
-		}
+	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition) throws
+			SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.updateCardSetPriceWithSetName(query, setNumber, rarity, price, setName, isFirstEdition);
 	}
 
 	@Override
 	public int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName,
-			boolean isFirstEdition) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME;
-
-		if (isFirstEdition) {
-			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST;
-		}
-
-		try (SQLiteStatement statement = connection.compileStatement(update)) {
-
-			statement.bindString(1, price);
-			statement.bindString(2, setNumber);
-			statement.bindString(3, rarity);
-			statement.bindString(4, setName);
-			statement.bindString(5, cardName);
-
-			return statement.executeUpdateDelete();
-		}
+			boolean isFirstEdition) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.updateCardSetPriceWithCardAndSetName(query, setNumber, rarity, price, setName, cardName,
+																		  isFirstEdition);
 	}
 
 	@Override
-	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME;
-
-		if (isFirstEdition) {
-			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST;
-		}
-
-		try (SQLiteStatement statement = connection.compileStatement(update)) {
-
-			statement.bindString(1, price);
-			statement.bindString(2, setNumber);
-			statement.bindString(3, rarity);
-			statement.bindString(4, cardName);
-
-			return statement.executeUpdateDelete();
-		}
+	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) throws
+			SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.updateCardSetPriceWithCardName(query, setNumber, rarity, price, cardName, isFirstEdition);
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) {
-		SQLiteDatabase connection = this.getInstance();
-
-		String update = SQLConst.UPDATE_CARD_SET_PRICE;
-
-		if (isFirstEdition) {
-			update = SQLConst.UPDATE_CARD_SET_PRICE_FIRST;
-		}
-
-		try (SQLiteStatement statement = connection.compileStatement(update)) {
-			statement.bindString(1, price);
-			statement.bindString(2, setNumber);
-			return statement.executeUpdateDelete();
-		}
-	}
-
-	@Override
-	public int getNewLowestPasscode() {
-		SQLiteDatabase connection = this.getInstance();
-
-		String query = SQLConst.GET_NEW_LOWEST_PASSCODE;
-
-		try (Cursor rs = connection.rawQuery(query, null)) {
-			if (rs.moveToNext()) {
-				int currentLowest = rs.getInt(1);
-				return currentLowest - 1;
-			}
-		}
-		return -1;
-	}
-
-	private void getAllSetBoxesFieldsFromRS(Cursor rs, String[] col, SetBox current) {
-		current.setBoxLabel(rs.getString(getColumn(col, Const.BOX_LABEL)));
-		current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
-		current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
-	}
-
-	@Override
-	public List<SetBox> getAllSetBoxes() {
-
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_ALL_SET_BOXES;
-
-		try (Cursor rs = connection.rawQuery(setQuery, null)) {
-
-			ArrayList<SetBox> resultsList = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				SetBox current = new SetBox();
-				getAllSetBoxesFieldsFromRS(rs, col, current);
-				resultsList.add(current);
-			}
-			return resultsList;
-		}
-	}
-
-	@Override
-	public List<SetBox> getSetBoxesByNameOrCode(String searchText) {
-
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_SET_BOXES_BY_NAME_OR_CODE;
-
-		String[] params = new String[]{searchText, "%" + searchText + "%"};
-
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-
-			ArrayList<SetBox> resultsList = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				SetBox current = new SetBox();
-				getAllSetBoxesFieldsFromRS(rs, col, current);
-				resultsList.add(current);
-			}
-			return resultsList;
-		}
+	public int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.updateCardSetPrice(query, setNumber, price, isFirstEdition);
 	}
 
 	@Override
@@ -1708,30 +1262,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	@Override
 	public int updateCardSetUrlAndColor(String setNumber, String rarity, String setName, String cardName, String setURL,
 			String currentColorVariant, String newColorVariant) throws SQLException {
-		if (currentColorVariant == null || currentColorVariant.isBlank()) {
-			currentColorVariant = Const.DEFAULT_COLOR_VARIANT;
-		}
-
-		if (newColorVariant == null || newColorVariant.isBlank()) {
-			newColorVariant = Const.DEFAULT_COLOR_VARIANT;
-		}
-
-		SQLiteDatabase connection = this.getInstance();
-
-		String update = SQLConst.UPDATE_CARD_SET_URL_AND_COLOR;
-
-		try (SQLiteStatement statement = connection.compileStatement(update)) {
-
-			statement.bindString(1, setURL);
-			statement.bindString(2, newColorVariant);
-			statement.bindString(3, setNumber);
-			statement.bindString(4, rarity);
-			statement.bindString(5, setName);
-			statement.bindString(6, cardName);
-			statement.bindString(7, currentColorVariant);
-
-			return statement.executeUpdateDelete();
-		}
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.updateCardSetUrlAndColor(query, setNumber, rarity, setName, cardName, setURL, currentColorVariant,
+															  newColorVariant);
 	}
 
 	public PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetterAndroid setter) {

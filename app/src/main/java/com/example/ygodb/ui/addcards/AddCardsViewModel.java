@@ -8,6 +8,7 @@ import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +35,7 @@ public class AddCardsViewModel extends ViewModel {
 	}
 
 
-	public void saveToDB() {
+	public void saveToDB() throws SQLException {
 		for (OwnedCard current : cardsList) {
 
 			if (current.getSetCode() == null || current.getSetCode().equals("")) {

@@ -24,7 +24,7 @@ public class SQLConst {
 	public static final String GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME = "select distinct gamePlayCardUUID from cardSets where setName = ?";
 	public static final String GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME = "select distinct a.* from gamePlayCard a left join cardSets b " + "on a.gamePlayCardUUID = b.gamePlayCardUUID " + "where b.setName = ?";
 	public static final String GET_DISTINCT_GAMEPLAYCARDS_BY_ARCHETYPE = "select distinct * from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
-	public static final String GET_SORTED_CARDS_IN_SET_BY_NAME = "select setNumber from cardSets where setName = ?";
+	public static final String GET_SORTED_SET_NUMBERS_IN_SET_BY_NAME = "select setNumber from cardSets where setName = ?";
 	public static final String GET_DISTINCT_SET_NAMES = "select distinct cardSets.setName from cardSets " + "left join setData on cardSets.setName = setData.setName " + "order by setData.releaseDate desc";
 	public static final String GET_DISTINCT_SET_AND_ARCHETYPE_NAMES = "select * from (select distinct cardSets.setName from " + "cardSets inner join setData on cardSets.setName = setData.setName " + "order by setData.releaseDate desc) " + "UNION ALL " + "select * from (select distinct archetype from gamePlayCard where archetype is not null order by archetype asc)";
 	public static final String GET_COUNT_DISTINCT_CARDS_IN_SET = "select count (distinct setNumber) from cardSets where setName = ?";

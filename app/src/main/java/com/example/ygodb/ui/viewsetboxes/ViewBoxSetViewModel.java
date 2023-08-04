@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
 
 import ygodb.commonlibrary.bean.SetBox;
+import ygodb.commonlibrary.utility.YGOLogger;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ViewBoxSetViewModel extends ViewModel {
@@ -37,16 +39,31 @@ public class ViewBoxSetViewModel extends ViewModel {
 	}
 
 	public List<SetBox> getInitialData() {
-		return AndroidUtil.getDBInstance().getAllSetBoxes();
+		try {
+			return AndroidUtil.getDBInstance().getAllSetBoxes();
+		} catch (SQLException e) {
+			YGOLogger.logException(e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	public List<SetBox> getSearchData(String input) {
 
 		if (input == null || input.isBlank() || input.trim().length() < 3) {
-			return AndroidUtil.getDBInstance().getAllSetBoxes();
+			try {
+				return AndroidUtil.getDBInstance().getAllSetBoxes();
+			} catch (SQLException e) {
+				YGOLogger.logException(e);
+				throw new RuntimeException(e);
+			}
 		}
 
-		return AndroidUtil.getDBInstance().getSetBoxesByNameOrCode(input);
+		try {
+			return AndroidUtil.getDBInstance().getSetBoxesByNameOrCode(input);
+		} catch (SQLException e) {
+			YGOLogger.logException(e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	public List<SetBox> getBoxList() {

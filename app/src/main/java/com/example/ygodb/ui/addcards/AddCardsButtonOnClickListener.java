@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import ygodb.commonlibrary.utility.YGOLogger;
 
+import java.sql.SQLException;
 import java.util.concurrent.Executors;
 
 class AddCardsButtonOnClickListener implements View.OnClickListener {
@@ -90,12 +92,15 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
 			if (menuItem.getTitle().equals("Save Cards")) {
 				Executors.newSingleThreadExecutor().execute(() -> {
 
-					addCardsViewModel.saveToDB();
+					try {
+						addCardsViewModel.saveToDB();
+						view.post(adapter::notifyDataSetChanged);
 
-					view.post(adapter::notifyDataSetChanged);
-
-					AndroidUtil.updateViewsAfterDBLoad();
-
+						AndroidUtil.updateViewsAfterDBLoad();
+					} catch (SQLException e) {
+						YGOLogger.logException(e);
+						throw new RuntimeException(e);
+					}
 				});
 			}
 			return true;

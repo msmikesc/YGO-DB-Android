@@ -63,11 +63,11 @@ public interface SQLiteConnection {
 
 	List<GamePlayCard> getDistinctGamePlayCardsByArchetype(String archetype) throws SQLException;
 
-	List<String> getSortedCardsInSetByName(String setName) throws SQLException;
+	List<String> getSortedSetNumbersInSetByName(String setName) throws SQLException;
 
 	List<String> getDistinctSetNames() throws SQLException;
 
-	List<String> getDistinctSetAndArchetypeNames();
+	List<String> getDistinctSetAndArchetypeNames() throws SQLException;
 
 	int getCountDistinctCardsInSet(String setName) throws SQLException;
 
@@ -85,13 +85,13 @@ public interface SQLiteConnection {
 
 	Map<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() throws SQLException;
 
-	void replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) throws SQLException;
+	int replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) throws SQLException;
 
 	GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException;
 
 	int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 
-	void insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException;
+	int insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException;
 
 	int updateOwnedCardByUUID(OwnedCard card) throws SQLException;
 
@@ -99,7 +99,7 @@ public interface SQLiteConnection {
 
 	int insertIntoOwnedCards(OwnedCard card) throws SQLException;
 
-	void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String cardName,
+	int insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String cardName,
 			String colorVariant, String url) throws SQLException;
 
 	void updateSetName(String original, String newName) throws SQLException;
@@ -119,9 +119,9 @@ public interface SQLiteConnection {
 
 	int getNewLowestPasscode() throws SQLException;
 
-	List<SetBox> getAllSetBoxes();
+	List<SetBox> getAllSetBoxes() throws SQLException;
 
-	List<SetBox> getSetBoxesByNameOrCode(String searchText);
+	List<SetBox> getSetBoxesByNameOrCode(String searchText) throws SQLException;
 
 	int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant) throws
 			SQLException;

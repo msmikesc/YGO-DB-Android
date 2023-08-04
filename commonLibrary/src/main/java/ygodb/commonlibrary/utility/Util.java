@@ -123,7 +123,7 @@ public class Util {
 
 	public static void checkForIssuesWithSet(String setName, SQLiteConnection db) throws SQLException {
 
-		List<String> cardsInSetList = db.getSortedCardsInSetByName(setName);
+		List<String> cardsInSetList = db.getSortedSetNumbersInSetByName(setName);
 
 		String lastPrefix = null;
 		String lastLang = null;
