@@ -25,117 +25,113 @@ import java.util.Locale;
 
 public class AndroidUtil {
 
-    private AndroidUtil(){}
+	private AndroidUtil() {
+	}
 
-    private static Context appContext = null;
+	private static Context appContext = null;
 
-    private static AppCompatActivity owner = null;
+	private static AppCompatActivity owner = null;
 
-    public static void setAppContext(Context in){
-        appContext = in;
-    }
+	public static void setAppContext(Context in) {
+		appContext = in;
+	}
 
-    public static Context getAppContext(){
-        return appContext;
-    }
+	public static Context getAppContext() {
+		return appContext;
+	}
 
-    public static void setViewModelOwner(AppCompatActivity in) {
-        owner = in;
-    }
+	public static void setViewModelOwner(AppCompatActivity in) {
+		owner = in;
+	}
 
-    private static SQLiteConnectionAndroid dbInstance = null;
+	private static SQLiteConnectionAndroid dbInstance = null;
 
-    public static SQLiteConnectionAndroid getDBInstance(){
-        if (dbInstance == null){
-            dbInstance = new SQLiteConnectionAndroid();
-        }
+	public static SQLiteConnectionAndroid getDBInstance() {
+		if (dbInstance == null) {
+			dbInstance = new SQLiteConnectionAndroid();
+		}
 
-        return dbInstance;
-    }
+		return dbInstance;
+	}
 
-    public static AppCompatActivity getViewModelOwner(){
-        return owner;
-    }
+	public static AppCompatActivity getViewModelOwner() {
+		return owner;
+	}
 
-    @SuppressLint("Range")
-    public static String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            try (Cursor cursor = getAppContext().getContentResolver()
-                    .query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
-    }
+	@SuppressLint("Range")
+	public static String getFileName(Uri uri) {
+		String result = null;
+		if (uri.getScheme().equals("content")) {
+			try (Cursor cursor = getAppContext().getContentResolver().query(uri, null, null, null, null)) {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			}
+		}
+		if (result == null) {
+			result = uri.getPath();
+			int cut = result.lastIndexOf('/');
+			if (cut != -1) {
+				result = result.substring(cut + 1);
+			}
+		}
+		return result;
+	}
 
-    public static void updateViewsAfterDBLoad(){
-        ViewCardSetViewModel viewCardSetViewModel =
-                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
+	public static void updateViewsAfterDBLoad() {
+		ViewCardSetViewModel viewCardSetViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
 
-        List<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
-        viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
+		List<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
+		viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
 
-        viewCardSetViewModel.refreshViewDBUpdate();
+		viewCardSetViewModel.refreshViewDBUpdate();
 
-        ViewCardsViewModel viewCardsViewModel =
-                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
-        viewCardsViewModel.refreshViewDBUpdate();
+		ViewCardsViewModel viewCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
+		viewCardsViewModel.refreshViewDBUpdate();
 
-        ViewCardsSummaryViewModel viewCardsSummaryViewModel =
-                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsSummaryViewModel.class);
-        viewCardsSummaryViewModel.refreshViewDBUpdate();
+		ViewCardsSummaryViewModel viewCardsSummaryViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(
+				ViewCardsSummaryViewModel.class);
+		viewCardsSummaryViewModel.refreshViewDBUpdate();
 
-        ViewSoldCardsViewModel viewSoldCardsViewModel =
-                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewSoldCardsViewModel.class);
-        viewSoldCardsViewModel.refreshViewDBUpdate();
+		ViewSoldCardsViewModel viewSoldCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(
+				ViewSoldCardsViewModel.class);
+		viewSoldCardsViewModel.refreshViewDBUpdate();
 
-        ViewBoxSetViewModel viewBoxSetViewModel =
-                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
-        viewBoxSetViewModel.refreshViewDBUpdate();
-    }
+		ViewBoxSetViewModel viewBoxSetViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
+		viewBoxSetViewModel.refreshViewDBUpdate();
+	}
 
-    public static int getColorByColorVariant(String colorVariant) {
-        if (colorVariant != null && !colorVariant.isEmpty() && !colorVariant.equals(Const.DEFAULT_COLOR_VARIANT)) {
-            return switch (colorVariant.toUpperCase(Locale.ROOT)) {
-                case "A" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold);
-                case "R" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson);
-                case "G" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen);
-                case "B" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue);
-                case "P" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet);
-                case "S" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.AMCSilver);
-                case "BRZ" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Bronze);
-                default -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
-            };
-        } else {
-            return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
-        }
-    }
+	public static int getColorByColorVariant(String colorVariant) {
+		if (colorVariant != null && !colorVariant.isEmpty() && !colorVariant.equals(Const.DEFAULT_COLOR_VARIANT)) {
+			return switch (colorVariant.toUpperCase(Locale.ROOT)) {
+				case "A" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold);
+				case "R" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson);
+				case "G" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen);
+				case "B" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue);
+				case "P" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet);
+				case "S" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.AMCSilver);
+				case "BRZ" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Bronze);
+				default -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
+			};
+		} else {
+			return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
+		}
+	}
 
-    public static String getSetRarityDisplayWithColorText(OwnedCard current) {
-        String setRarityText = current.getSetRarity();
+	public static String getSetRarityDisplayWithColorText(OwnedCard current) {
+		String setRarityText = current.getSetRarity();
 
-        if (current.getColorVariant() != null && !current.getColorVariant().isEmpty()
-                && !current.getColorVariant().equals(Const.DEFAULT_COLOR_VARIANT)) {
-            if (current.getColorVariant().equalsIgnoreCase("a")) {
-                setRarityText = "Alt Art " + setRarityText;
-            } else {
-                setRarityText = current.getColorVariant().toUpperCase(Locale.ROOT) + " " + setRarityText;
-            }
-        }
+		if (current.getColorVariant() != null && !current.getColorVariant().isEmpty() && !current.getColorVariant().equals(
+				Const.DEFAULT_COLOR_VARIANT)) {
+			if (current.getColorVariant().equalsIgnoreCase("a")) {
+				setRarityText = "Alt Art " + setRarityText;
+			} else {
+				setRarityText = current.getColorVariant().toUpperCase(Locale.ROOT) + " " + setRarityText;
+			}
+		}
 
-        return setRarityText;
-    }
-
+		return setRarityText;
+	}
 
 
 }

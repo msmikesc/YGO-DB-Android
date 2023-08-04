@@ -8,7 +8,9 @@ import java.io.StringWriter;
 
 public class YGOLogger {
 
-	private YGOLogger(){}
+	private YGOLogger() {
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(YGOLogger.class);
 
 	public static void info(String input) {
@@ -23,7 +25,7 @@ public class YGOLogger {
 		logger.error(input);
 	}
 
-	public static void logException(Throwable e){
+	public static void logException(Throwable e) {
 
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);

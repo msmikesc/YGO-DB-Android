@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 @FunctionalInterface
-public
-interface BatchSetterAndroid {
+public interface BatchSetterAndroid {
 	void setParams(SQLiteStatement statement, List<Object> params) throws SQLException;
 }

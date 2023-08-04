@@ -21,7 +21,7 @@ public class DatabaseUpdateQueryAndroid implements DatabaseUpdateQuery {
 
 	@Override
 	public void prepareStatement(String query) throws SQLException {
-		if(statement != null){
+		if (statement != null) {
 			throw new SQLException(ERROR_MESSAGE_INIT);
 		}
 		statement = connection.compileStatement(query);
@@ -29,7 +29,7 @@ public class DatabaseUpdateQueryAndroid implements DatabaseUpdateQuery {
 
 	@Override
 	public void bindString(int index, String value) throws SQLException {
-		if(statement == null || isClosed){
+		if (statement == null || isClosed) {
 			throw new SQLException(ERROR_MESSAGE);
 		}
 		if (value == null) {
@@ -41,7 +41,7 @@ public class DatabaseUpdateQueryAndroid implements DatabaseUpdateQuery {
 
 	@Override
 	public void bindInteger(int index, Integer value) throws SQLException {
-		if(statement == null || isClosed){
+		if (statement == null || isClosed) {
 			throw new SQLException(ERROR_MESSAGE);
 		}
 		if (value == null) {
@@ -53,7 +53,7 @@ public class DatabaseUpdateQueryAndroid implements DatabaseUpdateQuery {
 
 	@Override
 	public int executeUpdate() throws SQLException {
-		if(statement == null || isClosed){
+		if (statement == null || isClosed) {
 			throw new SQLException(ERROR_MESSAGE);
 		}
 		int count = statement.executeUpdateDelete();

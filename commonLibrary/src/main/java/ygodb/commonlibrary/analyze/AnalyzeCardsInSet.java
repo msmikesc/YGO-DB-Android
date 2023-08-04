@@ -28,29 +28,29 @@ public class AnalyzeCardsInSet {
 			addInitialAnalyzeDataForSet(analyzeDataHashMap, individualSet, db);
 		}
 
-		for(AnalyzeData analyzeData: analyzeDataHashMap.values()){
+		for (AnalyzeData analyzeData : analyzeDataHashMap.values()) {
 			updateAnalyzeDataValues(analyzeData, db);
 		}
 
 		return new ArrayList<>(analyzeDataHashMap.values());
 	}
 
-	public void addInitialAnalyzeDataForSet(Map<String, AnalyzeData> analyzeDataHashMap, String requestedSetName, SQLiteConnection db) throws SQLException {
+	public void addInitialAnalyzeDataForSet(Map<String, AnalyzeData> analyzeDataHashMap, String requestedSetName,
+			SQLiteConnection db) throws SQLException {
 		List<GamePlayCard> list = db.getDistinctGamePlayCardsInSetByName(requestedSetName);
 		boolean archetypeMode = false;
 
 		if (list.isEmpty()) {
 			List<SetMetaData> setNames = db.getSetMetaDataFromSetCode(requestedSetName.toUpperCase(Locale.ROOT));
 
-			if (setNames == null || setNames.isEmpty() ) {
+			if (setNames == null || setNames.isEmpty()) {
 
 				list = db.getDistinctGamePlayCardsByArchetype(requestedSetName);
 				archetypeMode = true;
 				if (list.isEmpty()) {
 					return;
 				}
-			}
-			else {
+			} else {
 				requestedSetName = setNames.get(0).getSetName();
 				list = db.getDistinctGamePlayCardsInSetByName(requestedSetName);
 			}
@@ -61,14 +61,13 @@ public class AnalyzeCardsInSet {
 			String gamePlayCardUUID = currentGamePlayCard.getGamePlayCardUUID();
 
 			List<CardSet> rarityList;
-			if(!archetypeMode) {
+			if (!archetypeMode) {
 				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, requestedSetName);
-			}
-			else{
+			} else {
 				rarityList = db.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID);
 			}
 
-			AnalyzeData analyzeData= new AnalyzeData();
+			AnalyzeData analyzeData = new AnalyzeData();
 			analyzeData.setCardName(currentGamePlayCard.getCardName());
 			analyzeData.setGamePlayCardUUID(gamePlayCardUUID);
 			analyzeData.setPasscode(currentGamePlayCard.getPasscode());
@@ -96,7 +95,7 @@ public class AnalyzeCardsInSet {
 
 		List<CardSet> rarityList = analyzeData.getCardSets();
 
-		for(CardSet currentRarity: rarityList){
+		for (CardSet currentRarity : rarityList) {
 			analyzeData.getSetNumber().add(currentRarity.getSetNumber());
 			analyzeData.getSetNames().add(currentRarity.getSetName());
 			analyzeData.getSetRarities().add(currentRarity.getSetRarity());
@@ -107,11 +106,9 @@ public class AnalyzeCardsInSet {
 
 		if (cardsList.isEmpty()) {
 			analyzeData.setQuantity(0);
-		}
-		else if(cardsList.size() > 1 ){
+		} else if (cardsList.size() > 1) {
 			YGOLogger.error("More than 1 summary output from getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID");
-		}
-		else{
+		} else {
 			OwnedCard current = cardsList.get(0);
 
 			analyzeData.setQuantity(current.getQuantity());
@@ -131,12 +128,12 @@ public class AnalyzeCardsInSet {
 			BigDecimal setPrice = new BigDecimal(rarity.getLowestExistingPrice());
 			BigDecimal zero = new BigDecimal(0);
 
-			if ((zero.compareTo(setPrice) != 0) && currentData.getCardPriceSummary().compareTo(setPrice) > 0){
+			if ((zero.compareTo(setPrice) != 0) && currentData.getCardPriceSummary().compareTo(setPrice) > 0) {
 				currentData.setCardPriceSummary(setPrice);
 			}
 		}
 		//If price has not changed due to no existing price data, default to 0
-		if(origSetPrice.equals(currentData.getCardPriceSummary())){
+		if (origSetPrice.equals(currentData.getCardPriceSummary())) {
 			currentData.setCardPriceSummary(new BigDecimal(0));
 		}
 	}

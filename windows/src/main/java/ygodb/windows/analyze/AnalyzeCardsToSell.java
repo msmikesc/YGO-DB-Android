@@ -18,7 +18,7 @@ import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzeCardsToSell {
-	
+
 	private final BigDecimal minPrice = new BigDecimal("2.00");
 
 
@@ -34,48 +34,48 @@ public class AnalyzeCardsToSell {
 
 		//TODO update this to use api prices
 
-		 List<OwnedCard> cards = db.getAllOwnedCards();
-		 
-		 HashMap <String, ArrayList<String>> priceMap = new HashMap<>();
-		 
-		 HashMap <String, Integer> countMap = new HashMap<>();
-		 
-		 HashMap <String, ArrayList<OwnedCard>> cardMap = new HashMap<>();
-		 
-		 for(OwnedCard card: cards) {
-			 
-			 ArrayList<String> priceList = priceMap.get(card.getCardName());
-			 
-			 Integer count = countMap.get(card.getCardName());
+		List<OwnedCard> cards = db.getAllOwnedCards();
 
-			 ArrayList<OwnedCard> cardList = cardMap.computeIfAbsent(card.getCardName(), k -> new ArrayList<>());
+		HashMap<String, ArrayList<String>> priceMap = new HashMap<>();
 
-			 cardList.add(card);
-			 
-			 if(priceMap.get(card.getCardName()) == null) {
-				 priceList = new ArrayList<>();
-				 priceMap.put(card.getCardName(), priceList);
-			 }
-			 
-			 if(count == null) {
-				 count = 0;
-			 }
-			 
-			 count += card.getQuantity();
-			 countMap.put(card.getCardName(), count);
-			 
-			 if(card.getPriceBought() != null) {
-				 priceList.add(card.getPriceBought());
-			 }
-		 }
-		 
+		HashMap<String, Integer> countMap = new HashMap<>();
+
+		HashMap<String, ArrayList<OwnedCard>> cardMap = new HashMap<>();
+
+		for (OwnedCard card : cards) {
+
+			ArrayList<String> priceList = priceMap.get(card.getCardName());
+
+			Integer count = countMap.get(card.getCardName());
+
+			ArrayList<OwnedCard> cardList = cardMap.computeIfAbsent(card.getCardName(), k -> new ArrayList<>());
+
+			cardList.add(card);
+
+			if (priceMap.get(card.getCardName()) == null) {
+				priceList = new ArrayList<>();
+				priceMap.put(card.getCardName(), priceList);
+			}
+
+			if (count == null) {
+				count = 0;
+			}
+
+			count += card.getQuantity();
+			countMap.put(card.getCardName(), count);
+
+			if (card.getPriceBought() != null) {
+				priceList.add(card.getPriceBought());
+			}
+		}
+
 
 		printOutput(priceMap, countMap, cardMap);
 
 	}
 
-	public void printOutput(Map<String, ArrayList<String>> priceMap, Map<String, Integer> countMap, Map<String, ArrayList<OwnedCard>> cardMap)
-			throws IOException {
+	public void printOutput(Map<String, ArrayList<String>> priceMap, Map<String, Integer> countMap,
+			Map<String, ArrayList<OwnedCard>> cardMap) throws IOException {
 
 		String filename = "Analyze-Sell.csv";
 		String resourcePath = Const.CSV_ANALYZE_FOLDER + filename;
@@ -108,7 +108,8 @@ public class AnalyzeCardsToSell {
 
 				for (OwnedCard card : cardMap.get(cardName)) {
 
-					p.printRecord(card.getQuantity(), card.getCardName(), card.getSetRarity(), card.getSetName(), card.getSetCode(), card.getPriceBought());
+					p.printRecord(card.getQuantity(), card.getCardName(), card.getSetRarity(), card.getSetName(), card.getSetCode(),
+								  card.getPriceBought());
 				}
 
 			}

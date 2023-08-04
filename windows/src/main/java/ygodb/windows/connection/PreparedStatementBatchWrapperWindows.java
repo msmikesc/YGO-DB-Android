@@ -17,7 +17,8 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 	private int currentBatchedLinesCount = 0;
 	private boolean isFinalized = false;
 
-	public PreparedStatementBatchWrapperWindows(Connection connection, String input, int maximum, BatchSetterWindows setter) throws SQLException {
+	public PreparedStatementBatchWrapperWindows(Connection connection, String input, int maximum, BatchSetterWindows setter) throws
+			SQLException {
 		this.connection = connection;
 		statement = connection.prepareStatement(input);
 		batchedLinesMax = maximum;
@@ -27,7 +28,7 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 	@Override
 	public void addSingleValuesSet(List<Object> params) throws SQLException {
 
-		if(isFinalized){
+		if (isFinalized) {
 			return;
 		}
 
@@ -35,7 +36,7 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 		currentBatchedLinesCount++;
 		statement.addBatch();
 
-		if(isAboveBatchMaximum()){
+		if (isAboveBatchMaximum()) {
 			executeBatch();
 		}
 	}
@@ -43,7 +44,7 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 	@Override
 	public void executeBatch() throws SQLException {
 
-		if(isFinalized){
+		if (isFinalized) {
 			return;
 		}
 
@@ -58,7 +59,7 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 	@Override
 	public void finalizeBatches() throws SQLException {
 
-		if(isFinalized){
+		if (isFinalized) {
 			return;
 		}
 
@@ -68,12 +69,12 @@ public class PreparedStatementBatchWrapperWindows implements PreparedStatementBa
 	}
 
 	@Override
-	public boolean isFinalized(){
+	public boolean isFinalized() {
 		return isFinalized;
 	}
 
 	@Override
-	public boolean isAboveBatchMaximum(){
+	public boolean isAboveBatchMaximum() {
 		return currentBatchedLinesCount >= batchedLinesMax;
 	}
 

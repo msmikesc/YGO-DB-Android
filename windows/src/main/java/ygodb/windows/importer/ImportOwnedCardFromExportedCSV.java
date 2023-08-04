@@ -38,7 +38,7 @@ public class ImportOwnedCardFromExportedCSV {
 		CSVParser parser = csvConnection.getParser(resourcePath, StandardCharsets.UTF_16LE);
 
 		Iterator<CSVRecord> it = parser.iterator();
-		
+
 		int count = 0;
 
 		while (it.hasNext()) {
@@ -46,7 +46,7 @@ public class ImportOwnedCardFromExportedCSV {
 			CSVRecord current = it.next();
 
 			OwnedCard csvOwnedCard = csvConnection.getOwnedCardFromExportedCSV(current, db);
-			
+
 			List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(csvOwnedCard, db);
 
 			for (OwnedCard existingCard : ownedRarities) {
@@ -72,7 +72,7 @@ public class ImportOwnedCardFromExportedCSV {
 		parser.close();
 
 		db.closeInstance();
-		
+
 		YGOLogger.info("Imported " + count + " cards");
 
 	}

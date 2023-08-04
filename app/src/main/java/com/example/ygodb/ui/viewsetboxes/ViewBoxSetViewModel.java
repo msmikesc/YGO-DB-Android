@@ -42,7 +42,7 @@ public class ViewBoxSetViewModel extends ViewModel {
 
 	public List<SetBox> getSearchData(String input) {
 
-		if(input == null || input.isBlank() || input.trim().length() < 3){
+		if (input == null || input.isBlank() || input.trim().length() < 3) {
 			return AndroidUtil.getDBInstance().getAllSetBoxes();
 		}
 

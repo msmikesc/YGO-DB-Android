@@ -42,7 +42,7 @@ public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		compare = thisDate.compareTo(otherDate);
 
 		if (compare != 0) {

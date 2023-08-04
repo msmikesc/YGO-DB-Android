@@ -28,6 +28,7 @@ import java.util.Set;
 public class ImportPricesFromYGOPROAPI {
 
 	private final HashMap<String, List<String>> setNameUpdateMap = new HashMap<>();
+
 	private void addToSetNameUpdateMap(CardSet currentSetFromAPI) {
 		List<String> setNamesList = setNameUpdateMap.computeIfAbsent(currentSetFromAPI.getSetName(), k -> new ArrayList<>());
 		setNamesList.add(currentSetFromAPI.getCardName() + " " + currentSetFromAPI.getSetNumber());
@@ -36,9 +37,10 @@ public class ImportPricesFromYGOPROAPI {
 	private final HashSet<String> updatedKeysSet = new HashSet<>();
 	private final HashMap<String, Integer> updatedMoreThanOnceKeysMap = new HashMap<>();
 	private boolean shouldAddToUpdatedKeySetAndMap = true;
+
 	private void addToSetAndMap(String key) {
 
-		if(!shouldAddToUpdatedKeySetAndMap){
+		if (!shouldAddToUpdatedKeySetAndMap) {
 			return;
 		}
 
@@ -50,6 +52,7 @@ public class ImportPricesFromYGOPROAPI {
 	}
 
 	private final Map<String, Set<String>> updatedURLsMap = new HashMap<>();
+
 	private void addToUpdatedURLsMap(String key, String urlAdded) {
 
 		Set<String> list = updatedURLsMap.computeIfAbsent(key, k -> new HashSet<>());
@@ -58,21 +61,21 @@ public class ImportPricesFromYGOPROAPI {
 	}
 
 	private final Map<String, PreparedStatementBatchWrapper> editionToPreparedStatementMap = new HashMap<>();
+
 	private PreparedStatementBatchWrapper getStatementForEdition(String edition, SQLiteConnection db) throws SQLException {
 		PreparedStatementBatchWrapper value = editionToPreparedStatementMap.get(edition);
 
-		if(!edition.equals(Const.CARD_PRINTING_FIRST_EDITION)){
+		if (!edition.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 			edition = Const.CARD_PRINTING_UNLIMITED;
 		}
 
-		if(value == null){
-			if(edition.equals(Const.CARD_PRINTING_FIRST_EDITION)){
+		if (value == null) {
+			if (edition.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 
 				value = db.getBatchedPreparedStatementUrlFirst();
 
 				editionToPreparedStatementMap.put(edition, value);
-			}
-			else{
+			} else {
 				value = db.getBatchedPreparedStatementUrlUnlimited();
 
 				editionToPreparedStatementMap.put(edition, value);
@@ -81,7 +84,8 @@ public class ImportPricesFromYGOPROAPI {
 		return value;
 	}
 
-	public boolean run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports) throws SQLException, IOException {
+	public boolean run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports) throws SQLException,
+			IOException {
 
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardinfo.php?tcgplayer_data=true";
 
@@ -105,7 +109,7 @@ public class ImportPricesFromYGOPROAPI {
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
-				if(lastPriceLoadFilename != null) {
+				if (lastPriceLoadFilename != null) {
 					try (FileWriter writer = new FileWriter(lastPriceLoadFilename, false)) {
 						writer.write(inline);
 					}
@@ -122,7 +126,7 @@ public class ImportPricesFromYGOPROAPI {
 
 				shouldAddToUpdatedKeySetAndMap = handleOptionalDBImports;
 
-				if(handleOptionalDBImports) {
+				if (handleOptionalDBImports) {
 					addAllMissingGamePlayCards(db, gamePlayCardsNode);
 					addAllMissingSetUrls(db, gamePlayCardsNode);
 				}
@@ -132,7 +136,8 @@ public class ImportPricesFromYGOPROAPI {
 				//log details recorded for future fixes
 				List<String> namesList = new ArrayList<>(setNameUpdateMap.keySet());
 				for (String setName : namesList) {
-					YGOLogger.debug("Possibly need to handle set name issue count: " + setNameUpdateMap.get(setName).size() + " " + setName);
+					YGOLogger.debug(
+							"Possibly need to handle set name issue count: " + setNameUpdateMap.get(setName).size() + " " + setName);
 					for (int j = 0; j < setNameUpdateMap.get(setName).size(); j++) {
 						YGOLogger.debug(setNameUpdateMap.get(setName).get(j));
 					}
@@ -155,7 +160,7 @@ public class ImportPricesFromYGOPROAPI {
 		return true;
 	}
 
-	private void emptyMaps(){
+	private void emptyMaps() {
 		setNameUpdateMap.clear();
 		updatedKeysSet.clear();
 		updatedMoreThanOnceKeysMap.clear();
@@ -163,6 +168,7 @@ public class ImportPricesFromYGOPROAPI {
 		editionToPreparedStatementMap.clear();
 		DatabaseHashMap.closeRaritiesInstance();
 	}
+
 	private void updateAllPricesForAllCards(SQLiteConnection db, JsonNode gamePlayCardsNode) throws SQLException {
 		for (JsonNode currentGamePlayCardNode : gamePlayCardsNode) {
 
@@ -171,11 +177,11 @@ public class ImportPricesFromYGOPROAPI {
 			String cardName = ApiUtil.getStringOrNull(currentGamePlayCardNode, Const.YGOPRO_CARD_NAME);
 			cardName = Util.checkForTranslatedCardName(cardName);
 
-			if(setsListNode != null) {
+			if (setsListNode != null) {
 				updateCardSetPricesForOneCard(setsListNode, cardName, db);
 			}
 		}
-		for(PreparedStatementBatchWrapper statement :editionToPreparedStatementMap.values()){
+		for (PreparedStatementBatchWrapper statement : editionToPreparedStatementMap.values()) {
 			statement.finalizeBatches();
 		}
 	}
@@ -187,7 +193,7 @@ public class ImportPricesFromYGOPROAPI {
 
 			JsonNode setsListNode = currentGamePlayCardNode.get(Const.YGOPRO_CARD_SETS);
 
-			if(setsListNode != null) {
+			if (setsListNode != null) {
 				for (JsonNode currentSetNode : setsListNode) {
 					CardSet currentSetFromAPI = getCardSetFromSetNode(cardName, currentSetNode);
 					recordEntriesWithMissingDBURL(currentSetFromAPI, db);
@@ -197,23 +203,22 @@ public class ImportPricesFromYGOPROAPI {
 
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
 
-		for(Map.Entry<String, Set<String>> e: updatedURLsMap.entrySet()){
+		for (Map.Entry<String, Set<String>> e : updatedURLsMap.entrySet()) {
 			String key = e.getKey();
 			Set<String> urlsSet = e.getValue();
 			ArrayList<String> urlsList = new ArrayList<>(urlsSet);
 
-			if(urlsSet.size() == 1){
+			if (urlsSet.size() == 1) {
 				YGOLogger.info("Ready to update set URL:" + key + ":" + urlsList.get(0));
 
 				List<CardSet> listToUpdate = rarityHashMap.get(key);
 
-				if(listToUpdate == null || listToUpdate.size() != 1 ){
+				if (listToUpdate == null || listToUpdate.size() != 1) {
 					YGOLogger.error("Hashmap missing entry before updating url:" + key);
-				}
-				else{
+				} else {
 					CardSet updateTarget = listToUpdate.get(0);
-					db.updateCardSetUrl(updateTarget.getSetNumber(), updateTarget.getSetRarity(),
-							updateTarget.getSetName(), updateTarget.getCardName(), urlsList.get(0), null);
+					db.updateCardSetUrl(updateTarget.getSetNumber(), updateTarget.getSetRarity(), updateTarget.getSetName(),
+										updateTarget.getCardName(), urlsList.get(0), null);
 				}
 
 			} else {
@@ -233,7 +238,8 @@ public class ImportPricesFromYGOPROAPI {
 		DatabaseHashMap.closeGamePlayCardInstance();
 	}
 
-	private void checkAndInsertMissingGamePlayCard(SQLiteConnection db, List<OwnedCard> ownedCardsToCheck, JsonNode currentGamePlayCardNode) throws SQLException {
+	private void checkAndInsertMissingGamePlayCard(SQLiteConnection db, List<OwnedCard> ownedCardsToCheck,
+			JsonNode currentGamePlayCardNode) throws SQLException {
 
 		Map<String, List<GamePlayCard>> gamePlayCardMap = DatabaseHashMap.getGamePlayCardsInstance(db);
 
@@ -246,38 +252,38 @@ public class ImportPricesFromYGOPROAPI {
 		JsonNode setListNode = currentGamePlayCardNode.get(Const.YGOPRO_CARD_SETS);
 
 		List<GamePlayCard> existingGamePlayCards = gamePlayCardMap.get(String.valueOf(passcode));
-		if(existingGamePlayCards == null || existingGamePlayCards.isEmpty()){
+		if (existingGamePlayCards == null || existingGamePlayCards.isEmpty()) {
 			existingGamePlayCards = gamePlayCardMap.get(name);
 		}
-		if(existingGamePlayCards != null && existingGamePlayCards.size() > 1){
+		if (existingGamePlayCards != null && existingGamePlayCards.size() > 1) {
 			YGOLogger.error("More than one matching gamePlayCard for:" + logIdentifier);
 		}
 
-		if (setListNode != null && (existingGamePlayCards == null || existingGamePlayCards.isEmpty())){
+		if (setListNode != null && (existingGamePlayCards == null || existingGamePlayCards.isEmpty())) {
 			//no gameplay card, create
-			YGOLogger.error("Creating gamePlayCard here for:"+logIdentifier);
+			YGOLogger.error("Creating gamePlayCard here for:" + logIdentifier);
 			GamePlayCard inserted = ApiUtil.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCardNode, ownedCardsToCheck, db);
 
 			ApiUtil.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
 		}
 
-		if(existingGamePlayCards != null && existingGamePlayCards.size() == 1 &&
-					Const.ARCHETYPE_AUTOGENERATE.equals(existingGamePlayCards.get(0).getArchetype())){
+		if (existingGamePlayCards != null && existingGamePlayCards.size() == 1 && Const.ARCHETYPE_AUTOGENERATE.equals(
+				existingGamePlayCards.get(0).getArchetype())) {
 			//autogenerated value exists
-			YGOLogger.error("updating autogenerated gamePlayCard here for:"+logIdentifier);
+			YGOLogger.error("updating autogenerated gamePlayCard here for:" + logIdentifier);
 			ApiUtil.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCardNode, ownedCardsToCheck, db);
 		}
 	}
 
 	public void attemptToInsertColorVariantsForUrls(String key, List<String> urlsList, SQLiteConnection db) throws SQLException {
-		if(key == null || key.isBlank() || urlsList == null || urlsList.size() < 2){
+		if (key == null || key.isBlank() || urlsList == null || urlsList.size() < 2) {
 			YGOLogger.error("Invalid input passed to attemptToInsertColorVariantsForUrls" + key + urlsList);
 			return;
 		}
 
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
 		List<CardSet> existingList = rarityHashMap.get(key);
-		if(existingList == null || existingList.size() != 1){
+		if (existingList == null || existingList.size() != 1) {
 			YGOLogger.error("No existing row found for key" + key + urlsList);
 			return;
 		}
@@ -306,7 +312,8 @@ public class ImportPricesFromYGOPROAPI {
 		insertAndUpdateConfirmedColorEntries(db, existingEntry, urlColors);
 	}
 
-	private void insertAndUpdateConfirmedColorEntries(SQLiteConnection db, CardSet existingEntry, Map<String, String> urlColors) throws SQLException {
+	private void insertAndUpdateConfirmedColorEntries(SQLiteConnection db, CardSet existingEntry, Map<String, String> urlColors) throws
+			SQLException {
 		boolean firstEntry = true;
 		String lastColor = null;
 		String lastURL = null;
@@ -334,40 +341,38 @@ public class ImportPricesFromYGOPROAPI {
 	}
 
 	private void handleUrlColorUpsert(SQLiteConnection db, CardSet existingEntry, String color, String url) throws SQLException {
-		if(Const.DEFAULT_COLOR_VARIANT.equals(color)){
+		if (Const.DEFAULT_COLOR_VARIANT.equals(color)) {
 			//update existing record with new url
 			YGOLogger.info("Updating existing entry to URL:" + url);
-			db.updateCardSetUrl(existingEntry.getSetNumber(), existingEntry.getSetRarity(),
-					existingEntry.getSetName(), existingEntry.getCardName(), url, null);
-		}
-		else{
+			db.updateCardSetUrl(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(),
+								existingEntry.getCardName(), url, null);
+		} else {
 			//insert new record
-			YGOLogger.info("adding new entry for "+color+" with URL:" + url);
-			db.insertOrIgnoreIntoCardSet(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(), existingEntry.getGamePlayCardUUID(),
-					existingEntry.getCardName(), color, url);
+			YGOLogger.info("adding new entry for " + color + " with URL:" + url);
+			db.insertOrIgnoreIntoCardSet(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(),
+										 existingEntry.getGamePlayCardUUID(), existingEntry.getCardName(), color, url);
 		}
 	}
 
-	private void handleUrlColorUpsertLast(SQLiteConnection db, CardSet existingEntry, String color, String url, boolean previouslyFoundDefault) throws SQLException {
-		if(previouslyFoundDefault){
+	private void handleUrlColorUpsertLast(SQLiteConnection db, CardSet existingEntry, String color, String url,
+			boolean previouslyFoundDefault) throws SQLException {
+		if (previouslyFoundDefault) {
 			//insert new record
-			YGOLogger.info("adding new entry for "+color+" with URL:" + url);
-			db.insertOrIgnoreIntoCardSet(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(), existingEntry.getGamePlayCardUUID(),
-					existingEntry.getCardName(), color, url);
-		}
-		else{
+			YGOLogger.info("adding new entry for " + color + " with URL:" + url);
+			db.insertOrIgnoreIntoCardSet(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(),
+										 existingEntry.getGamePlayCardUUID(), existingEntry.getCardName(), color, url);
+		} else {
 			//update existing record to whatever the remaining color is
-			YGOLogger.info("Updating existing entry to "+color+" with URL:" + url);
-			db.updateCardSetUrlAndColor(existingEntry.getSetNumber(), existingEntry.getSetRarity(),
-					existingEntry.getSetName(), existingEntry.getCardName(), url, null, color);
+			YGOLogger.info("Updating existing entry to " + color + " with URL:" + url);
+			db.updateCardSetUrlAndColor(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(),
+										existingEntry.getCardName(), url, null, color);
 		}
 
 	}
 
-	public void updateCardSetPricesForOneCard(JsonNode setsListNode, String cardName, SQLiteConnection db)
-			throws SQLException {
+	public void updateCardSetPricesForOneCard(JsonNode setsListNode, String cardName, SQLiteConnection db) throws SQLException {
 
-		for (JsonNode currentSetNode: setsListNode) {
+		for (JsonNode currentSetNode : setsListNode) {
 			CardSet currentSetFromAPI = getCardSetFromSetNode(cardName, currentSetNode);
 			if (currentSetFromAPI != null) {
 				updateSingleCardSetPrice(currentSetFromAPI, db);
@@ -377,7 +382,7 @@ public class ImportPricesFromYGOPROAPI {
 
 	private void updateSingleCardSetPrice(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 
-		if(Util.getSetUrlsThatDoNotExistInstance().contains(currentSetFromAPI.getSetUrl())){
+		if (Util.getSetUrlsThatDoNotExistInstance().contains(currentSetFromAPI.getSetUrl())) {
 			return;
 		}
 
@@ -404,7 +409,7 @@ public class ImportPricesFromYGOPROAPI {
 			setRarity = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_RARITY);
 			setPrice = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_PRICE);
 			cardEdition = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_CARD_EDITION);
-			setUrl = ApiUtil.getStringOrNull(setNode,Const.YGOPRO_SET_URL);
+			setUrl = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_URL);
 
 			setRarity = Util.checkForTranslatedRarity(setRarity);
 			setName = Util.checkForTranslatedSetName(setName);
@@ -436,9 +441,8 @@ public class ImportPricesFromYGOPROAPI {
 	}
 
 	private void recordEntriesWithMissingDBURL(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
-		if(currentSetFromAPI == null || currentSetFromAPI.getSetUrl() == null ||
-				currentSetFromAPI.getSetUrl().isBlank() ||
-				Util.getSetUrlsThatDoNotExistInstance().contains(currentSetFromAPI.getSetUrl())){
+		if (currentSetFromAPI == null || currentSetFromAPI.getSetUrl() == null || currentSetFromAPI.getSetUrl().isBlank() || Util.getSetUrlsThatDoNotExistInstance().contains(
+				currentSetFromAPI.getSetUrl())) {
 			return;
 		}
 
@@ -446,11 +450,10 @@ public class ImportPricesFromYGOPROAPI {
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
 		List<CardSet> urlKeysMatched = rarityHashMap.get(currentSetFromAPI.getSetUrl());
 
-		if(urlKeysMatched == null || urlKeysMatched.isEmpty()){
+		if (urlKeysMatched == null || urlKeysMatched.isEmpty()) {
 			//no matching url key, log
 			recordEntryWithConfirmedMissingDBURL(currentSetFromAPI, rarityHashMap);
-		}
-		else if(urlKeysMatched.size() > 1){
+		} else if (urlKeysMatched.size() > 1) {
 			YGOLogger.error("More than one matching key for url:" + currentSetFromAPI.getSetUrl());
 		}
 		//if exactly one, leave it alone and don't log anything
@@ -463,27 +466,26 @@ public class ImportPricesFromYGOPROAPI {
 
 		List<CardSet> existingRows = rarityHashMap.get(allMatchUrlKey);
 
-		if(existingRows != null && existingRows.size() == 1){
+		if (existingRows != null && existingRows.size() == 1) {
 			//DB existing entry found with all the exact same details with no set URL
 			CardSet existingRowWithNullUrl = existingRows.get(0);
 			addToUpdatedURLsMap(DatabaseHashMap.getAllMatchingKey(existingRowWithNullUrl), currentSetFromAPI.getSetUrl());
-		}
-		else{
+		} else {
 			//DB exact match existing entry not found, check for a match with a different set name
 			existingRows = rarityHashMap.get(DatabaseHashMap.getSetNameMismatchKeyWithUrl(matcherInput));
 
-			if(existingRows != null && existingRows.size() == 1){
+			if (existingRows != null && existingRows.size() == 1) {
 				CardSet existingRowWithNullUrl = existingRows.get(0);
 				addToUpdatedURLsMap(DatabaseHashMap.getAllMatchingKey(existingRowWithNullUrl), currentSetFromAPI.getSetUrl());
-			}
-			else {
+			} else {
 				//No match at all found, log for manual fix
 				int size = 0;
-				if(existingRows != null){
+				if (existingRows != null) {
 					size = existingRows.size();
 				}
 
-				YGOLogger.info("Found "+size+" matches for all matching url key:" + allMatchUrlKey + ":"+currentSetFromAPI.getCardLogIdentifier());
+				YGOLogger.info(
+						"Found " + size + " matches for all matching url key:" + allMatchUrlKey + ":" + currentSetFromAPI.getCardLogIdentifier());
 			}
 		}
 	}
@@ -522,7 +524,8 @@ public class ImportPricesFromYGOPROAPI {
 			int rowsUpdated = db.updateCardSetPrice(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetPrice(), isFirstEdition);
 			YGOLogger.info("Card rarity mismatch from price API:" + currentSetFromAPI.getCardLogIdentifier());
 			if (rowsUpdated != 1) {
-				YGOLogger.error("Actual rows updated did not equal predicted for card rarity mismatch" + currentSetFromAPI.getCardLogIdentifier());
+				YGOLogger.error(
+						"Actual rows updated did not equal predicted for card rarity mismatch" + currentSetFromAPI.getCardLogIdentifier());
 			}
 			for (CardSet set : existingRows) {
 				addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + isFirstEdition);
@@ -541,13 +544,16 @@ public class ImportPricesFromYGOPROAPI {
 		existingRows = rarityHashMap.get(DatabaseHashMap.getCardAndSetNameMismatchKey(matcherInput));
 		if (existingRows != null && !existingRows.isEmpty()) {
 			if (existingRows.size() > 1) {
-				YGOLogger.error("Multiple rows updated for card and set name mismatch from price API:" + currentSetFromAPI.getCardLogIdentifier());
+				YGOLogger.error(
+						"Multiple rows updated for card and set name mismatch from price API:" + currentSetFromAPI.getCardLogIdentifier());
 			}
-			int rowsUpdated = db.updateCardSetPrice(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(), currentSetFromAPI.getSetPrice(), isFirstEdition);
+			int rowsUpdated = db.updateCardSetPrice(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(),
+													currentSetFromAPI.getSetPrice(), isFirstEdition);
 			YGOLogger.info("Card name mismatch from price API:" + currentSetFromAPI.getCardLogIdentifier());
 			addToSetNameUpdateMap(currentSetFromAPI);
 			if (rowsUpdated != existingRows.size()) {
-				YGOLogger.error("Actual rows updated did not equal predicted for card and set name mismatch" + currentSetFromAPI.getCardLogIdentifier());
+				YGOLogger.error(
+						"Actual rows updated did not equal predicted for card and set name mismatch" + currentSetFromAPI.getCardLogIdentifier());
 			}
 			for (CardSet set : existingRows) {
 				addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + isFirstEdition);
@@ -570,9 +576,12 @@ public class ImportPricesFromYGOPROAPI {
 			}
 			YGOLogger.debug("Card name mismatch from price API:" + currentSetFromAPI.getCardLogIdentifier());
 
-			int rowsUpdated = db.updateCardSetPriceWithSetName(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(), currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetName(), isFirstEdition);
+			int rowsUpdated = db.updateCardSetPriceWithSetName(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(),
+															   currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetName(),
+															   isFirstEdition);
 			if (rowsUpdated != existingRows.size()) {
-				YGOLogger.error("Actual rows updated did not equal predicted for card name mismatch" + currentSetFromAPI.getCardLogIdentifier());
+				YGOLogger.error(
+						"Actual rows updated did not equal predicted for card name mismatch" + currentSetFromAPI.getCardLogIdentifier());
 			}
 			for (CardSet set : existingRows) {
 				addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + isFirstEdition);
@@ -593,9 +602,12 @@ public class ImportPricesFromYGOPROAPI {
 			if (existingRows.size() > 1) {
 				YGOLogger.error("Multiple rows updated for set name mismatch from price API:" + currentSetFromAPI.getCardLogIdentifier());
 			}
-			int rowsUpdated = db.updateCardSetPriceWithCardName(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(), currentSetFromAPI.getSetPrice(), currentSetFromAPI.getCardName(), isFirstEdition);
+			int rowsUpdated = db.updateCardSetPriceWithCardName(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(),
+																currentSetFromAPI.getSetPrice(), currentSetFromAPI.getCardName(),
+																isFirstEdition);
 			if (rowsUpdated != existingRows.size()) {
-				YGOLogger.error("Actual rows updated did not equal predicted for set name mismatch" + currentSetFromAPI.getCardLogIdentifier());
+				YGOLogger.error(
+						"Actual rows updated did not equal predicted for set name mismatch" + currentSetFromAPI.getCardLogIdentifier());
 			}
 
 			addToSetNameUpdateMap(currentSetFromAPI);
@@ -620,9 +632,12 @@ public class ImportPricesFromYGOPROAPI {
 				YGOLogger.error("more than 1 exact match, color or art variant:" + currentSetFromAPI.getCardLogIdentifier());
 			}
 
-			int rowsUpdated = db.updateCardSetPriceWithCardAndSetName(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(), currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetName(), currentSetFromAPI.getCardName(), isFirstEdition);
+			int rowsUpdated = db.updateCardSetPriceWithCardAndSetName(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(),
+																	  currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetName(),
+																	  currentSetFromAPI.getCardName(), isFirstEdition);
 			if (rowsUpdated != existingRows.size()) {
-				YGOLogger.error("Actual rows updated did not equal predicted for all properties match" + currentSetFromAPI.getCardLogIdentifier());
+				YGOLogger.error(
+						"Actual rows updated did not equal predicted for all properties match" + currentSetFromAPI.getCardLogIdentifier());
 			}
 
 			for (CardSet set : existingRows) {
@@ -637,7 +652,7 @@ public class ImportPricesFromYGOPROAPI {
 		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
 		boolean isFirstEdition = currentSetFromAPI.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
 
-		if(currentSetFromAPI.getSetUrl() != null && !currentSetFromAPI.getSetUrl().isBlank()) {
+		if (currentSetFromAPI.getSetUrl() != null && !currentSetFromAPI.getSetUrl().isBlank()) {
 			List<CardSet> existingRows = rarityHashMap.get(currentSetFromAPI.getSetUrl());
 			if (existingRows != null && !existingRows.isEmpty()) {
 				if (existingRows.size() > 1) {
@@ -646,7 +661,7 @@ public class ImportPricesFromYGOPROAPI {
 				}
 
 				PreparedStatementBatchWrapper statement = getStatementForEdition(currentSetFromAPI.getEditionPrinting(), db);
-				statement.addSingleValuesSet(List.of(currentSetFromAPI.getSetPrice(),currentSetFromAPI.getSetUrl()));
+				statement.addSingleValuesSet(List.of(currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetUrl()));
 
 				for (CardSet set : existingRows) {
 					addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + isFirstEdition);

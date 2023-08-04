@@ -29,8 +29,8 @@ public class CardSet {
 	public CardSet() {
 	}
 
-	public CardSet(String gamePlayCardUUID, String setNumber, String cardName, String setRarity, String setName,
-				   String colorVariant, String setCode) {
+	public CardSet(String gamePlayCardUUID, String setNumber, String cardName, String setRarity, String setName, String colorVariant,
+			String setCode) {
 		this.gamePlayCardUUID = gamePlayCardUUID;
 		this.setNumber = setNumber;
 		this.cardName = cardName;
@@ -41,25 +41,24 @@ public class CardSet {
 		this.rarityUnsure = Const.RARITY_UNSURE_FALSE;
 	}
 
-	public String getCardLogIdentifier(){
+	public String getCardLogIdentifier() {
 		return OPEN + getSetNumber() + SEP + getCardName() + SEP + getSetRarity() + SEP + getSetName() + CLOSE + getSetPrice();
 	}
 
-	public String getLowestExistingPrice(){
+	public String getLowestExistingPrice() {
 		return Util.getLowestPriceString(getSetPrice(), getSetPriceFirst());
 	}
 
-	public String getBestExistingPrice(boolean preferFirstEdition){
+	public String getBestExistingPrice(boolean preferFirstEdition) {
 		BigDecimal zero = new BigDecimal(0);
 
 		String preferredPrice;
 		String secondaryPrice;
 
-		if(preferFirstEdition){
+		if (preferFirstEdition) {
 			preferredPrice = getSetPriceFirst();
 			secondaryPrice = getSetPrice();
-		}
-		else{
+		} else {
 			preferredPrice = getSetPrice();
 			secondaryPrice = getSetPriceFirst();
 		}

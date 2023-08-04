@@ -6,23 +6,23 @@ import java.util.Comparator;
 
 public class OwnedCardSetNumberComparator implements Comparator<OwnedCard> {
 
-    @Override
-    public int compare(OwnedCard ownedCard, OwnedCard t1) {
+	@Override
+	public int compare(OwnedCard ownedCard, OwnedCard t1) {
 
-        int val = ownedCard.getSetNumber().compareTo(t1.getSetNumber());
+		int val = ownedCard.getSetNumber().compareTo(t1.getSetNumber());
 
-        if(val!=0){
-            return val;
-        }
+		if (val != 0) {
+			return val;
+		}
 
-        val = ownedCard.getQuantity() - t1.getQuantity();
+		val = ownedCard.getQuantity() - t1.getQuantity();
 
-        if(val!=0){
-            return val;
-        }
+		if (val != 0) {
+			return val;
+		}
 
-        val = ownedCard.getCardName().compareTo(t1.getCardName());
+		val = ownedCard.getCardName().compareTo(t1.getCardName());
 
-        return val;
-    }
+		return val;
+	}
 }

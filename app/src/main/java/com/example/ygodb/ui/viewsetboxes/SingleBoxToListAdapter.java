@@ -17,8 +17,7 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 
 	private final ViewBoxSetViewModel viewBoxSetViewModel;
 
-	public SingleBoxToListAdapter(List<SetBox> setBoxes,
-								  ViewBoxSetViewModel viewBoxSetViewModel) {
+	public SingleBoxToListAdapter(List<SetBox> setBoxes, ViewBoxSetViewModel viewBoxSetViewModel) {
 		this.setBoxes = setBoxes;
 		this.viewBoxSetViewModel = viewBoxSetViewModel;
 
@@ -31,8 +30,7 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 	@NonNull
 	@Override
 	public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).
-				inflate(R.layout.fragment_single_edit_box, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_single_edit_box, parent, false);
 
 		return new ItemViewHolder(view);
 	}

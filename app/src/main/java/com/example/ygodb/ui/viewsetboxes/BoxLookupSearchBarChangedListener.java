@@ -18,23 +18,23 @@ class BoxLookupSearchBarChangedListener extends TextChangedListener<EditText> {
 	private final SingleBoxToListAdapter adapter;
 	private final LinearLayoutManager layout;
 
-	public BoxLookupSearchBarChangedListener(EditText searchBar, ViewBoxSetViewModel viewBoxSetViewModel,
-											 SingleBoxToListAdapter adapter, LinearLayoutManager layout) {
+	public BoxLookupSearchBarChangedListener(EditText searchBar, ViewBoxSetViewModel viewBoxSetViewModel, SingleBoxToListAdapter adapter,
+			LinearLayoutManager layout) {
 		super(searchBar);
 		this.viewBoxSetViewModel = viewBoxSetViewModel;
 		this.adapter = adapter;
-		this.layout=layout;
+		this.layout = layout;
 	}
 
 	@Override
 	public void onTextChanged(EditText target, Editable s) {
 		String textSearch = s.toString().toLowerCase(Locale.ROOT);
 
-		if(textSearch.trim().length() < 3){
+		if (textSearch.trim().length() < 3) {
 			textSearch = "";
 		}
 
-		if(viewBoxSetViewModel.getCurrentSearchText().equals(textSearch)){
+		if (viewBoxSetViewModel.getCurrentSearchText().equals(textSearch)) {
 			//nothing to update
 			return;
 		}

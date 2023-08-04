@@ -13,8 +13,8 @@ public class CommonDatabaseQueries {
 	private CommonDatabaseQueries() {
 	}
 
-	public static <R> List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID,
-			DatabaseSelectQuery<CardSet, R> query, SelectQueryResultMapper<CardSet, R> mapper) throws SQLException {
+	public static <R> List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID, DatabaseSelectQuery<CardSet, R> query,
+			SelectQueryResultMapper<CardSet, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_RARITIES_OF_CARD_BY_GAME_PLAY_CARD_UUID);
 
 		query.bindString(1, gamePlayCardUUID);
@@ -32,8 +32,8 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static <R> String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID,
-			DatabaseSelectQuery<String, R> query, SelectQueryResultMapper<String, R> mapper) throws SQLException {
+	public static <R> String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID, DatabaseSelectQuery<String, R> query,
+			SelectQueryResultMapper<String, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID);
 
 		query.bindString(1, gamePlayCardUUID);
@@ -47,8 +47,8 @@ public class CommonDatabaseQueries {
 		return null;
 	}
 
-	public static <R> List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID,
-			DatabaseSelectQuery<String, R> query, SelectQueryResultMapper<String, R> mapper) throws SQLException {
+	public static <R> List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID, DatabaseSelectQuery<String, R> query,
+			SelectQueryResultMapper<String, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID);
 
 		query.bindString(1, gamePlayCardUUID);
@@ -56,9 +56,8 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static int updateCardSetUrl(DatabaseUpdateQuery query, String setNumber, String rarity, String setName,
-			String cardName, String setURL, String colorVariant)
-			throws SQLException {
+	public static int updateCardSetUrl(DatabaseUpdateQuery query, String setNumber, String rarity, String setName, String cardName,
+			String setURL, String colorVariant) throws SQLException {
 
 		if (colorVariant == null || colorVariant.isBlank()) {
 			colorVariant = Const.DEFAULT_COLOR_VARIANT;

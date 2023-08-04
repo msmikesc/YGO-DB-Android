@@ -30,14 +30,14 @@ public class PreparedStatementBatchWrapperAndroid implements PreparedStatementBa
 	@Override
 	public void addSingleValuesSet(List<Object> params) {
 
-		if(isFinalized){
+		if (isFinalized) {
 			return;
 		}
 
 		inputParams.add(params);
 		currentBatchedLinesCount++;
 
-		if(isAboveBatchMaximum()){
+		if (isAboveBatchMaximum()) {
 			executeBatch();
 		}
 
@@ -46,15 +46,15 @@ public class PreparedStatementBatchWrapperAndroid implements PreparedStatementBa
 	@Override
 	public void executeBatch() {
 
-		if(isFinalized){
+		if (isFinalized) {
 			return;
 		}
 
-		if(!connection.inTransaction()) {
+		if (!connection.inTransaction()) {
 			connection.beginTransaction();
 		}
 
-		for(List<Object> params : inputParams){
+		for (List<Object> params : inputParams) {
 			try {
 				batchSetterAndroid.setParams(statement, params);
 				statement.execute();
@@ -64,7 +64,7 @@ public class PreparedStatementBatchWrapperAndroid implements PreparedStatementBa
 			}
 		}
 
-		if(connection.inTransaction()) {
+		if (connection.inTransaction()) {
 			connection.setTransactionSuccessful();
 			connection.endTransaction();
 		}
@@ -76,7 +76,7 @@ public class PreparedStatementBatchWrapperAndroid implements PreparedStatementBa
 	@Override
 	public void finalizeBatches() {
 
-		if(isFinalized){
+		if (isFinalized) {
 			return;
 		}
 		executeBatch();
@@ -86,12 +86,12 @@ public class PreparedStatementBatchWrapperAndroid implements PreparedStatementBa
 	}
 
 	@Override
-	public boolean isFinalized(){
+	public boolean isFinalized() {
 		return isFinalized;
 	}
 
 	@Override
-	public boolean isAboveBatchMaximum(){
+	public boolean isAboveBatchMaximum() {
 		return currentBatchedLinesCount >= batchedLinesMax;
 	}
 

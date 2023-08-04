@@ -32,7 +32,7 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 			YGOLogger.logException(e);
 
 			String message = e.getMessage();
-			if(message == null){
+			if (message == null) {
 				message = "Unknown error";
 			}
 
@@ -75,7 +75,7 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 		return chosenURI;
 	}
 
-	public void importDBFromURI(Uri chosenURI){
+	public void importDBFromURI(Uri chosenURI) {
 		DrawerLayout view = activity.getBinding().getRoot();
 		try {
 			String responseMessage = AndroidUtil.getDBInstance().copyDataBaseFromURI(activity, chosenURI);

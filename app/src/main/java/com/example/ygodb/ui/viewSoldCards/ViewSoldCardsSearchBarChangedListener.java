@@ -12,42 +12,43 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 class ViewSoldCardsSearchBarChangedListener extends TextChangedListener<EditText> {
-    private final ViewSoldCardsViewModel viewSoldCardsViewModel;
-    private final SingleCardToListAdapter adapter;
-    private final LinearLayoutManager layout;
+	private final ViewSoldCardsViewModel viewSoldCardsViewModel;
+	private final SingleCardToListAdapter adapter;
+	private final LinearLayoutManager layout;
 
-    public ViewSoldCardsSearchBarChangedListener(EditText searchBar, ViewSoldCardsViewModel viewSoldCardsViewModel, SingleCardToListAdapter adapter, LinearLayoutManager layout) {
-        super(searchBar);
-        this.viewSoldCardsViewModel = viewSoldCardsViewModel;
-        this.adapter = adapter;
-        this.layout=layout;
-    }
+	public ViewSoldCardsSearchBarChangedListener(EditText searchBar, ViewSoldCardsViewModel viewSoldCardsViewModel,
+			SingleCardToListAdapter adapter, LinearLayoutManager layout) {
+		super(searchBar);
+		this.viewSoldCardsViewModel = viewSoldCardsViewModel;
+		this.adapter = adapter;
+		this.layout = layout;
+	}
 
-    @Override
-    public void onTextChanged(EditText target, Editable s) {
-        String cardNameSearch = s.toString();
+	@Override
+	public void onTextChanged(EditText target, Editable s) {
+		String cardNameSearch = s.toString();
 
-        if(viewSoldCardsViewModel.getCardNameSearch().equals(cardNameSearch)){
-            //nothing to update
-            return;
-        }
+		if (viewSoldCardsViewModel.getCardNameSearch().equals(cardNameSearch)) {
+			//nothing to update
+			return;
+		}
 
-        viewSoldCardsViewModel.setCardNameSearch(cardNameSearch);
+		viewSoldCardsViewModel.setCardNameSearch(cardNameSearch);
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            try {
-                List<OwnedCard> newList = viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(),
-                        ViewSoldCardsViewModel.LOADING_LIMIT, 0, cardNameSearch);
+		Executors.newSingleThreadExecutor().execute(() -> {
+			try {
+				List<OwnedCard> newList = viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(),
+																			  ViewSoldCardsViewModel.LOADING_LIMIT, 0, cardNameSearch);
 
-                handler.post(() -> {
-                    viewSoldCardsViewModel.setCardsList(newList);
-                    adapter.setOwnedCards(newList);
-                    layout.scrollToPositionWithOffset(0, 0);
-                    adapter.notifyDataSetChanged();
-                });
-            } catch (Exception e) {
-                YGOLogger.logException(e);
-            }
-        });
-    }
+				handler.post(() -> {
+					viewSoldCardsViewModel.setCardsList(newList);
+					adapter.setOwnedCards(newList);
+					layout.scrollToPositionWithOffset(0, 0);
+					adapter.notifyDataSetChanged();
+				});
+			} catch (Exception e) {
+				YGOLogger.logException(e);
+			}
+		});
+	}
 }

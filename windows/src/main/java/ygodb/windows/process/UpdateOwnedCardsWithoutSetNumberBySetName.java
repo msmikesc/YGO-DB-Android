@@ -24,13 +24,13 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 	public void run(SQLiteConnection db) throws SQLException {
 
 		List<OwnedCard> cards = db.getAllOwnedCardsWithoutSetNumber();
-		
+
 		int count = 0;
 
 		for (OwnedCard card : cards) {
-			
+
 			String newSetName = Util.checkForTranslatedSetName(card.getSetName());
-				
+
 			card.setSetName(newSetName);
 
 			CardSet setIdentified = db.getFirstCardSetForCardInSet(card.getCardName(), newSetName);
@@ -45,17 +45,16 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 			card.setSetCode(setIdentified.getSetCode());
 			card.setRarityUnsure(0);
 
-			try{
+			try {
 				db.updateOwnedCardByUUID(card);
 				count++;
-			}
-			catch(Exception e) {
+			} catch (Exception e) {
 				YGOLogger.logException(e);
 			}
-				
+
 
 		}
-		
+
 		YGOLogger.info("Updated " + count + " rows");
 	}
 

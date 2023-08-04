@@ -34,8 +34,8 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 		setCardPriceSummary(getCardPriceSummary().setScale(2, RoundingMode.HALF_UP));
 	}
 
-	public String getDisplaySummaryPrice(){
-		if(getCardPriceSummary() == null){
+	public String getDisplaySummaryPrice() {
+		if (getCardPriceSummary() == null) {
 			return Const.ZERO_PRICE_STRING;
 		}
 
@@ -46,7 +46,7 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	public int compareTo(AnalyzeData o) {
 
 		int compare = 0;
-		
+
 		compare = Integer.compare(this.getQuantity(), o.getQuantity());
 
 		if (compare != 0) {
@@ -69,8 +69,8 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	}
 
 	public String getStringOfSetNames() {
-		
-		if(getSetNames().isEmpty()) {
+
+		if (getSetNames().isEmpty()) {
 			return "";
 		}
 
@@ -88,18 +88,18 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	}
 
 	public String getStringOfSetNumbers() {
-		
-		if(getSetNumber().isEmpty()) {
+
+		if (getSetNumber().isEmpty()) {
 			return "";
 		}
-		
+
 		ArrayList<String> results = new ArrayList<>(getSetNumber());
 
-		if(results.size() == 1){
+		if (results.size() == 1) {
 			return results.get(0);
 		}
 
-		if(results.isEmpty()){
+		if (results.isEmpty()) {
 			return "None Found";
 		}
 
@@ -115,11 +115,11 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 	}
 
 	public String getStringOfRarities() {
-		
-		if(getSetRarities().isEmpty()) {
+
+		if (getSetRarities().isEmpty()) {
 			return "";
 		}
-		
+
 		HashSet<Rarity> enumList = new HashSet<>();
 
 		for (String s : getSetRarities()) {
@@ -129,11 +129,11 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 
 		ArrayList<Rarity> enumList2 = new ArrayList<>(enumList);
 
-		if(enumList2.size() == 1){
+		if (enumList2.size() == 1) {
 			return enumList2.get(0).toString();
 		}
 
-		if(enumList2.isEmpty()){
+		if (enumList2.isEmpty()) {
 			return "None Found";
 		}
 

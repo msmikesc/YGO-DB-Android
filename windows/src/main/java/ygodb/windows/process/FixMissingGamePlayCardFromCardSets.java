@@ -35,21 +35,21 @@ public class FixMissingGamePlayCardFromCardSets {
 			List<String> list = db.getDistinctGamePlayCardUUIDsInSetByName(setName);
 			for (String gamePlayCardUUID : list) {
 				List<String> titles = db.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID);
-				
+
 				List<CardSet> cardSets = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
-				
-				if(titles == null || titles.isEmpty()) {
+
+				if (titles == null || titles.isEmpty()) {
 					YGOLogger.info("0 gamePlayCard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).getCardName());
-					
+
 					GamePlayCard current = new GamePlayCard();
-					
+
 					current.setCardName(cardSets.get(0).getCardName());
 					current.setArchetype(Const.ARCHETYPE_AUTOGENERATE);
 					current.setGamePlayCardUUID(gamePlayCardUUID);
-					
+
 					db.replaceIntoGamePlayCard(current);
 				}
-				
+
 			}
 
 		}

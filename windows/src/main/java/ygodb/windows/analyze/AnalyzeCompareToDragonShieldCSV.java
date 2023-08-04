@@ -26,25 +26,25 @@ public class AnalyzeCompareToDragonShieldCSV {
 	private static final Map<String, String> longRareMap = new HashMap<>();
 
 	static {
-		longRareMap.put("SR","Super Rare");
-		longRareMap.put("R","Rare");
-		longRareMap.put("C","Common");
-		longRareMap.put("SP","Common");
-		longRareMap.put("UR","Ultra Rare");
-		longRareMap.put("PGR","Premium Gold Rare");
-		longRareMap.put("PScR","Prismatic Secret Rare");
-		longRareMap.put("ScR","Secret Rare");
-		longRareMap.put("DUPR","Duel Terminal Ultra Parallel Rare");
-		longRareMap.put("DRPR","Duel Terminal Normal Parallel Rare");
-		longRareMap.put("UtR","Ultimate Rare");
-		longRareMap.put("GUR","Gold Rare");
-		longRareMap.put("GScR","Gold Secret Rare");
-		longRareMap.put("SSP","Common");
-		longRareMap.put("CR","Collector's Rare");
-		longRareMap.put("SHR","Shatterfoil Rare");
-		longRareMap.put("DNPR","Duel Terminal Normal Parallel Rare");
-		longRareMap.put("SFR","Starfoil Rare");
-		longRareMap.put("QCScR","Quarter Century Secret Rare");
+		longRareMap.put("SR", "Super Rare");
+		longRareMap.put("R", "Rare");
+		longRareMap.put("C", "Common");
+		longRareMap.put("SP", "Common");
+		longRareMap.put("UR", "Ultra Rare");
+		longRareMap.put("PGR", "Premium Gold Rare");
+		longRareMap.put("PScR", "Prismatic Secret Rare");
+		longRareMap.put("ScR", "Secret Rare");
+		longRareMap.put("DUPR", "Duel Terminal Ultra Parallel Rare");
+		longRareMap.put("DRPR", "Duel Terminal Normal Parallel Rare");
+		longRareMap.put("UtR", "Ultimate Rare");
+		longRareMap.put("GUR", "Gold Rare");
+		longRareMap.put("GScR", "Gold Secret Rare");
+		longRareMap.put("SSP", "Common");
+		longRareMap.put("CR", "Collector's Rare");
+		longRareMap.put("SHR", "Shatterfoil Rare");
+		longRareMap.put("DNPR", "Duel Terminal Normal Parallel Rare");
+		longRareMap.put("SFR", "Starfoil Rare");
+		longRareMap.put("QCScR", "Quarter Century Secret Rare");
 	}
 
 
@@ -89,7 +89,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 			String colorCode = Const.DEFAULT_COLOR_VARIANT;
 
-			if(printing == null || printing.equals("")){
+			if (printing == null || printing.equals("")) {
 				printing = Const.CARD_PRINTING_UNLIMITED;
 			}
 
@@ -120,7 +120,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 				String newKey = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
 
 				existingOwnedCardsList = ownedCardsMap.get(newKey);
-				if(existingOwnedCardsList != null){
+				if (existingOwnedCardsList != null) {
 					handleForCSVKey(ownedCardsMap, csvOwnedcard, existingOwnedCardsList);
 				}
 			}
@@ -129,7 +129,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 				// try adding EN to set number
 				String[] brokenSetNumber = setNumber.split("-");
 
-				if(brokenSetNumber.length == 2){
+				if (brokenSetNumber.length == 2) {
 					String newSetNumber = brokenSetNumber[0] + "-EN" + brokenSetNumber[1];
 
 					setIdentified = new CardSet("", newSetNumber, name, rarity, setName, colorCode, setCode);
@@ -137,7 +137,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 					String newKey = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
 					existingOwnedCardsList = ownedCardsMap.get(newKey);
-					if(existingOwnedCardsList != null){
+					if (existingOwnedCardsList != null) {
 						handleForCSVKey(ownedCardsMap, csvOwnedcard, existingOwnedCardsList);
 					}
 				}
@@ -156,17 +156,16 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 				if (!card.getFolderName().equals(Const.FOLDER_MANUAL)) {
 					YGOLogger.info(
-							"Card in DB but not in CSV: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity()
-									+ " " + card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
+							"Card in DB but not in CSV: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity() + " " + card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());
 				}
 			}
 		}
 
 	}
 
-	public String convertRarityToLongForm(String input){
+	public String convertRarityToLongForm(String input) {
 		String output = longRareMap.get(input);
-		if(output == null){
+		if (output == null) {
 			return input;
 		}
 		return output;
@@ -174,7 +173,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 
 	private static void handleForCSVKey(Map<String, List<OwnedCard>> ownedCardsMap, OwnedCard csvOwnedcard,
-										List<OwnedCard> existingOwnedCardsList) {
+			List<OwnedCard> existingOwnedCardsList) {
 
 		String key = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
 
@@ -183,23 +182,21 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 			OwnedCard existingCard = existingOwnedCardsList.get(0);
 
-			if (!csvOwnedcard.getColorVariant().equalsIgnoreCase(existingOwnedCardsList.get(0).getColorVariant())
-					&& !Const.setColorVariantUnsupportedDragonShield.contains(existingCard.getSetName())) {
+			if (!csvOwnedcard.getColorVariant().equalsIgnoreCase(
+					existingOwnedCardsList.get(0).getColorVariant()) && !Const.setColorVariantUnsupportedDragonShield.contains(
+					existingCard.getSetName())) {
 				YGOLogger.info(
-						"Color Code Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity()
-								+ " " + existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
+						"Color Code Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity() + " " + existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
 			}
 
 			if (existingCard.getQuantity() != csvOwnedcard.getQuantity()) {
 				YGOLogger.info(
-						"Quantity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity() + " "
-								+ existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
+						"Quantity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity() + " " + existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
 			}
 
 			if (!existingCard.getSetRarity().equals(csvOwnedcard.getSetRarity())) {
 				YGOLogger.info(
-						"Rarity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity() + " "
-								+ existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
+						"Rarity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity() + " " + existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
 			}
 
 			ownedCardsMap.remove(key);
@@ -219,9 +216,8 @@ public class AnalyzeCompareToDragonShieldCSV {
 					existingOwnedCardsList.remove(i);
 
 					if (existingCard.getQuantity() != csvOwnedcard.getQuantity()) {
-						YGOLogger.info("Quantity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " "
-								+ existingCard.getSetRarity() + " " + existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " "
-								+ existingCard.getDateBought());
+						YGOLogger.info(
+								"Quantity Mismatch on: " + existingCard.getCardName() + " " + existingCard.getSetNumber() + " " + existingCard.getSetRarity() + " " + existingCard.getColorVariant() + " " + existingCard.getPriceBought() + " " + existingCard.getDateBought());
 					}
 
 					if (existingOwnedCardsList.isEmpty()) {

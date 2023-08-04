@@ -26,30 +26,30 @@ public class ExportAllOwnedCardToCSV {
 
 		String filename = "all-export.csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
-		
+
 		List<OwnedCard> list = db.getAllOwnedCards();
 
 		CsvConnection csvConnection = new CsvConnection();
-		
+
 		CSVPrinter p = csvConnection.getExportOutputFile(resourcePath);
-		
+
 		int quantityCount = 0;
-		
-		for(OwnedCard current : list) {
-			
+
+		for (OwnedCard current : list) {
+
 			quantityCount += current.getQuantity();
 
-			csvConnection.writeOwnedCardToCSV(p,current);
+			csvConnection.writeOwnedCardToCSV(p, current);
 
 		}
-		
-		YGOLogger.info("Exported cards: "+ quantityCount);
-		
-		YGOLogger.info("Total cards: "+db.getCountQuantity() + " + " + db.getCountQuantityManual() + " Manual");
-		
+
+		YGOLogger.info("Exported cards: " + quantityCount);
+
+		YGOLogger.info("Total cards: " + db.getCountQuantity() + " + " + db.getCountQuantityManual() + " Manual");
+
 		p.flush();
 		p.close();
-		
+
 	}
 
 }

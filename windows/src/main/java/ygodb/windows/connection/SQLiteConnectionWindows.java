@@ -34,8 +34,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	public Connection getInstance() throws SQLException {
 		if (connectionInstance == null) {
-			connectionInstance = DriverManager
-					.getConnection("jdbc:sqlite:C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\db\\YGO-DB.db");
+			connectionInstance = DriverManager.getConnection(
+					"jdbc:sqlite:C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\db\\YGO-DB.db");
 		}
 
 		return connectionInstance;
@@ -47,7 +47,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 			return;
 		}
 
-		if(!connectionInstance.getAutoCommit()){
+		if (!connectionInstance.getAutoCommit()) {
 			connectionInstance.commit();
 		}
 
@@ -150,8 +150,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String setQuery = SQLConst.GET_ALL_CARD_RARITIES;
 
-		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
-			 ResultSet rarities = statementSetQuery.executeQuery()) {
+		try (PreparedStatement statementSetQuery = connection.prepareStatement(
+				setQuery); ResultSet rarities = statementSetQuery.executeQuery()) {
 
 			HashMap<String, List<CardSet>> setRarities = new HashMap<>(300000, 0.75f);
 
@@ -161,8 +161,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 				List<String> keysList = DatabaseHashMap.getCardRarityKeys(set);
 
-				for (String key : keysList){
-					if(key != null && !key.isBlank()) {
+				for (String key : keysList) {
+					if (key != null && !key.isBlank()) {
 						List<CardSet> currentList = setRarities.computeIfAbsent(key, k -> new ArrayList<>());
 						currentList.add(set);
 					}
@@ -179,8 +179,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String setQuery = SQLConst.GET_ALL_GAME_PLAY_CARD;
 
-		try (PreparedStatement statement = connection.prepareStatement(setQuery);
-			 ResultSet rs = statement.executeQuery()) {
+		try (PreparedStatement statement = connection.prepareStatement(setQuery); ResultSet rs = statement.executeQuery()) {
 
 			HashMap<String, List<GamePlayCard>> cardMap = new HashMap<>();
 
@@ -190,7 +189,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 				List<String> keysList = DatabaseHashMap.getGamePlayCardKeys(card);
 
-				for (String key : keysList){
+				for (String key : keysList) {
 					List<GamePlayCard> currentList = cardMap.computeIfAbsent(key, k -> new ArrayList<>());
 					currentList.add(card);
 				}
@@ -200,19 +199,17 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 
-
 	@Override
 	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 		DatabaseSelectQuery<CardSet, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
-		return CommonDatabaseQueries.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID,
-				query, new CardSetMapperSelectQuery());
+		return CommonDatabaseQueries.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID, query, new CardSetMapperSelectQuery());
 	}
 
 	@Override
 	public List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) throws SQLException {
 		DatabaseSelectQuery<CardSet, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
-		return CommonDatabaseQueries.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName,
-				query, new CardSetMapperSelectQuery());
+		return CommonDatabaseQueries.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName, query,
+																			  new CardSetMapperSelectQuery());
 	}
 
 	@Override
@@ -233,16 +230,15 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	@Override
 	public String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 		DatabaseSelectQuery<String, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
-		return CommonDatabaseQueries.getCardTitleFromGamePlayCardUUID(gamePlayCardUUID,
-				query, new GamePlayCardNameMapperSelectQuery());
+		return CommonDatabaseQueries.getCardTitleFromGamePlayCardUUID(gamePlayCardUUID, query, new GamePlayCardNameMapperSelectQuery());
 	}
 
 	@Override
 	public List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 
 		DatabaseSelectQuery<String, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
-		return CommonDatabaseQueries.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID,
-				query, new GamePlayCardNameMapperSelectQuery());
+		return CommonDatabaseQueries.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID, query,
+																			  new GamePlayCardNameMapperSelectQuery());
 	}
 
 	@Override
@@ -335,7 +331,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 
-
 	@Override
 	public OwnedCard getExistingOwnedCardByObject(OwnedCard query) {
 		return null;
@@ -361,8 +356,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_SET_NUMBER;
 
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
-			 ResultSet rs = setQueryStatement.executeQuery()) {
+		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs = setQueryStatement.executeQuery()) {
 
 			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
@@ -381,8 +375,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE;
 
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
-			 ResultSet rs = setQueryStatement.executeQuery()) {
+		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs = setQueryStatement.executeQuery()) {
 
 			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
@@ -401,8 +394,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
 
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
-			 ResultSet rs = setQueryStatement.executeQuery()) {
+		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs = setQueryStatement.executeQuery()) {
 
 			HashMap<String, List<OwnedCard>> ownedCards = new HashMap<>();
 
@@ -425,8 +417,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		Connection connection = this.getInstance();
 		String setQuery = SQLConst.GET_RARITY_UNSURE_OWNED_CARDS;
 
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery);
-			 ResultSet rs = setQueryStatement.executeQuery()) {
+		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs = setQueryStatement.executeQuery()) {
 
 			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
 
@@ -534,8 +525,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		Connection connection = this.getInstance();
 		String distinctQuery = SQLConst.GET_DISTINCT_SET_NAMES;
 
-		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(distinctQuery);
-			 ResultSet rs = distinctQueryStatement.executeQuery()) {
+		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(
+				distinctQuery); ResultSet rs = distinctQueryStatement.executeQuery()) {
 
 			ArrayList<String> setsList = new ArrayList<>();
 
@@ -581,8 +572,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String query = SQLConst.GET_COUNT_QUANTITY;
 
-		try (PreparedStatement queryStatement = connection.prepareStatement(query);
-			 ResultSet rs = queryStatement.executeQuery()) {
+		try (PreparedStatement queryStatement = connection.prepareStatement(query); ResultSet rs = queryStatement.executeQuery()) {
 
 			int results = -1;
 
@@ -601,8 +591,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String query = SQLConst.GET_COUNT_QUANTITY_MANUAL;
 
-		try (PreparedStatement queryStatement = connection.prepareStatement(query);
-			 ResultSet rs = queryStatement.executeQuery()) {
+		try (PreparedStatement queryStatement = connection.prepareStatement(query); ResultSet rs = queryStatement.executeQuery()) {
 
 			int results = -1;
 
@@ -705,8 +694,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String distinctQuery = SQLConst.GET_ALL_SET_META_DATA_FROM_SET_DATA;
 
-		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(distinctQuery);
-			 ResultSet rs = distinctQueryStatement.executeQuery()) {
+		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(
+				distinctQuery); ResultSet rs = distinctQueryStatement.executeQuery()) {
 
 			ArrayList<SetMetaData> setsList = new ArrayList<>();
 
@@ -732,8 +721,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String distinctQuery = SQLConst.GET_CARDS_ONLY_PRINTED_ONCE;
 
-		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(distinctQuery);
-			 ResultSet rs = distinctQueryStatement.executeQuery()) {
+		try (PreparedStatement distinctQueryStatement = connection.prepareStatement(
+				distinctQuery); ResultSet rs = distinctQueryStatement.executeQuery()) {
 
 			HashMap<String, AnalyzePrintedOnceData> setsList = new HashMap<>();
 
@@ -772,8 +761,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public void replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate)
-			throws SQLException {
+	public void replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) throws SQLException {
 
 		Connection connection = this.getInstance();
 
@@ -831,7 +819,6 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 
-
 	@Override
 	public int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
@@ -841,15 +828,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	@Override
 	public void insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException {
-		if(card.getUuid() == null || card.getUuid().equals("")){
+		if (card.getUuid() == null || card.getUuid().equals("")) {
 			int rowsInserted = insertIntoOwnedCards(card);
-			if(rowsInserted != 1){
+			if (rowsInserted != 1) {
 				YGOLogger.error(rowsInserted + " rows inserted for insert for:" + card);
 			}
-		}
-		else{
-			int rowsUpdated =updateOwnedCardByUUID(card);
-			if(rowsUpdated != 1){
+		} else {
+			int rowsUpdated = updateOwnedCardByUUID(card);
+			if (rowsUpdated != 1) {
 				YGOLogger.error(rowsUpdated + " rows updated for update for:" + card);
 			}
 		}
@@ -877,7 +863,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String uuid = card.getUuid();
 
-		if(uuid == null || uuid.equals("")){
+		if (uuid == null || uuid.equals("")) {
 			YGOLogger.error("UUID null on updated owned card");
 			return 0;
 		}
@@ -947,8 +933,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		String uuid = card.getUuid();
 		if (uuid == null || uuid.equals("")) {
 			uuid = java.util.UUID.randomUUID().toString();
-		}
-		else{
+		} else {
 			YGOLogger.error("UUID not null on an insert owned card:" + uuid);
 			return 0;
 		}
@@ -990,10 +975,10 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID,
-										  String cardName, String colorVariant, String url) throws SQLException {
+	public void insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String cardName,
+			String colorVariant, String url) throws SQLException {
 
-		if(colorVariant == null || colorVariant.isBlank()){
+		if (colorVariant == null || colorVariant.isBlank()) {
 			colorVariant = Const.DEFAULT_COLOR_VARIANT;
 		}
 
@@ -1062,7 +1047,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY;
 
-		if(isFirstEdition){
+		if (isFirstEdition) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY_FIRST;
 		}
 
@@ -1077,14 +1062,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition)
-			throws SQLException {
+	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition) throws
+			SQLException {
 
 		Connection connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME;
 
-		if(isFirstEdition){
+		if (isFirstEdition) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_FIRST;
 		}
 
@@ -1100,15 +1085,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName,
-													String cardName, boolean isFirstEdition)
-			throws SQLException {
+	public int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName,
+			boolean isFirstEdition) throws SQLException {
 
 		Connection connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME;
 
-		if(isFirstEdition){
+		if (isFirstEdition) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST;
 		}
 
@@ -1125,14 +1109,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
-			throws SQLException {
+	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition) throws
+			SQLException {
 
 		Connection connection = this.getInstance();
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME;
 
-		if(isFirstEdition){
+		if (isFirstEdition) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST;
 		}
 
@@ -1153,7 +1137,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE;
 
-		if(isFirstEdition){
+		if (isFirstEdition) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_FIRST;
 		}
 
@@ -1171,9 +1155,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		String query = SQLConst.GET_NEW_LOWEST_PASSCODE;
 
-		try (PreparedStatement statement = connection.prepareStatement(query);
-			 ResultSet rarities = statement.executeQuery()) {
-			if(rarities.next()){
+		try (PreparedStatement statement = connection.prepareStatement(query); ResultSet rarities = statement.executeQuery()) {
+			if (rarities.next()) {
 				int currentLowest = rarities.getInt(1);
 				return currentLowest - 1;
 			}
@@ -1192,24 +1175,22 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetUrl(String setNumber, String rarity, String setName,
-								String cardName, String setURL, String colorVariant) throws SQLException {
+	public int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant) throws
+			SQLException {
 
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
-		return CommonDatabaseQueries.updateCardSetUrl(query, setNumber, rarity, setName,
-				cardName, setURL, colorVariant);
+		return CommonDatabaseQueries.updateCardSetUrl(query, setNumber, rarity, setName, cardName, setURL, colorVariant);
 	}
 
 	@Override
-	public int updateCardSetUrlAndColor(String setNumber, String rarity, String setName,
-										String cardName, String setURL, String currentColorVariant, String newColorVariant)
-			throws SQLException {
+	public int updateCardSetUrlAndColor(String setNumber, String rarity, String setName, String cardName, String setURL,
+			String currentColorVariant, String newColorVariant) throws SQLException {
 
-		if(currentColorVariant == null || currentColorVariant.isBlank()){
+		if (currentColorVariant == null || currentColorVariant.isBlank()) {
 			currentColorVariant = Const.DEFAULT_COLOR_VARIANT;
 		}
 
-		if(newColorVariant == null || newColorVariant.isBlank()){
+		if (newColorVariant == null || newColorVariant.isBlank()) {
 			newColorVariant = Const.DEFAULT_COLOR_VARIANT;
 		}
 
@@ -1231,15 +1212,13 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
-	public PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetterWindows setter)
-			throws SQLException {
+	public PreparedStatementBatchWrapper getBatchedPreparedStatement(String input, BatchSetterWindows setter) throws SQLException {
 		Connection connection = this.getInstance();
 		return new PreparedStatementBatchWrapperWindows(connection, input, BATCH_SIZE, setter);
 	}
 
 	@Override
-	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst()
-			throws SQLException {
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst() throws SQLException {
 
 		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST, (stmt, params) -> {
 			stmt.setString(1, (String) params.get(0));
@@ -1248,8 +1227,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited()
-			throws SQLException {
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited() throws SQLException {
 
 		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL, (stmt, params) -> {
 			stmt.setString(1, (String) params.get(0));

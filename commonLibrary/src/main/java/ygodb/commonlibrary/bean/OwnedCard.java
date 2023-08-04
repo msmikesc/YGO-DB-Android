@@ -35,8 +35,8 @@ public class OwnedCard {
 	public OwnedCard() {
 	}
 
-	public OwnedCard(String folder, String cardName, String quantity, String condition,
-					 String printing, String priceBought, String dateBought, CardSet setIdentified, int passcode) {
+	public OwnedCard(String folder, String cardName, String quantity, String condition, String printing, String priceBought,
+			String dateBought, CardSet setIdentified, int passcode) {
 		this.setFolderName(folder);
 		this.setCardName(cardName);
 		this.setQuantity(Integer.parseInt(quantity));
@@ -56,8 +56,8 @@ public class OwnedCard {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(gamePlayCardUUID, folderName, cardName, setCode, setNumber, setName, setRarity,
-				colorVariant, condition, editionPrinting, dateBought, priceBought, passcode);
+		return Objects.hash(gamePlayCardUUID, folderName, cardName, setCode, setNumber, setName, setRarity, colorVariant, condition,
+							editionPrinting, dateBought, priceBought, passcode);
 	}
 
 	@Override
@@ -67,17 +67,17 @@ public class OwnedCard {
 		if (other == null) return false;
 		if (other == this) return true;
 		if (!(other instanceof OwnedCard)) return false;
-		OwnedCard otherOwnedCard = (OwnedCard)other;
+		OwnedCard otherOwnedCard = (OwnedCard) other;
 
 		try {
-			return setNumber.equals(otherOwnedCard.getSetNumber()) && priceBought.equals(otherOwnedCard.getPriceBought())
-					&& dateBought.equals(otherOwnedCard.getDateBought()) && folderName.equals(otherOwnedCard.getFolderName())
-					&& condition.equals(otherOwnedCard.getCondition()) && editionPrinting.equals(otherOwnedCard.getEditionPrinting())
-					&& cardName.equals(otherOwnedCard.getCardName()) && setCode.equals(otherOwnedCard.getSetCode())
-					&& colorVariant.equals(otherOwnedCard.getColorVariant()) && setRarity.equals(otherOwnedCard.getSetRarity())
-					&& setName.equals(otherOwnedCard.getSetName()) && passcode == otherOwnedCard.getPasscode()
-					&& gamePlayCardUUID.equals(otherOwnedCard.getGamePlayCardUUID()
-			);
+			return setNumber.equals(otherOwnedCard.getSetNumber()) && priceBought.equals(
+					otherOwnedCard.getPriceBought()) && dateBought.equals(otherOwnedCard.getDateBought()) && folderName.equals(
+					otherOwnedCard.getFolderName()) && condition.equals(otherOwnedCard.getCondition()) && editionPrinting.equals(
+					otherOwnedCard.getEditionPrinting()) && cardName.equals(otherOwnedCard.getCardName()) && setCode.equals(
+					otherOwnedCard.getSetCode()) && colorVariant.equals(otherOwnedCard.getColorVariant()) && setRarity.equals(
+					otherOwnedCard.getSetRarity()) && setName.equals(
+					otherOwnedCard.getSetName()) && passcode == otherOwnedCard.getPasscode() && gamePlayCardUUID.equals(
+					otherOwnedCard.getGamePlayCardUUID());
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 			throw e;

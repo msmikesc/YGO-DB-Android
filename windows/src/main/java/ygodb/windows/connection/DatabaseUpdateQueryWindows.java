@@ -21,7 +21,7 @@ public class DatabaseUpdateQueryWindows implements DatabaseUpdateQuery {
 
 	@Override
 	public void prepareStatement(String query) throws SQLException {
-		if(statement != null){
+		if (statement != null) {
 			throw new SQLException(ERROR_MESSAGE_INIT);
 		}
 		statement = connection.prepareStatement(query);
@@ -29,7 +29,7 @@ public class DatabaseUpdateQueryWindows implements DatabaseUpdateQuery {
 
 	@Override
 	public void bindString(int index, String value) throws SQLException {
-		if(statement == null || statement.isClosed()){
+		if (statement == null || statement.isClosed()) {
 			throw new SQLException(ERROR_MESSAGE);
 		}
 		if (value == null) {
@@ -41,7 +41,7 @@ public class DatabaseUpdateQueryWindows implements DatabaseUpdateQuery {
 
 	@Override
 	public void bindInteger(int index, Integer value) throws SQLException {
-		if(statement == null || statement.isClosed()){
+		if (statement == null || statement.isClosed()) {
 			throw new SQLException(ERROR_MESSAGE);
 		}
 		if (value == null) {
@@ -53,7 +53,7 @@ public class DatabaseUpdateQueryWindows implements DatabaseUpdateQuery {
 
 	@Override
 	public int executeUpdate() throws SQLException {
-		if(statement == null || statement.isClosed()){
+		if (statement == null || statement.isClosed()) {
 			throw new SQLException(ERROR_MESSAGE);
 		}
 		int count = statement.executeUpdate();

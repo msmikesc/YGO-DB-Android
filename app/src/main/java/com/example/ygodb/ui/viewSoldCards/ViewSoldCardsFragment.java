@@ -19,64 +19,65 @@ import java.util.concurrent.Executors;
 
 public class ViewSoldCardsFragment extends Fragment {
 
-    private FragmentViewcardsBinding binding;
-    private LinearLayoutManager layout;
+	private FragmentViewcardsBinding binding;
+	private LinearLayoutManager layout;
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        ViewSoldCardsViewModel viewSoldCardsViewModel =
-                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewSoldCardsViewModel.class);
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		ViewSoldCardsViewModel viewSoldCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(
+				ViewSoldCardsViewModel.class);
 
-        binding = FragmentViewcardsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+		binding = FragmentViewcardsBinding.inflate(inflater, container, false);
+		View root = binding.getRoot();
 
-        RecyclerView cardsListView = binding.viewList;
+		RecyclerView cardsListView = binding.viewList;
 
-        SingleCardToListAdapter adapter = new SingleCardToListAdapter(
-                viewSoldCardsViewModel.getCardsList(), null, null, false);
+		SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewSoldCardsViewModel.getCardsList(), null, null, false);
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        layout = linearLayoutManager;
-        cardsListView.setLayoutManager(linearLayoutManager);
-        cardsListView.setAdapter(adapter);
+		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+		layout = linearLayoutManager;
+		cardsListView.setLayoutManager(linearLayoutManager);
+		cardsListView.setAdapter(adapter);
 
-        EndlessScrollListener scrollListener = new ViewSoldCardsEndlessScrollListener(linearLayoutManager, viewSoldCardsViewModel, adapter);
-        cardsListView.addOnScrollListener(scrollListener);
+		EndlessScrollListener scrollListener = new ViewSoldCardsEndlessScrollListener(linearLayoutManager, viewSoldCardsViewModel, adapter);
+		cardsListView.addOnScrollListener(scrollListener);
 
-        binding.fab.setOnClickListener(new ViewSoldCardsSortButtonOnClickListener(binding.fab,getContext(), viewSoldCardsViewModel, adapter, layout));
+		binding.fab.setOnClickListener(
+				new ViewSoldCardsSortButtonOnClickListener(binding.fab, getContext(), viewSoldCardsViewModel, adapter, layout));
 
-        binding.cardSearch.addTextChangedListener(new ViewSoldCardsSearchBarChangedListener(binding.cardSearch, viewSoldCardsViewModel, adapter, layout));
+		binding.cardSearch.addTextChangedListener(
+				new ViewSoldCardsSearchBarChangedListener(binding.cardSearch, viewSoldCardsViewModel, adapter, layout));
 
-        if(viewSoldCardsViewModel.getCardsList().isEmpty()) {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                try {
-                    viewSoldCardsViewModel.getCardsList().addAll(viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(),
-                            ViewSoldCardsViewModel.LOADING_LIMIT, 0, null));
+		if (viewSoldCardsViewModel.getCardsList().isEmpty()) {
+			Executors.newSingleThreadExecutor().execute(() -> {
+				try {
+					viewSoldCardsViewModel.getCardsList().addAll(
+							viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(), ViewSoldCardsViewModel.LOADING_LIMIT,
+																0, null));
 
-                    root.post(adapter::notifyDataSetChanged);
-                } catch (Exception e) {
-                    YGOLogger.logException(e);
-                }
-            });
-        }
+					root.post(adapter::notifyDataSetChanged);
+				} catch (Exception e) {
+					YGOLogger.logException(e);
+				}
+			});
+		}
 
-        viewSoldCardsViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), aBoolean -> {
-            if (aBoolean) {
-                viewSoldCardsViewModel.setDbRefreshIndicatorFalse();
-                layout.scrollToPositionWithOffset(0, 0);
-                adapter.notifyDataSetChanged();
-            }
-        });
+		viewSoldCardsViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), aBoolean -> {
+			if (aBoolean) {
+				viewSoldCardsViewModel.setDbRefreshIndicatorFalse();
+				layout.scrollToPositionWithOffset(0, 0);
+				adapter.notifyDataSetChanged();
+			}
+		});
 
-        return root;
-    }
+		return root;
+	}
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-        layout=null;
-    }
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		binding = null;
+		layout = null;
+	}
 
 }

@@ -36,7 +36,8 @@ public class Util {
 
 	private static Set<String> setUrlsThatDoNotExist = null;
 
-	private Util(){}
+	private Util() {
+	}
 
 	public static void checkSetCounts(SQLiteConnection db) throws SQLException {
 		List<SetMetaData> list = db.getAllSetMetaDataFromSetData();
@@ -45,8 +46,7 @@ public class Util {
 			int countCardsInList = db.getCountDistinctCardsInSet(setData.getSetName());
 
 			if (countCardsInList != setData.getNumOfCards()) {
-				YGOLogger.info("Issue for " + setData.getSetName() + " metadata:" + setData.getNumOfCards() + " count:"
-						+ countCardsInList);
+				YGOLogger.info("Issue for " + setData.getSetName() + " metadata:" + setData.getNumOfCards() + " count:" + countCardsInList);
 			}
 		}
 
@@ -59,17 +59,16 @@ public class Util {
 		List<String> setNames = db.getDistinctSetNames();
 
 		for (String setName : setNames) {
-			
+
 			if (setName.contains("Tip Card") || setName.contains("(POR)")) {
 				continue;
 			}
-			
+
 			SetMetaData meta = setMetaDataHashMap.get(setName);
 
 			if (meta == null) {
 				YGOLogger.error("Issue for " + setName + " no metadata");
-			}
-			else {
+			} else {
 				int cardsInSet = db.getCountDistinctCardsInSet(setName);
 
 				if (cardsInSet != meta.getNumOfCards()) {
@@ -82,7 +81,7 @@ public class Util {
 
 	public static String normalizePrice(String input) {
 
-		if(input == null || input.trim().equals("")) {
+		if (input == null || input.trim().equals("")) {
 			return null;
 		}
 
@@ -90,8 +89,7 @@ public class Util {
 
 		try {
 			price = new BigDecimal(input.replace(",", ""));
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			YGOLogger.info("Invalid price input:" + input);
 			price = new BigDecimal("0");
 		}
@@ -106,17 +104,17 @@ public class Util {
 		for (String i : list) {
 			String title = db.getCardTitleFromGamePlayCardUUID(i);
 
-			if(title == null) {
+			if (title == null) {
 				YGOLogger.info("Not exactly 1 gamePlayCard found for ID " + i);
 			}
 
 		}
 	}
 
-	public static String getPrefixFromSetNumber(String setNumber){
+	public static String getPrefixFromSetNumber(String setNumber) {
 		String[] splitStrings = setNumber.split("-");
 
-		if(splitStrings.length != 2){
+		if (splitStrings.length != 2) {
 			return null;
 		}
 
@@ -133,11 +131,11 @@ public class Util {
 		String lastFullString = null;
 		for (String currentCode : cardsInSetList) {
 			String[] splitStrings = currentCode.split("-");
-			
-			if(currentCode.equals("BLAR-EN10K")) {
+
+			if (currentCode.equals("BLAR-EN10K")) {
 				continue;
 			}
-			if(currentCode.contains("ENTKN")) {
+			if (currentCode.contains("ENTKN")) {
 				continue;
 			}
 
@@ -194,7 +192,8 @@ public class Util {
 		}
 	}
 
-	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(String name, SQLiteConnection db) throws SQLException {
+	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrGenerateNewWithSkillCheck(String name, SQLiteConnection db) throws
+			SQLException {
 		Pair<String, String> data = getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
 
 		if (data.getKey() == null) {
@@ -204,7 +203,8 @@ public class Util {
 		return data;
 	}
 
-	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(String name, SQLiteConnection db) throws SQLException {
+	public static Pair<String, String> getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(String name, SQLiteConnection db) throws
+			SQLException {
 		String gamePlayCardUUID = db.getGamePlayCardUUIDFromTitle(name);
 		// try skill card
 		if (gamePlayCardUUID == null) {
@@ -311,16 +311,26 @@ public class Util {
 		if (setUrlsThatDoNotExist == null) {
 			setUrlsThatDoNotExist = new HashSet<>();
 
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/duelist-league-promo/enemy-controller?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/legendary-duelists-season-3/number-15-gimmick-puppet-giant-grinder?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/duelist-league-promo/axe-of-despair?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/tactical-evolution/gemini-summoner-taev-ensp1?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/colossal-fighter-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/gaia-knight-the-force-of-earth-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
-			setUrlsThatDoNotExist.add("https://store.tcgplayer.com/yugioh/dark-legends-promo-card/gorz-the-emissary-of-darkness?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/duelist-league-promo/enemy-controller?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/legendary-duelists-season-3/number-15-gimmick-puppet-giant-grinder?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/duelist-league-promo/axe-of-despair?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/tactical-evolution/gemini-summoner-taev-ensp1?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/colossal-fighter-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/gaia-knight-the-force-of-earth-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+			setUrlsThatDoNotExist.add(
+					"https://store.tcgplayer.com/yugioh/dark-legends-promo-card/gorz-the-emissary-of-darkness?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			//setUrlsThatDoNotExist.add();
 		}
 
@@ -347,7 +357,7 @@ public class Util {
 
 		input = input.trim();
 
-		if(input.endsWith(match)) {
+		if (input.endsWith(match)) {
 			input = match + ": " + input.replace(match, "").trim();
 		}
 		return input;
@@ -356,66 +366,66 @@ public class Util {
 
 	public static String checkForTranslatedSetName(String setName) {
 
-		if(setName == null){
+		if (setName == null) {
 			return null;
 		}
 
-		if(setName.contains("The Lost Art Promotion")) {
+		if (setName.contains("The Lost Art Promotion")) {
 			setName = "The Lost Art Promotion";
 		}
 
-		if(setName.contains("(Worldwide English)")) {
+		if (setName.contains("(Worldwide English)")) {
 			setName = setName.replace("(Worldwide English)", "");
 			setName = setName.trim();
 		}
 
-		if(setName.contains("Sneak Peek Participation Card")) {
+		if (setName.contains("Sneak Peek Participation Card")) {
 			setName = setName.replace("Sneak Peek Participation Card", "");
 			setName = setName.trim();
 		}
 
-		if(setName.contains(": Special Edition")) {
+		if (setName.contains(": Special Edition")) {
 			setName = setName.replace(": Special Edition", "");
 			setName = setName.trim();
 		}
 
-		if(setName.contains("Special Edition")) {
+		if (setName.contains("Special Edition")) {
 			setName = setName.replace("Special Edition", "");
 			setName = setName.trim();
 		}
 
-		if(setName.contains(": Super Edition")) {
+		if (setName.contains(": Super Edition")) {
 			setName = setName.replace(": Super Edition", "");
 			setName = setName.trim();
 		}
 
-		if(setName.contains("Super Edition")) {
+		if (setName.contains("Super Edition")) {
 			setName = setName.replace("Super Edition", "");
 			setName = setName.trim();
 		}
 
-		if(!setName.equals("Structure Deck: Deluxe Edition") && setName.contains(": Deluxe Edition")) {
+		if (!setName.equals("Structure Deck: Deluxe Edition") && setName.contains(": Deluxe Edition")) {
 			setName = setName.replace(": Deluxe Edition", "");
 			setName = setName.trim();
 		}
 
-		if(!setName.equals("Structure Deck: Deluxe Edition") && setName.contains("Deluxe Edition")) {
+		if (!setName.equals("Structure Deck: Deluxe Edition") && setName.contains("Deluxe Edition")) {
 			setName = setName.replace("Deluxe Edition", "");
 			setName = setName.trim();
 		}
 
-		if(setName.contains("Premiere! promotional card")) {
+		if (setName.contains("Premiere! promotional card")) {
 			setName = setName.replace("Premiere! promotional card", "");
 			setName = setName.trim();
 		}
 
-		if(setName.contains("Launch Event participation card")) {
+		if (setName.contains("Launch Event participation card")) {
 			setName = setName.replace("Launch Event participation card", "");
 			setName = setName.trim();
 		}
 
-		if(setName.endsWith(" SE")) {
-			setName = setName.substring(0, setName.length()-3);
+		if (setName.endsWith(" SE")) {
+			setName = setName.substring(0, setName.length() - 3);
 			setName = setName.trim();
 		}
 
@@ -430,7 +440,7 @@ public class Util {
 
 		String newRarity = instance.getValue(rarity);
 
-		if(newRarity == null) {
+		if (newRarity == null) {
 			return rarity;
 		}
 
@@ -442,7 +452,7 @@ public class Util {
 
 		String newSetNumber = instance.getValue(setNumber);
 
-		if(newSetNumber == null) {
+		if (newSetNumber == null) {
 			return setNumber;
 		}
 
@@ -451,7 +461,7 @@ public class Util {
 
 	public static String checkForTranslatedCardName(String cardName) {
 
-		if(cardName == null){
+		if (cardName == null) {
 			return null;
 		}
 
@@ -461,7 +471,7 @@ public class Util {
 
 		String newName = instance.getValue(lowerCaseName);
 
-		if(newName == null || newName.equals(lowerCaseName)) {
+		if (newName == null || newName.equals(lowerCaseName)) {
 			return cardName;
 		}
 
@@ -473,50 +483,47 @@ public class Util {
 
 		Integer newPasscode = instance.get(passcode);
 
-		if(newPasscode == null) {
+		if (newPasscode == null) {
 			return passcode;
 		}
 
 		return newPasscode;
 	}
-	
-	public static String getLowestPriceString(String input1, String input2){
+
+	public static String getLowestPriceString(String input1, String input2) {
 		BigDecimal zero = new BigDecimal(0);
 		BigDecimal price;
 		BigDecimal priceFirst;
 		boolean noFirstOption = false;
 		boolean noSecondOption = false;
 
-		if(input1 == null){
+		if (input1 == null) {
 			price = new BigDecimal(Integer.MAX_VALUE);
 			noFirstOption = true;
-		}
-		else{
+		} else {
 			price = new BigDecimal(input1);
 		}
 
-		if(input2 == null){
+		if (input2 == null) {
 			priceFirst = new BigDecimal(Integer.MAX_VALUE);
 			noSecondOption = true;
-		}
-		else{
+		} else {
 			priceFirst = new BigDecimal(input2);
 		}
 
-		if(noFirstOption && noSecondOption){
+		if (noFirstOption && noSecondOption) {
 			return Const.ZERO_PRICE_STRING;
 		}
-		if(noFirstOption || zero.compareTo(price) == 0){
+		if (noFirstOption || zero.compareTo(price) == 0) {
 			return input2;
 		}
-		if(noSecondOption || zero.compareTo(priceFirst) == 0){
+		if (noSecondOption || zero.compareTo(priceFirst) == 0) {
 			return input1;
 		}
 
-		if(price.compareTo(priceFirst) < 0){
+		if (price.compareTo(priceFirst) < 0) {
 			return input1;
-		}
-		else{
+		} else {
 			return input2;
 		}
 	}
@@ -528,7 +535,7 @@ public class Util {
 
 		StringBuilder builder = new StringBuilder(name);
 		for (Rarity rarity : Rarity.values()) {
-			String rarityWithParens = "("+rarity.toString()+")";
+			String rarityWithParens = "(" + rarity.toString() + ")";
 			int index = builder.indexOf(rarityWithParens);
 			while (index != -1) {
 				builder.delete(index, index + rarityWithParens.length());
@@ -591,27 +598,27 @@ public class Util {
 	}
 
 	public static String extractColorFromUrl(String url) {
-		String tester = url.replace("blue-eyes","").replace("red-eyes","").replace("eyes-of-blue","");
+		String tester = url.replace("blue-eyes", "").replace("red-eyes", "").replace("eyes-of-blue", "");
 
-		if(tester.contains("-red?")){
+		if (tester.contains("-red?")) {
 			return "r";
 		}
-		if(tester.contains("-blue?")){
+		if (tester.contains("-blue?")) {
 			return "b";
 		}
-		if(tester.contains("-green?")){
+		if (tester.contains("-green?")) {
 			return "g";
 		}
-		if(tester.contains("-purple?")){
+		if (tester.contains("-purple?")) {
 			return "p";
 		}
-		if(tester.contains("-bronze?")){
+		if (tester.contains("-bronze?")) {
 			return "brz";
 		}
-		if(tester.contains("-silver?")){
+		if (tester.contains("-silver?")) {
 			return "s";
 		}
-		if(tester.contains("-alternate-art?")){
+		if (tester.contains("-alternate-art?")) {
 			return "a";
 		}
 		return Const.DEFAULT_COLOR_VARIANT;
@@ -620,62 +627,57 @@ public class Util {
 	public static String millisToShortDHMS(long duration) {
 		String res = "";
 		long days = TimeUnit.MILLISECONDS.toDays(duration);
-		long hours = TimeUnit.MILLISECONDS.toHours(duration) -
-				TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(duration));
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(duration) -
-				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration));
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) -
-				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration));
-		long millis = TimeUnit.MILLISECONDS.toMillis(duration) -
-				TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration));
+		long hours = TimeUnit.MILLISECONDS.toHours(duration) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(duration));
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration));
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration));
+		long millis = TimeUnit.MILLISECONDS.toMillis(duration) - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration));
 
 		if (days == 0) res = String.format(Locale.ENGLISH, "%02d:%02d:%02d.%04d", hours, minutes, seconds, millis);
 		else res = String.format(Locale.ENGLISH, "%dd %02d:%02d:%02d.%04d", days, hours, minutes, seconds, millis);
 		return res;
 	}
 
-	public static String getEstimatePriceFromRarity(String rarity){
+	public static String getEstimatePriceFromRarity(String rarity) {
 		String trimmed = rarity.trim();
 
-		if(trimmed.equalsIgnoreCase(Rarity.Common.toString())){
+		if (trimmed.equalsIgnoreCase(Rarity.Common.toString())) {
 			return "0.15";
 		}
 
-		if(trimmed.equalsIgnoreCase(Rarity.Rare.toString())){
+		if (trimmed.equalsIgnoreCase(Rarity.Rare.toString())) {
 			return "0.15";
 		}
 
-		if(trimmed.equalsIgnoreCase(Rarity.SuperRare.toString())){
+		if (trimmed.equalsIgnoreCase(Rarity.SuperRare.toString())) {
 			return "0.25";
 		}
 
 		return Const.ZERO_PRICE_STRING;
 	}
 
-	public static String getAPIPriceFromRarity(OwnedCard card, SQLiteConnection db){
+	public static String getAPIPriceFromRarity(OwnedCard card, SQLiteConnection db) {
 
 		boolean isFirstEdition = card.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
 
-		try{
-			if(card.getAnalyzeResultsCardSets() == null){
+		try {
+			if (card.getAnalyzeResultsCardSets() == null) {
 				card.setAnalyzeResultsCardSets(db.getRaritiesOfCardInSetByGamePlayCardUUID(card.getGamePlayCardUUID(), card.getSetName()));
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			YGOLogger.error("Error getting getRaritiesOfCardInSetByGamePlayCardUUID");
 			YGOLogger.logException(e);
 			return Const.ZERO_PRICE_STRING;
 		}
 		List<CardSet> analyzeResultsCardSets = card.getAnalyzeResultsCardSets();
 
-		if(analyzeResultsCardSets.size() == 1){
+		if (analyzeResultsCardSets.size() == 1) {
 			return analyzeResultsCardSets.get(0).getBestExistingPrice(isFirstEdition);
 		}
 
 		for (CardSet cardSet : analyzeResultsCardSets) {
-			if (cardSet.getSetRarity().equalsIgnoreCase(card.getSetRarity()) &&
-					cardSet.getSetNumber().equalsIgnoreCase(card.getSetNumber()) &&
-					cardSet.getSetName().equalsIgnoreCase(card.getSetName()) &&
-					cardSet.getColorVariant().equalsIgnoreCase(card.getColorVariant())) {
+			if (cardSet.getSetRarity().equalsIgnoreCase(card.getSetRarity()) && cardSet.getSetNumber().equalsIgnoreCase(
+					card.getSetNumber()) && cardSet.getSetName().equalsIgnoreCase(
+					card.getSetName()) && cardSet.getColorVariant().equalsIgnoreCase(card.getColorVariant())) {
 				return cardSet.getBestExistingPrice(isFirstEdition);
 			}
 		}
@@ -685,7 +687,7 @@ public class Util {
 
 	public static String identifyEditionPrinting(String input) {
 
-		if(input == null){
+		if (input == null) {
 			return Const.CARD_PRINTING_UNLIMITED;
 		}
 

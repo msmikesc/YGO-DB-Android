@@ -24,11 +24,11 @@ public class UpdateSetNames {
 	public void run(SQLiteConnection db) throws SQLException {
 
 		List<String> setsList = db.getDistinctSetNames();
-		
+
 		List<SetMetaData> metaData = db.getAllSetMetaDataFromSetData();
-		
-		for(SetMetaData meta: metaData) {
-			if(!setsList.contains(meta.getSetName())) {
+
+		for (SetMetaData meta : metaData) {
+			if (!setsList.contains(meta.getSetName())) {
 				setsList.add(meta.getSetName());
 			}
 		}
@@ -38,10 +38,10 @@ public class UpdateSetNames {
 			if (setName.contains("Tip Card") || setName.contains("(POR)")) {
 				continue;
 			}
-			
+
 			String newSetName = Util.checkForTranslatedSetName(setName);
-			
-			if(!newSetName.equals(setName)) {
+
+			if (!newSetName.equals(setName)) {
 				YGOLogger.info("Updating " + setName + " to " + newSetName);
 				db.updateSetName(setName, newSetName);
 			}

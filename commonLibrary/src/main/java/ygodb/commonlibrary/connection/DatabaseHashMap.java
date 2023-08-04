@@ -12,7 +12,8 @@ import ygodb.commonlibrary.utility.Util;
 
 public class DatabaseHashMap {
 
-	private DatabaseHashMap(){}
+	private DatabaseHashMap() {
+	}
 
 	private static Map<String, List<GamePlayCard>> allGamePlayCards = null;
 
@@ -53,7 +54,7 @@ public class DatabaseHashMap {
 		allOwnedCards = null;
 	}
 
-	public static List<String> getGamePlayCardKeys(GamePlayCard input){
+	public static List<String> getGamePlayCardKeys(GamePlayCard input) {
 		ArrayList<String> list = new ArrayList<>();
 
 		list.add(input.getCardName());
@@ -62,7 +63,7 @@ public class DatabaseHashMap {
 		return list;
 	}
 
-	public static List<String> getCardRarityKeys(CardSet input){
+	public static List<String> getCardRarityKeys(CardSet input) {
 		ArrayList<String> list = new ArrayList<>();
 
 		list.add(getAllMatchingKey(input));
@@ -77,44 +78,45 @@ public class DatabaseHashMap {
 		return list;
 	}
 
-	public static String getAllMatchingKeyWithUrl(CardSet input){
+	public static String getAllMatchingKeyWithUrl(CardSet input) {
 		return input.getSetNumber() + input.getSetRarity() + input.getSetName() + input.getCardName() + input.getSetUrl();
 	}
 
-	public static String getAllMatchingKey(CardSet input){
+	public static String getAllMatchingKey(CardSet input) {
 		return input.getSetNumber() + input.getSetRarity() + input.getSetName() + input.getCardName();
 	}
 
-	public static String getCardNameMismatchKey(CardSet input){
+	public static String getCardNameMismatchKey(CardSet input) {
 		return input.getSetNumber() + input.getSetRarity() + input.getSetName();
 	}
 
-	public static String getSetNameMismatchKey(CardSet input){
+	public static String getSetNameMismatchKey(CardSet input) {
 		return input.getSetNumber() + input.getSetRarity() + input.getCardName();
 	}
 
-	public static String getSetNameMismatchKeyWithUrl(CardSet input){
+	public static String getSetNameMismatchKeyWithUrl(CardSet input) {
 		return input.getSetNumber() + input.getSetRarity() + input.getCardName() + input.getSetUrl();
 	}
 
-	public static String getCardAndSetNameMismatchKey(CardSet input){
+	public static String getCardAndSetNameMismatchKey(CardSet input) {
 		return input.getSetNumber() + input.getSetRarity();
 	}
 
-	public static String getSetUrlKey(CardSet input){
+	public static String getSetUrlKey(CardSet input) {
 		return input.getSetUrl();
 	}
 
-	public static String getSetNumberOnlyKey(CardSet input){
+	public static String getSetNumberOnlyKey(CardSet input) {
 		return input.getSetNumber();
 	}
 
 	public static String getOwnedCardHashMapKey(OwnedCard input) {
-		return input.getSetNumber() + ":" + Util.normalizePrice(input.getPriceBought()) + ":" + input.getDateBought()
-				+ ":" + input.getFolderName() + ":" + input.getCondition() + ":" + input.getEditionPrinting();
+		return input.getSetNumber() + ":" + Util.normalizePrice(
+				input.getPriceBought()) + ":" + input.getDateBought() + ":" + input.getFolderName() + ":" + input.getCondition() + ":" + input.getEditionPrinting();
 	}
 
-	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(OwnedCard comparison, SQLiteConnection db) throws SQLException {
+	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(OwnedCard comparison, SQLiteConnection db) throws
+			SQLException {
 		Map<String, List<OwnedCard>> data = DatabaseHashMap.getOwnedInstance(db);
 
 		String key = getOwnedCardHashMapKey(comparison);

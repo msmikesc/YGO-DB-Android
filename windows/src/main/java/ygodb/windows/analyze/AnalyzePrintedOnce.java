@@ -46,7 +46,7 @@ public class AnalyzePrintedOnce {
 
 		for (AnalyzePrintedOnceData s : array) {
 			p.printRecord(s.getGamePlayCardUUID(), s.getCardName(), s.getCardType(), s.getStringOfRarities(), s.getStringOfSetNames(),
-					s.getStringOfSetNumbers(), s.getReleaseDate(), s.getArchetype());
+						  s.getStringOfSetNumbers(), s.getReleaseDate(), s.getArchetype());
 
 		}
 		p.flush();

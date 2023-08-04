@@ -49,7 +49,7 @@ public class ExportUnSyncedForUpload {
 				db.updateOwnedCardByUUID(current);
 
 				//temporary changes
-				if(current.getSetName().contains("(25th Anniversary Edition)")){
+				if (current.getSetName().contains("(25th Anniversary Edition)")) {
 					current.setSetCode(current.getSetCode() + "_25");
 				}
 
@@ -59,8 +59,7 @@ public class ExportUnSyncedForUpload {
 
 		YGOLogger.info("Exported cards: " + quantityCount);
 
-		YGOLogger.info("Total cards: " + db.getCountQuantity() + " + "
-				+ db.getCountQuantityManual() + " Manual");
+		YGOLogger.info("Total cards: " + db.getCountQuantity() + " + " + db.getCountQuantityManual() + " Manual");
 
 		p.flush();
 		p.close();

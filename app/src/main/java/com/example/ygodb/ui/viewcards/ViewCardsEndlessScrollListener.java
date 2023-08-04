@@ -12,37 +12,37 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 class ViewCardsEndlessScrollListener extends EndlessScrollListener {
-    private final ViewCardsViewModel viewCardsViewModel;
-    private final SingleCardToListAdapter adapter;
+	private final ViewCardsViewModel viewCardsViewModel;
+	private final SingleCardToListAdapter adapter;
 
-    public ViewCardsEndlessScrollListener(LinearLayoutManager linearLayoutManager, ViewCardsViewModel viewCardsViewModel, SingleCardToListAdapter adapter) {
-        super(linearLayoutManager);
-        this.viewCardsViewModel = viewCardsViewModel;
-        this.adapter = adapter;
-    }
+	public ViewCardsEndlessScrollListener(LinearLayoutManager linearLayoutManager, ViewCardsViewModel viewCardsViewModel,
+			SingleCardToListAdapter adapter) {
+		super(linearLayoutManager);
+		this.viewCardsViewModel = viewCardsViewModel;
+		this.adapter = adapter;
+	}
 
-    @Override
-    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+	@Override
+	public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            try {
-                List<OwnedCard> moreCards =
-                        viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
-                                ViewCardsViewModel.LOADING_LIMIT,
-                                page * ViewCardsViewModel.LOADING_LIMIT,
-                                viewCardsViewModel.getCardNameSearch());
-                int curSize = adapter.getItemCount();
+		Executors.newSingleThreadExecutor().execute(() -> {
+			try {
+				List<OwnedCard> moreCards = viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(),
+																			ViewCardsViewModel.LOADING_LIMIT,
+																			page * ViewCardsViewModel.LOADING_LIMIT,
+																			viewCardsViewModel.getCardNameSearch());
+				int curSize = adapter.getItemCount();
 
-                List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
+				List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
 
-                cardsList.addAll(moreCards);
+				cardsList.addAll(moreCards);
 
-                view.post(() -> adapter.notifyItemRangeInserted(curSize, moreCards.size()));
-            } catch (Exception e) {
-                YGOLogger.logException(e);
-            }
-        });
+				view.post(() -> adapter.notifyItemRangeInserted(curSize, moreCards.size()));
+			} catch (Exception e) {
+				YGOLogger.logException(e);
+			}
+		});
 
 
-    }
+	}
 }

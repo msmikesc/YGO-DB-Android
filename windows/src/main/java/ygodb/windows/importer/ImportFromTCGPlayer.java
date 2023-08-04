@@ -107,7 +107,8 @@ public class ImportFromTCGPlayer {
 		return csvConnection.getParser(fileStream, StandardCharsets.UTF_16LE);
 	}
 
-	private static void overwriteInputFileWithUpdates(CsvConnection csvConnection, String tempResourcePath, File inputFile, List<ReadCSVRecord> readCSVRecords) throws IOException {
+	private static void overwriteInputFileWithUpdates(CsvConnection csvConnection, String tempResourcePath, File inputFile,
+			List<ReadCSVRecord> readCSVRecords) throws IOException {
 		File tempFile = new File(tempResourcePath);
 
 		CSVPrinter outfile = csvConnection.getTCGPlayerOutputFile(tempFile.getPath());
@@ -133,7 +134,8 @@ public class ImportFromTCGPlayer {
 		}
 	}
 
-	private static int addCSVRecordToImportMap(CsvConnection csvConnection, SQLiteConnection db, HashMap<String, OwnedCard> map, CSVRecord current) throws SQLException {
+	private static int addCSVRecordToImportMap(CsvConnection csvConnection, SQLiteConnection db, HashMap<String, OwnedCard> map,
+			CSVRecord current) throws SQLException {
 
 		OwnedCard csvOwnedCard = csvConnection.getOwnedCardFromTCGPlayerCSV(current, db);
 
@@ -147,8 +149,7 @@ public class ImportFromTCGPlayer {
 				map.get(key).setQuantity(map.get(key).getQuantity() + csvOwnedCard.getQuantity());
 			} else {
 
-				List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(
-						csvOwnedCard, db);
+				List<OwnedCard> ownedRarities = DatabaseHashMap.getExistingOwnedRaritiesForCardFromHashMap(csvOwnedCard, db);
 
 				for (OwnedCard existingCard : ownedRarities) {
 					if (existingCard.equals(csvOwnedCard)) {

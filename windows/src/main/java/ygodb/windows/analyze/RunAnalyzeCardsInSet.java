@@ -37,10 +37,7 @@ public class RunAnalyzeCardsInSet {
 		String finalFileName = setName;
 
 		if (setName == null || setName.isBlank()) {
-			setName = "HAC1;BLVO;SDFC;MAMA;SGX2;SDCB;MP22;TAMA;POTE;"
-					+ "LDS3;LED9;DIFO;GFP2;SDAZ;SGX1;BACH;GRCR;BROL;"
-					+ "MGED;BODE;LED8;SDCS;MP21;DAMA;KICO;EGO1;EGS1;"
-					+ "LIOV;ANGU;GEIM;SBCB;SDCH;PHHY;DABL;AMDE;PHHY;MAZE;CYAC;WISU";
+			setName = "HAC1;BLVO;SDFC;MAMA;SGX2;SDCB;MP22;TAMA;POTE;" + "LDS3;LED9;DIFO;GFP2;SDAZ;SGX1;BACH;GRCR;BROL;" + "MGED;BODE;LED8;SDCS;MP21;DAMA;KICO;EGO1;EGS1;" + "LIOV;ANGU;GEIM;SBCB;SDCH;PHHY;DABL;AMDE;PHHY;MAZE;CYAC;WISU";
 			finalFileName = "Combined";
 		}
 
@@ -95,7 +92,7 @@ public class RunAnalyzeCardsInSet {
 			}
 
 			p.printRecord(s.getQuantity(), s.getCardName(), s.getCardType(), s.getStringOfRarities(), s.getStringOfSetNames(),
-					s.getStringOfSetNumbers(), massbuy, massbuy1);
+						  s.getStringOfSetNumbers(), massbuy, massbuy1);
 
 		}
 		p.flush();

@@ -10,19 +10,18 @@ import com.example.ygodb.databinding.FragmentSinglecardBinding;
 
 public class SummaryCardFragment extends Fragment {
 
-    private FragmentSinglecardBinding binding;
+	private FragmentSinglecardBinding binding;
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentSinglecardBinding.inflate(inflater, container, false);
-        return binding.getRoot();
-    }
+		binding = FragmentSinglecardBinding.inflate(inflater, container, false);
+		return binding.getRoot();
+	}
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		binding = null;
+	}
 }

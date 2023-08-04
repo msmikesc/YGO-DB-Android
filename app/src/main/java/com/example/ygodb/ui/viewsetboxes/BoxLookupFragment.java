@@ -21,29 +21,27 @@ public class BoxLookupFragment extends Fragment {
 	private LinearLayoutManager layout = null;
 
 	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater,
-							 ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		//TODO support adding new by creating an entry by set code
 		//TODO save updated box label
 
-		ViewBoxSetViewModel viewBoxSetViewModel =
-				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
+		ViewBoxSetViewModel viewBoxSetViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
 
 		binding = FragmentBoxLookupBinding.inflate(inflater, container, false);
 		View root = binding.getRoot();
 
 		RecyclerView boxListViewResults = binding.boxListViewResults;
 
-		SingleBoxToListAdapter adapter = new SingleBoxToListAdapter(
-				viewBoxSetViewModel.getBoxList(), viewBoxSetViewModel);
+		SingleBoxToListAdapter adapter = new SingleBoxToListAdapter(viewBoxSetViewModel.getBoxList(), viewBoxSetViewModel);
 
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
 		layout = linearLayoutManager;
 		boxListViewResults.setLayoutManager(linearLayoutManager);
 		boxListViewResults.setAdapter(adapter);
 
-		binding.boxSearchEditText.addTextChangedListener(new BoxLookupSearchBarChangedListener(binding.boxSearchEditText, viewBoxSetViewModel, adapter, layout));
+		binding.boxSearchEditText.addTextChangedListener(
+				new BoxLookupSearchBarChangedListener(binding.boxSearchEditText, viewBoxSetViewModel, adapter, layout));
 
 		viewBoxSetViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), aBoolean -> {
 			if (aBoolean) {

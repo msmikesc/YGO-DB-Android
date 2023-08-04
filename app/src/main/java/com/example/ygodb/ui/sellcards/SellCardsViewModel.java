@@ -16,149 +16,146 @@ import java.util.Map;
 
 public class SellCardsViewModel extends ViewModel {
 
-    private final HashMap<String,Integer> keyToPosition;
-    private final ArrayList<OwnedCard> cardsList;
+	private final HashMap<String, Integer> keyToPosition;
+	private final ArrayList<OwnedCard> cardsList;
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    public SellCardsViewModel() {
-        cardsList = new ArrayList<>();
-        keyToPosition = new HashMap<>();
-    }
+	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-
-    public void saveToDB(){
-        for(OwnedCard current: cardsList){
-
-            AndroidUtil.getDBInstance().sellCards(current, current.getSellQuantity(), current.getPriceSold());
-
-        }
-        keyToPosition.clear();
-        cardsList.clear();
-    }
+	public SellCardsViewModel() {
+		cardsList = new ArrayList<>();
+		keyToPosition = new HashMap<>();
+	}
 
 
-    public List<OwnedCard> getCardsList(){
-        return cardsList;
-    }
+	public void saveToDB() {
+		for (OwnedCard current : cardsList) {
 
-    public void addNewFromOwnedCard(OwnedCard current){
+			AndroidUtil.getDBInstance().sellCards(current, current.getSellQuantity(), current.getPriceSold());
 
-        //TODO move around multiple buttons to add different amounts
-        //TODO implement update and add new set boxes
-        //TODO add android implementation of batch wrapper
-        //TODO try functional programming for all sql queries
+		}
+		keyToPosition.clear();
+		cardsList.clear();
+	}
 
-        if(current.getSetNumber() == null || current.getSetRarity() == null ||
-                current.getSetName() == null || current.getCardName() == null){
-            return;
-        }
 
-        String key = current.getUuid();
+	public List<OwnedCard> getCardsList() {
+		return cardsList;
+	}
 
-        Integer position = keyToPosition.get(key);
+	public void addNewFromOwnedCard(OwnedCard current) {
 
-        OwnedCard sellingCard = null;
+		//TODO move around multiple buttons to add different amounts
+		//TODO implement update and add new set boxes
+		//TODO add android implementation of batch wrapper
+		//TODO try functional programming for all sql queries
 
-        if(position != null){
-            sellingCard = cardsList.get(position);
-        }
-        if(sellingCard != null){
+		if (current.getSetNumber() == null || current.getSetRarity() == null || current.getSetName() == null || current.getCardName() == null) {
+			return;
+		}
 
-            if(sellingCard.getQuantity() > sellingCard.getSellQuantity()){
-                sellingCard.setSellQuantity(sellingCard.getSellQuantity() + 1);
-            }
-        }
-        else{
-            sellingCard = new OwnedCard();
-            keyToPosition.put(key, cardsList.size());
-            cardsList.add(sellingCard);
-            sellingCard.setCardName(current.getCardName());
-            sellingCard.setDateBought(current.getDateBought());
-            sellingCard.setDateSold(sdf.format(new Date()));
-            sellingCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
-            sellingCard.setSetRarity(current.getSetRarity());
-            sellingCard.setSetName(current.getSetName());
-            sellingCard.setQuantity(current.getQuantity());
-            sellingCard.setSellQuantity(1);
-            sellingCard.setRarityUnsure(Const.RARITY_UNSURE_FALSE);
-            sellingCard.setSetCode(current.getSetCode());
-            sellingCard.setSetNumber(current.getSetNumber());
-            sellingCard.setColorVariant(current.getColorVariant());
-            sellingCard.setUuid(current.getUuid());
-            sellingCard.setPasscode(current.getPasscode());
+		String key = current.getUuid();
 
-            sellingCard.setPriceBought(current.getPriceBought());
+		Integer position = keyToPosition.get(key);
 
-            if(current.getEditionPrinting() == null || current.getEditionPrinting().equals("")){
-                //assume unlimited
-                sellingCard.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
-            }
-            else{
-                sellingCard.setEditionPrinting(current.getEditionPrinting());
-            }
+		OwnedCard sellingCard = null;
 
-            sellingCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
+		if (position != null) {
+			sellingCard = cardsList.get(position);
+		}
+		if (sellingCard != null) {
 
-            sellingCard.setPriceSold(Util.getAPIPriceFromRarity(sellingCard, AndroidUtil.getDBInstance()));
+			if (sellingCard.getQuantity() > sellingCard.getSellQuantity()) {
+				sellingCard.setSellQuantity(sellingCard.getSellQuantity() + 1);
+			}
+		} else {
+			sellingCard = new OwnedCard();
+			keyToPosition.put(key, cardsList.size());
+			cardsList.add(sellingCard);
+			sellingCard.setCardName(current.getCardName());
+			sellingCard.setDateBought(current.getDateBought());
+			sellingCard.setDateSold(sdf.format(new Date()));
+			sellingCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
+			sellingCard.setSetRarity(current.getSetRarity());
+			sellingCard.setSetName(current.getSetName());
+			sellingCard.setQuantity(current.getQuantity());
+			sellingCard.setSellQuantity(1);
+			sellingCard.setRarityUnsure(Const.RARITY_UNSURE_FALSE);
+			sellingCard.setSetCode(current.getSetCode());
+			sellingCard.setSetNumber(current.getSetNumber());
+			sellingCard.setColorVariant(current.getColorVariant());
+			sellingCard.setUuid(current.getUuid());
+			sellingCard.setPasscode(current.getPasscode());
 
-            sellingCard.setCreationDate(current.getCreationDate());
+			sellingCard.setPriceBought(current.getPriceBought());
 
-            if(current.getCondition() == null || current.getCondition().equals("")){
-                sellingCard.setCondition("NearMint");
-            }
-            else{
-                sellingCard.setCondition(current.getCondition());
-            }
-        }
-    }
+			if (current.getEditionPrinting() == null || current.getEditionPrinting().equals("")) {
+				//assume unlimited
+				sellingCard.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
+			} else {
+				sellingCard.setEditionPrinting(current.getEditionPrinting());
+			}
 
-    public void setAllPricesEstimate(){
-        for(OwnedCard current: cardsList){
-            current.setPriceSold(Util.getEstimatePriceFromRarity(current.getSetRarity()));
-        }
-    }
+			sellingCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
 
-    public void setAllPricesAPI(){
-        for(OwnedCard current: cardsList){
-            current.setPriceSold(Util.getAPIPriceFromRarity(current, AndroidUtil.getDBInstance()));
-        }
-    }
+			sellingCard.setPriceSold(Util.getAPIPriceFromRarity(sellingCard, AndroidUtil.getDBInstance()));
 
-    public void setAllPricesZero(){
-        for(OwnedCard current: cardsList){
-            current.setPriceSold(Const.ZERO_PRICE_STRING);
-        }
-    }
+			sellingCard.setCreationDate(current.getCreationDate());
 
-    public void removeNewFromOwnedCard(OwnedCard current){
+			if (current.getCondition() == null || current.getCondition().equals("")) {
+				sellingCard.setCondition("NearMint");
+			} else {
+				sellingCard.setCondition(current.getCondition());
+			}
+		}
+	}
 
-        String key = current.getUuid();
+	public void setAllPricesEstimate() {
+		for (OwnedCard current : cardsList) {
+			current.setPriceSold(Util.getEstimatePriceFromRarity(current.getSetRarity()));
+		}
+	}
 
-        Integer position = keyToPosition.get(key);
-        OwnedCard newCard = null;
+	public void setAllPricesAPI() {
+		for (OwnedCard current : cardsList) {
+			current.setPriceSold(Util.getAPIPriceFromRarity(current, AndroidUtil.getDBInstance()));
+		}
+	}
 
-        if(position != null){
-            newCard = cardsList.get(position);
-        }
-        if(newCard == null){
-           return;
-        }
+	public void setAllPricesZero() {
+		for (OwnedCard current : cardsList) {
+			current.setPriceSold(Const.ZERO_PRICE_STRING);
+		}
+	}
 
-        for(Map.Entry<String, Integer> testEntry: keyToPosition.entrySet()){
+	public void removeNewFromOwnedCard(OwnedCard current) {
 
-            String testKey = testEntry.getKey();
+		String key = current.getUuid();
 
-            Integer testPos = testEntry.getValue();
+		Integer position = keyToPosition.get(key);
+		OwnedCard newCard = null;
 
-            if(testPos > position){
-                testPos--;
-                keyToPosition.put(testKey, testPos);
-            }
-        }
+		if (position != null) {
+			newCard = cardsList.get(position);
+		}
+		if (newCard == null) {
+			return;
+		}
 
-        keyToPosition.remove(key);
-        cardsList.remove(position.intValue());
+		for (Map.Entry<String, Integer> testEntry : keyToPosition.entrySet()) {
 
-    }
+			String testKey = testEntry.getKey();
+
+			Integer testPos = testEntry.getValue();
+
+			if (testPos > position) {
+				testPos--;
+				keyToPosition.put(testKey, testPos);
+			}
+		}
+
+		keyToPosition.remove(key);
+		cardsList.remove(position.intValue());
+
+	}
 
 }

@@ -17,32 +17,30 @@ import com.example.ygodb.databinding.FragmentSellcardsBinding;
 
 public class SellCardsFragment extends Fragment {
 
-    private FragmentSellcardsBinding binding;
-    private LinearLayoutManager layout;
+	private FragmentSellcardsBinding binding;
+	private LinearLayoutManager layout;
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        SellCardsViewModel sellCardsViewModel =
-                new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(SellCardsViewModel.class);
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		SellCardsViewModel sellCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(SellCardsViewModel.class);
 
-        binding = FragmentSellcardsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+		binding = FragmentSellcardsBinding.inflate(inflater, container, false);
+		View root = binding.getRoot();
 
-        RecyclerView cardsListView = binding.viewList;
+		RecyclerView cardsListView = binding.viewList;
 
-        SellCardToListAdapter adapter = new SellCardToListAdapter(sellCardsViewModel.getCardsList(), sellCardsViewModel);
+		SellCardToListAdapter adapter = new SellCardToListAdapter(sellCardsViewModel.getCardsList(), sellCardsViewModel);
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        layout = linearLayoutManager;
-        cardsListView.setLayoutManager(linearLayoutManager);
-        cardsListView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+		layout = linearLayoutManager;
+		cardsListView.setLayoutManager(linearLayoutManager);
+		cardsListView.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
 
-        binding.fab.setOnClickListener(new SellCardsButtonOnClickListener(binding.fab,getContext(), sellCardsViewModel, adapter, layout));
+		binding.fab.setOnClickListener(new SellCardsButtonOnClickListener(binding.fab, getContext(), sellCardsViewModel, adapter, layout));
 
-        return root;
-    }
+		return root;
+	}
 
 }

@@ -13,57 +13,56 @@ import java.util.Map;
 
 public class QuadKeyUpdateMap {
 
-    private final Map<String, List<String>> map = new HashMap<>();
-    private final String delimiter;
+	private final Map<String, List<String>> map = new HashMap<>();
+	private final String delimiter;
 
-    public QuadKeyUpdateMap(InputStream input, String delimiter) throws IOException {
-        this.delimiter = delimiter;
-        loadMappings(input);
-    }
+	public QuadKeyUpdateMap(InputStream input, String delimiter) throws IOException {
+		this.delimiter = delimiter;
+		loadMappings(input);
+	}
 
-    public void addMapping(String key, List<String> values) {
-        map.put(key, values);
-    }
+	public void addMapping(String key, List<String> values) {
+		map.put(key, values);
+	}
 
-    public List<String> getValues(String key1, String key2, String key3, String key4) {
-        String key = String.join(delimiter, key1, key2, key3, key4);
-        List<String> values = map.get(key);
-        if (values != null) {
-            return values;
-        }
-        return List.of(key1, key2, key3, key4);
-    }
+	public List<String> getValues(String key1, String key2, String key3, String key4) {
+		String key = String.join(delimiter, key1, key2, key3, key4);
+		List<String> values = map.get(key);
+		if (values != null) {
+			return values;
+		}
+		return List.of(key1, key2, key3, key4);
+	}
 
-    private void loadMappings(InputStream input) throws IOException {
+	private void loadMappings(InputStream input) throws IOException {
 
-        CsvConnection csvConnection = new CsvConnection();
+		CsvConnection csvConnection = new CsvConnection();
 
-        CSVParser parser = csvConnection.getParser(input, StandardCharsets.UTF_16LE);
+		CSVParser parser = csvConnection.getParser(input, StandardCharsets.UTF_16LE);
 
-        for (CSVRecord current : parser) {
+		for (CSVRecord current : parser) {
 
-            String name = csvConnection.getStringOrNull(current, "Card Name Key");
-            String cardNumber = csvConnection.getStringOrNull(current, "Card Number Key");
-            String rarity = csvConnection.getStringOrNull(current, "Rarity Key");
-            String setName = csvConnection.getStringOrNull(current, "Set Name Key");
+			String name = csvConnection.getStringOrNull(current, "Card Name Key");
+			String cardNumber = csvConnection.getStringOrNull(current, "Card Number Key");
+			String rarity = csvConnection.getStringOrNull(current, "Rarity Key");
+			String setName = csvConnection.getStringOrNull(current, "Set Name Key");
 
-            String nameValue = csvConnection.getStringOrNull(current, "Card Name Value");
-            String cardNumberValue = csvConnection.getStringOrNull(current, "Card Number Value");
-            String rarityValue = csvConnection.getStringOrNull(current, "Rarity Value");
-            String setNameValue = csvConnection.getStringOrNull(current, "Set Name Value");
+			String nameValue = csvConnection.getStringOrNull(current, "Card Name Value");
+			String cardNumberValue = csvConnection.getStringOrNull(current, "Card Number Value");
+			String rarityValue = csvConnection.getStringOrNull(current, "Rarity Value");
+			String setNameValue = csvConnection.getStringOrNull(current, "Set Name Value");
 
-            if(nameValue == null || cardNumberValue == null || rarityValue == null || setNameValue == null){
-                YGOLogger.error("missing value in quad csv:" + nameValue +":"
-                        + cardNumberValue +":"+ rarityValue +":"+ setNameValue);
-                continue;
-            }
+			if (nameValue == null || cardNumberValue == null || rarityValue == null || setNameValue == null) {
+				YGOLogger.error("missing value in quad csv:" + nameValue + ":" + cardNumberValue + ":" + rarityValue + ":" + setNameValue);
+				continue;
+			}
 
-            String key = String.join(delimiter, name, cardNumber, rarity, setName);
-            List<String> values = List.of(nameValue, cardNumberValue, rarityValue, setNameValue);
-            addMapping(key, values);
-        }
-        parser.close();
-    }
+			String key = String.join(delimiter, name, cardNumber, rarity, setName);
+			List<String> values = List.of(nameValue, cardNumberValue, rarityValue, setNameValue);
+			addMapping(key, values);
+		}
+		parser.close();
+	}
 
 
 }
