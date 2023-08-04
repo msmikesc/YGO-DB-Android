@@ -60,7 +60,7 @@ public class AnalyzeCardsInSet {
 
 			String gamePlayCardUUID = currentGamePlayCard.getGamePlayCardUUID();
 
-			ArrayList<CardSet> rarityList;
+			List<CardSet> rarityList;
 			if(!archetypeMode) {
 				rarityList = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, requestedSetName);
 			}

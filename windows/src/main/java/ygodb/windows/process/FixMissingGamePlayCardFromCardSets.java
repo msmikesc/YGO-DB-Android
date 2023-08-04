@@ -2,6 +2,7 @@ package ygodb.windows.process;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
@@ -36,7 +37,7 @@ public class FixMissingGamePlayCardFromCardSets {
 			for (String gamePlayCardUUID : list) {
 				ArrayList<String> titles = db.getMultipleCardNamesFromGamePlayCardUUID(gamePlayCardUUID);
 				
-				ArrayList<CardSet> cardSets = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
+				List<CardSet> cardSets = db.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName);
 				
 				if(titles == null || titles.isEmpty()) {
 					YGOLogger.info("0 gamePlayCard found for ID " + gamePlayCardUUID + " " + cardSets.get(0).getCardName());

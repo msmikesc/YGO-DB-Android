@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -352,7 +353,17 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		}
 	}
 
-	private void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
+	public static class CardSetMapperSelectQuery implements SelectQueryResultMapper<CardSet, Cursor> {
+		@Override
+		public CardSet mapRow(Cursor resultSet) throws SQLException {
+			CardSet entity = new CardSet();
+			String[] col = resultSet.getColumnNames();
+			getAllCardSetFieldsFromRS(resultSet, col, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllCardSetFieldsFromRS(Cursor rs, String[] col, CardSet set) {
 		set.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
 		set.setCardName(rs.getString(getColumn(col, Const.CARD_NAME)));
 		set.setSetNumber(rs.getString(getColumn(col, Const.SET_NUMBER)));
@@ -393,28 +404,10 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) {
-
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID;
-
-		String[] params = new String[]{gamePlayCardUUID, setName};
-
-		try (Cursor rs = connection.rawQuery(setQuery, params)) {
-
-			ArrayList<CardSet> results = new ArrayList<>();
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				CardSet set = new CardSet();
-				getAllCardSetFieldsFromRS(rs, col, set);
-				results.add(set);
-			}
-
-			return results;
-		}
+	public List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) throws SQLException {
+		DatabaseSelectQuery<CardSet, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName,
+				query, new CardSetMapperSelectQuery());
 	}
 
 	@Override

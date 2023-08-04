@@ -1,10 +1,12 @@
 package ygodb.commonlibrary.connection;
 
+import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.constant.SQLConst;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class CommonDatabaseQueries {
 
@@ -51,5 +53,15 @@ public class CommonDatabaseQueries {
 		query.bindString(13, input.getArchetype());
 
 		return query.executeUpdate();
+	}
+
+	public static <R> List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName,
+			DatabaseSelectQuery <CardSet, R> query, SelectQueryResultMapper<CardSet, R> cardSetMapperSelectQuery) throws SQLException {
+		query.prepareStatement(SQLConst.GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID);
+
+		query.bindString(1, gamePlayCardUUID);
+		query.bindString(2, setName);
+
+		return query.executeQuery(cardSetMapperSelectQuery);
 	}
 }

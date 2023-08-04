@@ -112,7 +112,16 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
-	private void getAllCardSetFieldsFromRS(ResultSet rarities, CardSet set) throws SQLException {
+	public static class CardSetMapperSelectQuery implements SelectQueryResultMapper<CardSet, ResultSet> {
+		@Override
+		public CardSet mapRow(ResultSet resultSet) throws SQLException {
+			CardSet entity = new CardSet();
+			getAllCardSetFieldsFromRS(resultSet, entity);
+			return entity;
+		}
+	}
+
+	private static void getAllCardSetFieldsFromRS(ResultSet rarities, CardSet set) throws SQLException {
 		set.setGamePlayCardUUID(rarities.getString(Const.GAME_PLAY_CARD_UUID));
 		set.setCardName(rarities.getString(Const.CARD_NAME));
 		set.setSetNumber(rarities.getString(Const.SET_NUMBER));
@@ -150,28 +159,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName)
+	public List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName)
 			throws SQLException {
-		Connection connection = this.getInstance();
-		String setQuery = SQLConst.GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID;
-
-		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery)) {
-
-			statementSetQuery.setString(1, gamePlayCardUUID);
-			statementSetQuery.setString(2, setName);
-
-			try (ResultSet rarities = statementSetQuery.executeQuery()) {
-				ArrayList<CardSet> setRarities = new ArrayList<>();
-
-				while (rarities.next()) {
-					CardSet set = new CardSet();
-					getAllCardSetFieldsFromRS(rarities, set);
-					setRarities.add(set);
-				}
-
-				return setRarities;
-			}
-		}
+		DatabaseSelectQuery<CardSet, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getRaritiesOfCardInSetByGamePlayCardUUID(gamePlayCardUUID, setName,
+				query, new CardSetMapperSelectQuery());
 	}
 
 	@Override

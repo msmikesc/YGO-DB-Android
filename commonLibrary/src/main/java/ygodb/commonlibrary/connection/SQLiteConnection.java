@@ -22,7 +22,7 @@ public interface SQLiteConnection {
 
     ArrayList<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
-    ArrayList<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) throws SQLException;
+    List<CardSet> getRaritiesOfCardInSetByGamePlayCardUUID(String gamePlayCardUUID, String setName) throws SQLException;
 
     List<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy);
 

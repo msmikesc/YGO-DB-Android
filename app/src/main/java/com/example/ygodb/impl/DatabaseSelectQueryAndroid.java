@@ -12,12 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DatabaseSelectQueryAndroid<T> implements DatabaseSelectQuery<T, Cursor> {
-
-	private static final String ERROR_MESSAGE = "Cursor null or closed";
-	private static final String ERROR_MESSAGE_INIT = "Cursor already exists";
-
 	private final SQLiteDatabase connection;
-	private Cursor cursor = null;
 	private String query;
 	private final Map<Integer, String> bindArgs = new HashMap<>();
 
@@ -26,18 +21,12 @@ public class DatabaseSelectQueryAndroid<T> implements DatabaseSelectQuery<T, Cur
 	}
 
 	@Override
-	public void prepareStatement(String query) throws SQLException {
-		if (cursor != null) {
-			throw new SQLException(ERROR_MESSAGE_INIT);
-		}
+	public void prepareStatement(String query) {
 		this.query = query;
 	}
 
 	@Override
-	public void bindString(int index, String value) throws SQLException {
-		if (cursor == null || cursor.isClosed()) {
-			throw new SQLException(ERROR_MESSAGE);
-		}
+	public void bindString(int index, String value) {
 		if (value == null) {
 			throw new IllegalArgumentException("Cannot bind null value to a string parameter");
 		} else {
@@ -46,10 +35,7 @@ public class DatabaseSelectQueryAndroid<T> implements DatabaseSelectQuery<T, Cur
 	}
 
 	@Override
-	public void bindInteger(int index, Integer value) throws SQLException {
-		if (cursor == null || cursor.isClosed()) {
-			throw new SQLException(ERROR_MESSAGE);
-		}
+	public void bindInteger(int index, Integer value) {
 		if (value == null) {
 			throw new IllegalArgumentException("Cannot bind null value to an integer parameter");
 		} else {
@@ -59,9 +45,6 @@ public class DatabaseSelectQueryAndroid<T> implements DatabaseSelectQuery<T, Cur
 
 	@Override
 	public List<T> executeQuery(SelectQueryResultMapper<T, Cursor> mapper) throws SQLException {
-		if (cursor == null || cursor.isClosed()) {
-			throw new SQLException(ERROR_MESSAGE);
-		}
 
 		String[] bindArgsArray = new String[bindArgs.size()];
 		for (Map.Entry<Integer, String> entry : bindArgs.entrySet()) {
@@ -70,7 +53,7 @@ public class DatabaseSelectQueryAndroid<T> implements DatabaseSelectQuery<T, Cur
 			bindArgsArray[index - 1] = value;
 		}
 
-		cursor = connection.rawQuery(query, bindArgsArray);
+		Cursor cursor = connection.rawQuery(query, bindArgsArray);
 		bindArgs.clear(); // Clear the bound arguments after execution
 
 		List<T> resultList = new ArrayList<>();

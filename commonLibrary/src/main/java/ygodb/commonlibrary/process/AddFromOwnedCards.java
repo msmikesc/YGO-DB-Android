@@ -47,8 +47,8 @@ public class AddFromOwnedCards {
 				}
 			}
 
-			ArrayList<CardSet> sets = db.getRaritiesOfCardInSetByGamePlayCardUUID(card.getGamePlayCardUUID(), card.getSetName()
-			);
+			List<CardSet> sets = db.getRaritiesOfCardInSetByGamePlayCardUUID(card.getGamePlayCardUUID(),
+					card.getSetName());
 
 			if (sets.isEmpty()) {
 				// add it
