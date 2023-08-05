@@ -17,11 +17,13 @@ import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.CommonDatabaseQueries;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.DatabaseSelectMapQuery;
 import ygodb.commonlibrary.connection.DatabaseSelectQuery;
 import ygodb.commonlibrary.connection.DatabaseUpdateQuery;
 import ygodb.commonlibrary.connection.FileHelper;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.connection.SelectQueryMapMapper;
 import ygodb.commonlibrary.connection.SelectQueryResultMapper;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.constant.SQLConst;
@@ -38,6 +40,7 @@ import java.io.UncheckedIOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -443,92 +446,80 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		}
 	}
 
-	@Override
-	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() {
+	public static class CardSetMapMapperSelectQuery implements SelectQueryMapMapper<CardSet, Cursor> {
+		@Override
+		public List<String> getKeys(CardSet entity) {
+			return DatabaseHashMap.getCardRarityKeys(entity);
+		}
 
-		SQLiteDatabase connection = this.getInstance();
-
-		String setQuery = SQLConst.GET_ALL_CARD_RARITIES;
-
-		try (Cursor rs = connection.rawQuery(setQuery, null)) {
-
-			HashMap<String, List<CardSet>> results = new HashMap<>(300000, 0.75f);
-
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				CardSet set = new CardSet();
-				getAllCardSetFieldsFromRS(rs, col, set);
-
-				List<String> keysList = DatabaseHashMap.getCardRarityKeys(set);
-
-				for (String key : keysList) {
-					if (key != null && !key.isBlank()) {
-						List<CardSet> currentList = results.computeIfAbsent(key, k -> new ArrayList<>());
-						currentList.add(set);
-					}
-				}
-			}
-
-			return results;
+		@Override
+		public CardSet mapRow(Cursor resultSet) throws SQLException {
+			CardSet entity = new CardSet();
+			String[] col = resultSet.getColumnNames();
+			getAllCardSetFieldsFromRS(resultSet, col, entity);
+			return entity;
 		}
 	}
 
 	@Override
-	public Map<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() {
-		SQLiteDatabase connection = this.getInstance();
+	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() throws SQLException {
+		DatabaseSelectMapQuery<CardSet, Cursor> query = new DatabaseSelectMapQueryAndroid<>(getInstance());
 
-		String setQuery = SQLConst.GET_ALL_GAME_PLAY_CARD;
+		query.prepareStatement(SQLConst.GET_ALL_CARD_RARITIES);
 
-		try (Cursor rs = connection.rawQuery(setQuery, null)) {
+		return query.executeQuery(new CardSetMapMapperSelectQuery());
+	}
 
-			HashMap<String, List<GamePlayCard>> cardMap = new HashMap<>();
+	public static class GamePlayCardMapMapperSelectQuery implements SelectQueryMapMapper<GamePlayCard, Cursor> {
+		@Override
+		public List<String> getKeys(GamePlayCard entity) {
+			return DatabaseHashMap.getGamePlayCardKeys(entity);
+		}
 
-			String[] col = rs.getColumnNames();
-
-			while (rs.moveToNext()) {
-				GamePlayCard card = new GamePlayCard();
-				getAllGamePlayCardFieldsFromRS(rs, col, card);
-
-				List<String> keysList = DatabaseHashMap.getGamePlayCardKeys(card);
-
-				for (String key : keysList) {
-					List<GamePlayCard> currentList = cardMap.computeIfAbsent(key, k -> new ArrayList<>());
-					currentList.add(card);
-				}
-			}
-			return cardMap;
+		@Override
+		public GamePlayCard mapRow(Cursor resultSet) throws SQLException {
+			GamePlayCard entity = new GamePlayCard();
+			String[] col = resultSet.getColumnNames();
+			getAllGamePlayCardFieldsFromRS(resultSet, col, entity);
+			return entity;
 		}
 	}
 
 	@Override
-	public Map<String, List<OwnedCard>> getAllOwnedCardsForHashMap() {
-		SQLiteDatabase connection = this.getInstance();
+	public Map<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException {
+		DatabaseSelectMapQuery<GamePlayCard, Cursor> query = new DatabaseSelectMapQueryAndroid<>(getInstance());
 
-		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
+		query.prepareStatement(SQLConst.GET_ALL_GAME_PLAY_CARD);
 
-		try (Cursor rs = connection.rawQuery(setQuery, null)) {
-			String[] col = rs.getColumnNames();
+		return query.executeQuery(new GamePlayCardMapMapperSelectQuery());
+	}
 
-			HashMap<String, List<OwnedCard>> ownedCards = new HashMap<>();
-
-			while (rs.moveToNext()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, col, current);
-
-				String key = DatabaseHashMap.getOwnedCardHashMapKey(current);
-
-				List<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
-				currentList.add(current);
-			}
-
-			return ownedCards;
+	public static class OwnedCardMapMapperSelectQuery implements SelectQueryMapMapper<OwnedCard, Cursor> {
+		@Override
+		public List<String> getKeys(OwnedCard entity) {
+			return new ArrayList<>(Collections.singleton(DatabaseHashMap.getOwnedCardHashMapKey(entity)));
 		}
+
+		@Override
+		public OwnedCard mapRow(Cursor resultSet) throws SQLException {
+			OwnedCard entity = new OwnedCard();
+			String[] col = resultSet.getColumnNames();
+			getAllOwnedCardFieldsFromRS(resultSet, col, entity);
+			return entity;
+		}
+	}
+
+	@Override
+	public Map<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
+		DatabaseSelectMapQuery<OwnedCard, Cursor> query = new DatabaseSelectMapQueryAndroid<>(getInstance());
+
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP);
+
+		return query.executeQuery(new OwnedCardMapMapperSelectQuery());
 	}
 
 	@Override
 	public List<CardSet> getRaritiesOfCardByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
-
 		DatabaseSelectQuery<CardSet, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
 		return CommonDatabaseQueries.getRaritiesOfCardByGamePlayCardUUID(gamePlayCardUUID, query, new CardSetMapperSelectQuery());
 	}

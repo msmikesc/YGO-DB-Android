@@ -1,13 +1,5 @@
 package ygodb.windows.connection;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.*;
-
 import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
@@ -16,15 +8,28 @@ import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.CommonDatabaseQueries;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.DatabaseSelectMapQuery;
 import ygodb.commonlibrary.connection.DatabaseSelectQuery;
 import ygodb.commonlibrary.connection.DatabaseUpdateQuery;
 import ygodb.commonlibrary.connection.PreparedStatementBatchWrapper;
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.connection.SelectQueryMapMapper;
 import ygodb.commonlibrary.connection.SelectQueryResultMapper;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.constant.SQLConst;
 import ygodb.commonlibrary.utility.Util;
-import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SQLiteConnectionWindows implements SQLiteConnection {
 
@@ -202,83 +207,73 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
+	public static class CardSetMapMapperSelectQuery implements SelectQueryMapMapper<CardSet, ResultSet> {
+		@Override
+		public List<String> getKeys(CardSet entity) {
+			return DatabaseHashMap.getCardRarityKeys(entity);
+		}
+
+		@Override
+		public CardSet mapRow(ResultSet resultSet) throws SQLException {
+			CardSet entity = new CardSet();
+			getAllCardSetFieldsFromRS(resultSet, entity);
+			return entity;
+		}
+	}
+
 	@Override
 	public Map<String, List<CardSet>> getAllCardRaritiesForHashMap() throws SQLException {
+		DatabaseSelectMapQuery<CardSet, ResultSet> query = new DatabaseSelectMapQueryWindows<>(getInstance());
 
-		Connection connection = this.getInstance();
+		query.prepareStatement(SQLConst.GET_ALL_CARD_RARITIES);
 
-		String setQuery = SQLConst.GET_ALL_CARD_RARITIES;
+		return query.executeQuery(new CardSetMapMapperSelectQuery());
+	}
 
-		try (PreparedStatement statementSetQuery = connection.prepareStatement(setQuery);
-			 ResultSet rarities = statementSetQuery.executeQuery()) {
+	public static class GamePlayCardMapMapperSelectQuery implements SelectQueryMapMapper<GamePlayCard, ResultSet> {
+		@Override
+		public List<String> getKeys(GamePlayCard entity) {
+			return DatabaseHashMap.getGamePlayCardKeys(entity);
+		}
 
-			HashMap<String, List<CardSet>> setRarities = new HashMap<>(300000, 0.75f);
-
-			while (rarities.next()) {
-				CardSet set = new CardSet();
-				getAllCardSetFieldsFromRS(rarities, set);
-
-				List<String> keysList = DatabaseHashMap.getCardRarityKeys(set);
-
-				for (String key : keysList) {
-					if (key != null && !key.isBlank()) {
-						List<CardSet> currentList = setRarities.computeIfAbsent(key, k -> new ArrayList<>());
-						currentList.add(set);
-					}
-				}
-			}
-			return setRarities;
+		@Override
+		public GamePlayCard mapRow(ResultSet resultSet) throws SQLException {
+			GamePlayCard entity = new GamePlayCard();
+			getAllGamePlayCardFieldsFromRS(resultSet, entity);
+			return entity;
 		}
 	}
 
 	@Override
 	public Map<String, List<GamePlayCard>> getAllGamePlayCardsForHashMap() throws SQLException {
+		DatabaseSelectMapQuery<GamePlayCard, ResultSet> query = new DatabaseSelectMapQueryWindows<>(getInstance());
 
-		Connection connection = this.getInstance();
+		query.prepareStatement(SQLConst.GET_ALL_GAME_PLAY_CARD);
 
-		String setQuery = SQLConst.GET_ALL_GAME_PLAY_CARD;
+		return query.executeQuery(new GamePlayCardMapMapperSelectQuery());
+	}
 
-		try (PreparedStatement statement = connection.prepareStatement(setQuery); ResultSet rs = statement.executeQuery()) {
+	public static class OwnedCardMapMapperSelectQuery implements SelectQueryMapMapper<OwnedCard, ResultSet> {
+		@Override
+		public List<String> getKeys(OwnedCard entity) {
+			return new ArrayList<>(Collections.singleton(DatabaseHashMap.getOwnedCardHashMapKey(entity)));
+		}
 
-			HashMap<String, List<GamePlayCard>> cardMap = new HashMap<>();
-
-			while (rs.next()) {
-				GamePlayCard card = new GamePlayCard();
-				getAllGamePlayCardFieldsFromRS(rs, card);
-
-				List<String> keysList = DatabaseHashMap.getGamePlayCardKeys(card);
-
-				for (String key : keysList) {
-					List<GamePlayCard> currentList = cardMap.computeIfAbsent(key, k -> new ArrayList<>());
-					currentList.add(card);
-				}
-			}
-			return cardMap;
+		@Override
+		public OwnedCard mapRow(ResultSet resultSet) throws SQLException {
+			OwnedCard entity = new OwnedCard();
+			getAllOwnedCardFieldsFromRS(resultSet, entity);
+			return entity;
 		}
 	}
 
 	@Override
 	public Map<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException {
-		Connection connection = this.getInstance();
-		String setQuery = SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP;
+		DatabaseSelectMapQuery<OwnedCard, ResultSet> query = new DatabaseSelectMapQueryWindows<>(getInstance());
 
-		try (PreparedStatement setQueryStatement = connection.prepareStatement(setQuery); ResultSet rs =
-				setQueryStatement.executeQuery()) {
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_FOR_HASH_MAP);
 
-			HashMap<String, List<OwnedCard>> ownedCards = new HashMap<>();
-
-			while (rs.next()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, current);
-
-				String key = DatabaseHashMap.getOwnedCardHashMapKey(current);
-
-				List<OwnedCard> currentList = ownedCards.computeIfAbsent(key, k -> new ArrayList<>());
-				currentList.add(current);
-			}
-
-			return ownedCards;
-		}
+		return query.executeQuery(new OwnedCardMapMapperSelectQuery());
 	}
 
 	@Override
