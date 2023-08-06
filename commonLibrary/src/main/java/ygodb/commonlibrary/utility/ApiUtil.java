@@ -152,8 +152,8 @@ public class ApiUtil {
 			setRarity = translatedList.get(2);
 			setName = translatedList.get(3);
 
-			//TODO change URL to be -1 always instead of null???
 			//TODO get card images from ygopro
+			//TODO re-add sets view to android for analyze
 
 			CardSet matcher = new CardSet(gamePlayCardUUID, setNumber, cardName, setRarity, setName, Const.DEFAULT_COLOR_VARIANT, null);
 			String allMatchingKey = DatabaseHashMap.getAllMatchingKey(matcher);

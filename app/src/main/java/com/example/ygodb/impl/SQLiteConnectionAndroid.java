@@ -86,7 +86,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				throw new UncheckedIOException(e);
 			}
 		} else if (this.upgradeDatabase) {
-			//TODO implement anything needed here
+			//implement anything needed here
 		}
 
 	}
