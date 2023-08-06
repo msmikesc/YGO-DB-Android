@@ -557,13 +557,13 @@ public class Util {
 	}
 
 	public static CardSet createUnknownCardSet(String name, String setName, SQLiteConnection db) throws SQLException {
-		YGOLogger.error("Unknown setCode for card name and set: " + name + ":" + setName);
+		YGOLogger.error("Unknown set number for card name and set: " + name + ":" + setName);
 		CardSet setIdentified = new CardSet();
 		setIdentified.setRarityUnsure(Const.RARITY_UNSURE_TRUE);
 		setIdentified.setColorVariant(Const.DEFAULT_COLOR_VARIANT);
 		setIdentified.setSetName(setName);
 		setIdentified.setSetNumber(null);
-		setIdentified.setSetCode(null);
+		setIdentified.setSetPrefix(null);
 		setIdentified.setGamePlayCardUUID(db.getGamePlayCardUUIDFromTitle(name));
 		return setIdentified;
 	}

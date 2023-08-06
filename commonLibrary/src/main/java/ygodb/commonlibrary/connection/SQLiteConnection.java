@@ -79,17 +79,17 @@ public interface SQLiteConnection {
 
 	List<SetMetaData> getSetMetaDataFromSetName(String setName) throws SQLException;
 
-	List<SetMetaData> getSetMetaDataFromSetCode(String setCode) throws SQLException;
+	List<SetMetaData> getSetMetaDataFromSetPrefix(String setPrefix) throws SQLException;
 
 	List<SetMetaData> getAllSetMetaDataFromSetData() throws SQLException;
 
 	Map<String, AnalyzePrintedOnceData> getCardsOnlyPrintedOnce() throws SQLException;
 
-	int replaceIntoCardSetMetaData(String setName, String setCode, int numOfCards, String tcgDate) throws SQLException;
+	int replaceIntoCardSetMetaData(String setName, String setPrefix, int numOfCards, String tcgDate) throws SQLException;
 
 	GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException;
 
-	List<SetBox> getNewSetBoxDataForValidSetCode(String setCode) throws SQLException;
+	List<SetBox> getNewSetBoxDataForValidSetPrefix(String setPrefix) throws SQLException;
 
 	int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 

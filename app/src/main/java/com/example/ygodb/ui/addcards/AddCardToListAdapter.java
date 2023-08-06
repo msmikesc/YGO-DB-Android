@@ -127,7 +127,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 		ImageButton button3 = viewHolder.itemView.findViewById(R.id.firstButton);
 		button3.setOnClickListener(view -> onFirstButtonClick(viewHolder, current));
 
-		viewHolder.setCode.setText(current.getSetNumber());
+		viewHolder.setNumber.setText(current.getSetNumber());
 		viewHolder.setName.setText(current.getSetName());
 
 		viewHolder.title.setText(current.getCardName());
@@ -197,7 +197,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
 		final TextView title;
-		final TextView setCode;
+		final TextView setNumber;
 		final TextView setName;
 		final TextView cardRarity;
 		final TextView cardPrice;
@@ -211,7 +211,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 			super(view);
 
 			title = view.findViewById(R.id.cardTitle);
-			setCode = view.findViewById(R.id.cardSetCode);
+			setNumber = view.findViewById(R.id.cardSetNumber);
 			setName = view.findViewById(R.id.cardSetName);
 			cardRarity = view.findViewById(R.id.cardRarity);
 			cardPrice = view.findViewById(R.id.cardPrice);

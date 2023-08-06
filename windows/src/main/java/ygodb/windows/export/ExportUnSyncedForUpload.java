@@ -50,7 +50,7 @@ public class ExportUnSyncedForUpload {
 
 				//temporary changes
 				if (current.getSetName().contains("(25th Anniversary Edition)")) {
-					current.setSetCode(current.getSetCode() + "_25");
+					current.setSetPrefix(current.getSetPrefix() + "_25");
 				}
 
 				csvConnection.writeUploadCardToCSV(p, current);

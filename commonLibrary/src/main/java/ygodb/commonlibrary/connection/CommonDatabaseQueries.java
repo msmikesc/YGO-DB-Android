@@ -222,11 +222,11 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static <R> List<SetMetaData> getSetMetaDataFromSetCode(String setCode, DatabaseSelectQuery<SetMetaData, R> query,
+	public static <R> List<SetMetaData> getSetMetaDataFromSetPrefix(String setPrefix, DatabaseSelectQuery<SetMetaData, R> query,
 			SelectQueryResultMapper<SetMetaData, R> mapper) throws SQLException {
-		query.prepareStatement(SQLConst.GET_SET_META_DATA_FROM_SET_CODE);
+		query.prepareStatement(SQLConst.GET_SET_META_DATA_FROM_SET_PREFIX);
 
-		query.bindString(1, setCode);
+		query.bindString(1, setPrefix);
 
 		return query.executeQuery(mapper);
 	}
@@ -285,11 +285,11 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static <R> List<SetBox> getNewSetBoxDataForValidSetCode(String setCode, DatabaseSelectQuery<SetBox, R> query,
+	public static <R> List<SetBox> getNewSetBoxDataForValidSetPrefix(String setPrefix, DatabaseSelectQuery<SetBox, R> query,
 			SelectQueryResultMapper<SetBox, R> mapper) throws SQLException {
-		query.prepareStatement(SQLConst.GET_NEW_SET_BOX_DATA_FOR_VALID_SET_CODE);
+		query.prepareStatement(SQLConst.GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX);
 
-		query.bindString(1, setCode);
+		query.bindString(1, setPrefix);
 
 		return query.executeQuery(mapper);
 	}
@@ -316,14 +316,14 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static int replaceIntoCardSetMetaData(DatabaseUpdateQuery query, String setName, String setCode, int numOfCards, String tcgDate)
+	public static int replaceIntoCardSetMetaData(DatabaseUpdateQuery query, String setName, String setPrefix, int numOfCards, String tcgDate)
 			throws SQLException {
 
 		String gamePlayCard = SQLConst.REPLACE_INTO_CARD_SET_META_DATA;
 		query.prepareStatement(gamePlayCard);
 
 		query.bindString(1, setName);
-		query.bindString(2, setCode);
+		query.bindString(2, setPrefix);
 		query.bindInteger(3, numOfCards);
 		query.bindString(4, tcgDate);
 
@@ -351,7 +351,7 @@ public class CommonDatabaseQueries {
 		String folder = card.getFolderName();
 		String name = card.getCardName();
 		int quantity = card.getQuantity();
-		String setCode = card.getSetCode();
+		String setPrefix = card.getSetPrefix();
 		String condition = card.getCondition();
 		String printing = card.getEditionPrinting();
 		String priceBought = card.getPriceBought();
@@ -385,7 +385,7 @@ public class CommonDatabaseQueries {
 		query.bindString(2, folder);
 		query.bindString(3, name);
 		query.bindInteger(4, quantity);
-		query.bindString(5, setCode);
+		query.bindString(5, setPrefix);
 		query.bindString(6, setNumber);
 		query.bindString(7, setName);
 		query.bindString(8, setRarity);
@@ -406,7 +406,7 @@ public class CommonDatabaseQueries {
 		String folder = card.getFolderName();
 		String name = card.getCardName();
 		int quantity = card.getQuantity();
-		String setCode = card.getSetCode();
+		String setPrefix = card.getSetPrefix();
 		String condition = card.getCondition();
 		String printing = card.getEditionPrinting();
 		String priceBought = card.getPriceBought();
@@ -442,7 +442,7 @@ public class CommonDatabaseQueries {
 		query.bindString(2, folder);
 		query.bindString(3, name);
 		query.bindInteger(4, quantity);
-		query.bindString(5, setCode);
+		query.bindString(5, setPrefix);
 		query.bindString(6, setNumber);
 		query.bindString(7, setName);
 		query.bindString(8, setRarity);
@@ -476,7 +476,7 @@ public class CommonDatabaseQueries {
 
 	public static int updateSetBoxesByUUID(DatabaseUpdateQuery query, SetBox setBox) throws SQLException {
 		String uuid = setBox.getSetBoxUUID();
-		String setCode = setBox.getSetCode();
+		String setPrefix = setBox.getSetPrefix();
 		String setName = setBox.getSetName();
 		String boxLabel = setBox.getBoxLabel();
 
@@ -488,7 +488,7 @@ public class CommonDatabaseQueries {
 		query.prepareStatement(SQLConst.UPDATE_SET_BOX_BY_UUID);
 
 		query.bindString(1, boxLabel);
-		query.bindString(2, setCode);
+		query.bindString(2, setPrefix);
 		query.bindString(3, setName);
 		query.bindString(4, uuid);
 
@@ -497,7 +497,7 @@ public class CommonDatabaseQueries {
 
 	public static int insertIntoSetBoxes(DatabaseUpdateQuery query, SetBox setBox) throws SQLException {
 		String uuid = setBox.getSetBoxUUID();
-		String setCode = setBox.getSetCode();
+		String setPrefix = setBox.getSetPrefix();
 		String setName = setBox.getSetName();
 		String boxLabel = setBox.getBoxLabel();
 
@@ -508,7 +508,7 @@ public class CommonDatabaseQueries {
 		query.prepareStatement(SQLConst.INSERT_OR_IGNORE_INTO_SET_BOX);
 
 		query.bindString(1, boxLabel);
-		query.bindString(2, setCode);
+		query.bindString(2, setPrefix);
 		query.bindString(3, setName);
 		query.bindString(4, uuid);
 

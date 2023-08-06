@@ -76,7 +76,7 @@ public class SellCardsViewModel extends ViewModel {
 			sellingCard.setQuantity(current.getQuantity());
 			sellingCard.setSellQuantity(1);
 			sellingCard.setRarityUnsure(Const.RARITY_UNSURE_FALSE);
-			sellingCard.setSetCode(current.getSetCode());
+			sellingCard.setSetPrefix(current.getSetPrefix());
 			sellingCard.setSetNumber(current.getSetNumber());
 			sellingCard.setColorVariant(current.getColorVariant());
 			sellingCard.setUuid(current.getUuid());

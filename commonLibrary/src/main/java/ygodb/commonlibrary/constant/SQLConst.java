@@ -48,7 +48,7 @@ public class SQLConst {
 			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE + " where UPPER(cardSets.setName) = UPPER(?) and UPPER(cardName) = UPPER(?)";
 	public static final String GET_SET_META_DATA_FROM_SET_NAME =
 			"select setName,setCode,numOfCards,releaseDate from setData where UPPER(setName) = UPPER(?)";
-	public static final String GET_SET_META_DATA_FROM_SET_CODE =
+	public static final String GET_SET_META_DATA_FROM_SET_PREFIX =
 			"select setName,setCode,numOfCards,releaseDate from setData where setCode = ?";
 	public static final String GET_ALL_SET_META_DATA_FROM_SET_DATA = "select distinct setName,setCode,numOfCards,releaseDate from setData";
 	public static final String GET_CARDS_ONLY_PRINTED_ONCE = "select cardSets.gamePlayCardUUID, cardName, type, setNumber,setRarity, " +
@@ -143,7 +143,7 @@ public class SQLConst {
 	public static final String INSERT_OR_IGNORE_INTO_SET_BOX =
 			"insert OR IGNORE into setBoxes(boxLabel,setCode,setName,setBoxUUID) values(?,?,?,?)";
 
-	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_CODE =
+	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX =
 			"select setBoxUUID, setData.setCode, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setCode = " +
 					"setData.setCode where setBoxes.setCode is null and UPPER(setData.setCode) = UPPER(?)";
 }

@@ -4,7 +4,7 @@ public class SetBox {
 
 	private String setBoxUUID;
 	private String boxLabel;
-	private String setCode;
+	private String setPrefix;
 	private String setName;
 
 	public String getBoxLabel() {
@@ -15,12 +15,12 @@ public class SetBox {
 		this.boxLabel = boxLabel;
 	}
 
-	public String getSetCode() {
-		return setCode;
+	public String getSetPrefix() {
+		return setPrefix;
 	}
 
-	public void setSetCode(String setCode) {
-		this.setCode = setCode;
+	public void setSetPrefix(String setPrefix) {
+		this.setPrefix = setPrefix;
 	}
 
 	public String getSetName() {

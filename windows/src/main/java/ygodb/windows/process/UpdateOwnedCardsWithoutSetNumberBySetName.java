@@ -36,13 +36,13 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 			CardSet setIdentified = db.getFirstCardSetForCardInSet(card.getCardName(), newSetName);
 
 			if (setIdentified == null) {
-				YGOLogger.info("Unknown setCode for card name and set: " + card.getCardName() + ":" + newSetName);
+				YGOLogger.info("Unknown set number for card name and set: " + card.getCardName() + ":" + newSetName);
 				continue;
 			}
 
 			card.setGamePlayCardUUID(setIdentified.getGamePlayCardUUID());
 			card.setSetNumber(setIdentified.getSetNumber());
-			card.setSetCode(setIdentified.getSetCode());
+			card.setSetPrefix(setIdentified.getSetPrefix());
 			card.setRarityUnsure(0);
 
 			try {

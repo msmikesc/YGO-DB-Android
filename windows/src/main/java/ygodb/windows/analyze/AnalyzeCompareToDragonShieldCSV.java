@@ -76,7 +76,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 			String folder = csvConnection.getStringOrNull(current, Const.FOLDER_NAME_CSV);
 			String name = csvConnection.getStringOrNull(current, Const.CARD_NAME_CSV);
 			String quantity = csvConnection.getStringOrNull(current, Const.QUANTITY_CSV);
-			String setCode = csvConnection.getStringOrNull(current, Const.SET_CODE_CSV);
+			String setPrefix = csvConnection.getStringOrNull(current, Const.SET_CODE_CSV);
 			String setNumber = csvConnection.getStringOrNull(current, Const.CARD_NUMBER_CSV);
 			String condition = csvConnection.getStringOrNull(current, Const.CONDITION_CSV);
 			String printing = csvConnection.getStringOrNull(current, Const.PRINTING_CSV);
@@ -97,7 +97,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 				printing = Const.CARD_PRINTING_FIRST_EDITION;
 			}
 
-			CardSet setIdentified = new CardSet("", setNumber, name, rarity, setName, colorCode, setCode);
+			CardSet setIdentified = new CardSet("", setNumber, name, rarity, setName, colorCode, setPrefix);
 			OwnedCard csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
 
 			String key = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
@@ -114,7 +114,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 				String newColorCode = setNumber.substring(setNumber.length() - 1);
 				String newSetNumber = setNumber.substring(0, setNumber.length() - 1);
 
-				setIdentified = new CardSet("", newSetNumber, name, rarity, setName, newColorCode, setCode);
+				setIdentified = new CardSet("", newSetNumber, name, rarity, setName, newColorCode, setPrefix);
 				csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
 
 				String newKey = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);
@@ -132,7 +132,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 				if (brokenSetNumber.length == 2) {
 					String newSetNumber = brokenSetNumber[0] + "-EN" + brokenSetNumber[1];
 
-					setIdentified = new CardSet("", newSetNumber, name, rarity, setName, colorCode, setCode);
+					setIdentified = new CardSet("", newSetNumber, name, rarity, setName, colorCode, setPrefix);
 					csvOwnedcard = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, 0);
 
 					String newKey = DatabaseHashMap.getOwnedCardHashMapKey(csvOwnedcard);

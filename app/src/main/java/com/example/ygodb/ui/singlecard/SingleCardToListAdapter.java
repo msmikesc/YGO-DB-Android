@@ -126,7 +126,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 		String setRarityText = AndroidUtil.getSetRarityDisplayWithColorText(current);
 		viewHolder.cardRarity.setText(setRarityText);
 
-		viewHolder.setCode.setText(current.getSetNumber());
+		viewHolder.setNumber.setText(current.getSetNumber());
 		viewHolder.setName.setMaxLines(2);
 
 		if (sellCardsViewModel == null) {
@@ -179,7 +179,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
 		TextView title;
-		TextView setCode;
+		TextView setNumber;
 		TextView setName;
 		TextView cardRarity;
 		TextView cardPrice;
@@ -195,7 +195,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 			super(view);
 
 			title = view.findViewById(R.id.cardTitle);
-			setCode = view.findViewById(R.id.cardSetCode);
+			setNumber = view.findViewById(R.id.cardSetNumber);
 			setName = view.findViewById(R.id.cardSetName);
 			cardRarity = view.findViewById(R.id.cardRarity);
 			cardPrice = view.findViewById(R.id.cardPrice);

@@ -108,7 +108,7 @@ public class AnalyzeCardsToSell {
 
 				for (OwnedCard card : cardMap.get(cardName)) {
 
-					p.printRecord(card.getQuantity(), card.getCardName(), card.getSetRarity(), card.getSetName(), card.getSetCode(),
+					p.printRecord(card.getQuantity(), card.getCardName(), card.getSetRarity(), card.getSetName(), card.getSetPrefix(),
 								  card.getPriceBought());
 				}
 

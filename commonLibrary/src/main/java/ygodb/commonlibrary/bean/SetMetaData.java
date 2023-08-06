@@ -2,7 +2,7 @@ package ygodb.commonlibrary.bean;
 
 public class SetMetaData {
 	private String setName;
-	private String setCode;
+	private String setPrefix;
 	private int numOfCards;
 	private String tcgDate;
 
@@ -14,12 +14,12 @@ public class SetMetaData {
 		this.setName = setName;
 	}
 
-	public String getSetCode() {
-		return setCode;
+	public String getSetPrefix() {
+		return setPrefix;
 	}
 
-	public void setSetCode(String setCode) {
-		this.setCode = setCode;
+	public void setSetPrefix(String setPrefix) {
+		this.setPrefix = setPrefix;
 	}
 
 	public int getNumOfCards() {

@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="@+id/cardTitle" />
 
     <TextView
-        android:id="@+id/cardSetCode"
+        android:id="@+id/cardSetNumber"
         android:layout_width="100sp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -97,7 +97,7 @@
         android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="@+id/cardImage"
         app:layout_constraintStart_toEndOf="@+id/cardImage"
-        app:layout_constraintTop_toBottomOf="@+id/cardSetCode" />
+        app:layout_constraintTop_toBottomOf="@+id/cardSetNumber" />
 
     <ImageView
         android:id="@+id/cardImage"
@@ -140,8 +140,8 @@
         android:adjustViewBounds="true"
         android:layout_gravity="left"
         android:paddingRight="2sp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardSetCode"
-        app:layout_constraintStart_toEndOf="@+id/cardSetCode"
+        app:layout_constraintBottom_toBottomOf="@+id/cardSetNumber"
+        app:layout_constraintStart_toEndOf="@+id/cardSetNumber"
         app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
 
     <LinearLayout

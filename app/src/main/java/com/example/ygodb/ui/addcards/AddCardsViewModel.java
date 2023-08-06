@@ -38,8 +38,8 @@ public class AddCardsViewModel extends ViewModel {
 	public void saveToDB() throws SQLException {
 		for (OwnedCard current : cardsList) {
 
-			if (current.getSetCode() == null || current.getSetCode().equals("")) {
-				current.setSetCode(Util.getPrefixFromSetNumber(current.getSetNumber()));
+			if (current.getSetPrefix() == null || current.getSetPrefix().equals("")) {
+				current.setSetPrefix(Util.getPrefixFromSetNumber(current.getSetNumber()));
 			}
 
 			if (current.getPriceBought() == null) {
@@ -102,7 +102,7 @@ public class AddCardsViewModel extends ViewModel {
 			newCard.setSetRarity(current.getSetRarity());
 			newCard.setQuantity(quantity);
 			newCard.setRarityUnsure(0);
-			newCard.setSetCode(current.getSetCode());
+			newCard.setSetPrefix(current.getSetPrefix());
 			newCard.setFolderName(Const.FOLDER_UNSYNCED);
 			newCard.setSetNumber(current.getSetNumber());
 			newCard.setColorVariant(current.getColorVariant());

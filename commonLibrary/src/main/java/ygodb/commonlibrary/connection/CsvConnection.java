@@ -156,7 +156,7 @@ public class CsvConnection {
 			outputSetNumber += current.getColorVariant();
 		}
 
-		p.printRecord(current.getFolderName(), current.getQuantity(), 0, current.getCardName(), current.getSetCode(), current.getSetName(),
+		p.printRecord(current.getFolderName(), current.getQuantity(), 0, current.getCardName(), current.getSetPrefix(), current.getSetName(),
 					  outputSetNumber, current.getCondition(), printing, "English", current.getPriceBought(), current.getDateBought(), 0
 				, 0,
 					  0);
@@ -222,7 +222,7 @@ public class CsvConnection {
 		String folder = getStringOrNull(current, Const.FOLDER_NAME_CSV);
 		String name = getStringOrNull(current, Const.CARD_NAME_CSV);
 		String quantity = getStringOrNull(current, Const.QUANTITY_CSV);
-		String setCode = getStringOrNull(current, Const.SET_CODE_CSV);
+		String setPrefix = getStringOrNull(current, Const.SET_CODE_CSV);
 		String setNumber = getStringOrNull(current, Const.CARD_NUMBER_CSV);
 		String setName = getStringOrNull(current, Const.SET_NAME_CSV);
 		String condition = getStringOrNull(current, Const.CONDITION_CSV);
@@ -275,7 +275,7 @@ public class CsvConnection {
 		setIdentified.setSetName(setName);
 		setIdentified.setSetNumber(setNumber);
 		setIdentified.setGamePlayCardUUID(gamePlayCardUUID);
-		setIdentified.setSetCode(setCode);
+		setIdentified.setSetPrefix(setPrefix);
 
 		OwnedCard card = new OwnedCard(folder, name, quantity, condition, printing, priceBought, dateBought, setIdentified, passcode);
 
@@ -479,7 +479,7 @@ public class CsvConnection {
 	}
 
 	public void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {
-		p.printRecord(current.getFolderName(), current.getQuantity(), current.getCardName(), current.getSetCode(), current.getSetName(),
+		p.printRecord(current.getFolderName(), current.getQuantity(), current.getCardName(), current.getSetPrefix(), current.getSetName(),
 					  current.getSetNumber(), current.getCondition(), current.getEditionPrinting(), current.getPriceBought(),
 					  current.getDateBought(), current.getSetRarity(), current.getColorVariant(), current.getRarityUnsure(),
 					  current.getGamePlayCardUUID(), current.getUuid(), current.getPasscode());

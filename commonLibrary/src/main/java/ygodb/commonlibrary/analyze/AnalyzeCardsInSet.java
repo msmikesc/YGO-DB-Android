@@ -41,7 +41,7 @@ public class AnalyzeCardsInSet {
 		boolean archetypeMode = false;
 
 		if (list.isEmpty()) {
-			List<SetMetaData> setNames = db.getSetMetaDataFromSetCode(requestedSetName.toUpperCase(Locale.ROOT));
+			List<SetMetaData> setNames = db.getSetMetaDataFromSetPrefix(requestedSetName.toUpperCase(Locale.ROOT));
 
 			if (setNames == null || setNames.isEmpty()) {
 

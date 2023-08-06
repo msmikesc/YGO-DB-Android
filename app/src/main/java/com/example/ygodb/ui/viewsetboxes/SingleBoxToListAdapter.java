@@ -46,7 +46,7 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 		viewHolder.removeTextWatcher();
 		viewHolder.setName.setText(current.getSetName());
 		viewHolder.boxLabel.setText(current.getBoxLabel());
-		viewHolder.setCode.setText(current.getSetCode());
+		viewHolder.setPrefix.setText(current.getSetPrefix());
 		viewHolder.addTextWatcher();
 	}
 
@@ -59,7 +59,7 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 
 		TextView setName;
 		EditText boxLabel;
-		TextView setCode;
+		TextView setPrefix;
 
 		TextWatcher textWatcher;
 
@@ -68,7 +68,7 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 
 			setName = view.findViewById(R.id.textViewSetName);
 			boxLabel = view.findViewById(R.id.editTextBoxLabel);
-			setCode = view.findViewById(R.id.textViewSetCode);
+			setPrefix = view.findViewById(R.id.textViewSetPrefix);
 
 			textWatcher = new SingleBoxLabelChangedListener(boxLabel, AndroidUtil.getDBInstance());
 			boxLabel.addTextChangedListener(textWatcher);

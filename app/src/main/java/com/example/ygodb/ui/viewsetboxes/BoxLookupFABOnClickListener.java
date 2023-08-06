@@ -37,7 +37,7 @@ class BoxLookupFABOnClickListener implements View.OnClickListener {
 			String menuOption = (String) menuItem.getTitle();
 
 			if(menuOption.equalsIgnoreCase("Add New From Search Box")) {
-				boolean results = viewBoxSetViewModel.attemptToAddNewFromSetCode(searchEditText.getText().toString());
+				boolean results = viewBoxSetViewModel.attemptToAddNewFromSetPrefix(searchEditText.getText().toString());
 
 				if(results){
 					adapter.notifyDataSetChanged();

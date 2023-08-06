@@ -12,7 +12,7 @@ public class OwnedCard {
 	private String folderName;
 	private String cardName;
 	private int quantity;
-	private String setCode;
+	private String setPrefix;
 	private String setNumber;
 	private String setName;
 	private String setRarity;
@@ -40,7 +40,7 @@ public class OwnedCard {
 		this.setFolderName(folder);
 		this.setCardName(cardName);
 		this.setQuantity(Integer.parseInt(quantity));
-		this.setSetCode(setIdentified.getSetCode());
+		this.setSetPrefix(setIdentified.getSetPrefix());
 		this.setCondition(condition);
 		this.setEditionPrinting(printing);
 		this.setPriceBought(Util.normalizePrice(priceBought));
@@ -56,7 +56,7 @@ public class OwnedCard {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(gamePlayCardUUID, folderName, cardName, setCode, setNumber, setName, setRarity, colorVariant, condition,
+		return Objects.hash(gamePlayCardUUID, folderName, cardName, setPrefix, setNumber, setName, setRarity, colorVariant, condition,
 							editionPrinting, dateBought, priceBought, passcode);
 	}
 
@@ -79,7 +79,7 @@ public class OwnedCard {
 			return setNumber.equals(otherOwnedCard.getSetNumber()) && priceBought.equals(otherOwnedCard.getPriceBought()) &&
 					dateBought.equals(otherOwnedCard.getDateBought()) && folderName.equals(otherOwnedCard.getFolderName()) &&
 					condition.equals(otherOwnedCard.getCondition()) && editionPrinting.equals(otherOwnedCard.getEditionPrinting()) &&
-					cardName.equals(otherOwnedCard.getCardName()) && setCode.equals(otherOwnedCard.getSetCode()) &&
+					cardName.equals(otherOwnedCard.getCardName()) && setPrefix.equals(otherOwnedCard.getSetPrefix()) &&
 					colorVariant.equals(otherOwnedCard.getColorVariant()) && setRarity.equals(otherOwnedCard.getSetRarity()) &&
 					setName.equals(otherOwnedCard.getSetName()) && passcode == otherOwnedCard.getPasscode() &&
 					gamePlayCardUUID.equals(otherOwnedCard.getGamePlayCardUUID());
@@ -121,12 +121,12 @@ public class OwnedCard {
 		this.quantity = quantity;
 	}
 
-	public String getSetCode() {
-		return setCode;
+	public String getSetPrefix() {
+		return setPrefix;
 	}
 
-	public void setSetCode(String setCode) {
-		this.setCode = setCode;
+	public void setSetPrefix(String setPrefix) {
+		this.setPrefix = setPrefix;
 	}
 
 	public String getSetNumber() {

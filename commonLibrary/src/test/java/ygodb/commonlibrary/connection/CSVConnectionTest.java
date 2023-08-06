@@ -172,7 +172,7 @@ class CSVConnectionTest {
 		setIdentified.setColorVariant(Const.DEFAULT_COLOR_VARIANT);
 		setIdentified.setSetName("setName");
 		setIdentified.setSetNumber(null);
-		setIdentified.setSetCode(null);
+		setIdentified.setSetPrefix(null);
 		setIdentified.setGamePlayCardUUID("1");
 		setIdentified.setSetRarity("Secret Rare");
 

@@ -151,7 +151,7 @@ public class ImportFromYGOPROAPI {
 
 		boolean isSpecificSet = inputSetName != null && !inputSetName.isBlank();
 		String currentSetName = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_NAME);
-		String setCode = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_CODE);
+		String setPrefix = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_SET_CODE);
 		int numOfCards = ApiUtil.getIntOrNegativeOne(setNode, Const.YGOPRO_TOTAL_CARDS_IN_SET);
 		String tcgDate = ApiUtil.getStringOrNull(setNode, Const.YGOPRO_TCG_RELEASE_DATE);
 
@@ -166,14 +166,14 @@ public class ImportFromYGOPROAPI {
 			List<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
 
 			if (setMetaDataList.isEmpty()) {
-				db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
+				db.replaceIntoCardSetMetaData(newSetName, setPrefix, numOfCards, tcgDate);
 			}
 		}
 		if (isSpecificSet && inputSetName.equalsIgnoreCase(newSetName)) {
 			List<SetMetaData> setMetaDataList = db.getSetMetaDataFromSetName(newSetName);
 
 			if (setMetaDataList.isEmpty()) {
-				db.replaceIntoCardSetMetaData(newSetName, setCode, numOfCards, tcgDate);
+				db.replaceIntoCardSetMetaData(newSetName, setPrefix, numOfCards, tcgDate);
 			}
 		}
 	}

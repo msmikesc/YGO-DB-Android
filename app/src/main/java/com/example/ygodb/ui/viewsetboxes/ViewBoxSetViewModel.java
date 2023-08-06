@@ -66,16 +66,16 @@ public class ViewBoxSetViewModel extends ViewModel {
 		}
 	}
 
-	public boolean attemptToAddNewFromSetCode(String setCode){
+	public boolean attemptToAddNewFromSetPrefix(String setPrefix){
 
-		List<SetBox> newSetBoxDataForValidSetCode;
+		List<SetBox> newSetBoxDataForValidSetPrefix;
 		try{
-			newSetBoxDataForValidSetCode = AndroidUtil.getDBInstance().getNewSetBoxDataForValidSetCode(setCode);
-			if(newSetBoxDataForValidSetCode.isEmpty()){
+			newSetBoxDataForValidSetPrefix = AndroidUtil.getDBInstance().getNewSetBoxDataForValidSetPrefix(setPrefix);
+			if(newSetBoxDataForValidSetPrefix.isEmpty()){
 				return false;
 			}
 
-			SetBox setBox = newSetBoxDataForValidSetCode.get(0);
+			SetBox setBox = newSetBoxDataForValidSetPrefix.get(0);
 
 			setBox.setSetBoxUUID(java.util.UUID.randomUUID().toString());
 

@@ -19,7 +19,7 @@ public class CardSet {
 	private String colorVariant;
 	private String setUrl;
 	private int rarityUnsure;
-	private String setCode;
+	private String setPrefix;
 	private String editionPrinting;
 
 	private static final String OPEN = "\"";
@@ -30,14 +30,14 @@ public class CardSet {
 	}
 
 	public CardSet(String gamePlayCardUUID, String setNumber, String cardName, String setRarity, String setName, String colorVariant,
-			String setCode) {
+			String setPrefix) {
 		this.gamePlayCardUUID = gamePlayCardUUID;
 		this.setNumber = setNumber;
 		this.cardName = cardName;
 		this.setRarity = setRarity;
 		this.setName = setName;
 		this.colorVariant = colorVariant;
-		this.setCode = setCode;
+		this.setPrefix = setPrefix;
 		this.rarityUnsure = Const.RARITY_UNSURE_FALSE;
 	}
 
@@ -148,12 +148,12 @@ public class CardSet {
 		this.rarityUnsure = rarityUnsure;
 	}
 
-	public String getSetCode() {
-		return setCode;
+	public String getSetPrefix() {
+		return setPrefix;
 	}
 
-	public void setSetCode(String setCode) {
-		this.setCode = setCode;
+	public void setSetPrefix(String setPrefix) {
+		this.setPrefix = setPrefix;
 	}
 
 	public String getSetPriceFirst() {
