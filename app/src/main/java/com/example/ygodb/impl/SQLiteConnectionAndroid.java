@@ -401,6 +401,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		}
 
 		private static void getAllSetBoxesFieldsFromRS(Cursor rs, String[] col, SetBox current) {
+			current.setSetBoxUUID(rs.getString(getColumn(col, Const.SET_BOX_UUID)));
 			current.setBoxLabel(rs.getString(getColumn(col, Const.BOX_LABEL)));
 			current.setSetCode(rs.getString(getColumn(col, Const.SET_CODE)));
 			current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
@@ -750,9 +751,15 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public List<SetBox> getSetBoxesByNameOrCode(String searchText) throws SQLException {
+	public List<SetBox> getSetBoxesByNameOrCodeOrLabel(String searchText) throws SQLException {
 		DatabaseSelectQuery<SetBox, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
-		return CommonDatabaseQueries.getSetBoxesByNameOrCode(searchText, query, new SetBoxMapperSelectQuery());
+		return CommonDatabaseQueries.getSetBoxesByNameOrCodeOrLabel(searchText, query, new SetBoxMapperSelectQuery());
+	}
+
+	@Override
+	public List<SetBox> getNewSetBoxDataForValidSetCode(String setCode) throws SQLException {
+		DatabaseSelectQuery<SetBox, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getNewSetBoxDataForValidSetCode(setCode, query, new SetBoxMapperSelectQuery());
 	}
 
 	@Override
@@ -783,6 +790,18 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public int insertIntoOwnedCards(OwnedCard card) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
 		return CommonDatabaseQueries.insertIntoOwnedCards(query, card);
+	}
+
+	@Override
+	public int insertOrUpdateSetBoxByUUID(SetBox setBox) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.insertOrUpdateSetBoxByUUID(query, setBox);
+	}
+
+	@Override
+	public int insertIntoSetBoxes(SetBox setBox) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.insertIntoSetBoxes(query, setBox);
 	}
 
 	@Override

@@ -89,6 +89,8 @@ public interface SQLiteConnection {
 
 	GamePlayCard getGamePlayCardByUUID(String gamePlayCardUUID) throws SQLException;
 
+	List<SetBox> getNewSetBoxDataForValidSetCode(String setCode) throws SQLException;
+
 	int replaceIntoGamePlayCard(GamePlayCard input) throws SQLException;
 
 	int insertOrUpdateOwnedCardByUUID(OwnedCard card) throws SQLException;
@@ -98,6 +100,10 @@ public interface SQLiteConnection {
 	void sellCards(OwnedCard card, int quantity, String priceSold);
 
 	int insertIntoOwnedCards(OwnedCard card) throws SQLException;
+
+	int insertOrUpdateSetBoxByUUID(SetBox setBox) throws SQLException;
+
+	int insertIntoSetBoxes(SetBox setBox) throws SQLException;
 
 	int insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String cardName,
 			String colorVariant, String url) throws SQLException;
@@ -121,7 +127,7 @@ public interface SQLiteConnection {
 
 	List<SetBox> getAllSetBoxes() throws SQLException;
 
-	List<SetBox> getSetBoxesByNameOrCode(String searchText) throws SQLException;
+	List<SetBox> getSetBoxesByNameOrCodeOrLabel(String searchText) throws SQLException;
 
 	int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant)
 			throws SQLException;

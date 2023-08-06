@@ -1,5 +1,6 @@
 package com.example.ygodb.ui.viewsetboxes;
 
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
+import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonlibrary.bean.SetBox;
 
 import java.util.List;
@@ -39,10 +41,13 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
 		SetBox current = setBoxes.get(position);
+		viewHolder.boxLabel.setTag(current); // Set the SetBox as the tag of the EditText for the text changed listener
 
+		viewHolder.removeTextWatcher();
 		viewHolder.setName.setText(current.getSetName());
 		viewHolder.boxLabel.setText(current.getBoxLabel());
 		viewHolder.setCode.setText(current.getSetCode());
+		viewHolder.addTextWatcher();
 	}
 
 	@Override
@@ -56,6 +61,8 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 		EditText boxLabel;
 		TextView setCode;
 
+		TextWatcher textWatcher;
+
 		public ItemViewHolder(@NonNull View view) {
 			super(view);
 
@@ -63,6 +70,18 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 			boxLabel = view.findViewById(R.id.editTextBoxLabel);
 			setCode = view.findViewById(R.id.textViewSetCode);
 
+			textWatcher = new SingleBoxLabelChangedListener(boxLabel, AndroidUtil.getDBInstance());
+			boxLabel.addTextChangedListener(textWatcher);
+
+		}
+
+		public void removeTextWatcher() {
+			boxLabel.removeTextChangedListener(textWatcher);
+		}
+
+		// Method to add the TextWatcher
+		public void addTextWatcher() {
+			boxLabel.addTextChangedListener(textWatcher);
 		}
 
 	}

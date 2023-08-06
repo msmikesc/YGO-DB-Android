@@ -23,9 +23,6 @@ public class BoxLookupFragment extends Fragment {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		//TODO support adding new by creating an entry by set code
-		//TODO save updated box label
-
 		ViewBoxSetViewModel viewBoxSetViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewBoxSetViewModel.class);
 
 		binding = FragmentBoxLookupBinding.inflate(inflater, container, false);
@@ -39,6 +36,9 @@ public class BoxLookupFragment extends Fragment {
 		layout = linearLayoutManager;
 		boxListViewResults.setLayoutManager(linearLayoutManager);
 		boxListViewResults.setAdapter(adapter);
+
+		binding.fab.setOnClickListener(
+				new BoxLookupFABOnClickListener(binding.fab, getContext(), viewBoxSetViewModel, adapter, binding.boxSearchEditText));
 
 		binding.boxSearchEditText.addTextChangedListener(
 				new BoxLookupSearchBarChangedListener(binding.boxSearchEditText, viewBoxSetViewModel, adapter, layout));

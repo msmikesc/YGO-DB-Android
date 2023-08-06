@@ -145,6 +145,8 @@ public class ImportPricesFromYGOPROAPI {
 
 				//TODO address keys updated more than once
 				// limited, unlimited, and first edition entries existing at same time
+
+				//TODO lock ui while loading db or prices
 				for (String key : updatedMoreThanOnceKeysMap.keySet()) {
 					YGOLogger.info("Key updated more than once:" + key);
 				}

@@ -49,7 +49,7 @@ public class ViewBoxSetViewModel extends ViewModel {
 
 	public List<SetBox> getSearchData(String input) {
 
-		if (input == null || input.isBlank() || input.trim().length() < 3) {
+		if (input == null || input.isBlank()) {
 			try {
 				return AndroidUtil.getDBInstance().getAllSetBoxes();
 			} catch (SQLException e) {
@@ -59,10 +59,32 @@ public class ViewBoxSetViewModel extends ViewModel {
 		}
 
 		try {
-			return AndroidUtil.getDBInstance().getSetBoxesByNameOrCode(input);
+			return AndroidUtil.getDBInstance().getSetBoxesByNameOrCodeOrLabel(input);
 		} catch (SQLException e) {
 			YGOLogger.logException(e);
 			throw new RuntimeException(e);
+		}
+	}
+
+	public boolean attemptToAddNewFromSetCode(String setCode){
+
+		List<SetBox> newSetBoxDataForValidSetCode;
+		try{
+			newSetBoxDataForValidSetCode = AndroidUtil.getDBInstance().getNewSetBoxDataForValidSetCode(setCode);
+			if(newSetBoxDataForValidSetCode.isEmpty()){
+				return false;
+			}
+
+			SetBox setBox = newSetBoxDataForValidSetCode.get(0);
+
+			setBox.setSetBoxUUID(java.util.UUID.randomUUID().toString());
+
+			AndroidUtil.getDBInstance().insertIntoSetBoxes(setBox);
+			boxList.add(0, setBox);
+			return true;
+		} catch (SQLException e) {
+			YGOLogger.logException(e);
+			return false;
 		}
 	}
 

@@ -1,6 +1,8 @@
 package ygodb.commonlibrary.bean;
 
 public class SetBox {
+
+	private String setBoxUUID;
 	private String boxLabel;
 	private String setCode;
 	private String setName;
@@ -27,5 +29,13 @@ public class SetBox {
 
 	public void setSetName(String setName) {
 		this.setName = setName;
+	}
+
+	public String getSetBoxUUID() {
+		return setBoxUUID;
+	}
+
+	public void setSetBoxUUID(String setBoxUUID) {
+		this.setBoxUUID = setBoxUUID;
 	}
 }

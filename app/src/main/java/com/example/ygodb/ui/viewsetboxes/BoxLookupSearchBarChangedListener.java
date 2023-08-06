@@ -30,7 +30,7 @@ class BoxLookupSearchBarChangedListener extends TextChangedListener<EditText> {
 	public void onTextChanged(EditText target, Editable s) {
 		String textSearch = s.toString().toLowerCase(Locale.ROOT);
 
-		if (textSearch.trim().length() < 3) {
+		if (textSearch.isBlank() || textSearch.trim().length() < 3) {
 			textSearch = "";
 		}
 

@@ -69,6 +69,7 @@ public class Const {
 	public static final String COLOR_VARIANT = "colorVariant";
 	public static final String RELEASE_DATE = "releaseDate";
 
+	public static final String SET_BOX_UUID = "setBoxUUID";
 	public static final String BOX_LABEL = "boxLabel";
 
 	public static final String SET_NUM_OF_CARDS = "numOfCards";

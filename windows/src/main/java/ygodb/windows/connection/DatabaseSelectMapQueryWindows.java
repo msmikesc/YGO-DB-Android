@@ -1,9 +1,7 @@
 package ygodb.windows.connection;
 
 import ygodb.commonlibrary.connection.DatabaseSelectMapQuery;
-import ygodb.commonlibrary.connection.DatabaseSelectQuery;
 import ygodb.commonlibrary.connection.SelectQueryMapMapper;
-import ygodb.commonlibrary.connection.SelectQueryResultMapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

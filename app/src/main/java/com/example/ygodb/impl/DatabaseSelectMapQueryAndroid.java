@@ -3,9 +3,7 @@ package com.example.ygodb.impl;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import ygodb.commonlibrary.connection.DatabaseSelectMapQuery;
-import ygodb.commonlibrary.connection.DatabaseSelectQuery;
 import ygodb.commonlibrary.connection.SelectQueryMapMapper;
-import ygodb.commonlibrary.connection.SelectQueryResultMapper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

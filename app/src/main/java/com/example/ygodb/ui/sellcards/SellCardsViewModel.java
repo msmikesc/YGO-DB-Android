@@ -44,11 +44,6 @@ public class SellCardsViewModel extends ViewModel {
 
 	public void addNewFromOwnedCard(OwnedCard current) {
 
-		//TODO move around multiple buttons to add different amounts
-		//TODO implement update and add new set boxes
-		//TODO add android implementation of batch wrapper
-		//TODO try functional programming for all sql queries
-
 		if (current.getSetNumber() == null || current.getSetRarity() == null || current.getSetName() == null ||
 				current.getCardName() == null) {
 			return;

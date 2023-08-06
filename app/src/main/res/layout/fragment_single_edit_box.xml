@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textViewSetCode"
-            app:layout_constraintWidth_percent="0.55" />
+            app:layout_constraintWidth_percent="0.50" />
 
     <EditText
             android:id="@+id/editTextBoxLabel"
@@ -39,12 +39,12 @@
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:paddingHorizontal="5sp"
+            android:paddingHorizontal="3sp"
             app:layout_constraintStart_toEndOf="@+id/textViewSetName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_percent="0.12"
+            app:layout_constraintWidth_percent="0.15"
             android:inputType="textNoSuggestions"
     />
 

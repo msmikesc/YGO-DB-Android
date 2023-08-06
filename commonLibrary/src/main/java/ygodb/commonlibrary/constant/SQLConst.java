@@ -99,9 +99,9 @@ public class SQLConst {
 					" = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ?";
 
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME =
-			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and" +
-					" " +
-					"setName = ? and UPPER(cardName) = UPPER(?)";
+			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? " +
+					"and" +
+					" " + "setName = ? and UPPER(cardName) = UPPER(?)";
 
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST = "update cardSets set setPriceFirst = ?, " +
 			"setPriceFirstUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ? and UPPER" +
@@ -123,8 +123,8 @@ public class SQLConst {
 
 	public static final String GET_ALL_SET_BOXES = "select * from setBoxes order by boxLabel";
 
-	public static final String GET_SET_BOXES_BY_NAME_OR_CODE =
-			"select * from setBoxes where setCode = UPPER(?) or setName like ? order by boxLabel";
+	public static final String GET_SET_BOXES_BY_NAME_OR_CODE_OR_LABEL =
+			"select * from setBoxes where setCode = UPPER(?) or setName like ? or UPPER(boxLabel) = UPPER(?) order by boxLabel";
 
 	public static final String UPDATE_CARD_SET_URL = "update cardSets set setURL = ? where setNumber = ? and setRarity = ? and " +
 			"setName = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
@@ -137,4 +137,13 @@ public class SQLConst {
 
 	public static final String UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST =
 			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime') where setURL = ?";
+
+	public static final String UPDATE_SET_BOX_BY_UUID = "update setBoxes set boxLabel = ?, setCode = ?, setName = ? where setBoxUUID = ?";
+
+	public static final String INSERT_OR_IGNORE_INTO_SET_BOX =
+			"insert OR IGNORE into setBoxes(boxLabel,setCode,setName,setBoxUUID) values(?,?,?,?)";
+
+	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_CODE =
+			"select setBoxUUID, setData.setCode, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setCode = " +
+					"setData.setCode where setBoxes.setCode is null and UPPER(setData.setCode) = UPPER(?)";
 }

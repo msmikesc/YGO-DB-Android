@@ -1,50 +1,70 @@
-<!-- activity_main.xml -->
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     tools:context=".ui.addcards.AddCardsFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/boxSearchLayout"
-            android:layout_width="0sp"
-            android:layout_height="48dp"
-            app:hintEnabled="false"
-            app:hintAnimationEnabled="false"
-            app:endIconMode="clear_text"
-            app:endIconTint="@color/white"
-            app:boxBackgroundMode="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <!-- activity_main.xml -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+    >
 
-        <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/boxSearchEditText"
-                android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/boxSearchLayout"
+                android:layout_width="0sp"
                 android:layout_height="48dp"
-                android:padding="0dp"
-                android:paddingStart="4dp"
-                android:textSize="18sp"
-                android:inputType="text"
-                android:hint="Set Name or Code"
-                android:background="@drawable/edit_text_border"
-                app:hintTextColor="#8E8E8E"
-                android:textColor="#FFFFFF"/>
+                app:hintEnabled="false"
+                app:hintAnimationEnabled="false"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/white"
+                app:boxBackgroundMode="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/boxSearchEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:padding="0dp"
+                    android:paddingStart="4dp"
+                    android:textSize="18sp"
+                    android:inputType="text"
+                    android:hint="Set Name or Code"
+                    android:background="@drawable/edit_text_border"
+                    app:hintTextColor="#8E8E8E"
+                    android:textColor="#FFFFFF"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/boxListViewResults"
-            android:layout_width="0sp"
-            android:layout_height="0sp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/boxSearchLayout"
-            app:layout_constraintVertical_bias="1.0" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/boxListViewResults"
+                android:layout_width="0sp"
+                android:layout_height="0sp"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/boxSearchLayout"
+                app:layout_constraintVertical_bias="1.0"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:layout_marginBottom="16dp"
+            app:srcCompat="@android:drawable/ic_menu_sort_by_size"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

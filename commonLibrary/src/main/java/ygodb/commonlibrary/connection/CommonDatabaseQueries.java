@@ -272,12 +272,22 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static <R> List<SetBox> getSetBoxesByNameOrCode(String searchText, DatabaseSelectQuery<SetBox, R> query,
+	public static <R> List<SetBox> getSetBoxesByNameOrCodeOrLabel(String searchText, DatabaseSelectQuery<SetBox, R> query,
 			SelectQueryResultMapper<SetBox, R> mapper) throws SQLException {
-		query.prepareStatement(SQLConst.GET_SET_BOXES_BY_NAME_OR_CODE);
+		query.prepareStatement(SQLConst.GET_SET_BOXES_BY_NAME_OR_CODE_OR_LABEL);
 
 		query.bindString(1, searchText);
 		query.bindString(2, "%" + searchText + "%");
+		query.bindString(3, searchText);
+
+		return query.executeQuery(mapper);
+	}
+
+	public static <R> List<SetBox> getNewSetBoxDataForValidSetCode(String setCode, DatabaseSelectQuery<SetBox, R> query,
+			SelectQueryResultMapper<SetBox, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_NEW_SET_BOX_DATA_FOR_VALID_SET_CODE);
+
+		query.bindString(1, setCode);
 
 		return query.executeQuery(mapper);
 	}
@@ -319,7 +329,7 @@ public class CommonDatabaseQueries {
 	}
 
 	public static int insertOrUpdateOwnedCardByUUID(DatabaseUpdateQuery query, OwnedCard card) throws SQLException {
-		if (card.getUuid() == null || card.getUuid().equals("")) {
+		if (card.getUuid() == null || card.getUuid().isBlank()) {
 			int rowsInserted = insertIntoOwnedCards(query, card);
 			if (rowsInserted != 1) {
 				YGOLogger.error(rowsInserted + " rows inserted for insert for:" + card);
@@ -352,7 +362,7 @@ public class CommonDatabaseQueries {
 		int passcode = card.getPasscode();
 		String uuid = card.getUuid();
 
-		if (uuid == null || uuid.equals("")) {
+		if (uuid == null || uuid.isBlank()) {
 			YGOLogger.error("UUID null on updated owned card");
 			return 0;
 		}
@@ -407,7 +417,7 @@ public class CommonDatabaseQueries {
 		String uuid = card.getUuid();
 		int passcode = card.getPasscode();
 
-		if (uuid == null || uuid.equals("")) {
+		if (uuid == null || uuid.isBlank()) {
 			uuid = java.util.UUID.randomUUID().toString();
 		} else {
 			YGOLogger.error("UUID not null on an insert owned card:" + uuid);
@@ -442,6 +452,63 @@ public class CommonDatabaseQueries {
 		query.bindInteger(14, rarityUnsure);
 		query.bindString(15, uuid);
 		query.bindInteger(16, passcode);
+
+		return query.executeUpdate();
+	}
+
+	public static int insertOrUpdateSetBoxByUUID(DatabaseUpdateQuery query, SetBox setBox) throws SQLException {
+		if (setBox.getSetBoxUUID() == null || setBox.getSetBoxUUID().isBlank()) {
+			int rowsInserted = insertIntoSetBoxes(query, setBox);
+			if (rowsInserted != 1) {
+				YGOLogger.error(rowsInserted + " rows inserted for insert for:" + setBox);
+			}
+			return rowsInserted;
+		} else {
+			int rowsUpdated = updateSetBoxesByUUID(query, setBox);
+			if (rowsUpdated != 1) {
+				YGOLogger.error(rowsUpdated + " rows updated for update for:" + setBox);
+			}
+			return rowsUpdated;
+		}
+	}
+
+	public static int updateSetBoxesByUUID(DatabaseUpdateQuery query, SetBox setBox) throws SQLException {
+		String uuid = setBox.getSetBoxUUID();
+		String setCode = setBox.getSetCode();
+		String setName = setBox.getSetName();
+		String boxLabel = setBox.getBoxLabel();
+
+		if (uuid == null || uuid.isBlank()) {
+			YGOLogger.error("UUID null on updated set box card");
+			return 0;
+		}
+
+		query.prepareStatement(SQLConst.UPDATE_SET_BOX_BY_UUID);
+
+		query.bindString(1, boxLabel);
+		query.bindString(2, setCode);
+		query.bindString(3, setName);
+		query.bindString(4, uuid);
+
+		return query.executeUpdate();
+	}
+
+	public static int insertIntoSetBoxes(DatabaseUpdateQuery query, SetBox setBox) throws SQLException {
+		String uuid = setBox.getSetBoxUUID();
+		String setCode = setBox.getSetCode();
+		String setName = setBox.getSetName();
+		String boxLabel = setBox.getBoxLabel();
+
+		if (uuid == null || uuid.isBlank()) {
+			uuid = java.util.UUID.randomUUID().toString();
+		}
+
+		query.prepareStatement(SQLConst.INSERT_OR_IGNORE_INTO_SET_BOX);
+
+		query.bindString(1, boxLabel);
+		query.bindString(2, setCode);
+		query.bindString(3, setName);
+		query.bindString(4, uuid);
 
 		return query.executeUpdate();
 	}

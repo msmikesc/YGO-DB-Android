@@ -166,6 +166,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 
 		private static void getAllSetBoxesFieldsFromRS(ResultSet rs, SetBox current) throws SQLException {
+			current.setSetBoxUUID(rs.getString(Const.SET_BOX_UUID));
 			current.setBoxLabel(rs.getString(Const.BOX_LABEL));
 			current.setSetCode(rs.getString(Const.SET_CODE));
 			current.setSetName(rs.getString(Const.SET_NAME));
@@ -511,9 +512,15 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public List<SetBox> getSetBoxesByNameOrCode(String searchText) throws SQLException {
+	public List<SetBox> getSetBoxesByNameOrCodeOrLabel(String searchText) throws SQLException {
 		DatabaseSelectQuery<SetBox, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
-		return CommonDatabaseQueries.getSetBoxesByNameOrCode(searchText, query, new SetBoxMapperSelectQuery());
+		return CommonDatabaseQueries.getSetBoxesByNameOrCodeOrLabel(searchText, query, new SetBoxMapperSelectQuery());
+	}
+
+	@Override
+	public List<SetBox> getNewSetBoxDataForValidSetCode(String setCode) throws SQLException {
+		DatabaseSelectQuery<SetBox, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getNewSetBoxDataForValidSetCode(setCode, query, new SetBoxMapperSelectQuery());
 	}
 
 	@Override
@@ -544,6 +551,18 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	public int insertIntoOwnedCards(OwnedCard card) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
 		return CommonDatabaseQueries.insertIntoOwnedCards(query, card);
+	}
+
+	@Override
+	public int insertOrUpdateSetBoxByUUID(SetBox setBox) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
+		return CommonDatabaseQueries.insertOrUpdateSetBoxByUUID(query, setBox);
+	}
+
+	@Override
+	public int insertIntoSetBoxes(SetBox setBox) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
+		return CommonDatabaseQueries.insertIntoSetBoxes(query, setBox);
 	}
 
 	@Override
