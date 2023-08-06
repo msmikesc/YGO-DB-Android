@@ -33,7 +33,7 @@ public class Const {
 	public static final String RARITY_UNSURE = "rarityUnsure";
 	public static final String QUANTITY = "quantity";
 	public static final String CARD_NAME = "cardName";
-	public static final String SET_CODE = "setCode";
+	public static final String SET_PREFIX = "setPrefix";
 	public static final String SET_NUMBER = "setNumber";
 	public static final String SET_NAME = "setName";
 	public static final String SET_RARITY = "setRarity";

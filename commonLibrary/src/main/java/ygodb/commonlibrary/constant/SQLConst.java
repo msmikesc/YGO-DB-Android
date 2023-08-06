@@ -7,14 +7,14 @@ public class SQLConst {
 
 	public static final String OWNED_CARDS_TABLE = "ownedCards";
 
-	public static final String SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE =
-			"Select cardSets.*, setData.setCode from cardSets left join setData on cardSets.setName = setData.setName";
+	public static final String SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX =
+			"Select cardSets.*, setData.setPrefix from cardSets left join setData on cardSets.setName = setData.setName";
 
-	public static final String GET_ALL_CARD_RARITIES = SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE;
+	public static final String GET_ALL_CARD_RARITIES = SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX;
 	public static final String GET_RARITIES_OF_CARD_BY_GAME_PLAY_CARD_UUID =
-			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE + " where gamePlayCardUUID=?";
+			SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX + " where gamePlayCardUUID=?";
 	public static final String GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID =
-			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE + " where gamePlayCardUUID=? and UPPER(cardSets.setName) = UPPER(?)";
+			SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX + " where gamePlayCardUUID=? and UPPER(cardSets.setName) = UPPER(?)";
 	public static final String GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID = "Select * from gamePlayCard where gamePlayCardUUID=?";
 	public static final String GET_GAME_PLAY_CARD_UUID_FROM_TITLE = "Select * from gamePlayCard where UPPER(title)=UPPER(?)";
 	public static final String GET_GAME_PLAY_CARD_UUID_FROM_PASSCODE = "Select * from gamePlayCard where passcode = ?";
@@ -22,7 +22,7 @@ public class SQLConst {
 			"(DISTINCT setName), MAX(dateBought) as maxDate, sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
 			"gamePlayCardUUID from ownedCards where gamePlayCardUUID = ? group by cardName";
 	public static final String GET_ALL_OWNED_CARDS = "select * from ownedCards order by setName, setRarity, cardName";
-	public static final String GET_ALL_OWNED_CARDS_WITHOUT_SET_NUMBER = "select * from ownedCards where setCode is null";
+	public static final String GET_ALL_OWNED_CARDS_WITHOUT_SET_PREFIX = "select * from ownedCards where setPrefix is null";
 	public static final String GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE = "select * from ownedCards where passcode = -1";
 	public static final String GET_ALL_OWNED_CARDS_FOR_HASH_MAP = "select * from ownedCards order by setName, setRarity, cardName";
 	public static final String GET_RARITY_UNSURE_OWNED_CARDS = "select * from ownedCards where rarityUnsure = 1 order by setName";
@@ -45,26 +45,26 @@ public class SQLConst {
 	public static final String GET_COUNT_QUANTITY_MANUAL =
 			"select sum(quantity) from ownedCards where ownedCards.folderName = '" + Const.FOLDER_MANUAL + "'";
 	public static final String GET_FIRST_CARD_SET_FOR_CARD_IN_SET =
-			SELECT_STAR_FROM_CARD_SETS_WITH_SET_CODE + " where UPPER(cardSets.setName) = UPPER(?) and UPPER(cardName) = UPPER(?)";
+			SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX + " where UPPER(cardSets.setName) = UPPER(?) and UPPER(cardName) = UPPER(?)";
 	public static final String GET_SET_META_DATA_FROM_SET_NAME =
-			"select setName,setCode,numOfCards,releaseDate from setData where UPPER(setName) = UPPER(?)";
+			"select setName,setPrefix,numOfCards,releaseDate from setData where UPPER(setName) = UPPER(?)";
 	public static final String GET_SET_META_DATA_FROM_SET_PREFIX =
-			"select setName,setCode,numOfCards,releaseDate from setData where setCode = ?";
-	public static final String GET_ALL_SET_META_DATA_FROM_SET_DATA = "select distinct setName,setCode,numOfCards,releaseDate from setData";
+			"select setName,setPrefix,numOfCards,releaseDate from setData where setPrefix = ?";
+	public static final String GET_ALL_SET_META_DATA_FROM_SET_DATA = "select distinct setName,setPrefix,numOfCards,releaseDate from setData";
 	public static final String GET_CARDS_ONLY_PRINTED_ONCE = "select cardSets.gamePlayCardUUID, cardName, type, setNumber,setRarity, " +
 			"cardSets.setName, releaseDate, archetype from cardSets join setData on setData.setName = cardSets.setName join " +
 			"gamePlayCard on gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID where cardName in (select cardName from " +
 			"(Select DISTINCT cardName, setName from cardSets join gamePlayCard on gamePlayCard.gamePlayCardUUID = cardSets" +
 			".gamePlayCardUUID where type <>'Token') group by cardName having count(cardName) = 1) order by releaseDate";
 	public static final String REPLACE_INTO_CARD_SET_META_DATA =
-			"Replace into setData(setName,setCode,numOfCards,releaseDate) values(?,?,?,?)";
+			"Replace into setData(setName,setPrefix,numOfCards,releaseDate) values(?,?,?,?)";
 	public static final String GET_GAME_PLAY_CARD_BY_UUID = "select * from gamePlayCard where gamePlayCardUUID = ?";
 	public static final String GET_ALL_GAME_PLAY_CARD = "select * from gamePlayCard";
 	public static final String REPLACE_INTO_GAME_PLAY_CARD = "Replace into gamePlayCard(gamePlayCardUUID,title,type,passcode,lore," +
 			"attribute,race,linkValue,level,pendScale,atk,def,archetype, modificationDate) values(?,?,?,?,?,?,?,?,?,?,?,?,?," +
 			"datetime('now','localtime'))";
 	public static final String UPDATE_OWNED_CARD_BY_UUID = "update ownedCards set gamePlayCardUUID = ?,folderName = ?,cardName = ?," +
-			"quantity = ?,setCode = ?, setNumber = ?,setName = ?,setRarity = ?,setRarityColorVariant = ?,condition = ?," +
+			"quantity = ?,setPrefix = ?, setNumber = ?,setName = ?,setRarity = ?,setRarityColorVariant = ?,condition = ?," +
 			"editionPrinting = ?,dateBought = ?,priceBought = ?,rarityUnsure = ?, modificationDate = datetime('now','localtime'), " +
 			"passcode = ? where UUID = ?";
 
@@ -72,13 +72,13 @@ public class SQLConst {
 	public static final String UPDATE_OWNED_CARDS_SET_QUANTITY_WHERE_UUID =
 			"UPDATE ownedCards SET quantity = ?, modificationDate = datetime('now','localtime') WHERE UUID = ?";
 	public static final String INSERT_INTO_SOLD_CARDS =
-			"INSERT INTO soldCards (gamePlayCardUUID, cardName, quantity, setCode, setNumber, " +
+			"INSERT INTO soldCards (gamePlayCardUUID, cardName, quantity, setPrefix, setNumber, " +
 					"setName, setRarity, setRarityColorVariant, condition, editionPrinting, dateBought, priceBought, dateSold, " +
 					"priceSold, UUID, creationDate, modificationDate, passcode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
 					"datetime('now','localtime'), ?)";
 	public static final String INSERT_OR_IGNORE_INTO_OWNED_CARDS =
 			"insert OR IGNORE into ownedCards(gamePlayCardUUID,folderName,cardName," +
-					"quantity,setCode,setNumber,setName,setRarity,setRarityColorVariant,condition,editionPrinting,dateBought," +
+					"quantity,setPrefix,setNumber,setName,setRarity,setRarityColorVariant,condition,editionPrinting,dateBought," +
 					"priceBought,rarityUnsure, creationDate, modificationDate, UUID, passcode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
 					"datetime('now','localtime'),datetime('now','localtime'),?,?)";
 	public static final String INSERT_OR_IGNORE_INTO_CARD_SETS = "INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName," +
@@ -124,7 +124,7 @@ public class SQLConst {
 	public static final String GET_ALL_SET_BOXES = "select * from setBoxes order by boxLabel";
 
 	public static final String GET_SET_BOXES_BY_NAME_OR_CODE_OR_LABEL =
-			"select * from setBoxes where setCode = UPPER(?) or setName like ? or UPPER(boxLabel) = UPPER(?) order by boxLabel";
+			"select * from setBoxes where setPrefix = UPPER(?) or setName like ? or UPPER(boxLabel) = UPPER(?) order by boxLabel";
 
 	public static final String UPDATE_CARD_SET_URL = "update cardSets set setURL = ? where setNumber = ? and setRarity = ? and " +
 			"setName = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
@@ -138,12 +138,12 @@ public class SQLConst {
 	public static final String UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST =
 			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime') where setURL = ?";
 
-	public static final String UPDATE_SET_BOX_BY_UUID = "update setBoxes set boxLabel = ?, setCode = ?, setName = ? where setBoxUUID = ?";
+	public static final String UPDATE_SET_BOX_BY_UUID = "update setBoxes set boxLabel = ?, setPrefix = ?, setName = ? where setBoxUUID = ?";
 
 	public static final String INSERT_OR_IGNORE_INTO_SET_BOX =
-			"insert OR IGNORE into setBoxes(boxLabel,setCode,setName,setBoxUUID) values(?,?,?,?)";
+			"insert OR IGNORE into setBoxes(boxLabel,setPrefix,setName,setBoxUUID) values(?,?,?,?)";
 
 	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX =
-			"select setBoxUUID, setData.setCode, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setCode = " +
-					"setData.setCode where setBoxes.setCode is null and UPPER(setData.setCode) = UPPER(?)";
+			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix = " +
+					"setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
 }

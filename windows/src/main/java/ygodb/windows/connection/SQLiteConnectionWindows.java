@@ -75,7 +75,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		current.setRarityUnsure(rs.getInt(Const.RARITY_UNSURE));
 		current.setQuantity(rs.getInt(Const.QUANTITY));
 		current.setCardName(rs.getString(Const.CARD_NAME));
-		current.setSetPrefix(rs.getString(Const.SET_CODE));
+		current.setSetPrefix(rs.getString(Const.SET_PREFIX));
 		current.setSetNumber(rs.getString(Const.SET_NUMBER));
 		current.setSetName(rs.getString(Const.SET_NAME));
 		current.setSetRarity(rs.getString(Const.SET_RARITY));
@@ -110,7 +110,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		set.setSetPriceUpdateTime(rarities.getString(Const.SET_PRICE_UPDATE_TIME));
 		set.setSetPriceFirst(rarities.getString(Const.SET_PRICE_FIRST));
 		set.setSetPriceFirstUpdateTime(rarities.getString(Const.SET_PRICE_FIRST_UPDATE_TIME));
-		set.setSetPrefix(rarities.getString(Const.SET_CODE));
+		set.setSetPrefix(rarities.getString(Const.SET_PREFIX));
 		set.setSetUrl(rarities.getString(Const.SET_URL));
 		set.setColorVariant(rarities.getString(Const.COLOR_VARIANT));
 	}
@@ -151,7 +151,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		private static void getAllSetMetaDataFieldsFromRS(ResultSet rarities, SetMetaData set) throws SQLException {
 			set.setSetName(rarities.getString(Const.SET_NAME));
-			set.setSetPrefix(rarities.getString(Const.SET_CODE));
+			set.setSetPrefix(rarities.getString(Const.SET_PREFIX));
 			set.setNumOfCards(rarities.getInt(Const.SET_NUM_OF_CARDS));
 			set.setTcgDate(rarities.getString(Const.SET_TCG_DATE));
 		}
@@ -168,7 +168,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		private static void getAllSetBoxesFieldsFromRS(ResultSet rs, SetBox current) throws SQLException {
 			current.setSetBoxUUID(rs.getString(Const.SET_BOX_UUID));
 			current.setBoxLabel(rs.getString(Const.BOX_LABEL));
-			current.setSetPrefix(rs.getString(Const.SET_CODE));
+			current.setSetPrefix(rs.getString(Const.SET_PREFIX));
 			current.setSetName(rs.getString(Const.SET_NAME));
 		}
 	}
@@ -348,7 +348,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	@Override
 	public List<OwnedCard> getAllOwnedCardsWithoutSetNumber() throws SQLException {
 		DatabaseSelectQuery<OwnedCard, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
-		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_SET_NUMBER);
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_SET_PREFIX);
 
 		return query.executeQuery(new OwnedCardMapperSelectQuery());
 	}
