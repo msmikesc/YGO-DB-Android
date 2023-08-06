@@ -15,6 +15,7 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.connection.CommonDatabaseQueries;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.DatabaseSelectMapQuery;
@@ -320,6 +321,30 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		current.setCreationDate(rs.getString(getColumn(col, Const.CREATION_DATE)));
 		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
 		current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
+	}
+
+	private static void getAllSoldCardFieldsFromRS(Cursor rs, String[] col, SoldCard current) {
+		current.setGamePlayCardUUID(rs.getString(getColumn(col, Const.GAME_PLAY_CARD_UUID)));
+		current.setQuantity(rs.getInt(getColumn(col, Const.QUANTITY)));
+		current.setCardName(rs.getString(getColumn(col, Const.CARD_NAME)));
+		current.setSetNumber(rs.getString(getColumn(col, Const.SET_NUMBER)));
+		current.setSetName(rs.getString(getColumn(col, Const.SET_NAME)));
+		current.setSetRarity(rs.getString(getColumn(col, Const.SET_RARITY)));
+		current.setColorVariant(rs.getString(getColumn(col, Const.SET_RARITY_COLOR_VARIANT)));
+		current.setEditionPrinting(rs.getString(getColumn(col, Const.EDITION_PRINTING)));
+		current.setDateBought(rs.getString(getColumn(col, Const.DATE_BOUGHT)));
+		current.setPriceBought(rs.getString(getColumn(col, Const.PRICE_BOUGHT)));
+		current.setUuid(rs.getString(getColumn(col, Const.UUID)));
+		current.setSetPrefix(rs.getString(getColumn(col, Const.SET_PREFIX)));
+		current.setFolderName(rs.getString(getColumn(col, Const.FOLDER_NAME)));
+		current.setRarityUnsure(rs.getInt(getColumn(col, Const.RARITY_UNSURE)));
+		current.setCondition(rs.getString(getColumn(col, Const.CONDITION)));
+		current.setCreationDate(rs.getString(getColumn(col, Const.CREATION_DATE)));
+		current.setModificationDate(rs.getString(getColumn(col, Const.MODIFICATION_DATE)));
+		current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
+
+		current.setDateSold(rs.getString(getColumn(col, Const.DATE_SOLD)));
+		current.setPriceSold(rs.getString(getColumn(col, Const.PRICE_SOLD)));
 	}
 
 	public static class CardSetMapperSelectQuery implements SelectQueryResultMapper<CardSet, Cursor> {
@@ -1162,14 +1187,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public List<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<SoldCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String[] columns =
 				new String[]{Const.GAME_PLAY_CARD_UUID, Const.QUANTITY, Const.CARD_NAME, Const.SET_NUMBER, Const.SET_NAME,
 						Const.SET_RARITY,
-						Const.SET_RARITY_COLOR_VARIANT, Const.EDITION_PRINTING, Const.DATE_SOLD + " as " + Const.DATE_BOUGHT,
-						Const.PRICE_SOLD + " as " + Const.PRICE_BOUGHT, Const.UUID, Const.SET_PREFIX, "'Sold Cards' as " + Const.FOLDER_NAME,
+						Const.SET_RARITY_COLOR_VARIANT, Const.EDITION_PRINTING, Const.DATE_SOLD, Const.DATE_BOUGHT,
+						Const.PRICE_SOLD, Const.PRICE_BOUGHT, Const.UUID, Const.SET_PREFIX, "'Sold Cards' as " + Const.FOLDER_NAME,
 						"0 as " + Const.RARITY_UNSURE, Const.CONDITION, Const.CREATION_DATE, Const.MODIFICATION_DATE, Const.PASSCODE};
 
 		String selection = null;
@@ -1182,12 +1207,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		try (Cursor rs = connection.query("soldCards", columns, selection, selectionArgs, null, null, orderBy, offset + "," + limit)) {
 
-			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
+			ArrayList<SoldCard> cardsInSetList = new ArrayList<>();
 			String[] col = rs.getColumnNames();
 
 			while (rs.moveToNext()) {
-				OwnedCard current = new OwnedCard();
-				getAllOwnedCardFieldsFromRS(rs, col, current);
+				SoldCard current = new SoldCard();
+				getAllSoldCardFieldsFromRS(rs, col, current);
 				cardsInSetList.add(current);
 			}
 

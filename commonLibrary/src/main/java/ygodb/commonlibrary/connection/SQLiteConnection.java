@@ -10,6 +10,7 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.bean.SoldCard;
 
 public interface SQLiteConnection {
 
@@ -45,7 +46,7 @@ public interface SQLiteConnection {
 
 	List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch);
 
-	List<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch);
+	List<SoldCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch);
 
 	List<OwnedCard> queryOwnedCardsGrouped(String orderBy, int limit, int offset, String cardNameSearch);
 

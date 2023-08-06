@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
@@ -26,11 +27,11 @@ import java.util.List;
 import java.util.Locale;
 
 public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAdapter.ItemViewHolder> {
-	private final List<OwnedCard> sellingOwnedCards;
+	private final List<SoldCard> sellingOwnedCards;
 	private final SellCardsViewModel sellCardsViewModel;
 	private Drawable firstDrawableSmall;
 
-	public SellCardToListAdapter(List<OwnedCard> ownedCards, SellCardsViewModel sellCardsViewModel) {
+	public SellCardToListAdapter(List<SoldCard> ownedCards, SellCardsViewModel sellCardsViewModel) {
 		this.sellingOwnedCards = ownedCards;
 		this.sellCardsViewModel = sellCardsViewModel;
 
@@ -50,7 +51,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 		return new ItemViewHolder(view);
 	}
 
-	public void onPlusButtonClick(ItemViewHolder viewHolder, OwnedCard current) {
+	public void onPlusButtonClick(ItemViewHolder viewHolder, SoldCard current) {
 
 		if (current.getSellQuantity() >= current.getQuantity()) {
 			current.setSellQuantity(current.getQuantity());
@@ -60,7 +61,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 		viewHolder.cardQuantity.setText(String.valueOf(current.getSellQuantity()));
 	}
 
-	public void onMinusButtonClick(OwnedCard current) {
+	public void onMinusButtonClick(SoldCard current) {
 		current.setSellQuantity(current.getSellQuantity() - 1);
 
 		if (current.getSellQuantity() < 1) {
@@ -70,7 +71,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 		this.notifyDataSetChanged();
 	}
 
-	public void onUpdatePrice(CharSequence priceBox, OwnedCard current, int position) {
+	public void onUpdatePrice(CharSequence priceBox, SoldCard current, int position) {
 		String newPrice = priceBox.toString();
 
 		try {
@@ -95,7 +96,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		OwnedCard current = sellingOwnedCards.get(position);
+		SoldCard current = sellingOwnedCards.get(position);
 
 		ImageButton button = viewHolder.itemView.findViewById(R.id.plusButton);
 		button.setOnClickListener(view -> onPlusButtonClick(viewHolder, current));

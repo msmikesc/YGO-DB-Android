@@ -28,9 +28,6 @@ public class OwnedCard {
 	private int passcode;
 
 	private List<CardSet> analyzeResultsCardSets;
-	private int sellQuantity;
-	private String priceSold;
-	private String dateSold;
 
 	public OwnedCard() {
 	}
@@ -231,30 +228,6 @@ public class OwnedCard {
 
 	public void setAnalyzeResultsCardSets(List<CardSet> analyzeResultsCardSets) {
 		this.analyzeResultsCardSets = analyzeResultsCardSets;
-	}
-
-	public int getSellQuantity() {
-		return sellQuantity;
-	}
-
-	public void setSellQuantity(int sellQuantity) {
-		this.sellQuantity = sellQuantity;
-	}
-
-	public String getPriceSold() {
-		return priceSold;
-	}
-
-	public void setPriceSold(String priceSold) {
-		this.priceSold = priceSold;
-	}
-
-	public String getDateSold() {
-		return dateSold;
-	}
-
-	public void setDateSold(String dateSold) {
-		this.dateSold = dateSold;
 	}
 
 	public int getPasscode() {

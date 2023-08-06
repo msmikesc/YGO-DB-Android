@@ -4,13 +4,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SoldCard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewSoldCardsViewModel extends ViewModel {
 
-	private List<OwnedCard> cardsList;
+	private List<SoldCard> cardsList;
 
 	public static final int LOADING_LIMIT = 100;
 
@@ -19,8 +20,8 @@ public class ViewSoldCardsViewModel extends ViewModel {
 	private String cardNameSearch = null;
 
 	public ViewSoldCardsViewModel() {
-		sortOrder = "dateBought desc, modificationDate desc";
-		sortOption = "Date Bought";
+		sortOrder = "dateSold desc, modificationDate desc";
+		sortOption = "Date Sold";
 		cardsList = new ArrayList<>();
 	}
 
@@ -41,11 +42,11 @@ public class ViewSoldCardsViewModel extends ViewModel {
 		this.dbRefreshIndicator.postValue(true);
 	}
 
-	public List<OwnedCard> getCardsList() {
+	public List<SoldCard> getCardsList() {
 		return cardsList;
 	}
 
-	public List<OwnedCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<SoldCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch) {
 		return AndroidUtil.getDBInstance().querySoldCards(orderBy, limit, offset, cardNameSearch);
 	}
 
@@ -78,7 +79,7 @@ public class ViewSoldCardsViewModel extends ViewModel {
 		this.cardNameSearch = cardNameSearch;
 	}
 
-	public void setCardsList(List<OwnedCard> cardsList) {
+	public void setCardsList(List<SoldCard> cardsList) {
 		this.cardsList = cardsList;
 	}
 

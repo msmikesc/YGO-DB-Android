@@ -6,6 +6,7 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.connection.CommonDatabaseQueries;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.DatabaseSelectMapQuery;
@@ -714,7 +715,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public List<OwnedCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<SoldCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		throw new UnsupportedOperationException();
 	}
 

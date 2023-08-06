@@ -32,7 +32,7 @@ public class ViewSoldCardsFragment extends Fragment {
 
 		RecyclerView cardsListView = binding.viewList;
 
-		SingleCardToListAdapter adapter = new SingleCardToListAdapter(viewSoldCardsViewModel.getCardsList(), null, null, false);
+		SoldCardToListAdapter adapter = new SoldCardToListAdapter(viewSoldCardsViewModel.getCardsList());
 
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 		layout = linearLayoutManager;

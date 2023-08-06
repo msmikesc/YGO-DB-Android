@@ -8,6 +8,7 @@ import com.example.ygodb.R;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;
@@ -16,13 +17,13 @@ import java.util.concurrent.Executors;
 class ViewSoldCardsSortButtonOnClickListener implements View.OnClickListener {
 
 	private final ViewSoldCardsViewModel viewSoldCardsViewModel;
-	private final SingleCardToListAdapter adapter;
+	private final SoldCardToListAdapter adapter;
 	private final LinearLayoutManager layout;
 	private final FloatingActionButton fab;
 	private final Context context;
 
 	public ViewSoldCardsSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewSoldCardsViewModel viewSoldCardsViewModel,
-			SingleCardToListAdapter adapter, LinearLayoutManager layout) {
+			SoldCardToListAdapter adapter, LinearLayoutManager layout) {
 		this.viewSoldCardsViewModel = viewSoldCardsViewModel;
 		this.adapter = adapter;
 		this.layout = layout;
@@ -55,13 +56,13 @@ class ViewSoldCardsSortButtonOnClickListener implements View.OnClickListener {
 				viewSoldCardsViewModel.setSortOption(sortOption);
 				viewSoldCardsViewModel.setSortOrder(sortOrder);
 
-				List<OwnedCard> cardsList = viewSoldCardsViewModel.getCardsList();
+				List<SoldCard> cardsList = viewSoldCardsViewModel.getCardsList();
 
 				String finalSortOrder = sortOrder;
 				Executors.newSingleThreadExecutor().execute(() -> {
 					try {
 						cardsList.clear();
-						List<OwnedCard> moreCards =
+						List<SoldCard> moreCards =
 								viewSoldCardsViewModel.loadMoreData(finalSortOrder, ViewSoldCardsViewModel.LOADING_LIMIT, 0,
 																	viewSoldCardsViewModel.getCardNameSearch());
 						cardsList.addAll(moreCards);

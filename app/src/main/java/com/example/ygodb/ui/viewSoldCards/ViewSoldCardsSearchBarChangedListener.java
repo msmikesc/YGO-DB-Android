@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.abs.TextChangedListener;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;
@@ -13,11 +14,11 @@ import java.util.concurrent.Executors;
 
 class ViewSoldCardsSearchBarChangedListener extends TextChangedListener<EditText> {
 	private final ViewSoldCardsViewModel viewSoldCardsViewModel;
-	private final SingleCardToListAdapter adapter;
+	private final SoldCardToListAdapter adapter;
 	private final LinearLayoutManager layout;
 
 	public ViewSoldCardsSearchBarChangedListener(EditText searchBar, ViewSoldCardsViewModel viewSoldCardsViewModel,
-			SingleCardToListAdapter adapter, LinearLayoutManager layout) {
+			SoldCardToListAdapter adapter, LinearLayoutManager layout) {
 		super(searchBar);
 		this.viewSoldCardsViewModel = viewSoldCardsViewModel;
 		this.adapter = adapter;
@@ -37,13 +38,13 @@ class ViewSoldCardsSearchBarChangedListener extends TextChangedListener<EditText
 
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
-				List<OwnedCard> newList =
+				List<SoldCard> newList =
 						viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(), ViewSoldCardsViewModel.LOADING_LIMIT, 0,
 															cardNameSearch);
 
 				handler.post(() -> {
 					viewSoldCardsViewModel.setCardsList(newList);
-					adapter.setOwnedCards(newList);
+					adapter.setSoldCards(newList);
 					layout.scrollToPositionWithOffset(0, 0);
 					adapter.notifyDataSetChanged();
 				});

@@ -3,6 +3,7 @@ package com.example.ygodb.ui.sellcards;
 import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 public class SellCardsViewModel extends ViewModel {
 
 	private final HashMap<String, Integer> keyToPosition;
-	private final ArrayList<OwnedCard> cardsList;
+	private final ArrayList<SoldCard> cardsList;
 
 	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -28,7 +29,7 @@ public class SellCardsViewModel extends ViewModel {
 
 
 	public void saveToDB() {
-		for (OwnedCard current : cardsList) {
+		for (SoldCard current : cardsList) {
 
 			AndroidUtil.getDBInstance().sellCards(current, current.getSellQuantity(), current.getPriceSold());
 
@@ -38,7 +39,7 @@ public class SellCardsViewModel extends ViewModel {
 	}
 
 
-	public List<OwnedCard> getCardsList() {
+	public List<SoldCard> getCardsList() {
 		return cardsList;
 	}
 
@@ -53,7 +54,7 @@ public class SellCardsViewModel extends ViewModel {
 
 		Integer position = keyToPosition.get(key);
 
-		OwnedCard sellingCard = null;
+		SoldCard sellingCard = null;
 
 		if (position != null) {
 			sellingCard = cardsList.get(position);
@@ -64,7 +65,7 @@ public class SellCardsViewModel extends ViewModel {
 				sellingCard.setSellQuantity(sellingCard.getSellQuantity() + 1);
 			}
 		} else {
-			sellingCard = new OwnedCard();
+			sellingCard = new SoldCard();
 			keyToPosition.put(key, cardsList.size());
 			cardsList.add(sellingCard);
 			sellingCard.setCardName(current.getCardName());
@@ -106,19 +107,19 @@ public class SellCardsViewModel extends ViewModel {
 	}
 
 	public void setAllPricesEstimate() {
-		for (OwnedCard current : cardsList) {
+		for (SoldCard current : cardsList) {
 			current.setPriceSold(Util.getEstimatePriceFromRarity(current.getSetRarity()));
 		}
 	}
 
 	public void setAllPricesAPI() {
-		for (OwnedCard current : cardsList) {
+		for (SoldCard current : cardsList) {
 			current.setPriceSold(Util.getAPIPriceFromRarity(current, AndroidUtil.getDBInstance()));
 		}
 	}
 
 	public void setAllPricesZero() {
-		for (OwnedCard current : cardsList) {
+		for (SoldCard current : cardsList) {
 			current.setPriceSold(Const.ZERO_PRICE_STRING);
 		}
 	}
