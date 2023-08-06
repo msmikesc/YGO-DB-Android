@@ -2,8 +2,10 @@ package ygodb.commonlibrary.utility;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.util.Pair;
+import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 
@@ -126,12 +128,12 @@ public class ApiUtil {
 
 		for (JsonNode currentSetNode : setListNode) {
 
-			String setCode = null;
+			String setNumber = null;
 			String setName = null;
 			String setRarity = null;
 
 			try {
-				setCode = getStringOrNull(currentSetNode, Const.YGOPRO_SET_CODE);
+				setNumber = getStringOrNull(currentSetNode, Const.YGOPRO_SET_CODE);
 				setName = getStringOrNull(currentSetNode, Const.YGOPRO_SET_NAME);
 				setRarity = getStringOrNull(currentSetNode, Const.YGOPRO_SET_RARITY);
 			} catch (Exception e) {
@@ -142,18 +144,25 @@ public class ApiUtil {
 			cardName = Util.checkForTranslatedCardName(cardName);
 			setRarity = Util.checkForTranslatedRarity(setRarity);
 			setName = Util.checkForTranslatedSetName(setName);
-			setCode = Util.checkForTranslatedSetNumber(setCode);
+			setNumber = Util.checkForTranslatedSetNumber(setNumber);
 
-			List<String> translatedList = Util.checkForTranslatedQuadKey(cardName, setCode, setRarity, setName);
+			List<String> translatedList = Util.checkForTranslatedQuadKey(cardName, setNumber, setRarity, setName);
 			cardName = translatedList.get(0);
-			setCode = translatedList.get(1);
+			setNumber = translatedList.get(1);
 			setRarity = translatedList.get(2);
 			setName = translatedList.get(3);
 
-			//TODO handle for if URL exists already or not
-			//TODO change URL to be -1 always instead of null
+			//TODO change URL to be -1 always instead of null???
 			//TODO get card images from ygopro
-			db.insertOrIgnoreIntoCardSet(setCode, setRarity, setName, gamePlayCardUUID, cardName, null, null);
+
+			CardSet matcher = new CardSet(gamePlayCardUUID, setNumber, cardName, setRarity, setName, Const.DEFAULT_COLOR_VARIANT, null);
+			String allMatchingKey = DatabaseHashMap.getAllMatchingKey(matcher);
+			List<CardSet> cardSets = DatabaseHashMap.getRaritiesInstance(db).get(allMatchingKey);
+
+			if (cardSets == null || cardSets.isEmpty()) {
+				YGOLogger.info("Inserting card set:" + matcher.getCardLogIdentifier());
+				db.insertOrIgnoreIntoCardSet(setNumber, setRarity, setName, gamePlayCardUUID, cardName, null, null);
+			}
 		}
 	}
 }

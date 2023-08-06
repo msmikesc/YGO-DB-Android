@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetMetaData;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.ApiUtil;
@@ -91,6 +92,8 @@ public class ImportFromYGOPROAPI {
 					}
 
 				}
+
+				DatabaseHashMap.closeRaritiesInstance();
 
 				Util.checkForIssuesWithSet(setName, db);
 				Util.checkSetCounts(db);
