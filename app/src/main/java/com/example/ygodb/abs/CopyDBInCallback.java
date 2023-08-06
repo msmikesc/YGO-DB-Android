@@ -41,6 +41,7 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 		}
 
 		Uri finalChosenURI = chosenURI;
+		AndroidUtil.showProgressDialog(activity);
 		Executors.newSingleThreadExecutor().execute(() -> importDBFromURI(finalChosenURI));
 	}
 
@@ -82,10 +83,16 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 
 			AndroidUtil.updateViewsAfterDBLoad();
 
-			view.post(() -> Snackbar.make(view, responseMessage, BaseTransientBottomBar.LENGTH_LONG).show());
+			view.post(() -> {
+				AndroidUtil.hideProgressDialog();
+				Snackbar.make(view, responseMessage, BaseTransientBottomBar.LENGTH_LONG).show();
+			});
 		} catch (Exception e) {
 			YGOLogger.logException(e);
-			view.post(() -> Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show());
+			view.post(() -> {
+				AndroidUtil.hideProgressDialog();
+				Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+			});
 		}
 	}
 }

@@ -25,7 +25,7 @@ public class ImportFromYGOPROAPI {
 
 	public static void main(String[] args) throws SQLException, IOException {
 
-		String setName = "Duelist Nexus";
+		String setName = "Legendary Duelists: Soulburning Volcano";
 
 		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();
 

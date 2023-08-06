@@ -650,7 +650,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	@Override
 	public int getCountDistinctCardsInSet(String setName) throws SQLException {
 		DatabaseSelectQuery<Integer, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
-		return CommonDatabaseQueries.getCountDistinctCardsInSet(query, new FirstIntMapperSelectQuery());
+		return CommonDatabaseQueries.getCountDistinctCardsInSet(setName, query, new FirstIntMapperSelectQuery());
 	}
 
 	@Override

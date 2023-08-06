@@ -150,6 +150,9 @@ public class ApiUtil {
 			setRarity = translatedList.get(2);
 			setName = translatedList.get(3);
 
+			//TODO handle for if URL exists already or not
+			//TODO change URL to be -1 always instead of null
+			//TODO get card images from ygopro
 			db.insertOrIgnoreIntoCardSet(setCode, setRarity, setName, gamePlayCardUUID, cardName, null, null);
 		}
 	}

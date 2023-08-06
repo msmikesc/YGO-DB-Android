@@ -156,9 +156,11 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static <R> Integer getCountDistinctCardsInSet(DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper)
+	public static <R> Integer getCountDistinctCardsInSet(String setName, DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper)
 			throws SQLException {
 		query.prepareStatement(SQLConst.GET_COUNT_DISTINCT_CARDS_IN_SET);
+
+		query.bindString(1,setName);
 
 		List<Integer> resultsFound = query.executeQuery(mapper);
 

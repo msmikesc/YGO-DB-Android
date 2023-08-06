@@ -45,6 +45,7 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
 
 		Uri finalChosenURI = chosenURI;
 
+		AndroidUtil.showProgressDialog(activity);
 		Executors.newSingleThreadExecutor().execute(() -> exportDBFileToURI(finalChosenURI));
 
 	}
@@ -89,9 +90,11 @@ public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult>
 			file = activity.getContentResolver().openOutputStream(chosenURI);
 			AndroidUtil.getDBInstance().copyDataBaseToURI(activity, file);
 
+			AndroidUtil.hideProgressDialog();
 			Snackbar.make(view, "DB Exported", BaseTransientBottomBar.LENGTH_LONG).show();
 
 		} catch (Exception e) {
+			AndroidUtil.hideProgressDialog();
 			YGOLogger.logException(e);
 			Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
 		} finally {

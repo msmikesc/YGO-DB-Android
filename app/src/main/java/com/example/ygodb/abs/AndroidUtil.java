@@ -1,6 +1,8 @@
 package com.example.ygodb.abs;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import com.example.ygodb.MainActivity;
 import com.example.ygodb.R;
 import com.example.ygodb.impl.SQLiteConnectionAndroid;
 import com.example.ygodb.ui.viewSoldCards.ViewSoldCardsViewModel;
@@ -139,6 +142,24 @@ public class AndroidUtil {
 		}
 
 		return setRarityText;
+	}
+
+	private static Dialog progressDialog = null;
+
+	public static void showProgressDialog(Activity activity) {
+		if(progressDialog == null) {
+			progressDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			progressDialog.setContentView(R.layout.layout_dialog_progress);
+			progressDialog.setCancelable(false);
+			progressDialog.show();
+		}
+	}
+
+	public static void hideProgressDialog(){
+		if(progressDialog != null){
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
 	}
 
 

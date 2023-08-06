@@ -408,7 +408,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	@Override
 	public int getCountDistinctCardsInSet(String setName) throws SQLException {
 		DatabaseSelectQuery<Integer, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
-		return CommonDatabaseQueries.getCountDistinctCardsInSet(query, new FirstIntMapperSelectQuery());
+		return CommonDatabaseQueries.getCountDistinctCardsInSet(setName, query, new FirstIntMapperSelectQuery());
 	}
 
 	@Override
