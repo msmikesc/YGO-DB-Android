@@ -50,7 +50,8 @@ public class SQLConst {
 			"select setName,setPrefix,numOfCards,releaseDate from setData where UPPER(setName) = UPPER(?)";
 	public static final String GET_SET_META_DATA_FROM_SET_PREFIX =
 			"select setName,setPrefix,numOfCards,releaseDate from setData where setPrefix = ?";
-	public static final String GET_ALL_SET_META_DATA_FROM_SET_DATA = "select distinct setName,setPrefix,numOfCards,releaseDate from setData";
+	public static final String GET_ALL_SET_META_DATA_FROM_SET_DATA =
+			"select distinct setName,setPrefix,numOfCards,releaseDate from setData";
 	public static final String GET_CARDS_ONLY_PRINTED_ONCE = "select cardSets.gamePlayCardUUID, cardName, type, setNumber,setRarity, " +
 			"cardSets.setName, releaseDate, archetype from cardSets join setData on setData.setName = cardSets.setName join " +
 			"gamePlayCard on gamePlayCard.gamePlayCardUUID = cardSets.gamePlayCardUUID where cardName in (select cardName from " +
@@ -100,8 +101,7 @@ public class SQLConst {
 
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME =
 			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? " +
-					"and" +
-					" " + "setName = ? and UPPER(cardName) = UPPER(?)";
+					"and setName = ? and UPPER(cardName) = UPPER(?)";
 
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST = "update cardSets set setPriceFirst = ?, " +
 			"setPriceFirstUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ? and UPPER" +
@@ -138,12 +138,13 @@ public class SQLConst {
 	public static final String UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST =
 			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime') where setURL = ?";
 
-	public static final String UPDATE_SET_BOX_BY_UUID = "update setBoxes set boxLabel = ?, setPrefix = ?, setName = ? where setBoxUUID = ?";
+	public static final String UPDATE_SET_BOX_BY_UUID = "update setBoxes set boxLabel = ?, setPrefix = ?, setName = ? where setBoxUUID =" +
+			" ?";
 
 	public static final String INSERT_OR_IGNORE_INTO_SET_BOX =
 			"insert OR IGNORE into setBoxes(boxLabel,setPrefix,setName,setBoxUUID) values(?,?,?,?)";
 
 	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX =
-			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix = " +
-					"setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
+			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix =" +
+					" setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
 }

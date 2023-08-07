@@ -10,10 +10,12 @@ import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -152,7 +154,6 @@ public class ApiUtil {
 			setRarity = translatedList.get(2);
 			setName = translatedList.get(3);
 
-			//TODO get card images from ygopro
 			//TODO re-add sets view to android for analyze
 
 			CardSet matcher = new CardSet(gamePlayCardUUID, setNumber, cardName, setRarity, setName, Const.DEFAULT_COLOR_VARIANT, null);
@@ -165,4 +166,31 @@ public class ApiUtil {
 			}
 		}
 	}
+
+	public static boolean downloadCardImageFromYGOPRO(GamePlayCard card, Path filePathDestination) {
+		String url = Const.YGOPRO_API_IMAGES_BASE_URL;
+
+		url += "/" + card.getPasscode() + ".jpg";
+
+		try {
+			URL imageUrl = new URL(url);
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+
+			try (InputStream inputStream = imageUrl.openStream();
+				 FileOutputStream outputStream = new FileOutputStream(filePathDestination.toString())) {
+
+				while ((bytesRead = inputStream.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+				return true;
+			}
+
+		} catch (IOException e) {
+			YGOLogger.error("Error downloading card image for '" + card.getCardName());
+			YGOLogger.logException(e);
+			return false;
+		}
+	}
+
 }

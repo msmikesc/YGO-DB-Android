@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ImportFromYGOPROAPI {
 
-	public static void main(String[] args) throws SQLException, IOException {
+	public static void main(String[] args) throws SQLException, IOException, InterruptedException {
 
 		String setName = "Legendary Duelists: Soulburning Volcano";
 
@@ -36,7 +36,17 @@ public class ImportFromYGOPROAPI {
 		if (!successful) {
 			YGOLogger.info("Import Failed");
 		} else {
-			YGOLogger.info("Import Finished");
+			YGOLogger.info("Set Data Import Finished");
+
+			DownloadCardImagesFromYGOPRO downloadCardImagesFromYGOPRO = new DownloadCardImagesFromYGOPRO();
+
+			successful = downloadCardImagesFromYGOPRO.run(db, setName);
+			if (!successful) {
+				YGOLogger.info("Images Import Failed");
+			} else {
+				YGOLogger.info("Images Import Finished");
+			}
+
 		}
 		db.closeInstance();
 	}
