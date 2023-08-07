@@ -155,7 +155,6 @@ public class ApiUtil {
 			setName = translatedList.get(3);
 
 			//TODO possibly handle alt arts display?
-			//TODO holofoil/ghost rare art overlay/GOLD
 
 			CardSet matcher = new CardSet(gamePlayCardUUID, setNumber, cardName, setRarity, setName, Const.DEFAULT_COLOR_VARIANT, null);
 			String allMatchingKey = DatabaseHashMap.getAllMatchingKey(matcher);
