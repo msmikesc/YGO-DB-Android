@@ -1,5 +1,6 @@
 package com.example.ygodb.ui.singlecard;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 
@@ -31,6 +33,8 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 	private final boolean isManyPlusButtons;
 	private Drawable firstDrawableSmall;
 	private Drawable limitedDrawableSmall;
+
+	private Context context;
 
 	public SingleCardToListAdapter(List<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel,
 			boolean isManyPlusButtons) {
@@ -58,6 +62,8 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 	@Override
 	public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_singlecard, parent, false);
+
+		context = parent.getContext();
 
 		return new ItemViewHolder(view);
 	}
@@ -163,6 +169,14 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 			// load image as Drawable
 			Drawable d = Drawable.createFromStream(ims, null);
 			// set image to ImageView
+
+			// Apply shader for holofoil pattern
+			if (Rarity.androidShinyRarities.contains(current.getSetRarity())) {
+				d = AndroidUtil.applyShader(context, R.drawable.holofoil, d, 161, 236);
+			}
+			else if("Ghost Rare".equals(current.getSetRarity())){
+				d = AndroidUtil.convertToGrayscale(d);
+			}
 
 			viewHolder.cardImage.setImageDrawable(d);
 		} catch (Exception ex) {

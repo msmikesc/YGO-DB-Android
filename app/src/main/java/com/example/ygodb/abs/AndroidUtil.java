@@ -5,6 +5,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 
@@ -12,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.ygodb.MainActivity;
 import com.example.ygodb.R;
 import com.example.ygodb.impl.SQLiteConnectionAndroid;
 import com.example.ygodb.ui.analyzesets.AnalyzeCardsViewModel;
@@ -167,6 +175,86 @@ public class AndroidUtil {
 			progressDialog = null;
 		}
 	}
+
+	public static Drawable convertToGrayscale(Drawable drawable)
+	{
+		ColorMatrix matrix = new ColorMatrix();
+		matrix.setSaturation(0);
+
+		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+
+		drawable.setColorFilter(filter);
+
+		return drawable;
+	}
+
+	public static Drawable applyShader(Context context, int shaderResourceId, Drawable drawable, int width, int height) {
+		try {
+			// Load the holofoil pattern image as a Bitmap
+
+			Bitmap shaderBitmap = getBitmapFromVectorDrawable(context, shaderResourceId);
+
+			// Convert the drawable to a Bitmap
+			Bitmap originalBitmap = drawableToBitmap(drawable, width, height);
+
+			// Scale the holofoil pattern to match the size of the original drawable
+			shaderBitmap = Bitmap.createScaledBitmap(shaderBitmap, width, height, true);
+
+			// Create a new Bitmap with the same size as the original drawable
+			Bitmap finalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+			// Create a Canvas to draw on the new Bitmap
+			Canvas canvas = new Canvas(finalBitmap);
+
+			// Draw the original drawable on the Canvas
+			drawable.setBounds(0, 0, width, height);
+			drawable.draw(canvas);
+
+			// Set the shader effect
+			Paint paint = new Paint();
+			paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+
+			paint.setAlpha(128);
+
+			// Draw the holofoil pattern with the shader effect on the Canvas
+			canvas.drawBitmap(shaderBitmap, 0, 0, paint);
+
+			// Release the resources used by the Bitmaps
+			shaderBitmap.recycle();
+			originalBitmap.recycle();
+
+			// Create a new Drawable from the final Bitmap and return it
+			return new BitmapDrawable(context.getResources(), finalBitmap);
+		}
+		catch (Exception e){
+			YGOLogger.error("Unable to apply shader:");
+			YGOLogger.logException(e);
+			return null;
+		}
+	}
+
+	private static Bitmap drawableToBitmap(Drawable drawable, int width, int height) {
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, width, height);
+		drawable.draw(canvas);
+		return bitmap;
+	}
+
+
+	public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+		Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+
+		Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+											drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawable.draw(canvas);
+
+		return bitmap;
+	}
+
+
 
 
 }

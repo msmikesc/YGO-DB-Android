@@ -1,5 +1,7 @@
 package ygodb.commonlibrary.bean;
 
+import java.util.Set;
+
 public enum Rarity {
 
 	Common("Common"), ShortPrint("Short Print"), SuperShortPrint("Super Short Print"), Rare("Rare"), SuperRare("Super Rare"),
@@ -36,5 +38,10 @@ public enum Rarity {
 		}
 		return nullRarity;
 	}
+
+	public static final Set<String> androidShinyRarities =
+			Set.of(QuarterCenturySecretRare.toString(), MillenniumSecretRare.toString(), UltimateRare.toString(), StarlightRare.toString(),
+				   SecretRareTenThousand.toString(), SecretRarePharohsRare.toString(), UltraRarePharohsRare.toString(),
+				   CollectorsRare.toString());
 
 }

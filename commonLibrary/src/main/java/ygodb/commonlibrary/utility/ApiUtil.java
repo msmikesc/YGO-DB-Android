@@ -153,7 +153,7 @@ public class ApiUtil {
 			setNumber = translatedList.get(1);
 			setRarity = translatedList.get(2);
 			setName = translatedList.get(3);
-			
+
 			//TODO possibly handle alt arts display?
 			//TODO holofoil/ghost rare art overlay/GOLD
 
