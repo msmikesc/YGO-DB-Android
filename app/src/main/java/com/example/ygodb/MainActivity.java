@@ -25,6 +25,7 @@ import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.ActivityMainBinding;
 
 
+import com.example.ygodb.ui.analyzesets.AnalyzeCardsViewModel;
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -66,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
 		// menu should be considered as top level destinations.
 		mAppBarConfiguration =
 				new AppBarConfiguration.Builder(R.id.nav_viewCardsSummary, R.id.nav_viewCards, R.id.nav_viewCardSet, R.id.nav_addCards,
-												R.id.nav_sellCards, R.id.nav_soldCards, R.id.nav_boxLookup).setOpenableLayout(drawer)
-						.build();
+												R.id.nav_sellCards, R.id.nav_soldCards, R.id.nav_boxLookup,
+												R.id.nav_analyzeSet).setOpenableLayout(drawer).build();
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 		NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 		NavigationUI.setupWithNavController(navigationView, navController);
@@ -82,11 +83,14 @@ public class MainActivity extends AppCompatActivity {
 		copyDBOutIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), copyDBOutCallback);
 
 		ViewCardSetViewModel viewCardSetViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardSetViewModel.class);
+		AnalyzeCardsViewModel analyzeCardsViewModel =
+				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(AnalyzeCardsViewModel.class);
 
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
 				List<String> setNamesArrayList = AndroidUtil.getDBInstance().getDistinctSetAndArchetypeNames();
 				viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
+				analyzeCardsViewModel.updateSetNamesDropdownList(setNamesArrayList);
 			} catch (Exception e) {
 				YGOLogger.logException(e);
 			}

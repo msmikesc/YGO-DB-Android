@@ -19,4 +19,5 @@
     <string name="menu_sellCards">Sell Cards</string>
     <string name="menu_soldCards">Sold Cards</string>
     <string name="menu_boxLookup">Box Lookup</string>
+    <string name="menu_analyzeSet">Analyze Card Sets</string>
 </resources>

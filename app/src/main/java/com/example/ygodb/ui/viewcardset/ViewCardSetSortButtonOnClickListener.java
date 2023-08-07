@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
+public class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
 
 	private final ViewCardSetViewModel viewCardsViewModel;
 	private final SingleCardToListAdapter adapter;

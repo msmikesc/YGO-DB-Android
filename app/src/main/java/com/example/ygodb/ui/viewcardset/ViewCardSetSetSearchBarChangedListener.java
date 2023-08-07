@@ -11,7 +11,7 @@ import ygodb.commonlibrary.utility.YGOLogger;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-class ViewCardSetSetSearchBarChangedListener extends TextChangedListener<EditText> {
+public class ViewCardSetSetSearchBarChangedListener extends TextChangedListener<EditText> {
 	private final ViewCardSetViewModel viewCardsViewModel;
 	private final SingleCardToListAdapter adapter;
 	private final LinearLayoutManager layout;

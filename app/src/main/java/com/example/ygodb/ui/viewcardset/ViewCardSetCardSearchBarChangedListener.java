@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
-class ViewCardSetCardSearchBarChangedListener extends TextChangedListener<EditText> {
+public class ViewCardSetCardSearchBarChangedListener extends TextChangedListener<EditText> {
 	private final ViewCardSetViewModel viewCardsViewModel;
 	private final SingleCardToListAdapter adapter;
 	private final LinearLayoutManager layout;

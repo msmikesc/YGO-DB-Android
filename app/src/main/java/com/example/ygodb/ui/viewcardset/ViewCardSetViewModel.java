@@ -13,17 +13,17 @@ import java.util.Locale;
 
 public class ViewCardSetViewModel extends ViewModel {
 
-	private List<OwnedCard> cardsList;
-	private List<OwnedCard> filteredCardsList;
+	protected List<OwnedCard> cardsList;
+	protected List<OwnedCard> filteredCardsList;
 
-	private Comparator<OwnedCard> currentComparator = null;
-	private String sortOption = null;
-	private String cardNameSearch = null;
-	private String setNameSearch = null;
+	protected Comparator<OwnedCard> currentComparator = null;
+	protected String sortOption = null;
+	protected String cardNameSearch = null;
+	protected String setNameSearch = null;
 
-	private boolean isCardNameMode = true;
+	protected boolean isCardNameMode = true;
 
-	private final List<String> setNamesDropdownList = new ArrayList<>();
+	protected final List<String> setNamesDropdownList = new ArrayList<>();
 
 	public ViewCardSetViewModel() {
 		currentComparator = new OwnedCardSetNumberComparator();
@@ -78,7 +78,7 @@ public class ViewCardSetViewModel extends ViewModel {
 
 	public List<OwnedCard> getInitialData(String setName) {
 
-		if (setName == null || setName.equals("") || setName.trim().length() < 3) {
+		if (setName == null || setName.isBlank() || setName.trim().length() < 3) {
 			isCardNameMode = true;
 			return getInitialCardNameData(cardNameSearch);
 		}

@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.ygodb.MainActivity;
 import com.example.ygodb.R;
 import com.example.ygodb.impl.SQLiteConnectionAndroid;
+import com.example.ygodb.ui.analyzesets.AnalyzeCardsViewModel;
 import com.example.ygodb.ui.viewSoldCards.ViewSoldCardsViewModel;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
@@ -94,8 +95,13 @@ public class AndroidUtil {
 			throw new RuntimeException(e);
 		}
 		viewCardSetViewModel.updateSetNamesDropdownList(setNamesArrayList);
-
 		viewCardSetViewModel.refreshViewDBUpdate();
+
+		AnalyzeCardsViewModel analyzeCardsViewModel =
+				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(com.example.ygodb.ui.analyzesets.AnalyzeCardsViewModel.class);
+
+		analyzeCardsViewModel.updateSetNamesDropdownList(setNamesArrayList);
+		analyzeCardsViewModel.refreshViewDBUpdate();
 
 		ViewCardsViewModel viewCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(ViewCardsViewModel.class);
 		viewCardsViewModel.refreshViewDBUpdate();
