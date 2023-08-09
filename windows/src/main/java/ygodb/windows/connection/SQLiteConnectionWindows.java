@@ -111,6 +111,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		set.setSetPriceUpdateTime(rarities.getString(Const.SET_PRICE_UPDATE_TIME));
 		set.setSetPriceFirst(rarities.getString(Const.SET_PRICE_FIRST));
 		set.setSetPriceFirstUpdateTime(rarities.getString(Const.SET_PRICE_FIRST_UPDATE_TIME));
+		set.setSetPriceLimited(rarities.getString(Const.SET_PRICE_LIMITED));
+		set.setSetPriceLimitedUpdateTime(rarities.getString(Const.SET_PRICE_LIMITED_UPDATE_TIME));
 		set.setSetPrefix(rarities.getString(Const.SET_PREFIX));
 		set.setSetUrl(rarities.getString(Const.SET_URL));
 		set.setColorVariant(rarities.getString(Const.COLOR_VARIANT));
@@ -617,37 +619,36 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String rarity, String price, boolean isFirstEdition) throws SQLException {
+	public int updateCardSetPrice(String setNumber, String rarity, String price, String edition) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
-		return CommonDatabaseQueries.updateCardSetPrice(query, setNumber, rarity, price, isFirstEdition);
+		return CommonDatabaseQueries.updateCardSetPrice(query, setNumber, rarity, price, edition);
 	}
 
 	@Override
-	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition)
+	public int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, String edition)
 			throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
-		return CommonDatabaseQueries.updateCardSetPriceWithSetName(query, setNumber, rarity, price, setName, isFirstEdition);
+		return CommonDatabaseQueries.updateCardSetPriceWithSetName(query, setNumber, rarity, price, setName, edition);
 	}
 
 	@Override
 	public int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName,
-			boolean isFirstEdition) throws SQLException {
+			String edition) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
-		return CommonDatabaseQueries.updateCardSetPriceWithCardAndSetName(query, setNumber, rarity, price, setName, cardName,
-																		  isFirstEdition);
+		return CommonDatabaseQueries.updateCardSetPriceWithCardAndSetName(query, setNumber, rarity, price, setName, cardName, edition);
 	}
 
 	@Override
-	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, String edition)
 			throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
-		return CommonDatabaseQueries.updateCardSetPriceWithCardName(query, setNumber, rarity, price, cardName, isFirstEdition);
+		return CommonDatabaseQueries.updateCardSetPriceWithCardName(query, setNumber, rarity, price, cardName, edition);
 	}
 
 	@Override
-	public int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) throws SQLException {
+	public int updateCardSetPrice(String setNumber, String price, String edition) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
-		return CommonDatabaseQueries.updateCardSetPrice(query, setNumber, price, isFirstEdition);
+		return CommonDatabaseQueries.updateCardSetPrice(query, setNumber, price, edition);
 	}
 
 	@Override
@@ -684,6 +685,15 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited() throws SQLException {
 
 		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL, (stmt, params) -> {
+			stmt.setString(1, (String) params.get(0));
+			stmt.setString(2, (String) params.get(1));
+		});
+	}
+
+	@Override
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementUrlLimited() throws SQLException {
+
+		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_LIMITED, (stmt, params) -> {
 			stmt.setString(1, (String) params.get(0));
 			stmt.setString(2, (String) params.get(1));
 		});

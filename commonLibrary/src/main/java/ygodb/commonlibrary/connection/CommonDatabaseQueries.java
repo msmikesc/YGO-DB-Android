@@ -156,11 +156,11 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static <R> Integer getCountDistinctCardsInSet(String setName, DatabaseSelectQuery<Integer, R> query, SelectQueryResultMapper<Integer, R> mapper)
-			throws SQLException {
+	public static <R> Integer getCountDistinctCardsInSet(String setName, DatabaseSelectQuery<Integer, R> query,
+			SelectQueryResultMapper<Integer, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_COUNT_DISTINCT_CARDS_IN_SET);
 
-		query.bindString(1,setName);
+		query.bindString(1, setName);
 
 		List<Integer> resultsFound = query.executeQuery(mapper);
 
@@ -316,8 +316,8 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static int replaceIntoCardSetMetaData(DatabaseUpdateQuery query, String setName, String setPrefix, int numOfCards, String tcgDate)
-			throws SQLException {
+	public static int replaceIntoCardSetMetaData(DatabaseUpdateQuery query, String setName, String setPrefix, int numOfCards,
+			String tcgDate) throws SQLException {
 
 		String gamePlayCard = SQLConst.REPLACE_INTO_CARD_SET_META_DATA;
 		query.prepareStatement(gamePlayCard);
@@ -535,13 +535,16 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String rarity, String price, boolean isFirstEdition)
+	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String rarity, String price, String edition)
 			throws SQLException {
+		String editionTarget = Util.identifyEditionPrinting(edition);
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY;
 
-		if (isFirstEdition) {
+		if (editionTarget.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY_FIRST;
+		} else if (editionTarget.equals(Const.CARD_PRINTING_LIMITED)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_RARITY_LIMITED;
 		}
 
 		query.prepareStatement(update);
@@ -554,12 +557,16 @@ public class CommonDatabaseQueries {
 	}
 
 	public static int updateCardSetPriceWithSetName(DatabaseUpdateQuery query, String setNumber, String rarity, String price,
-			String setName, boolean isFirstEdition) throws SQLException {
+			String setName, String edition) throws SQLException {
+
+		String editionTarget = Util.identifyEditionPrinting(edition);
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME;
 
-		if (isFirstEdition) {
+		if (editionTarget.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_FIRST;
+		} else if (editionTarget.equals(Const.CARD_PRINTING_LIMITED)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_LIMITED;
 		}
 
 		query.prepareStatement(update);
@@ -573,12 +580,16 @@ public class CommonDatabaseQueries {
 	}
 
 	public static int updateCardSetPriceWithCardAndSetName(DatabaseUpdateQuery query, String setNumber, String rarity, String price,
-			String setName, String cardName, boolean isFirstEdition) throws SQLException {
+			String setName, String cardName, String edition) throws SQLException {
+
+		String editionTarget = Util.identifyEditionPrinting(edition);
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME;
 
-		if (isFirstEdition) {
+		if (editionTarget.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST;
+		} else if (editionTarget.equals(Const.CARD_PRINTING_LIMITED)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_LIMITED;
 		}
 
 		query.prepareStatement(update);
@@ -593,12 +604,16 @@ public class CommonDatabaseQueries {
 	}
 
 	public static int updateCardSetPriceWithCardName(DatabaseUpdateQuery query, String setNumber, String rarity, String price,
-			String cardName, boolean isFirstEdition) throws SQLException {
+			String cardName, String edition) throws SQLException {
+
+		String editionTarget = Util.identifyEditionPrinting(edition);
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME;
 
-		if (isFirstEdition) {
+		if (editionTarget.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST;
+		} else if (editionTarget.equals(Const.CARD_PRINTING_LIMITED)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_LIMITED;
 		}
 
 		query.prepareStatement(update);
@@ -611,13 +626,16 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String price, boolean isFirstEdition)
-			throws SQLException {
+	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String price, String edition) throws SQLException {
+
+		String editionTarget = Util.identifyEditionPrinting(edition);
 
 		String update = SQLConst.UPDATE_CARD_SET_PRICE;
 
-		if (isFirstEdition) {
+		if (editionTarget.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 			update = SQLConst.UPDATE_CARD_SET_PRICE_FIRST;
+		} else if (editionTarget.equals(Const.CARD_PRINTING_LIMITED)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_LIMITED;
 		}
 
 		query.prepareStatement(update);

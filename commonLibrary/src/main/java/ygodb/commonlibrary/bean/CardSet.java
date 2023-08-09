@@ -16,6 +16,8 @@ public class CardSet {
 	private String setPriceUpdateTime;
 	private String setPriceFirst;
 	private String setPriceFirstUpdateTime;
+	private String setPriceLimited;
+	private String setPriceLimitedUpdateTime;
 	private String colorVariant;
 	private String setUrl;
 	private int rarityUnsure;
@@ -46,23 +48,31 @@ public class CardSet {
 	}
 
 	public String getLowestExistingPrice() {
-		return Util.getLowestPriceString(getSetPrice(), getSetPriceFirst());
+		return Util.getLowestPriceString(getSetPrice(), getSetPriceFirst(), getSetPriceLimited());
 	}
 
-	public String getBestExistingPrice(boolean preferFirstEdition) {
+	public String getBestExistingPrice(String edition) {
 		BigDecimal zero = new BigDecimal(0);
+
+		String editionTarget = Util.identifyEditionPrinting(edition);
 
 		String preferredPrice;
 		String secondaryPrice;
+		String tertiaryPrice;
 
-		if (preferFirstEdition) {
+		if (editionTarget.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
 			preferredPrice = getSetPriceFirst();
 			secondaryPrice = getSetPrice();
-		} else {
+			tertiaryPrice = getSetPriceLimited();
+		} else if (editionTarget.equals(Const.CARD_PRINTING_UNLIMITED)) {
 			preferredPrice = getSetPrice();
-			secondaryPrice = getSetPriceFirst();
+			secondaryPrice = getSetPriceLimited();
+			tertiaryPrice = getSetPriceFirst();
+		} else {
+			preferredPrice = getSetPriceLimited();
+			secondaryPrice = getSetPrice();
+			tertiaryPrice = getSetPriceFirst();
 		}
-
 
 		if (preferredPrice != null && new BigDecimal(preferredPrice).compareTo(zero) != 0) {
 			return preferredPrice;
@@ -70,6 +80,10 @@ public class CardSet {
 
 		if (secondaryPrice != null && new BigDecimal(secondaryPrice).compareTo(zero) != 0) {
 			return secondaryPrice;
+		}
+
+		if (tertiaryPrice != null && new BigDecimal(tertiaryPrice).compareTo(zero) != 0) {
+			return tertiaryPrice;
 		}
 
 		return Const.ZERO_PRICE_STRING;
@@ -186,5 +200,21 @@ public class CardSet {
 
 	public void setEditionPrinting(String editionPrinting) {
 		this.editionPrinting = editionPrinting;
+	}
+
+	public String getSetPriceLimited() {
+		return setPriceLimited;
+	}
+
+	public void setSetPriceLimited(String setPriceLimited) {
+		this.setPriceLimited = setPriceLimited;
+	}
+
+	public String getSetPriceLimitedUpdateTime() {
+		return setPriceLimitedUpdateTime;
+	}
+
+	public void setSetPriceLimitedUpdateTime(String setPriceLimitedUpdateTime) {
+		this.setPriceLimitedUpdateTime = setPriceLimitedUpdateTime;
 	}
 }

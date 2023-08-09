@@ -92,11 +92,20 @@ public class SQLConst {
 	public static final String UPDATE_CARD_SET_PRICE_WITH_RARITY_FIRST =
 			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime =" +
 					" datetime('now','localtime') where setNumber = ? and setRarity = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_RARITY_LIMITED =
+			"update cardSets set setPriceLimited = ?, setPriceLimitedUpdateTime =" +
+					" datetime('now','localtime') where setNumber = ? and setRarity = ?";
+
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME = "update cardSets set setPrice = ?, setPriceUpdateTime = datetime" +
 			"('now','localtime') where setNumber = ? and setRarity = ? and setName = ?";
 
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_FIRST =
 			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime" +
+					" = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_LIMITED =
+			"update cardSets set setPriceLimited = ?, setPriceLimitedUpdateTime" +
 					" = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ?";
 
 	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME =
@@ -107,17 +116,27 @@ public class SQLConst {
 			"setPriceFirstUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ? and UPPER" +
 			"(cardName) = UPPER(?)";
 
+	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_LIMITED = "update cardSets set setPriceLimited = ?, " +
+			"setPriceLimitedUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ? and UPPER" +
+			"(cardName) = UPPER(?)";
+
 	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME = "update cardSets set setPrice = ?, setPriceUpdateTime = datetime" +
 			"('now','localtime') where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?)";
 
 	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST = "update cardSets set setPriceFirst = ?, " +
 			"setPriceFirstUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?)";
 
+	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_LIMITED = "update cardSets set setPriceLimited = ?, " +
+			"setPriceLimitedUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?)";
+
 	public static final String UPDATE_CARD_SET_PRICE =
 			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime') where setNumber = ?";
 
 	public static final String UPDATE_CARD_SET_PRICE_FIRST =
 			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime') where setNumber = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_LIMITED =
+			"update cardSets set setPriceLimited = ?, setPriceLimitedUpdateTime = datetime('now','localtime') where setNumber = ?";
 
 	public static final String GET_NEW_LOWEST_PASSCODE = "select min(cast(passcode as INTEGER)) from gamePlayCard";
 
@@ -138,13 +157,17 @@ public class SQLConst {
 	public static final String UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_FIRST =
 			"update cardSets set setPriceFirst = ?, setPriceFirstUpdateTime = datetime('now','localtime') where setURL = ?";
 
-	public static final String UPDATE_SET_BOX_BY_UUID = "update setBoxes set boxLabel = ?, setPrefix = ?, setName = ? where setBoxUUID =" +
-			" ?";
+	public static final String UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_LIMITED =
+			"update cardSets set setPriceLimited = ?, setPriceLimitedUpdateTime = datetime('now','localtime') where setURL = ?";
+
+	public static final String UPDATE_SET_BOX_BY_UUID =
+			"update setBoxes set boxLabel = ?, setPrefix = ?, setName = ? where setBoxUUID =" + " ?";
 
 	public static final String INSERT_OR_IGNORE_INTO_SET_BOX =
 			"insert OR IGNORE into setBoxes(boxLabel,setPrefix,setName,setBoxUUID) values(?,?,?,?)";
 
 	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX =
-			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix =" +
+			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix " +
+					"=" +
 					" setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
 }

@@ -111,18 +111,18 @@ public interface SQLiteConnection {
 
 	void updateSetName(String original, String newName) throws SQLException;
 
-	int updateCardSetPrice(String setNumber, String rarity, String price, boolean isFirstEdition) throws SQLException;
+	int updateCardSetPrice(String setNumber, String rarity, String price, String edition) throws SQLException;
 
-	int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, boolean isFirstEdition)
+	int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, String edition)
 			throws SQLException;
 
 	int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName,
-			boolean isFirstEdition) throws SQLException;
+			String edition) throws SQLException;
 
-	int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, boolean isFirstEdition)
+	int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, String edition)
 			throws SQLException;
 
-	int updateCardSetPrice(String setNumber, String price, boolean isFirstEdition) throws SQLException;
+	int updateCardSetPrice(String setNumber, String price, String edition) throws SQLException;
 
 	int getNewLowestPasscode() throws SQLException;
 
@@ -139,4 +139,6 @@ public interface SQLiteConnection {
 	PreparedStatementBatchWrapper getBatchedPreparedStatementUrlFirst() throws SQLException;
 
 	PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited() throws SQLException;
+
+	PreparedStatementBatchWrapper getBatchedPreparedStatementUrlLimited() throws SQLException;
 }

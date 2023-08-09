@@ -68,6 +68,8 @@ public class Const {
 	public static final String SET_PRICE_UPDATE_TIME = "setPriceUpdateTime";
 	public static final String SET_PRICE_FIRST = "setPriceFirst";
 	public static final String SET_PRICE_FIRST_UPDATE_TIME = "setPriceFirstUpdateTime";
+	public static final String SET_PRICE_LIMITED = "setPriceLimited";
+	public static final String SET_PRICE_LIMITED_UPDATE_TIME = "setPriceLimitedUpdateTime";
 	public static final String SET_URL = "setURL";
 	public static final String COLOR_VARIANT = "colorVariant";
 	public static final String RELEASE_DATE = "releaseDate";

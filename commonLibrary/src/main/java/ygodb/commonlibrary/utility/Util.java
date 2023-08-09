@@ -501,42 +501,59 @@ public class Util {
 	}
 
 	public static String getLowestPriceString(String input1, String input2) {
-		BigDecimal zero = new BigDecimal(0);
-		BigDecimal price;
-		BigDecimal priceFirst;
-		boolean noFirstOption = false;
-		boolean noSecondOption = false;
 
-		if (input1 == null) {
-			price = new BigDecimal(Integer.MAX_VALUE);
-			noFirstOption = true;
-		} else {
-			price = new BigDecimal(input1);
-		}
-
-		if (input2 == null) {
-			priceFirst = new BigDecimal(Integer.MAX_VALUE);
-			noSecondOption = true;
-		} else {
-			priceFirst = new BigDecimal(input2);
-		}
-
-		if (noFirstOption && noSecondOption) {
+		if(input1 == null && input2 == null){
 			return Const.ZERO_PRICE_STRING;
 		}
-		if (noFirstOption || zero.compareTo(price) == 0) {
+
+		BigDecimal price1 = input1 == null ? BigDecimal.valueOf(Integer.MAX_VALUE) : new BigDecimal(input1);
+		BigDecimal price2 = input2 == null ? BigDecimal.valueOf(Integer.MAX_VALUE) : new BigDecimal(input2);
+
+		if (BigDecimal.ZERO.equals(price1)) {
 			return input2;
 		}
-		if (noSecondOption || zero.compareTo(priceFirst) == 0) {
+
+		if (BigDecimal.ZERO.equals(price2)) {
 			return input1;
 		}
 
-		if (price.compareTo(priceFirst) < 0) {
+		if (price1.compareTo(price2) < 0) {
 			return input1;
 		} else {
 			return input2;
 		}
 	}
+
+	public static String getLowestPriceString(String input1, String input2, String input3) {
+		if (input1 == null && input2 == null && input3 == null) {
+			return Const.ZERO_PRICE_STRING;
+		}
+
+		BigDecimal price1 = input1 == null ? BigDecimal.valueOf(Integer.MAX_VALUE) : new BigDecimal(input1);
+		BigDecimal price2 = input2 == null ? BigDecimal.valueOf(Integer.MAX_VALUE) : new BigDecimal(input2);
+		BigDecimal price3 = input3 == null ? BigDecimal.valueOf(Integer.MAX_VALUE) : new BigDecimal(input3);
+
+		if (BigDecimal.ZERO.equals(price1)) {
+			return getLowestPriceString(input2, input3);
+		}
+
+		if (BigDecimal.ZERO.equals(price2)) {
+			return getLowestPriceString(input1, input3);
+		}
+
+		if (BigDecimal.ZERO.equals(price3)) {
+			return getLowestPriceString(input1, input2);
+		}
+
+		if (price1.compareTo(price2) < 0 && price1.compareTo(price3) < 0) {
+			return input1;
+		} else if (price2.compareTo(price3) < 0) {
+			return input2;
+		} else {
+			return input3;
+		}
+	}
+
 
 	public static String removeRarityStringsFromName(String name) {
 		if (name == null) {
@@ -670,8 +687,6 @@ public class Util {
 
 	public static String getAPIPriceFromRarity(OwnedCard card, SQLiteConnection db) {
 
-		boolean isFirstEdition = card.getEditionPrinting().contains(Const.CARD_PRINTING_CONTAINS_FIRST);
-
 		try {
 			if (card.getAnalyzeResultsCardSets() == null) {
 				card.setAnalyzeResultsCardSets(db.getRaritiesOfCardInSetByGamePlayCardUUID(card.getGamePlayCardUUID(), card.getSetName()));
@@ -684,7 +699,7 @@ public class Util {
 		List<CardSet> analyzeResultsCardSets = card.getAnalyzeResultsCardSets();
 
 		if (analyzeResultsCardSets.size() == 1) {
-			return analyzeResultsCardSets.get(0).getBestExistingPrice(isFirstEdition);
+			return analyzeResultsCardSets.get(0).getBestExistingPrice(card.getEditionPrinting());
 		}
 
 		for (CardSet cardSet : analyzeResultsCardSets) {
@@ -692,7 +707,7 @@ public class Util {
 					cardSet.getSetNumber().equalsIgnoreCase(card.getSetNumber()) &&
 					cardSet.getSetName().equalsIgnoreCase(card.getSetName()) &&
 					cardSet.getColorVariant().equalsIgnoreCase(card.getColorVariant())) {
-				return cardSet.getBestExistingPrice(isFirstEdition);
+				return cardSet.getBestExistingPrice(card.getEditionPrinting());
 			}
 		}
 
@@ -705,7 +720,7 @@ public class Util {
 			return Const.CARD_PRINTING_UNLIMITED;
 		}
 
-		if (input.contains(Const.CARD_PRINTING_FIRST_EDITION)) {
+		if (input.contains(Const.CARD_PRINTING_CONTAINS_FIRST)) {
 			return Const.CARD_PRINTING_FIRST_EDITION;
 		} else if (input.contains(Const.CARD_PRINTING_UNLIMITED)) {
 			return Const.CARD_PRINTING_UNLIMITED;

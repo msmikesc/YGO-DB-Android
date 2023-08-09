@@ -14,7 +14,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst("10.00");
 		cardSet.setSetPrice("5.00");
 
-		String result = cardSet.getBestExistingPrice(true);
+		String result = cardSet.getBestExistingPrice("1st Edition");
 
 		assertEquals("10.00", result);
 	}
@@ -25,7 +25,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst("0.00");
 		cardSet.setSetPrice("5.00");
 
-		String result = cardSet.getBestExistingPrice(true);
+		String result = cardSet.getBestExistingPrice("1st Edition");
 
 		assertEquals("5.00", result);
 	}
@@ -36,7 +36,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst(null);
 		cardSet.setSetPrice("5.00");
 
-		String result = cardSet.getBestExistingPrice(true);
+		String result = cardSet.getBestExistingPrice("1st Edition");
 
 		assertEquals("5.00", result);
 	}
@@ -47,7 +47,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst("0.00");
 		cardSet.setSetPrice("5.00");
 
-		String result = cardSet.getBestExistingPrice(true);
+		String result = cardSet.getBestExistingPrice("1st Edition");
 
 		assertEquals("5.00", result);
 	}
@@ -58,7 +58,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst(null);
 		cardSet.setSetPrice(null);
 
-		String result = cardSet.getBestExistingPrice(true);
+		String result = cardSet.getBestExistingPrice("1st Edition");
 
 		assertEquals(Const.ZERO_PRICE_STRING, result);
 	}
@@ -69,7 +69,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst("10.00");
 		cardSet.setSetPrice("5.00");
 
-		String result = cardSet.getBestExistingPrice(false);
+		String result = cardSet.getBestExistingPrice("Unlimited");
 
 		assertEquals("5.00", result);
 	}
@@ -80,7 +80,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst("0.00");
 		cardSet.setSetPrice("5.00");
 
-		String result = cardSet.getBestExistingPrice(false);
+		String result = cardSet.getBestExistingPrice("Unlimited");
 
 		assertEquals("5.00", result);
 	}
@@ -91,7 +91,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst(null);
 		cardSet.setSetPrice("5.00");
 
-		String result = cardSet.getBestExistingPrice(false);
+		String result = cardSet.getBestExistingPrice("Unlimited");
 
 		assertEquals("5.00", result);
 	}
@@ -102,7 +102,7 @@ class CardSetTest {
 		cardSet.setSetPriceFirst("0.00");
 		cardSet.setSetPrice("5.00");
 
-		String result = cardSet.getBestExistingPrice(false);
+		String result = cardSet.getBestExistingPrice("Unlimited");
 
 		assertEquals("5.00", result);
 	}
@@ -113,8 +113,69 @@ class CardSetTest {
 		cardSet.setSetPriceFirst(null);
 		cardSet.setSetPrice(null);
 
-		String result = cardSet.getBestExistingPrice(false);
+		String result = cardSet.getBestExistingPrice("Unlimited");
 
 		assertEquals(Const.ZERO_PRICE_STRING, result);
 	}
+
+	@Test
+	void testGetBestExistingPrice_PreferTertiaryPrice_TertiaryPriceNotNull_ReturnsTertiaryPrice() {
+		CardSet cardSet = new CardSet();
+		cardSet.setSetPriceFirst("10.00");
+		cardSet.setSetPrice("5.00");
+		cardSet.setSetPriceLimited("7.00");
+
+		String result = cardSet.getBestExistingPrice("Limited");
+
+		assertEquals("7.00", result);
+	}
+
+	@Test
+	void testGetBestExistingPrice_PreferTertiaryPrice_TertiaryPriceIsNull_ReturnsPreferredPrice() {
+		CardSet cardSet = new CardSet();
+		cardSet.setSetPriceFirst("0.00");
+		cardSet.setSetPrice("5.00");
+		cardSet.setSetPriceLimited(null);
+
+		String result = cardSet.getBestExistingPrice("Limited");
+
+		assertEquals("5.00", result);
+	}
+
+	@Test
+	void testGetBestExistingPrice_PreferTertiaryPrice_TertiaryPriceIsNull_ReturnsUnlimPrice() {
+		CardSet cardSet = new CardSet();
+		cardSet.setSetPriceFirst("7.00");
+		cardSet.setSetPrice("5.00");
+		cardSet.setSetPriceLimited(null);
+
+		String result = cardSet.getBestExistingPrice("Limited");
+
+		assertEquals("5.00", result);
+	}
+
+	@Test
+	void testGetBestExistingPrice_PreferTertiaryPrice_TertiaryPriceIsZero_ReturnsPreferredPrice() {
+		CardSet cardSet = new CardSet();
+		cardSet.setSetPriceFirst("0.00");
+		cardSet.setSetPrice("5.00");
+		cardSet.setSetPriceLimited("0.00");
+
+		String result = cardSet.getBestExistingPrice("Limited");
+
+		assertEquals("5.00", result);
+	}
+
+	@Test
+	void testGetBestExistingPrice_PreferTertiaryPrice_TertiaryPriceIsNullAndPreferredPriceIsNull_ReturnsSecondaryPrice() {
+		CardSet cardSet = new CardSet();
+		cardSet.setSetPriceFirst(null);
+		cardSet.setSetPrice(null);
+		cardSet.setSetPriceLimited(null);
+
+		String result = cardSet.getBestExistingPrice("Limited");
+
+		assertEquals(Const.ZERO_PRICE_STRING, result);
+	}
+
 }
