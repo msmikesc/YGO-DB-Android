@@ -70,7 +70,7 @@ public class ImportPricesFromYGOPROAPI {
 				value = db.getBatchedPreparedStatementUrlFirst();
 
 				editionToPreparedStatementMap.put(edition, value);
-			} else if(edition.equals(Const.CARD_PRINTING_UNLIMITED)) {
+			} else if (edition.equals(Const.CARD_PRINTING_UNLIMITED)) {
 				value = db.getBatchedPreparedStatementUrlUnlimited();
 
 				editionToPreparedStatementMap.put(edition, value);
@@ -141,7 +141,7 @@ public class ImportPricesFromYGOPROAPI {
 						YGOLogger.debug(setNameUpdateMap.get(setName).get(j));
 					}
 				}
-				
+
 				for (String key : updatedMoreThanOnceKeysMap.keySet()) {
 					YGOLogger.info("Key updated more than once:" + key);
 				}
@@ -587,8 +587,7 @@ public class ImportPricesFromYGOPROAPI {
 			YGOLogger.debug("Card name mismatch from price API:" + currentSetFromAPI.getCardLogIdentifier());
 
 			int rowsUpdated = db.updateCardSetPriceWithSetName(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(),
-															   currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetName(),
-															   edition);
+															   currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetName(), edition);
 			if (rowsUpdated != existingRows.size()) {
 				YGOLogger.error(
 						"Actual rows updated did not equal predicted for card name mismatch" + currentSetFromAPI.getCardLogIdentifier());
@@ -613,8 +612,7 @@ public class ImportPricesFromYGOPROAPI {
 				YGOLogger.error("Multiple rows updated for set name mismatch from price API:" + currentSetFromAPI.getCardLogIdentifier());
 			}
 			int rowsUpdated = db.updateCardSetPriceWithCardName(currentSetFromAPI.getSetNumber(), currentSetFromAPI.getSetRarity(),
-																currentSetFromAPI.getSetPrice(), currentSetFromAPI.getCardName(),
-																edition);
+																currentSetFromAPI.getSetPrice(), currentSetFromAPI.getCardName(), edition);
 			if (rowsUpdated != existingRows.size()) {
 				YGOLogger.error(
 						"Actual rows updated did not equal predicted for set name mismatch" + currentSetFromAPI.getCardLogIdentifier());
