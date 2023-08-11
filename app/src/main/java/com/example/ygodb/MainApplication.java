@@ -22,4 +22,11 @@ public class MainApplication extends Application {
 
 		AndroidUtil.getDBInstance();
 	}
+
+	@Override
+	public void onTerminate() {
+		super.onTerminate();
+		// The app is about to be terminated, so close the database connection
+		AndroidUtil.getDBInstance().closeInstance();
+	}
 }

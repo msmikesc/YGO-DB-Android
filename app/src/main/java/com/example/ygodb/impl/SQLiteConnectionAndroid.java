@@ -68,7 +68,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public SQLiteConnectionAndroid() {
 		super(AndroidUtil.getAppContext(),
 			  AndroidUtil.getAppContext().getFilesDir().getAbsolutePath() + "/" + SQLiteConnectionAndroid.DB_NAME, null, 1);
-		this.getWritableDatabase();
+		getInstance();
 
 		if (this.createDatabase) {
 			/*
@@ -92,8 +92,29 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	}
 
-	private SQLiteDatabase getInstance() {
-		return this.getWritableDatabase();
+	public SQLiteDatabase getInstance() {
+
+		if(connectionInstance == null) {
+			connectionInstance = this.getWritableDatabase();
+		}
+		return connectionInstance;
+	}
+
+	@Override
+	public void closeInstance() {
+
+		if (connectionInstance == null) {
+			return;
+		}
+
+		if (connectionInstance.inTransaction()) {
+			connectionInstance.setTransactionSuccessful();
+			connectionInstance.endTransaction();
+		}
+
+		connectionInstance.close();
+
+		connectionInstance = null;
 	}
 
 	private void copyDataBaseFromAppResources() throws IOException {
@@ -101,7 +122,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		 * Close SQLiteOpenHelper so it will commit the created empty database
 		 * to internal storage.
 		 */
-		close();
+		closeInstance();
 
 		try (InputStream myInput = AndroidUtil.getAppContext().getAssets().open(DB_FILE_PATH);
 			 OutputStream myOutput = new FileOutputStream(new File(AndroidUtil.getAppContext().getFilesDir(), DB_NAME))) {
@@ -119,7 +140,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		 * Access the copied database so SQLiteHelper will cache it and mark it
 		 * as created.
 		 */
-		getWritableDatabase().close();
+		getInstance();
+		closeInstance();
 	}
 
 	public String copyDataBaseFromURI(Activity activity, Uri myInput) throws IOException {
@@ -127,7 +149,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			return "Uri input was null";
 		}
 
-		close();
+		closeInstance();
 
 		SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
@@ -182,7 +204,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		 * Access the copied database so SQLiteHelper will cache it and mark it
 		 * as created.
 		 */
-		getWritableDatabase().close();
+		getInstance();
+		closeInstance();
 
 		return response;
 	}
@@ -220,7 +243,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			return;
 		}
 
-		close();
+		closeInstance();
 
 		/*
 		 * Open the database in the internal folder as the input stream.
@@ -253,7 +276,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		 * Access the copied database so SQLiteHelper will cache it and mark it
 		 * as created.
 		 */
-		getWritableDatabase().close();
+		getInstance();
+		closeInstance();
 	}
 
 	@Override
@@ -264,23 +288,6 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	@Override
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 		upgradeDatabase = true;
-	}
-
-	@Override
-	public void closeInstance() {
-
-		if (connectionInstance == null) {
-			return;
-		}
-
-		if (connectionInstance.inTransaction()) {
-			connectionInstance.setTransactionSuccessful();
-			connectionInstance.endTransaction();
-		}
-
-		connectionInstance.close();
-
-		connectionInstance = null;
 	}
 
 	private static int getColumn(String[] col, String columnName) {
