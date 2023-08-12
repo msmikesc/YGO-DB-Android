@@ -6,6 +6,7 @@ import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.io.IOException;
@@ -19,9 +20,9 @@ import java.util.Map;
 
 public class AnalyzeCardsToSell {
 
-	private final BigDecimal minPrice = new BigDecimal("4.00");
+	private final BigDecimal minPrice = new BigDecimal("5.00");
 
-	private final BigDecimal minPricePercentage = new BigDecimal("2.00");
+	private final BigDecimal minPricePercentage = new BigDecimal("10.00");
 
 
 	public static void main(String[] args) throws SQLException, IOException {
@@ -76,14 +77,15 @@ public class AnalyzeCardsToSell {
 			String cardName = entry.getKey();
 			Integer count = entry.getValue();
 
-			if (count <= 3) {
-				continue;
-			}
-
 			for (OwnedCard card : cardMap.get(cardName)) {
 
 				CardSet set = db.getRarityOfExactCardInSet(card.getGamePlayCardUUID(), card.getSetNumber(), card.getSetRarity(),
 														   card.getColorVariant(), card.getSetName());
+
+				if(set == null){
+					YGOLogger.error("No Set data matching for:" + cardName);
+					continue;
+				}
 
 				String priceFromAPI = set.getBestExistingPrice(card.getEditionPrinting());
 
@@ -97,7 +99,7 @@ public class AnalyzeCardsToSell {
 				}
 
 
-				if (priceApi.compareTo(minPrice) >= 0 || (priceApi.compareTo(minPricePercentage) >= 0 &&
+				if ((count > 3 && priceApi.compareTo(minPrice) >= 0) || ( priceApi.compareTo(minPricePercentage) >= 0 &&
 						priceApi.divide(priceBought, 2, RoundingMode.HALF_UP).compareTo(BigDecimal.valueOf(1.5)) > 0)) {
 					p.printRecord(card.getQuantity(), card.getCardName(), card.getSetRarity(), card.getSetName(), card.getSetPrefix(),
 								  card.getPriceBought(),
