@@ -15,6 +15,8 @@ public class SQLConst {
 			SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX + " where gamePlayCardUUID=?";
 	public static final String GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID =
 			SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX + " where gamePlayCardUUID=? and UPPER(cardSets.setName) = UPPER(?)";
+	public static final String GET_RARITIES_OF_EXACT_CARD_IN_SET = SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX +
+			" where gamePlayCardUUID=? and setNumber = ? and setRarity = ? and colorVariant = ? and UPPER(cardSets.setName) = UPPER(?)";
 	public static final String GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID = "Select * from gamePlayCard where gamePlayCardUUID=?";
 	public static final String GET_GAME_PLAY_CARD_UUID_FROM_TITLE = "Select * from gamePlayCard where UPPER(title)=UPPER(?)";
 	public static final String GET_GAME_PLAY_CARD_UUID_FROM_PASSCODE = "Select * from gamePlayCard where passcode = ?";
@@ -167,7 +169,7 @@ public class SQLConst {
 			"insert OR IGNORE into setBoxes(boxLabel,setPrefix,setName,setBoxUUID) values(?,?,?,?)";
 
 	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX =
-			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix " +
-					"=" +
-					" setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
+			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix" +
+					" " +
+					"=" + " setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
 }

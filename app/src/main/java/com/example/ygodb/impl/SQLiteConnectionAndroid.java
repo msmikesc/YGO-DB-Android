@@ -94,7 +94,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 	public SQLiteDatabase getInstance() {
 
-		if(connectionInstance == null) {
+		if (connectionInstance == null) {
 			connectionInstance = this.getWritableDatabase();
 		}
 		return connectionInstance;
@@ -567,6 +567,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant, String setName)
+			throws SQLException {
+		DatabaseSelectQuery<CardSet, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getRarityOfExactCardInSet(gamePlayCardUUID, setNumber, rarity, colorVariant, setName, query,
+															   new CardSetMapperSelectQuery());
+	}
+
+	@Override
 	public String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
 		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
 		return CommonDatabaseQueries.getCardTitleFromGamePlayCardUUID(gamePlayCardUUID, query, new GamePlayCardNameMapperSelectQuery());
@@ -901,8 +909,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName,
 			String edition) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
-		return CommonDatabaseQueries.updateCardSetPriceWithCardAndSetName(query, setNumber, rarity, price, setName, cardName,
-																		  edition);
+		return CommonDatabaseQueries.updateCardSetPriceWithCardAndSetName(query, setNumber, rarity, price, setName, cardName, edition);
 	}
 
 	@Override
@@ -986,7 +993,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		ArrayList<OwnedCard> results = new ArrayList<>();
 
 		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
-				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst","a.setPriceLimited", "sum(b.quantity) as quantity",
+				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "a.setPriceLimited", "sum(b.quantity) as quantity",
 				"MAX(b.dateBought) as maxDate, c.setPrefix", "d.passcode, colorVariant"};
 
 		String selection = "a.cardName like ?";
@@ -1088,7 +1095,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		ArrayList<OwnedCard> results = new ArrayList<>();
 
 		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
-				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst","a.setPriceLimited", "sum(b.quantity) as quantity",
+				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "a.setPriceLimited", "sum(b.quantity) as quantity",
 				"MAX(b.dateBought) as maxDate, c.setPrefix", "d.passcode, colorVariant"};
 
 		String selection = "a.cardName like ? OR UPPER(d.archetype) = UPPER(?)";
@@ -1213,8 +1220,8 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String[] columns =
 				new String[]{Const.GAME_PLAY_CARD_UUID, Const.QUANTITY, Const.CARD_NAME, Const.SET_NUMBER, Const.SET_NAME,
 						Const.SET_RARITY,
-						Const.SET_RARITY_COLOR_VARIANT, Const.EDITION_PRINTING, Const.DATE_SOLD, Const.DATE_BOUGHT,
-						Const.PRICE_SOLD, Const.PRICE_BOUGHT, Const.UUID, Const.SET_PREFIX, "'Sold Cards' as " + Const.FOLDER_NAME,
+						Const.SET_RARITY_COLOR_VARIANT, Const.EDITION_PRINTING, Const.DATE_SOLD, Const.DATE_BOUGHT, Const.PRICE_SOLD,
+						Const.PRICE_BOUGHT, Const.UUID, Const.SET_PREFIX, "'Sold Cards' as " + Const.FOLDER_NAME,
 						"0 as " + Const.RARITY_UNSURE, Const.CONDITION, Const.CREATION_DATE, Const.MODIFICATION_DATE, Const.PASSCODE};
 
 		String selection = null;

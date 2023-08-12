@@ -188,7 +188,7 @@ public class CsvConnection {
 			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
 
 			p.printRecord(Const.QUANTITY_CSV, Const.CARD_NAME_CSV, Const.RARITY_CSV, Const.SET_NAME_CSV, Const.SET_CODE_CSV,
-						  Const.PRICE_BOUGHT_CSV);
+						  Const.PRICE_BOUGHT_CSV, "Api price current");
 
 			return p;
 

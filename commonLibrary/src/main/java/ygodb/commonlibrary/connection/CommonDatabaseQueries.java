@@ -38,6 +38,26 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
+	public static <R> CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity,
+			String colorVariant, String setName, DatabaseSelectQuery<CardSet, R> query, SelectQueryResultMapper<CardSet, R> mapper)
+			throws SQLException {
+		query.prepareStatement(SQLConst.GET_RARITIES_OF_EXACT_CARD_IN_SET);
+
+		query.bindString(1, gamePlayCardUUID);
+		query.bindString(2, setNumber);
+		query.bindString(3, rarity);
+		query.bindString(4, colorVariant);
+		query.bindString(5, setName);
+
+		List<CardSet> resultsFound = query.executeQuery(mapper);
+
+		if (resultsFound.size() == 1) {
+			return resultsFound.get(0);
+		}
+
+		return null;
+	}
+
 	public static <R> String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID, DatabaseSelectQuery<String, R> query,
 			SelectQueryResultMapper<String, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID);

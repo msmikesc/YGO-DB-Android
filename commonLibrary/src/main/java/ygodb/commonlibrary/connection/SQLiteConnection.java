@@ -30,6 +30,8 @@ public interface SQLiteConnection {
 
 	List<OwnedCard> getAllPossibleCardsByArchetype(String archetype, String orderBy);
 
+	CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant, String setName) throws SQLException;
+
 	String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
 	List<String> getMultipleCardNamesFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
