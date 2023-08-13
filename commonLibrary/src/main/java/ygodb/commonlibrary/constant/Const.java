@@ -1,6 +1,5 @@
 package ygodb.commonlibrary.constant;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -72,6 +71,7 @@ public class Const {
 	public static final String SET_PRICE_LIMITED_UPDATE_TIME = "setPriceLimitedUpdateTime";
 	public static final String SET_URL = "setURL";
 	public static final String COLOR_VARIANT = "colorVariant";
+	public static final String ALT_ART_PASSCODE = "altArtPasscode";
 	public static final String RELEASE_DATE = "releaseDate";
 
 	public static final String SET_BOX_UUID = "setBoxUUID";

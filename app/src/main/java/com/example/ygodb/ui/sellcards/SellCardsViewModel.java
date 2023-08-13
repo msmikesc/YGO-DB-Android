@@ -82,6 +82,7 @@ public class SellCardsViewModel extends ViewModel {
 			sellingCard.setColorVariant(current.getColorVariant());
 			sellingCard.setUuid(current.getUuid());
 			sellingCard.setPasscode(current.getPasscode());
+			sellingCard.setAltArtPasscode(current.getAltArtPasscode());
 
 			sellingCard.setPriceBought(current.getPriceBought());
 

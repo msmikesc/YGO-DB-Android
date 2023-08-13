@@ -23,6 +23,7 @@ public class CardSet {
 	private int rarityUnsure;
 	private String setPrefix;
 	private String editionPrinting;
+	private Integer altArtPasscode;
 
 	private static final String OPEN = "\"";
 	private static final String CLOSE = "\",";
@@ -216,5 +217,13 @@ public class CardSet {
 
 	public void setSetPriceLimitedUpdateTime(String setPriceLimitedUpdateTime) {
 		this.setPriceLimitedUpdateTime = setPriceLimitedUpdateTime;
+	}
+
+	public Integer getAltArtPasscode() {
+		return altArtPasscode;
+	}
+
+	public void setAltArtPasscode(Integer altArtPasscode) {
+		this.altArtPasscode = altArtPasscode;
 	}
 }

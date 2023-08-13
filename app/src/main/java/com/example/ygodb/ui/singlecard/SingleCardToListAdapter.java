@@ -163,9 +163,15 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 			viewHolder.firstEdition.setImageDrawable(null);
 		}
 
+		int imagePasscode = current.getPasscode();
+
+		if(current.getAltArtPasscode() != null && current.getAltArtPasscode() != 0){
+			imagePasscode = current.getAltArtPasscode();
+		}
+
 		try {
 			// get input stream
-			InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + current.getPasscode() + ".jpg");
+			InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + imagePasscode + ".jpg");
 			// load image as Drawable
 			Drawable d = Drawable.createFromStream(ims, null);
 			// set image to ImageView

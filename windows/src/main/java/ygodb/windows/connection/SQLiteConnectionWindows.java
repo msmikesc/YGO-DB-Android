@@ -116,6 +116,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		set.setSetPrefix(rarities.getString(Const.SET_PREFIX));
 		set.setSetUrl(rarities.getString(Const.SET_URL));
 		set.setColorVariant(rarities.getString(Const.COLOR_VARIANT));
+		set.setAltArtPasscode(rarities.getInt(Const.ALT_ART_PASSCODE));
 	}
 
 	public static class GamePlayCardMapperSelectQuery implements SelectQueryResultMapper<GamePlayCard, ResultSet> {

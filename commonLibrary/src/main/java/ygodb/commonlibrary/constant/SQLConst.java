@@ -7,6 +7,14 @@ public class SQLConst {
 
 	public static final String OWNED_CARDS_TABLE = "ownedCards";
 
+	public static final String OWNED_CARDS_TABLE_JOIN_CARD_SETS =
+			"ownedCards a left outer join cardsets b on a.gamePlayCardUUID=b.gamePlayCardUUID and a.setNumber = b.setNumber and a" +
+					".setRarity = b.setRarity and a.setRarityColorVariant = b.colorVariant and UPPER(a.setName) = UPPER(b.setName)";
+
+	public static final String SOLD_CARDS_TABLE_JOIN_CARD_SETS =
+			"soldCards a left outer join cardsets b on a.gamePlayCardUUID=b.gamePlayCardUUID and a.setNumber = b.setNumber and a" +
+					".setRarity = b.setRarity and a.setRarityColorVariant = b.colorVariant and UPPER(a.setName) = UPPER(b.setName)";
+
 	public static final String SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX =
 			"Select cardSets.*, setData.setPrefix from cardSets left join setData on cardSets.setName = setData.setName";
 
@@ -170,6 +178,5 @@ public class SQLConst {
 
 	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX =
 			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix" +
-					" " +
-					"=" + " setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
+					" " + "=" + " setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
 }

@@ -26,6 +26,7 @@ public class OwnedCard {
 	private String modificationDate;
 	private String uuid;
 	private int passcode;
+	private Integer altArtPasscode;
 
 	private List<CardSet> analyzeResultsCardSets;
 
@@ -236,5 +237,13 @@ public class OwnedCard {
 
 	public void setPasscode(int passcode) {
 		this.passcode = passcode;
+	}
+
+	public Integer getAltArtPasscode() {
+		return altArtPasscode;
+	}
+
+	public void setAltArtPasscode(Integer altArtPasscode) {
+		this.altArtPasscode = altArtPasscode;
 	}
 }

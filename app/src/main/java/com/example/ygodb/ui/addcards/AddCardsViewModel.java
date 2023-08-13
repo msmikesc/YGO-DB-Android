@@ -109,6 +109,7 @@ public class AddCardsViewModel extends ViewModel {
 			newCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
 			newCard.setPasscode(current.getPasscode());
 			newCard.setSetName(current.getSetName());
+			newCard.setAltArtPasscode(current.getAltArtPasscode());
 
 
 			if (current.getEditionPrinting() == null || current.getEditionPrinting().equals("")) {

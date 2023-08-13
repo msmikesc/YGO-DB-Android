@@ -379,6 +379,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		set.setSetPrefix(rs.getString(getColumn(col, Const.SET_PREFIX)));
 		set.setSetUrl(rs.getString(getColumn(col, Const.SET_URL)));
 		set.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
+		set.setAltArtPasscode(rs.getInt(getColumn(col, Const.ALT_ART_PASSCODE)));
 	}
 
 	public static class GamePlayCardMapperSelectQuery implements SelectQueryResultMapper<GamePlayCard, Cursor> {
@@ -994,7 +995,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
 				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "a.setPriceLimited", "sum(b.quantity) as quantity",
-				"MAX(b.dateBought) as maxDate, c.setPrefix", "d.passcode, colorVariant"};
+				"MAX(b.dateBought) as maxDate, c.setPrefix", "d.passcode, colorVariant, altArtPasscode"};
 
 		String selection = "a.cardName like ?";
 		String[] selectionArgs = new String[]{'%' + cardName.trim() + '%'};
@@ -1028,6 +1029,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				current.setDateBought(rs.getString(getColumn(col, "maxDate")));
 				current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
 				current.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
+				current.setAltArtPasscode(rs.getInt(getColumn(col, Const.ALT_ART_PASSCODE)));
 
 				results.add(current);
 			}
@@ -1045,7 +1047,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
 				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "a.setPriceLimited", "sum(b.quantity) as quantity",
-				"MAX(b.dateBought) as maxDate, c.setPrefix", "d.passcode, colorVariant"};
+				"MAX(b.dateBought) as maxDate, c.setPrefix", "d.passcode, colorVariant, altArtPasscode"};
 
 		String selection = "a.setName = ? OR UPPER(c.setPrefix) = UPPER(?)";
 		String[] selectionArgs = new String[]{setName, setName};
@@ -1079,6 +1081,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				current.setDateBought(rs.getString(getColumn(col, "maxDate")));
 				current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
 				current.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
+				current.setAltArtPasscode(rs.getInt(getColumn(col, Const.ALT_ART_PASSCODE)));
 
 				results.add(current);
 			}
@@ -1096,7 +1099,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] columns = new String[]{"a.gamePlayCardUUID", "a.cardName as cardNameCol", "a.setNumber as setNumberCol", "a.setName",
 				"a.setRarity as setRarityCol", "a.setPrice", "a.setPriceFirst", "a.setPriceLimited", "sum(b.quantity) as quantity",
-				"MAX(b.dateBought) as maxDate, c.setPrefix", "d.passcode, colorVariant"};
+				"MAX(b.dateBought) as maxDate, c.setPrefix", "d.passcode, colorVariant, altArtPasscode"};
 
 		String selection = "a.cardName like ? OR UPPER(d.archetype) = UPPER(?)";
 		String[] selectionArgs = new String[]{"%" + archetype + "%", archetype};
@@ -1130,6 +1133,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				current.setDateBought(rs.getString(getColumn(col, "maxDate")));
 				current.setPasscode(rs.getInt(getColumn(col, Const.PASSCODE)));
 				current.setColorVariant(rs.getString(getColumn(col, Const.COLOR_VARIANT)));
+				current.setAltArtPasscode(rs.getInt(getColumn(col, Const.ALT_ART_PASSCODE)));
 
 				results.add(current);
 			}
@@ -1142,14 +1146,17 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public OwnedCard getExistingOwnedCardByObject(OwnedCard query) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID, Const.RARITY_UNSURE, Const.QUANTITY, Const.CARD_NAME, Const.SET_PREFIX,
-				Const.SET_NUMBER, Const.SET_NAME, Const.SET_RARITY, Const.SET_RARITY_COLOR_VARIANT, Const.FOLDER_NAME, Const.CONDITION,
-				Const.EDITION_PRINTING, Const.DATE_BOUGHT, Const.PRICE_BOUGHT, Const.CREATION_DATE, Const.MODIFICATION_DATE, Const.UUID,
-				Const.PASSCODE};
-
-		//PRIMARY KEY(Const.gamePlayCardUUID,Const.folderName,Const.setNumber,Const.setRarity,Const.setRarityColorVariant,
-		// Const.condition,Const.editionPrinting,Const.dateBought,Const.priceBought)
-
+		String[] columns = new String[]{"a." + Const.GAME_PLAY_CARD_UUID + " as " + Const.GAME_PLAY_CARD_UUID,
+				"a." + Const.RARITY_UNSURE + " as " + Const.RARITY_UNSURE, "a." + Const.QUANTITY + " as " + Const.QUANTITY,
+				"a." + Const.CARD_NAME + " as " + Const.CARD_NAME, "a." + Const.SET_PREFIX + " as " + Const.SET_PREFIX,
+				"a." + Const.SET_NUMBER + " as " + Const.SET_NUMBER, "a." + Const.SET_NAME + " as " + Const.SET_NAME,
+				"a." + Const.SET_RARITY + " as " + Const.SET_RARITY,
+				"a." + Const.SET_RARITY_COLOR_VARIANT + " as " + Const.SET_RARITY_COLOR_VARIANT,
+				"a." + Const.FOLDER_NAME + " as " + Const.FOLDER_NAME, "a." + Const.CONDITION + " as " + Const.CONDITION,
+				"a." + Const.EDITION_PRINTING + " as " + Const.EDITION_PRINTING, "a." + Const.DATE_BOUGHT + " as " + Const.DATE_BOUGHT,
+				"a." + Const.PRICE_BOUGHT + " as " + Const.PRICE_BOUGHT, "a." + Const.CREATION_DATE + " as " + Const.CREATION_DATE,
+				"a." + Const.MODIFICATION_DATE + " as " + Const.MODIFICATION_DATE, "a." + Const.UUID + " as " + Const.UUID,
+				"a." + Const.PASSCODE + " as " + Const.PASSCODE, "b.altArtPasscode"};
 
 		if (query.getFolderName() == null || query.getSetNumber() == null || query.getSetRarity() == null ||
 				query.getColorVariant() == null || query.getCondition() == null || query.getEditionPrinting() == null ||
@@ -1157,20 +1164,24 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			return null;
 		}
 
-		String selection = "gamePlayCardUUID = ? AND folderName = ? AND setNumber = ? AND setRarity = ? AND setRarityColorVariant = ?" +
-				" AND condition = ? AND editionPrinting = ? AND " + "dateBought = ? AND priceBought = ? AND setName = ? AND setPrefix = ?";
+		String selection =
+				"a.gamePlayCardUUID = ? AND a.folderName = ? AND a.setNumber = ? AND a.setRarity = ? AND a.setRarityColorVariant = ?" +
+						" AND a.condition = ? AND a.editionPrinting = ? AND " +
+						"a.dateBought = ? AND a.priceBought = ? AND a.setName = ? AND a.setPrefix = ?";
 		String[] selectionArgs =
 				new String[]{query.getGamePlayCardUUID(), query.getFolderName(), query.getSetNumber(), query.getSetRarity(),
 						query.getColorVariant(), query.getCondition(), query.getEditionPrinting(), query.getDateBought(),
 						query.getPriceBought(), query.getSetName(), query.getSetPrefix()};
 
-		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE, columns, selection, selectionArgs, null, null, null, null)) {
+		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE_JOIN_CARD_SETS, columns, selection, selectionArgs, null, null, null,
+										  null)) {
 
 			String[] col = rs.getColumnNames();
 
 			if (rs.moveToNext()) {
 				OwnedCard current = new OwnedCard();
 				getAllOwnedCardFieldsFromRS(rs, col, current);
+				current.setAltArtPasscode(rs.getInt(getColumn(col, Const.ALT_ART_PASSCODE)));
 				return current;
 			}
 
@@ -1182,22 +1193,28 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String[] columns =
-				new String[]{Const.GAME_PLAY_CARD_UUID, Const.QUANTITY, Const.CARD_NAME, Const.SET_NUMBER, Const.SET_NAME,
-						Const.SET_RARITY,
-						Const.SET_RARITY_COLOR_VARIANT, Const.EDITION_PRINTING, Const.DATE_BOUGHT, Const.PRICE_BOUGHT, Const.UUID,
-						Const.SET_PREFIX, Const.FOLDER_NAME, Const.RARITY_UNSURE, Const.CONDITION, Const.CREATION_DATE,
-						Const.MODIFICATION_DATE, Const.PASSCODE};
+		String[] columns = new String[]{"a." + Const.GAME_PLAY_CARD_UUID + " as " + Const.GAME_PLAY_CARD_UUID,
+				"a." + Const.RARITY_UNSURE + " as " + Const.RARITY_UNSURE, "a." + Const.QUANTITY + " as " + Const.QUANTITY,
+				"a." + Const.CARD_NAME + " as " + Const.CARD_NAME, "a." + Const.SET_PREFIX + " as " + Const.SET_PREFIX,
+				"a." + Const.SET_NUMBER + " as " + Const.SET_NUMBER, "a." + Const.SET_NAME + " as " + Const.SET_NAME,
+				"a." + Const.SET_RARITY + " as " + Const.SET_RARITY,
+				"a." + Const.SET_RARITY_COLOR_VARIANT + " as " + Const.SET_RARITY_COLOR_VARIANT,
+				"a." + Const.FOLDER_NAME + " as " + Const.FOLDER_NAME, "a." + Const.CONDITION + " as " + Const.CONDITION,
+				"a." + Const.EDITION_PRINTING + " as " + Const.EDITION_PRINTING, "a." + Const.DATE_BOUGHT + " as " + Const.DATE_BOUGHT,
+				"a." + Const.PRICE_BOUGHT + " as " + Const.PRICE_BOUGHT, "a." + Const.CREATION_DATE + " as " + Const.CREATION_DATE,
+				"a." + Const.MODIFICATION_DATE + " as " + Const.MODIFICATION_DATE, "a." + Const.UUID + " as " + Const.UUID,
+				"a." + Const.PASSCODE + " as " + Const.PASSCODE, "b.altArtPasscode"};
 
 		String selection = null;
 		String[] selectionArgs = null;
 
 		if (cardNameSearch != null && !cardNameSearch.equals("")) {
-			selection = "upper(cardName) like upper(?)";
+			selection = "upper(a.cardName) like upper(?)";
 			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
 		}
 
-		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE, columns, selection, selectionArgs, null, null, orderBy,
+		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE_JOIN_CARD_SETS, columns, selection, selectionArgs, null, null,
+										  orderBy,
 										  offset + "," + limit)) {
 
 			ArrayList<OwnedCard> cardsInSetList = new ArrayList<>();
@@ -1206,6 +1223,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			while (rs.moveToNext()) {
 				OwnedCard current = new OwnedCard();
 				getAllOwnedCardFieldsFromRS(rs, col, current);
+				current.setAltArtPasscode(rs.getInt(getColumn(col, Const.ALT_ART_PASSCODE)));
 				cardsInSetList.add(current);
 			}
 
@@ -1217,12 +1235,17 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public List<SoldCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch) {
 		SQLiteDatabase connection = this.getInstance();
 
-		String[] columns =
-				new String[]{Const.GAME_PLAY_CARD_UUID, Const.QUANTITY, Const.CARD_NAME, Const.SET_NUMBER, Const.SET_NAME,
-						Const.SET_RARITY,
-						Const.SET_RARITY_COLOR_VARIANT, Const.EDITION_PRINTING, Const.DATE_SOLD, Const.DATE_BOUGHT, Const.PRICE_SOLD,
-						Const.PRICE_BOUGHT, Const.UUID, Const.SET_PREFIX, "'Sold Cards' as " + Const.FOLDER_NAME,
-						"0 as " + Const.RARITY_UNSURE, Const.CONDITION, Const.CREATION_DATE, Const.MODIFICATION_DATE, Const.PASSCODE};
+		String[] columns = new String[]{"a." + Const.GAME_PLAY_CARD_UUID + " as " + Const.GAME_PLAY_CARD_UUID,
+				"0 as " + Const.RARITY_UNSURE, "a." + Const.QUANTITY + " as " + Const.QUANTITY,
+				"a." + Const.CARD_NAME + " as " + Const.CARD_NAME, "a." + Const.SET_PREFIX + " as " + Const.SET_PREFIX,
+				"a." + Const.SET_NUMBER + " as " + Const.SET_NUMBER, "a." + Const.SET_NAME + " as " + Const.SET_NAME,
+				"a." + Const.SET_RARITY + " as " + Const.SET_RARITY,
+				"a." + Const.SET_RARITY_COLOR_VARIANT + " as " + Const.SET_RARITY_COLOR_VARIANT,
+				"'Sold Cards' as " + Const.FOLDER_NAME, "a." + Const.CONDITION + " as " + Const.CONDITION,
+				"a." + Const.EDITION_PRINTING + " as " + Const.EDITION_PRINTING, "a." + Const.DATE_BOUGHT + " as " + Const.DATE_BOUGHT,
+				"a." + Const.PRICE_BOUGHT + " as " + Const.PRICE_BOUGHT, "a." + Const.CREATION_DATE + " as " + Const.CREATION_DATE,
+				"a." + Const.MODIFICATION_DATE + " as " + Const.MODIFICATION_DATE, "a." + Const.UUID + " as " + Const.UUID,
+				"a." + Const.PASSCODE + " as " + Const.PASSCODE, "b.altArtPasscode", Const.DATE_SOLD, Const.PRICE_SOLD};
 
 		String selection = null;
 		String[] selectionArgs = null;
@@ -1232,7 +1255,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
 		}
 
-		try (Cursor rs = connection.query("soldCards", columns, selection, selectionArgs, null, null, orderBy, offset + "," + limit)) {
+		try (Cursor rs = connection.query(SQLConst.SOLD_CARDS_TABLE_JOIN_CARD_SETS, columns, selection, selectionArgs, null, null, orderBy, offset + "," + limit)) {
 
 			ArrayList<SoldCard> cardsInSetList = new ArrayList<>();
 			String[] col = rs.getColumnNames();
@@ -1240,6 +1263,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			while (rs.moveToNext()) {
 				SoldCard current = new SoldCard();
 				getAllSoldCardFieldsFromRS(rs, col, current);
+				current.setAltArtPasscode(rs.getInt(getColumn(col, Const.ALT_ART_PASSCODE)));
 				cardsInSetList.add(current);
 			}
 
