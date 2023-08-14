@@ -38,9 +38,9 @@ public class ImportFromYGOPROAPI {
 		} else {
 			YGOLogger.info("Set Data Import Finished");
 
-			DownloadCardImagesFromYGOPRO downloadCardImagesFromYGOPRO = new DownloadCardImagesFromYGOPRO();
+			DownloadCardImagesBySet downloadCardImagesBySet = new DownloadCardImagesBySet();
 
-			successful = downloadCardImagesFromYGOPRO.run(db, setName);
+			successful = downloadCardImagesBySet.run(db, setName);
 			if (!successful) {
 				YGOLogger.info("Images Import Failed");
 			} else {

@@ -31,7 +31,7 @@ public class Util {
 	private static KeyUpdateMap cardNameMap = null;
 	private static KeyUpdateMap rarityMap = null;
 	private static KeyUpdateMap setNumberMap = null;
-	private static HashMap<Integer, Integer> passcodeMap = null;
+	private static KeyUpdateMap passcodeMap = null;
 	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
 
 	private static Set<String> setUrlsThatDoNotExist = null;
@@ -291,17 +291,20 @@ public class Util {
 		return setNumberMap;
 	}
 
-	public static Map<Integer, Integer> getPasscodeMapInstance() {
+	public static KeyUpdateMap getPasscodeMapInstance() {
 		if (passcodeMap == null) {
-			passcodeMap = new HashMap<>();
+			try {
+				String filename = "passcodeUpdateMapping.csv";
 
-			passcodeMap.put(74677427, 74677422);
-			passcodeMap.put(89943724, 89943723);
-			passcodeMap.put(27847700, 24094653);
-			passcodeMap.put(65741787, 65741786);
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
 
+				passcodeMap = new KeyUpdateMap(inputStream);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
 
-			//passcodeMap.put("", "");
+			//TODO handle alt arts with also alt colors, dmg dragon knight
+			//TODO fix monster reborn and gilford
 
 		}
 
@@ -490,15 +493,22 @@ public class Util {
 	}
 
 	public static int checkForTranslatedPasscode(int passcode) {
-		Map<Integer, Integer> instance = getPasscodeMapInstance();
+		KeyUpdateMap instance = getPasscodeMapInstance();
 
-		Integer newPasscode = instance.get(passcode);
+		String newPasscode = instance.getValue(String.valueOf(passcode));
 
 		if (newPasscode == null) {
 			return passcode;
 		}
 
-		return newPasscode;
+		try{
+			return Integer.parseInt(newPasscode);
+		}
+		catch (Exception e){
+			YGOLogger.error("Issue with passcode map for value:" + passcode);
+			YGOLogger.logException(e);
+			return passcode;
+		}
 	}
 
 	public static String getLowestPriceString(String input1, String input2) {
