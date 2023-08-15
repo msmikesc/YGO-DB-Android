@@ -295,8 +295,8 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant,
-			String setName) throws SQLException {
+	public CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant, String setName)
+			throws SQLException {
 		DatabaseSelectQuery<CardSet, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
 		return CommonDatabaseQueries.getRarityOfExactCardInSet(gamePlayCardUUID, setNumber, rarity, colorVariant, setName, query,
 															   new CardSetMapperSelectQuery());
@@ -515,6 +515,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	public int getNewLowestPasscode() throws SQLException {
 		DatabaseSelectQuery<Integer, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
 		return CommonDatabaseQueries.getNewLowestPasscode(query, new FirstIntMapperSelectQuery());
+	}
+
+	@Override
+	public List<Integer> getAllArtPasscodesByName(String cardName) throws SQLException {
+		DatabaseSelectQuery<Integer, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getAllArtPasscodesByName(query, cardName, new FirstIntMapperSelectQuery());
 	}
 
 	@Override

@@ -287,6 +287,16 @@ public class CommonDatabaseQueries {
 		return -1;
 	}
 
+	public static <R> List<Integer> getAllArtPasscodesByName(DatabaseSelectQuery<Integer, R> query,String cardName, SelectQueryResultMapper<Integer, R> mapper)
+			throws SQLException {
+		query.prepareStatement(SQLConst.GET_ALL_ART_PASSCODES_BY_NAME);
+
+		query.bindString(1, cardName);
+		query.bindString(2, cardName);
+
+		return query.executeQuery(mapper);
+	}
+
 	public static <R> List<SetBox> getAllSetBoxes(DatabaseSelectQuery<SetBox, R> query, SelectQueryResultMapper<SetBox, R> mapper)
 			throws SQLException {
 		query.prepareStatement(SQLConst.GET_ALL_SET_BOXES);

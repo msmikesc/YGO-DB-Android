@@ -3,6 +3,7 @@ package ygodb.windows.utility;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.ApiUtil;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.windows.connection.SQLiteConnectionWindows;
 
 import java.nio.file.Path;
@@ -29,7 +30,10 @@ public class WindowsUtil {
 		boolean anyFailed = false;
 
 		for(GamePlayCard card: cardsList){
-			Path filePath = Paths.get(Const.PROJECT_CARD_IMAGES_DIRECTORY, card.getPasscode() + ".jpg");
+
+			int destinationPasscode = Util.checkForTranslatedYgoProImagePasscode(card.getPasscode());
+
+			Path filePath = Paths.get(Const.PROJECT_CARD_IMAGES_DIRECTORY, destinationPasscode + ".jpg");
 			boolean successful = ApiUtil.downloadCardImageFromYGOPRO(card, filePath);
 
 			if(!successful){

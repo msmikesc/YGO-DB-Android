@@ -1,6 +1,6 @@
 package ygodb.commonlibrary.bean;
 
-public class GamePlayCard {
+public class GamePlayCard implements Cloneable{
 
 	private String gamePlayCardUUID;
 	private String cardName;
@@ -127,5 +127,14 @@ public class GamePlayCard {
 
 	public void setModificationDate(String modificationDate) {
 		this.modificationDate = modificationDate;
+	}
+
+	@Override
+	public GamePlayCard clone() {
+		try {
+			return (GamePlayCard) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError();
+		}
 	}
 }

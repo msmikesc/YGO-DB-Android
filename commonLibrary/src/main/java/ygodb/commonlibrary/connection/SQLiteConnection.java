@@ -128,6 +128,8 @@ public interface SQLiteConnection {
 
 	int getNewLowestPasscode() throws SQLException;
 
+	List<Integer> getAllArtPasscodesByName(String cardName) throws SQLException;
+
 	List<SetBox> getAllSetBoxes() throws SQLException;
 
 	List<SetBox> getSetBoxesByNameOrCodeOrLabel(String searchText) throws SQLException;

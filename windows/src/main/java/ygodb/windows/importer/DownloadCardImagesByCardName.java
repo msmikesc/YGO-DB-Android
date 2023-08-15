@@ -6,12 +6,13 @@ import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DownloadCardImagesByCardName {
 
 	public static void main(String[] args) throws SQLException, InterruptedException {
-		String cardName = "Monster Reborn";
+		String cardName = "Gilford the Lightning";
 
 		DownloadCardImagesByCardName mainObj = new DownloadCardImagesByCardName();
 
@@ -26,17 +27,28 @@ public class DownloadCardImagesByCardName {
 		db.closeInstance();
 	}
 
-	public boolean run(SQLiteConnection db, String setName) throws SQLException, InterruptedException {
+	public boolean run(SQLiteConnection db, String cardName) throws SQLException, InterruptedException {
 		//get alt art ids UNION passcode
-		//
-		// List<GamePlayCard> cardsList = db.getDistinctGamePlayCardsInSetByName(setName);
+		List<Integer> codes = db.getAllArtPasscodesByName(cardName);
 
-		if(cardsList == null || cardsList.isEmpty()){
-			YGOLogger.error("No Cards found in set:" + setName);
+		String gpcUUID = db.getGamePlayCardUUIDFromTitle(cardName);
+
+		GamePlayCard card = db.getGamePlayCardByUUID(gpcUUID);
+
+		if(codes == null || codes.isEmpty()){
+			YGOLogger.error("No Cards found for name:" + cardName);
 			return false;
 		}
 
-		return WindowsUtil.downloadAllCardImagesForList(cardsList);
+		List<GamePlayCard> artCardsList = new ArrayList<>();
+
+		for(Integer passcode: codes){
+			GamePlayCard newCard = card.clone();
+			newCard.setPasscode(passcode);
+			artCardsList.add(newCard);
+		}
+
+		return WindowsUtil.downloadAllCardImagesForList(artCardsList);
 	}
 
 

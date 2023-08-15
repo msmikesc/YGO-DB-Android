@@ -32,6 +32,7 @@ public class Util {
 	private static KeyUpdateMap rarityMap = null;
 	private static KeyUpdateMap setNumberMap = null;
 	private static KeyUpdateMap passcodeMap = null;
+	private static KeyUpdateMap ygoProImagePasscodeMap = null;
 	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
 
 	private static Set<String> setUrlsThatDoNotExist = null;
@@ -304,11 +305,28 @@ public class Util {
 			}
 
 			//TODO handle alt arts with also alt colors, dmg dragon knight
-			//TODO fix monster reborn and gilford
+			//TODO go through lost arts
 
 		}
 
 		return passcodeMap;
+	}
+
+	public static KeyUpdateMap getYgoProImagePasscodeMapInstance() {
+		if (ygoProImagePasscodeMap == null) {
+			try {
+				String filename = "ygoProImagePasscodeUpdateMapping.csv";
+
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
+
+				ygoProImagePasscodeMap = new KeyUpdateMap(inputStream);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+
+		}
+
+		return ygoProImagePasscodeMap;
 	}
 
 	public static Set<String> getSetUrlsThatDoNotExistInstance() {
@@ -506,6 +524,25 @@ public class Util {
 		}
 		catch (Exception e){
 			YGOLogger.error("Issue with passcode map for value:" + passcode);
+			YGOLogger.logException(e);
+			return passcode;
+		}
+	}
+
+	public static int checkForTranslatedYgoProImagePasscode(int passcode) {
+		KeyUpdateMap instance = getYgoProImagePasscodeMapInstance();
+
+		String newPasscode = instance.getValue(String.valueOf(passcode));
+
+		if (newPasscode == null) {
+			return passcode;
+		}
+
+		try{
+			return Integer.parseInt(newPasscode);
+		}
+		catch (Exception e){
+			YGOLogger.error("Issue with ygo pro image passcode map for value:" + passcode);
 			YGOLogger.logException(e);
 			return passcode;
 		}

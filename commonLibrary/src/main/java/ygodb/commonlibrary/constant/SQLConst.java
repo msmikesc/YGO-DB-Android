@@ -179,4 +179,8 @@ public class SQLConst {
 	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX =
 			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix" +
 					" " + "=" + " setData.setPrefix where setBoxes.setPrefix is null and UPPER(setData.setPrefix) = UPPER(?)";
+
+	public static final String GET_ALL_ART_PASSCODES_BY_NAME =
+			"SELECT DISTINCT altArtPasscode from cardSets where upper(cardName) = upper(?) and altArtPasscode is not null union all " +
+					"select passcode from gamePlayCard where  upper(title) = upper(?)";
 }

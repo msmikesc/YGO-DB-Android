@@ -154,8 +154,6 @@ public class ApiUtil {
 			setRarity = translatedList.get(2);
 			setName = translatedList.get(3);
 
-			//TODO possibly handle alt arts display?
-
 			CardSet matcher = new CardSet(gamePlayCardUUID, setNumber, cardName, setRarity, setName, Const.DEFAULT_COLOR_VARIANT, null);
 			String allMatchingKey = DatabaseHashMap.getAllMatchingKey(matcher);
 			List<CardSet> cardSets = DatabaseHashMap.getRaritiesInstance(db).get(allMatchingKey);
