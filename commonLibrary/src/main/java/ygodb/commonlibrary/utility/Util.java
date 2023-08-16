@@ -303,9 +303,6 @@ public class Util {
 			} catch (IOException e) {
 				throw new UncheckedIOException(e);
 			}
-
-			//TODO handle alt arts with also alt colors, dmg dragon knight
-
 		}
 
 		return passcodeMap;

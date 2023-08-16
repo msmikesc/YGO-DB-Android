@@ -128,30 +128,62 @@ public class AndroidUtil {
 
 	public static int getColorByColorVariant(String colorVariant) {
 		if (colorVariant != null && !colorVariant.isEmpty() && !colorVariant.equals(Const.DEFAULT_COLOR_VARIANT)) {
-			return switch (colorVariant.toUpperCase(Locale.ROOT)) {
-				case "A" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold);
-				case "R" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson);
-				case "G" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen);
-				case "B" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue);
-				case "P" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet);
-				case "S" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.AMCSilver);
-				case "BRZ" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Bronze);
-				default -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
-			};
-		} else {
-			return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
+			if (colorVariant.contains(":")) {
+				String[] parts = colorVariant.split(":");
+				if (parts.length == 2) {
+					String color = parts[0].toUpperCase(Locale.ROOT);
+
+					return getColorForColorVariant(color);
+				}
+			} else {
+				String color = colorVariant.toUpperCase(Locale.ROOT);
+				if (color.equals("A")) {
+					return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold);
+				} else {
+					return getColorForColorVariant(color);
+				}
+			}
 		}
+
+		return ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
 	}
+
+	private static int getColorForColorVariant(String color) {
+		return switch (color) {
+			case "R" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Crimson);
+			case "G" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.LimeGreen);
+			case "B" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.DeepSkyBlue);
+			case "P" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.BlueViolet);
+			case "S" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.AMCSilver);
+			case "BRZ" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Bronze);
+			case "ORIGINAL" -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.Gold);
+			default -> ContextCompat.getColor(AndroidUtil.getAppContext(), R.color.White);
+		};
+	}
+
 
 	public static String getSetRarityDisplayWithColorText(OwnedCard current) {
 		String setRarityText = current.getSetRarity();
+		String colorVariant = current.getColorVariant();
 
-		if (current.getColorVariant() != null && !current.getColorVariant().isEmpty() &&
-				!current.getColorVariant().equals(Const.DEFAULT_COLOR_VARIANT)) {
-			if (current.getColorVariant().equalsIgnoreCase("a")) {
-				setRarityText = "Alt Art " + setRarityText;
+		if (colorVariant != null && !colorVariant.isEmpty() && !colorVariant.equals(Const.DEFAULT_COLOR_VARIANT)) {
+			if (colorVariant.contains(":")) {
+				String[] parts = colorVariant.split(":");
+				if (parts.length == 2) {
+					String color = parts[0];
+					String altArt = parts[1];
+
+					if (altArt.equalsIgnoreCase("a")) {
+						setRarityText = "Alt Art " + setRarityText;
+					}
+					setRarityText = color.toUpperCase(Locale.ROOT) + " " + setRarityText;
+				}
 			} else {
-				setRarityText = current.getColorVariant().toUpperCase(Locale.ROOT) + " " + setRarityText;
+				if (colorVariant.equalsIgnoreCase("a")) {
+					setRarityText = "Alt Art " + setRarityText;
+				} else {
+					setRarityText = colorVariant.toUpperCase(Locale.ROOT) + " " + setRarityText;
+				}
 			}
 		}
 
@@ -161,7 +193,7 @@ public class AndroidUtil {
 	private static Dialog progressDialog = null;
 
 	public static void showProgressDialog(Activity activity) {
-		if(progressDialog == null) {
+		if (progressDialog == null) {
 			progressDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			progressDialog.setContentView(R.layout.layout_dialog_progress);
 			progressDialog.setCancelable(false);
@@ -169,15 +201,14 @@ public class AndroidUtil {
 		}
 	}
 
-	public static void hideProgressDialog(){
-		if(progressDialog != null){
+	public static void hideProgressDialog() {
+		if (progressDialog != null) {
 			progressDialog.dismiss();
 			progressDialog = null;
 		}
 	}
 
-	public static Drawable convertToGrayscale(Drawable drawable)
-	{
+	public static Drawable convertToGrayscale(Drawable drawable) {
 		ColorMatrix matrix = new ColorMatrix();
 		matrix.setSaturation(0);
 
@@ -225,8 +256,7 @@ public class AndroidUtil {
 
 			// Create a new Drawable from the final Bitmap and return it
 			return new BitmapDrawable(context.getResources(), finalBitmap);
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			YGOLogger.error("Unable to apply shader:");
 			YGOLogger.logException(e);
 			return null;
@@ -245,16 +275,13 @@ public class AndroidUtil {
 	public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
 		Drawable drawable = ContextCompat.getDrawable(context, drawableId);
 
-		Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-											drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawable.draw(canvas);
 
 		return bitmap;
 	}
-
-
 
 
 }
