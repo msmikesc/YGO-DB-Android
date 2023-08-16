@@ -12,7 +12,7 @@ import java.util.List;
 public class DownloadCardImagesByCardName {
 
 	public static void main(String[] args) throws SQLException, InterruptedException {
-		String cardName = "Gilford the Lightning";
+		String cardName = "Senju of the Thousand Hands";
 
 		DownloadCardImagesByCardName mainObj = new DownloadCardImagesByCardName();
 

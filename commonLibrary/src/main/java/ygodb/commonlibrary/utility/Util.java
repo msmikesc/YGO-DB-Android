@@ -305,7 +305,6 @@ public class Util {
 			}
 
 			//TODO handle alt arts with also alt colors, dmg dragon knight
-			//TODO go through lost arts
 
 		}
 

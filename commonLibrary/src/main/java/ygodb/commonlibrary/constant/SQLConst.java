@@ -5,6 +5,11 @@ public class SQLConst {
 	private SQLConst() {
 	}
 
+	//So far only used in db browser
+	private static final String ALT_ART_PASSCODES_TRANSLATE =
+			"select distinct altArtPasscode, passcode from cardSets a join ownedCards b on a.gamePlayCardUUID = b.gamePlayCardUUID where a" +
+					".altArtPasscode is not null";
+
 	public static final String OWNED_CARDS_TABLE = "ownedCards";
 
 	public static final String OWNED_CARDS_TABLE_JOIN_CARD_SETS =
