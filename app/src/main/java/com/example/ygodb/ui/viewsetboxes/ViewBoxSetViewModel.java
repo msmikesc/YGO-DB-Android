@@ -2,9 +2,7 @@ package com.example.ygodb.ui.viewsetboxes;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.ygodb.abs.AndroidUtil;
-
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.utility.YGOLogger;
 
@@ -66,12 +64,12 @@ public class ViewBoxSetViewModel extends ViewModel {
 		}
 	}
 
-	public boolean attemptToAddNewFromSetPrefix(String setPrefix){
+	public boolean attemptToAddNewFromSetPrefix(String setPrefix) {
 
 		List<SetBox> newSetBoxDataForValidSetPrefix;
-		try{
+		try {
 			newSetBoxDataForValidSetPrefix = AndroidUtil.getDBInstance().getNewSetBoxDataForValidSetPrefix(setPrefix);
-			if(newSetBoxDataForValidSetPrefix.isEmpty()){
+			if (newSetBoxDataForValidSetPrefix.isEmpty()) {
 				return false;
 			}
 

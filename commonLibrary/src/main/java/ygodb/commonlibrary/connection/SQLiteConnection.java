@@ -1,9 +1,5 @@
 package ygodb.commonlibrary.connection;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
 import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
@@ -11,6 +7,10 @@ import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.bean.SoldCard;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 public interface SQLiteConnection {
 
@@ -30,7 +30,8 @@ public interface SQLiteConnection {
 
 	List<OwnedCard> getAllPossibleCardsByArchetype(String archetype, String orderBy);
 
-	CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant, String setName) throws SQLException;
+	CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant, String setName)
+			throws SQLException;
 
 	String getCardTitleFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
 
@@ -115,14 +116,13 @@ public interface SQLiteConnection {
 
 	int updateCardSetPrice(String setNumber, String rarity, String price, String edition) throws SQLException;
 
-	int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, String edition)
-			throws SQLException;
+	int updateCardSetPriceWithSetName(String setNumber, String rarity, String price, String setName, String edition) throws SQLException;
 
 	int updateCardSetPriceWithCardAndSetName(String setNumber, String rarity, String price, String setName, String cardName,
-			String edition) throws SQLException;
-
-	int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, String edition)
+			String edition)
 			throws SQLException;
+
+	int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, String edition) throws SQLException;
 
 	int updateCardSetPrice(String setNumber, String price, String edition) throws SQLException;
 

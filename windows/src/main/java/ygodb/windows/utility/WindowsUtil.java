@@ -29,14 +29,14 @@ public class WindowsUtil {
 	public static boolean downloadAllCardImagesForList(List<GamePlayCard> cardsList) throws InterruptedException {
 		boolean anyFailed = false;
 
-		for(GamePlayCard card: cardsList){
+		for (GamePlayCard card : cardsList) {
 
 			int destinationPasscode = Util.checkForTranslatedYgoProImagePasscode(card.getPasscode());
 
 			Path filePath = Paths.get(Const.PROJECT_CARD_IMAGES_DIRECTORY, destinationPasscode + ".jpg");
 			boolean successful = ApiUtil.downloadCardImageFromYGOPRO(card, filePath);
 
-			if(!successful){
+			if (!successful) {
 				anyFailed = true;
 			}
 

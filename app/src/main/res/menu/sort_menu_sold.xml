@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menuDateBought"
-        android:title="Date Sold" />
+            android:id="@+id/menuDateBought"
+            android:title="Date Sold"/>
     <item
-        android:id="@+id/menuCardName"
-        android:title="Card Name" />
+            android:id="@+id/menuCardName"
+            android:title="Card Name"/>
     <item
-        android:id="@+id/menuSetNumber"
-        android:title="Set Number" />
+            android:id="@+id/menuSetNumber"
+            android:title="Set Number"/>
     <item
-        android:id="@+id/menuPrice"
-        android:title="Price Sold" />
+            android:id="@+id/menuPrice"
+            android:title="Price Sold"/>
 
 </menu>

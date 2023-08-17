@@ -1,6 +1,6 @@
 package ygodb.commonlibrary.bean;
 
-public class GamePlayCard implements Cloneable{
+public class GamePlayCard implements Cloneable {
 
 	private String gamePlayCardUUID;
 	private String cardName;

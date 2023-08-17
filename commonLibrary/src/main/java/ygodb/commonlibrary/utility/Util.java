@@ -350,7 +350,8 @@ public class Util {
 					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign" +
 							"=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate&utm_medium" +
+					"https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate" +
+							"&utm_medium" +
 							"=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
 					"https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate" +
@@ -514,10 +515,9 @@ public class Util {
 			return passcode;
 		}
 
-		try{
+		try {
 			return Integer.parseInt(newPasscode);
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			YGOLogger.error("Issue with passcode map for value:" + passcode);
 			YGOLogger.logException(e);
 			return passcode;
@@ -533,10 +533,9 @@ public class Util {
 			return passcode;
 		}
 
-		try{
+		try {
 			return Integer.parseInt(newPasscode);
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			YGOLogger.error("Issue with ygo pro image passcode map for value:" + passcode);
 			YGOLogger.logException(e);
 			return passcode;
@@ -545,7 +544,7 @@ public class Util {
 
 	public static String getLowestPriceString(String input1, String input2) {
 
-		if(input1 == null && input2 == null){
+		if (input1 == null && input2 == null) {
 			return Const.ZERO_PRICE_STRING;
 		}
 

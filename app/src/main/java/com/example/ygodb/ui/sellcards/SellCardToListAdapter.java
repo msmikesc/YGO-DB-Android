@@ -11,10 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonlibrary.bean.Rarity;
@@ -154,7 +152,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 
 		int imagePasscode = current.getPasscode();
 
-		if(current.getAltArtPasscode() != null && current.getAltArtPasscode() != 0){
+		if (current.getAltArtPasscode() != null && current.getAltArtPasscode() != 0) {
 			imagePasscode = current.getAltArtPasscode();
 		}
 
@@ -168,8 +166,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 			// Apply shader for holofoil pattern
 			if (Rarity.androidShinyRarities.contains(current.getSetRarity())) {
 				d = AndroidUtil.applyShader(context, R.drawable.holofoil, d, 161, 236);
-			}
-			else if("Ghost Rare".equals(current.getSetRarity())){
+			} else if ("Ghost Rare".equals(current.getSetRarity())) {
 				AndroidUtil.convertToGrayscale(d);
 			}
 

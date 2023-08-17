@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,13 +18,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
+import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.abs.CopyDBInCallback;
 import com.example.ygodb.abs.CopyDBOutCallback;
-import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.databinding.ActivityMainBinding;
-
-
 import com.example.ygodb.ui.analyzesets.AnalyzeCardsViewModel;
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.google.android.material.navigation.NavigationView;
@@ -72,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 		NavHostFragment navHostFragment =
 				(NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
 
-		if(navHostFragment == null){
+		if (navHostFragment == null) {
 			throw new RuntimeException("navHostFragment null for " + R.id.nav_host_fragment_content_main);
 		}
 

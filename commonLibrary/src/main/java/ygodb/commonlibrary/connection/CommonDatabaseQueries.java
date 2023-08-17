@@ -38,9 +38,8 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
-	public static <R> CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity,
-			String colorVariant, String setName, DatabaseSelectQuery<CardSet, R> query, SelectQueryResultMapper<CardSet, R> mapper)
-			throws SQLException {
+	public static <R> CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant,
+			String setName, DatabaseSelectQuery<CardSet, R> query, SelectQueryResultMapper<CardSet, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_RARITIES_OF_EXACT_CARD_IN_SET);
 
 		query.bindString(1, gamePlayCardUUID);
@@ -287,8 +286,8 @@ public class CommonDatabaseQueries {
 		return -1;
 	}
 
-	public static <R> List<Integer> getAllArtPasscodesByName(DatabaseSelectQuery<Integer, R> query,String cardName, SelectQueryResultMapper<Integer, R> mapper)
-			throws SQLException {
+	public static <R> List<Integer> getAllArtPasscodesByName(DatabaseSelectQuery<Integer, R> query, String cardName,
+			SelectQueryResultMapper<Integer, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_ALL_ART_PASSCODES_BY_NAME);
 
 		query.bindString(1, cardName);

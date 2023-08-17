@@ -1,19 +1,18 @@
 package ygodb.windows.process;
 
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.connection.CsvConnection;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.YGOLogger;
+import ygodb.windows.utility.WindowsUtil;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-
-import ygodb.commonlibrary.bean.OwnedCard;
-import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.commonlibrary.connection.CsvConnection;
-import ygodb.commonlibrary.connection.SQLiteConnection;
-import ygodb.windows.utility.WindowsUtil;
 
 public class ReformatFromTCGPlayerForPurchase {
 

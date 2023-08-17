@@ -82,7 +82,7 @@ public class AnalyzeCardsToSell {
 				CardSet set = db.getRarityOfExactCardInSet(card.getGamePlayCardUUID(), card.getSetNumber(), card.getSetRarity(),
 														   card.getColorVariant(), card.getSetName());
 
-				if(set == null){
+				if (set == null) {
 					YGOLogger.error("No Set data matching for:" + cardName);
 					continue;
 				}
@@ -99,7 +99,7 @@ public class AnalyzeCardsToSell {
 				}
 
 
-				if ((count > 3 && priceApi.compareTo(minPrice) >= 0) || ( priceApi.compareTo(minPricePercentage) >= 0 &&
+				if ((count > 3 && priceApi.compareTo(minPrice) >= 0) || (priceApi.compareTo(minPricePercentage) >= 0 &&
 						priceApi.divide(priceBought, 2, RoundingMode.HALF_UP).compareTo(BigDecimal.valueOf(1.5)) > 0)) {
 					p.printRecord(card.getQuantity(), card.getCardName(), card.getSetRarity(), card.getSetName(), card.getSetPrefix(),
 								  card.getPriceBought(),

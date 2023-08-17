@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_viewCardsSummary"
-            android:icon="@android:drawable/ic_menu_view"
-            android:title="@string/menu_viewCardsSummary"/>
+                android:id="@+id/nav_viewCardsSummary"
+                android:icon="@android:drawable/ic_menu_view"
+                android:title="@string/menu_viewCardsSummary"/>
         <item
-            android:id="@+id/nav_viewCards"
-            android:icon="@android:drawable/ic_menu_zoom"
-            android:title="@string/menu_viewCards" />
+                android:id="@+id/nav_viewCards"
+                android:icon="@android:drawable/ic_menu_zoom"
+                android:title="@string/menu_viewCards"/>
         <item
-            android:id="@+id/nav_viewCardSet"
-            android:icon="@drawable/layers"
-            android:title="@string/menu_viewCardSet" />
+                android:id="@+id/nav_viewCardSet"
+                android:icon="@drawable/layers"
+                android:title="@string/menu_viewCardSet"/>
         <item
-            android:id="@+id/nav_addCards"
-            android:icon="@drawable/plus_circle"
-            android:title="@string/menu_addCards"
-            android:tint="@android:color/white" />
+                android:id="@+id/nav_addCards"
+                android:icon="@drawable/plus_circle"
+                android:title="@string/menu_addCards"
+                android:tint="@android:color/white"/>
         <item
-            android:id="@+id/nav_sellCards"
-            android:icon="@drawable/dollar_sign"
-            android:title="@string/menu_sellCards" />
+                android:id="@+id/nav_sellCards"
+                android:icon="@drawable/dollar_sign"
+                android:title="@string/menu_sellCards"/>
         <item
-            android:id="@+id/nav_soldCards"
-            android:icon="@drawable/dollar_sign"
-            android:title="@string/menu_soldCards" />
+                android:id="@+id/nav_soldCards"
+                android:icon="@drawable/dollar_sign"
+                android:title="@string/menu_soldCards"/>
         <item
-            android:id="@+id/nav_boxLookup"
-            android:icon="@drawable/box_icon"
-            android:title="@string/menu_boxLookup" />
+                android:id="@+id/nav_boxLookup"
+                android:icon="@drawable/box_icon"
+                android:title="@string/menu_boxLookup"/>
         <item
-            android:id="@+id/nav_analyzeSet"
-            android:icon="@drawable/layers"
-            android:title="@string/menu_analyzeSet" />
+                android:id="@+id/nav_analyzeSet"
+                android:icon="@drawable/layers"
+                android:title="@string/menu_analyzeSet"/>
     </group>
 </menu>

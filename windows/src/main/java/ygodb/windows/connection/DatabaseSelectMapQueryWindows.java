@@ -58,7 +58,7 @@ public class DatabaseSelectMapQueryWindows<T> implements DatabaseSelectMapQuery<
 	}
 
 	@Override
-	public Map<String,List<T>> executeQuery(SelectQueryMapMapper<T, ResultSet> mapper) throws SQLException {
+	public Map<String, List<T>> executeQuery(SelectQueryMapMapper<T, ResultSet> mapper) throws SQLException {
 		if (statement == null || statement.isClosed()) {
 			throw new SQLException(ERROR_MESSAGE);
 		}
@@ -70,7 +70,7 @@ public class DatabaseSelectMapQueryWindows<T> implements DatabaseSelectMapQuery<
 				T mappedResult = mapper.mapRow((resultSet));
 				List<String> keys = mapper.getKeys(mappedResult);
 
-				for(String key : keys){
+				for (String key : keys) {
 					List<T> currentList = resultMap.computeIfAbsent(key, k -> new ArrayList<>());
 					currentList.add(mappedResult);
 				}

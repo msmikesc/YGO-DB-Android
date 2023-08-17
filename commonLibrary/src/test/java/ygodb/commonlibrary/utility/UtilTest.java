@@ -5,7 +5,7 @@ import ygodb.commonlibrary.bean.NameAndColor;
 import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.constant.Const;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UtilTest {
 
@@ -14,7 +14,7 @@ class UtilTest {
 		CsvConnection obj = new CsvConnection();
 		NameAndColor result = Util.getNameAndColor("Card Name");
 		assertEquals("Card Name", result.name);
-		assertEquals(Const.DEFAULT_COLOR_VARIANT , result.colorVariant);
+		assertEquals(Const.DEFAULT_COLOR_VARIANT, result.colorVariant);
 	}
 
 	@Test

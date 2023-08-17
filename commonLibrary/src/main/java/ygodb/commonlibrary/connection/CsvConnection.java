@@ -156,10 +156,9 @@ public class CsvConnection {
 			outputSetNumber += current.getColorVariant();
 		}
 
-		p.printRecord(current.getFolderName(), current.getQuantity(), 0, current.getCardName(), current.getSetPrefix(), current.getSetName(),
-					  outputSetNumber, current.getCondition(), printing, "English", current.getPriceBought(), current.getDateBought(), 0
-				, 0,
-					  0);
+		p.printRecord(current.getFolderName(), current.getQuantity(), 0, current.getCardName(), current.getSetPrefix(),
+					  current.getSetName(), outputSetNumber, current.getCondition(), printing, "English", current.getPriceBought(),
+					  current.getDateBought(), 0, 0, 0);
 
 	}
 

@@ -27,7 +27,8 @@ public class AnalyzeCardsFragment extends Fragment {
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		AnalyzeCardsViewModel analyzeCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(AnalyzeCardsViewModel.class);
+		AnalyzeCardsViewModel analyzeCardsViewModel =
+				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(AnalyzeCardsViewModel.class);
 
 		binding = FragmentViewcardsetBinding.inflate(inflater, container, false);
 		View root = binding.getRoot();
@@ -40,8 +41,7 @@ public class AnalyzeCardsFragment extends Fragment {
 		textView.setThreshold(3);
 		textView.setAdapter(autoCompleteAdapter);
 
-		SingleCardToListAdapter adapter =
-				new SingleCardToListAdapter(analyzeCardsViewModel.getFilteredCardsList(), null, null, false);
+		SingleCardToListAdapter adapter = new SingleCardToListAdapter(analyzeCardsViewModel.getFilteredCardsList(), null, null, false);
 
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
 		layout = linearLayoutManager;

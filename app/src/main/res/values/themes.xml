@@ -20,7 +20,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.YGODB.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.YGODB.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="Theme.YGODB.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+    <style name="Theme.YGODB.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
 </resources>

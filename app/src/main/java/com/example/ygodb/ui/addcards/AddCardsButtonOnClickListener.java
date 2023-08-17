@@ -3,9 +3,7 @@ package com.example.ygodb.ui.addcards;
 import android.content.Context;
 import android.view.View;
 import android.widget.PopupMenu;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

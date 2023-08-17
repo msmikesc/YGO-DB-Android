@@ -19,8 +19,8 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="logcat" />
-        <appender-ref ref="FILE" />
+        <appender-ref ref="logcat"/>
+        <appender-ref ref="FILE"/>
     </root>
 
 </configuration>

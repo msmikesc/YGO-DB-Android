@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.viewSoldCards.ViewSoldCardsFragment">
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     tools:context=".ui.viewSoldCards.ViewSoldCardsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#232020"
-        >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#232020"
+    >
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/cardSearchLayout"
-            android:layout_width="0sp"
-            android:layout_height="48dp"
-            app:hintEnabled="false"
-            app:hintAnimationEnabled="false"
-            app:endIconMode="clear_text"
-            app:endIconTint="@color/white"
-            app:boxBackgroundMode="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+                android:id="@+id/cardSearchLayout"
+                android:layout_width="0sp"
+                android:layout_height="48dp"
+                app:hintEnabled="false"
+                app:hintAnimationEnabled="false"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/white"
+                app:boxBackgroundMode="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/cardSearch"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:padding="0dp"
-                android:paddingStart="4dp"
-                android:textSize="18sp"
-                android:inputType="text"
-                android:hint="Card Name"
-                android:background="@drawable/edit_text_border"
-                app:hintTextColor="#8E8E8E"
-                android:textColor="#FFFFFF"/>
+                    android:id="@+id/cardSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:padding="0dp"
+                    android:paddingStart="4dp"
+                    android:textSize="18sp"
+                    android:inputType="text"
+                    android:hint="Card Name"
+                    android:background="@drawable/edit_text_border"
+                    app:hintTextColor="#8E8E8E"
+                    android:textColor="#FFFFFF"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/view_list"
-            android:layout_width="0sp"
-            android:layout_height="0sp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardSearchLayout"
-            app:layout_constraintVertical_bias="1.0" />
+                android:id="@+id/view_list"
+                android:layout_width="0sp"
+                android:layout_height="0sp"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardSearchLayout"
+                app:layout_constraintVertical_bias="1.0"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginBottom="16dp"
+            app:srcCompat="@android:drawable/ic_menu_sort_by_size"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

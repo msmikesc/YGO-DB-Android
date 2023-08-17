@@ -35,14 +35,14 @@ public class DownloadCardImagesByCardName {
 
 		GamePlayCard card = db.getGamePlayCardByUUID(gpcUUID);
 
-		if(codes == null || codes.isEmpty()){
+		if (codes == null || codes.isEmpty()) {
 			YGOLogger.error("No Cards found for name:" + cardName);
 			return false;
 		}
 
 		List<GamePlayCard> artCardsList = new ArrayList<>();
 
-		for(Integer passcode: codes){
+		for (Integer passcode : codes) {
 			GamePlayCard newCard = card.clone();
 			newCard.setPasscode(passcode);
 			artCardsList.add(newCard);

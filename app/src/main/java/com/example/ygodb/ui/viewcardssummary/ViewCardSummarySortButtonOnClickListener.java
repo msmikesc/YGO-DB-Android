@@ -3,13 +3,11 @@ package com.example.ygodb.ui.viewcardssummary;
 import android.content.Context;
 import android.view.View;
 import android.widget.PopupMenu;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.example.ygodb.R;
-import ygodb.commonlibrary.bean.OwnedCard;
 import com.example.ygodb.ui.singlecard.SummaryCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;

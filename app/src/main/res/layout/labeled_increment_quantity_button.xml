@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="38sp"
-              android:layout_height="38sp"
-              >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="38sp"
+             android:layout_height="38sp"
+>
 
     <ImageButton
             android:id="@+id/incrementButton"
@@ -13,7 +13,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/empty_circle"
-            app:tint="#2FDF45" />
+            app:tint="#2FDF45"/>
 
     <TextView
             android:id="@+id/incrementLabel"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textColor="#FFFFFF"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
 
 </FrameLayout>
 

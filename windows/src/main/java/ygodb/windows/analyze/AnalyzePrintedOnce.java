@@ -1,19 +1,18 @@
 package ygodb.windows.analyze;
 
+import org.apache.commons.csv.CSVPrinter;
+import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
+import ygodb.commonlibrary.connection.CsvConnection;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.windows.utility.WindowsUtil;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.csv.CSVPrinter;
-
-import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
-import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.connection.CsvConnection;
-import ygodb.commonlibrary.connection.SQLiteConnection;
-import ygodb.windows.utility.WindowsUtil;
 
 public class AnalyzePrintedOnce {
 

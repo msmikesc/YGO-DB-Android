@@ -159,10 +159,8 @@ class CSVConnectionTest {
 		// Test case 1: All required fields are present
 		CSVRecord current = mock(CSVRecord.class);
 
-		when(current.get(Const.TCGPLAYER_ITEMS_CSV)).thenReturn("Armed Neos (Secret Rare)\n" +
-				"Battles of Legend: Monstrous Revenge\n");
-		when(current.get(Const.TCGPLAYER_DETAILS_CSV)).thenReturn("Rarity: Secret Rare\n" +
-				"Condition: Near Mint 1st Edition\n");
+		when(current.get(Const.TCGPLAYER_ITEMS_CSV)).thenReturn("Armed Neos (Secret Rare)\n" + "Battles of Legend: Monstrous Revenge\n");
+		when(current.get(Const.TCGPLAYER_DETAILS_CSV)).thenReturn("Rarity: Secret Rare\n" + "Condition: Near Mint 1st Edition\n");
 		when(current.get(Const.TCGPLAYER_PRICE_CSV)).thenReturn("$1.95");
 		when(current.get(Const.TCGPLAYER_QUANTITY_CSV)).thenReturn("1");
 		when(current.get(Const.TCGPLAYER_IMPORT_TIME)).thenReturn(null);
@@ -218,8 +216,7 @@ class CSVConnectionTest {
 		CSVRecord current = mock(CSVRecord.class);
 
 		when(current.get(Const.TCGPLAYER_ITEMS_CSV)).thenReturn("Armed Neos (Secret Rare)");
-		when(current.get(Const.TCGPLAYER_DETAILS_CSV)).thenReturn("Rarity: Secret Rare\n" +
-				"Condition: Near Mint 1st Edition\n");
+		when(current.get(Const.TCGPLAYER_DETAILS_CSV)).thenReturn("Rarity: Secret Rare\n" + "Condition: Near Mint 1st Edition\n");
 		when(current.get(Const.TCGPLAYER_PRICE_CSV)).thenReturn("$1.95");
 		when(current.get(Const.TCGPLAYER_QUANTITY_CSV)).thenReturn("1");
 		when(current.get(Const.TCGPLAYER_IMPORT_TIME)).thenReturn(null);
@@ -237,8 +234,7 @@ class CSVConnectionTest {
 		// Test case: Unknown format for details
 		CSVRecord current = mock(CSVRecord.class);
 
-		when(current.get(Const.TCGPLAYER_ITEMS_CSV)).thenReturn("Armed Neos (Secret Rare)\n" +
-				"Battles of Legend: Monstrous Revenge\n");
+		when(current.get(Const.TCGPLAYER_ITEMS_CSV)).thenReturn("Armed Neos (Secret Rare)\n" + "Battles of Legend: Monstrous Revenge\n");
 		when(current.get(Const.TCGPLAYER_DETAILS_CSV)).thenReturn("Rarity: Secret Rare");
 		when(current.get(Const.TCGPLAYER_PRICE_CSV)).thenReturn("$1.95");
 		when(current.get(Const.TCGPLAYER_QUANTITY_CSV)).thenReturn("1");

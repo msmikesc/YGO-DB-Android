@@ -1,21 +1,20 @@
 package ygodb.windows.importer;
 
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.connection.CsvConnection;
+import ygodb.commonlibrary.connection.DatabaseHashMap;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.YGOLogger;
+import ygodb.windows.utility.WindowsUtil;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-
-import ygodb.commonlibrary.bean.OwnedCard;
-import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.commonlibrary.connection.CsvConnection;
-import ygodb.commonlibrary.connection.DatabaseHashMap;
-import ygodb.commonlibrary.connection.SQLiteConnection;
-import ygodb.windows.utility.WindowsUtil;
 
 public class ImportOwnedCardFromExportedCSV {
 

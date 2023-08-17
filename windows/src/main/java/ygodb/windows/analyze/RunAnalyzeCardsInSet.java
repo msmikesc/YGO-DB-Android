@@ -1,20 +1,20 @@
 package ygodb.windows.analyze;
 
+import org.apache.commons.csv.CSVPrinter;
+import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
+import ygodb.commonlibrary.bean.AnalyzeData;
+import ygodb.commonlibrary.connection.CsvConnection;
+import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.YGOLogger;
+import ygodb.windows.utility.WindowsUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.csv.CSVPrinter;
-import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
-import ygodb.commonlibrary.bean.AnalyzeData;
-import ygodb.commonlibrary.connection.SQLiteConnection;
-import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.windows.utility.WindowsUtil;
-import ygodb.commonlibrary.connection.CsvConnection;
 
 public class RunAnalyzeCardsInSet {
 

@@ -2,11 +2,9 @@ package com.example.ygodb.abs;
 
 import android.content.Intent;
 import android.net.Uri;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.example.ygodb.MainActivity;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;

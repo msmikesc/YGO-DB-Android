@@ -16,7 +16,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="0.25"/>
 
     <TextView
             android:id="@+id/textViewSetName"
@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textViewSetPrefix"
-            app:layout_constraintWidth_percent="0.50" />
+            app:layout_constraintWidth_percent="0.50"/>
 
     <EditText
             android:id="@+id/editTextBoxLabel"

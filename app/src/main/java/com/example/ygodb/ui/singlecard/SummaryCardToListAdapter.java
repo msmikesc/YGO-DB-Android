@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
@@ -53,7 +51,7 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
 
 		int imagePasscode = current.getPasscode();
 
-		if(current.getAltArtPasscode() != null && current.getAltArtPasscode() != 0){
+		if (current.getAltArtPasscode() != null && current.getAltArtPasscode() != 0) {
 			imagePasscode = current.getAltArtPasscode();
 		}
 

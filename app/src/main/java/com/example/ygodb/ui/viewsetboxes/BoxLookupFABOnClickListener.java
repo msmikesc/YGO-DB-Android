@@ -36,13 +36,12 @@ class BoxLookupFABOnClickListener implements View.OnClickListener {
 		popupMenu.setOnMenuItemClickListener(menuItem -> {
 			String menuOption = (String) menuItem.getTitle();
 
-			if(menuOption.equalsIgnoreCase("Add New From Search Box")) {
+			if (menuOption.equalsIgnoreCase("Add New From Search Box")) {
 				boolean results = viewBoxSetViewModel.attemptToAddNewFromSetPrefix(searchEditText.getText().toString());
 
-				if(results){
+				if (results) {
 					adapter.notifyDataSetChanged();
-				}
-				else{
+				} else {
 					Snackbar.make(view, "Unable to add set box for that set code", BaseTransientBottomBar.LENGTH_LONG).show();
 				}
 			}

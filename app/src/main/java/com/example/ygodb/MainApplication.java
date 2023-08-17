@@ -1,7 +1,6 @@
 package com.example.ygodb;
 
 import android.app.Application;
-
 import com.example.ygodb.abs.AndroidUtil;
 import ygodb.commonlibrary.utility.YGOLogger;
 

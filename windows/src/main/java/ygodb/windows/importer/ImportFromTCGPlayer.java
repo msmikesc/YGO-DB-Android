@@ -5,11 +5,11 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.ReadCSVRecord;
+import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.DatabaseHashMap;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
-import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.io.File;

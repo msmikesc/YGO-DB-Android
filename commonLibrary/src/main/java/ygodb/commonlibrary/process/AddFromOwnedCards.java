@@ -1,14 +1,14 @@
 package ygodb.commonlibrary.process;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class AddFromOwnedCards {
 

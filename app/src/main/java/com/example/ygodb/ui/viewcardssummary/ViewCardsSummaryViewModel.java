@@ -2,9 +2,7 @@ package com.example.ygodb.ui.viewcardssummary;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.ygodb.abs.AndroidUtil;
-
 import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.ArrayList;

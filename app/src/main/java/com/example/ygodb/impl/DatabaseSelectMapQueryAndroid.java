@@ -36,7 +36,7 @@ public class DatabaseSelectMapQueryAndroid<T> implements DatabaseSelectMapQuery<
 	}
 
 	@Override
-	public Map<String,List<T>> executeQuery(SelectQueryMapMapper<T, Cursor> mapper) throws SQLException {
+	public Map<String, List<T>> executeQuery(SelectQueryMapMapper<T, Cursor> mapper) throws SQLException {
 
 		String[] bindArgsArray = new String[bindArgs.size()];
 		for (Map.Entry<Integer, String> entry : bindArgs.entrySet()) {
@@ -55,7 +55,7 @@ public class DatabaseSelectMapQueryAndroid<T> implements DatabaseSelectMapQuery<
 				T mappedResult = mapper.mapRow(cursor);
 				List<String> keys = mapper.getKeys(mappedResult);
 
-				for(String key : keys){
+				for (String key : keys) {
 					List<T> currentList = resultMap.computeIfAbsent(key, k -> new ArrayList<>());
 					currentList.add(mappedResult);
 				}

@@ -183,7 +183,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 
 		int imagePasscode = current.getPasscode();
 
-		if(current.getAltArtPasscode() != null && current.getAltArtPasscode() != 0){
+		if (current.getAltArtPasscode() != null && current.getAltArtPasscode() != 0) {
 			imagePasscode = current.getAltArtPasscode();
 		}
 
@@ -197,8 +197,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 			// Apply shader for holofoil pattern
 			if (Rarity.androidShinyRarities.contains(current.getSetRarity())) {
 				d = AndroidUtil.applyShader(context, R.drawable.holofoil, d, 161, 236);
-			}
-			else if("Ghost Rare".equals(current.getSetRarity())){
+			} else if ("Ghost Rare".equals(current.getSetRarity())) {
 				AndroidUtil.convertToGrayscale(d);
 			}
 

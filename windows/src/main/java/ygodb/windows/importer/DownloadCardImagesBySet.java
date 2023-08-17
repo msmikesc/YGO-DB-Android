@@ -29,7 +29,7 @@ public class DownloadCardImagesBySet {
 	public boolean run(SQLiteConnection db, String setName) throws SQLException, InterruptedException {
 		List<GamePlayCard> cardsList = db.getDistinctGamePlayCardsInSetByName(setName);
 
-		if(cardsList == null || cardsList.isEmpty()){
+		if (cardsList == null || cardsList.isEmpty()) {
 			YGOLogger.error("No Cards found in set:" + setName);
 			return false;
 		}

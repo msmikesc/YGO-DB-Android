@@ -30,7 +30,7 @@ public class AnalyzeCardsViewModel extends ViewCardSetViewModel {
 		List<AnalyzeData> results = null;
 		ArrayList<OwnedCard> newList = new ArrayList<>();
 
-		if (setName == null || setName.isBlank()|| setName.trim().length() < 3) {
+		if (setName == null || setName.isBlank() || setName.trim().length() < 3) {
 			isCardNameMode = true;
 			return getInitialCardNameData(cardNameSearch);
 		}
@@ -41,7 +41,7 @@ public class AnalyzeCardsViewModel extends ViewCardSetViewModel {
 			throw new RuntimeException(e);
 		}
 
-		for(AnalyzeData current: results){
+		for (AnalyzeData current : results) {
 			OwnedCard currentCard = new OwnedCard();
 			currentCard.setCardName(current.getCardName());
 			currentCard.setGamePlayCardUUID(current.getGamePlayCardUUID());
@@ -61,7 +61,7 @@ public class AnalyzeCardsViewModel extends ViewCardSetViewModel {
 
 		sortData(newList, currentComparator);
 
-		if(!newList.isEmpty()){
+		if (!newList.isEmpty()) {
 			isCardNameMode = false;
 		}
 

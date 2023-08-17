@@ -1,11 +1,11 @@
 package ygodb.windows.process;
 
-import java.sql.SQLException;
-
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.process.AddFromOwnedCards;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
-import ygodb.commonlibrary.process.AddFromOwnedCards;
+
+import java.sql.SQLException;
 
 public class RunAddFromOwnedCards {
 
