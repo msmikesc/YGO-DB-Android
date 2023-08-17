@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
-import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.constant.Const;
@@ -171,7 +170,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 				d = AndroidUtil.applyShader(context, R.drawable.holofoil, d, 161, 236);
 			}
 			else if("Ghost Rare".equals(current.getSetRarity())){
-				d = AndroidUtil.convertToGrayscale(d);
+				AndroidUtil.convertToGrayscale(d);
 			}
 
 			viewHolder.cardImage.setImageDrawable(d);

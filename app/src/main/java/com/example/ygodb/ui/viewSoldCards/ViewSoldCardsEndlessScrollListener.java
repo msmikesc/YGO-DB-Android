@@ -3,7 +3,6 @@ package com.example.ygodb.ui.viewSoldCards;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.abs.EndlessScrollListener;
-import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.utility.YGOLogger;
 

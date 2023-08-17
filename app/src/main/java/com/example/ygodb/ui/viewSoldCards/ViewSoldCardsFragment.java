@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.abs.EndlessScrollListener;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
-import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.concurrent.Executors;

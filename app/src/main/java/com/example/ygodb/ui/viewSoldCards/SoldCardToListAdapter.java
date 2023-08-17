@@ -119,7 +119,7 @@ public class SoldCardToListAdapter extends RecyclerView.Adapter<SoldCardToListAd
 				d = AndroidUtil.applyShader(context, R.drawable.holofoil, d, 161, 236);
 			}
 			else if("Ghost Rare".equals(current.getSetRarity())){
-				d = AndroidUtil.convertToGrayscale(d);
+				AndroidUtil.convertToGrayscale(d);
 			}
 
 			viewHolder.cardImage.setImageDrawable(d);

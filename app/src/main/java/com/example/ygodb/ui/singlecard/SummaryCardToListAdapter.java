@@ -76,13 +76,13 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
 
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-		TextView title;
-		TextView setName;
-		TextView cardQuantity;
-		ImageView cardImage;
-		TextView cardPrice;
-		TextView cardDate;
-		TextView rarity;
+		final TextView title;
+		final TextView setName;
+		final TextView cardQuantity;
+		final ImageView cardImage;
+		final TextView cardPrice;
+		final TextView cardDate;
+		final TextView rarity;
 
 		public ItemViewHolder(@NonNull View view) {
 			super(view);

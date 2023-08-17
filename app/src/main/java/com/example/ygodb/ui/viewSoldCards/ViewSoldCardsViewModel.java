@@ -3,7 +3,6 @@ package com.example.ygodb.ui.viewSoldCards;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
-import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SoldCard;
 
 import java.util.ArrayList;

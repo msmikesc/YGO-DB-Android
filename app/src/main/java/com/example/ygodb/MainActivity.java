@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -39,9 +40,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
 
 	private ActivityResultLauncher<Intent> copyDBInIntent = null;
-	private CopyDBInCallback copyDBInCallback = null;
 	private ActivityResultLauncher<Intent> copyDBOutIntent = null;
-	private CopyDBOutCallback copyDBOutCallback = null;
 	private AppBarConfiguration mAppBarConfiguration;
 	private ActivityMainBinding binding;
 
@@ -69,14 +68,23 @@ public class MainActivity extends AppCompatActivity {
 				new AppBarConfiguration.Builder(R.id.nav_viewCardsSummary, R.id.nav_viewCards, R.id.nav_viewCardSet, R.id.nav_addCards,
 												R.id.nav_sellCards, R.id.nav_soldCards, R.id.nav_boxLookup,
 												R.id.nav_analyzeSet).setOpenableLayout(drawer).build();
-		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+		NavHostFragment navHostFragment =
+				(NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+
+		if(navHostFragment == null){
+			throw new RuntimeException("navHostFragment null for " + R.id.nav_host_fragment_content_main);
+		}
+
+		NavController navController = navHostFragment.getNavController();
+
 		NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 		NavigationUI.setupWithNavController(navigationView, navController);
 
 		checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
 
-		copyDBInCallback = new CopyDBInCallback(this);
-		copyDBOutCallback = new CopyDBOutCallback(this);
+		CopyDBInCallback copyDBInCallback = new CopyDBInCallback(this);
+		CopyDBOutCallback copyDBOutCallback = new CopyDBOutCallback(this);
 
 		copyDBInIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), copyDBInCallback);
 

@@ -181,7 +181,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 				d = AndroidUtil.applyShader(context, R.drawable.holofoil, d, 161, 236);
 			}
 			else if("Ghost Rare".equals(current.getSetRarity())){
-				d = AndroidUtil.convertToGrayscale(d);
+				AndroidUtil.convertToGrayscale(d);
 			}
 
 			viewHolder.cardImage.setImageDrawable(d);
@@ -198,18 +198,18 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-		TextView title;
-		TextView setNumber;
-		TextView setName;
-		TextView cardRarity;
-		TextView cardPrice;
-		TextView cardDate;
-		TextView cardQuantity;
-		ImageView cardImage;
-		ImageView firstEdition;
-		ImageButton plusButton;
-		ImageButton sellButton;
-		LinearLayout incrementQuantityButtonContainer;
+		final TextView title;
+		final TextView setNumber;
+		final TextView setName;
+		final TextView cardRarity;
+		final TextView cardPrice;
+		final TextView cardDate;
+		final TextView cardQuantity;
+		final ImageView cardImage;
+		final ImageView firstEdition;
+		final ImageButton plusButton;
+		final ImageButton sellButton;
+		final LinearLayout incrementQuantityButtonContainer;
 
 		public ItemViewHolder(@NonNull View view) {
 			super(view);

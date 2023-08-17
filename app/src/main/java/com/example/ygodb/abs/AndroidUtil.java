@@ -161,6 +161,7 @@ public class AndroidUtil {
 		};
 	}
 
+	//TODO add all cards from a static set speed duel
 
 	public static String getSetRarityDisplayWithColorText(OwnedCard current) {
 		String setRarityText = current.getSetRarity();
@@ -208,7 +209,7 @@ public class AndroidUtil {
 		}
 	}
 
-	public static Drawable convertToGrayscale(Drawable drawable) {
+	public static void convertToGrayscale(Drawable drawable) {
 		ColorMatrix matrix = new ColorMatrix();
 		matrix.setSaturation(0);
 
@@ -216,7 +217,6 @@ public class AndroidUtil {
 
 		drawable.setColorFilter(filter);
 
-		return drawable;
 	}
 
 	public static Drawable applyShader(Context context, int shaderResourceId, Drawable drawable, int width, int height) {
@@ -274,6 +274,10 @@ public class AndroidUtil {
 
 	public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
 		Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+
+		if (drawable == null) {
+			throw new IllegalArgumentException("Drawable was null");
+		}
 
 		Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
