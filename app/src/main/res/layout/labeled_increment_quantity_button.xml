@@ -7,21 +7,21 @@
 >
 
     <ImageButton
-            android:id="@+id/incrementButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/empty_circle"
-            app:tint="#2FDF45"/>
+        android:id="@+id/incrementButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/empty_circle"
+        app:tint="#2FDF45"/>
 
     <TextView
-            android:id="@+id/incrementLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:layout_gravity="center"/>
+        android:id="@+id/incrementLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:layout_gravity="center"/>
 
 </FrameLayout>
 

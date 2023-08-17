@@ -7,164 +7,164 @@
                                                    tools:context=".ui.addcards.AddCardsFragment">
 
     <TextView
-            android:id="@+id/cardTitle"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:paddingTop="2sp"
-            android:textAlignment="textStart"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/priceRow"
-            app:layout_constraintStart_toEndOf="@+id/cardImage"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:id="@+id/cardTitle"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:paddingTop="2sp"
+        android:textAlignment="textStart"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/priceRow"
+        app:layout_constraintStart_toEndOf="@+id/cardImage"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
-            android:id="@+id/priceRow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="2sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cardTitle"
-            app:layout_constraintTop_toTopOf="@+id/cardTitle"
-            app:layout_constraintEnd_toEndOf="parent">
+        android:id="@+id/priceRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="2sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardTitle"
+        app:layout_constraintTop_toTopOf="@+id/cardTitle"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-                android:id="@+id/cardPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:paddingRight="0sp"
-                android:textAlignment="textEnd"
-                android:textColor="#56D848"
-                android:textSize="18sp"
+            android:id="@+id/cardPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:paddingRight="0sp"
+            android:textAlignment="textEnd"
+            android:textColor="#56D848"
+            android:textSize="18sp"
         />
 
         <EditText
-                android:id="@+id/cardPriceTextBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:paddingRight="5sp"
-                android:textAlignment="textEnd"
-                android:textColor="#56D848"
-                android:textSize="18sp"
-                android:digits="0123456789."
-                android:inputType="numberDecimal"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-        />
-
-    </LinearLayout>
-
-    <TextView
-            android:id="@+id/cardSetNumber"
-            android:layout_width="105sp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="textStart"
-            android:textColor="#EC160E"
-            android:textSize="15sp"
-            app:layout_constraintStart_toEndOf="@+id/cardImage"
-            app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
-
-    <TextView
-            android:id="@+id/cardDateBought"
+            android:id="@+id/cardPriceTextBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:paddingRight="5sp"
             android:textAlignment="textEnd"
-            android:textColor="#DCDCDC"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
+            android:textColor="#56D848"
+            android:textSize="18sp"
+            android:digits="0123456789."
+            android:inputType="numberDecimal"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+        />
+
+    </LinearLayout>
 
     <TextView
-            android:id="@+id/cardRarity"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="textStart"
-            android:textColor="#DCDCDC"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toStartOf="@+id/cardDateBought"
-            app:layout_constraintStart_toEndOf="@+id/firststEditionIcon"
-            app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
+        android:id="@+id/cardSetNumber"
+        android:layout_width="105sp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAlignment="textStart"
+        android:textColor="#EC160E"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/cardImage"
+        app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
 
     <TextView
-            android:id="@+id/cardSetName"
-            android:layout_width="0sp"
-            android:layout_height="0sp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:textColor="#DCDCDC"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cardQuantity"
-            app:layout_constraintEnd_toStartOf="@+id/plusButton"
-            app:layout_constraintStart_toEndOf="@+id/cardQuantity"
-            app:layout_constraintTop_toTopOf="@+id/cardQuantity"/>
+        android:id="@+id/cardDateBought"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:paddingRight="5sp"
+        android:textAlignment="textEnd"
+        android:textColor="#DCDCDC"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
 
     <TextView
-            android:id="@+id/cardQuantity"
-            android:layout_width="40sp"
-            android:layout_height="38sp"
-            android:gravity="center"
-            android:maxLines="1"
-            android:textColor="#DCDCDC"
-            android:textSize="28sp"
-            app:layout_constraintStart_toEndOf="@+id/cardImage"
-            app:layout_constraintTop_toBottomOf="@+id/cardSetNumber"/>
+        android:id="@+id/cardRarity"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAlignment="textStart"
+        android:textColor="#DCDCDC"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/cardDateBought"
+        app:layout_constraintStart_toEndOf="@+id/firststEditionIcon"
+        app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
+
+    <TextView
+        android:id="@+id/cardSetName"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:textColor="#DCDCDC"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardQuantity"
+        app:layout_constraintEnd_toStartOf="@+id/plusButton"
+        app:layout_constraintStart_toEndOf="@+id/cardQuantity"
+        app:layout_constraintTop_toTopOf="@+id/cardQuantity"/>
+
+    <TextView
+        android:id="@+id/cardQuantity"
+        android:layout_width="40sp"
+        android:layout_height="38sp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="#DCDCDC"
+        android:textSize="28sp"
+        app:layout_constraintStart_toEndOf="@+id/cardImage"
+        app:layout_constraintTop_toBottomOf="@+id/cardSetNumber"/>
 
     <ImageView
-            android:id="@+id/cardImage"
-            android:layout_width="70dp"
-            android:layout_height="90dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars"/>
+        android:id="@+id/cardImage"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars"/>
 
     <ImageButton
-            android:id="@+id/plusButton"
-            android:layout_width="0sp"
-            android:layout_height="0sp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="fitXY"
-            android:layout_marginLeft="2sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cardQuantity"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/minusButton"
-            app:layout_constraintTop_toBottomOf="@+id/cardRarity"
-            app:srcCompat="@drawable/plus_circle"
-            app:tint="#2FDF45"/>
+        android:id="@+id/plusButton"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitXY"
+        android:layout_marginLeft="2sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardQuantity"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/minusButton"
+        app:layout_constraintTop_toBottomOf="@+id/cardRarity"
+        app:srcCompat="@drawable/plus_circle"
+        app:tint="#2FDF45"/>
 
     <ImageButton
-            android:id="@+id/minusButton"
-            android:layout_width="0sp"
-            android:layout_height="0sp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:paddingLeft="0sp"
-            android:paddingRight="0sp"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="@+id/cardQuantity"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardRarity"
-            app:srcCompat="@drawable/minus_circle"
-            app:tint="#DF352F"/>
+        android:id="@+id/minusButton"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:paddingLeft="0sp"
+        android:paddingRight="0sp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/cardQuantity"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardRarity"
+        app:srcCompat="@drawable/minus_circle"
+        app:tint="#DF352F"/>
 
     <ImageView
-            android:id="@+id/firststEditionIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="15sp"
-            android:adjustViewBounds="true"
-            android:layout_gravity="left"
-            android:paddingRight="2sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cardSetNumber"
-            app:layout_constraintStart_toEndOf="@+id/cardSetNumber"
-            app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
+        android:id="@+id/firststEditionIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="15sp"
+        android:adjustViewBounds="true"
+        android:layout_gravity="left"
+        android:paddingRight="2sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardSetNumber"
+        app:layout_constraintStart_toEndOf="@+id/cardSetNumber"
+        app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

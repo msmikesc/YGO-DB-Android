@@ -351,8 +351,7 @@ public class Util {
 							"=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
 					"https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate" +
-							"&utm_medium" +
-							"=card_set_url_api&utm_source=YGOPRODeck");
+							"&utm_medium" + "=card_set_url_api&utm_source=YGOPRODeck");
 			setUrlsThatDoNotExist.add(
 					"https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate" +
 							"&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
