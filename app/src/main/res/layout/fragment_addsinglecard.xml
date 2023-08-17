@@ -52,6 +52,7 @@
                 android:digits="0123456789."
                 android:inputType="numberDecimal"
                 android:imeOptions="actionDone"
+                android:importantForAutofill="no"
         />
 
     </LinearLayout>

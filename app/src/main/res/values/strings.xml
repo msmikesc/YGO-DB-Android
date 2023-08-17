@@ -3,7 +3,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">YGO DB</string>
-    <string name="nav_header_subtitle"></string>
     <string name="nav_header_desc">Navigation</string>
     <string name="action_settings">Settings</string>
 
@@ -20,4 +19,19 @@
     <string name="menu_soldCards">Sold Cards</string>
     <string name="menu_boxLookup">Box Lookup</string>
     <string name="menu_analyzeSet">Analyze Card Sets</string>
+    <string name="set_name_or_code">Set Name or Code</string>
+    <string name="box">Box</string>
+    <string name="set_name">Set Name</string>
+    <string name="card_name">Card Name</string>
+    <string name="save_cards">Save Cards</string>
+    <string name="invert_editions">Invert Editions</string>
+    <string name="set_estimated_prices">Set Estimated Prices</string>
+    <string name="set_api_prices">Set API Prices</string>
+    <string name="set_prices_zero">Set Prices Zero</string>
+    <string name="add_new_from_search_box">Add New From Search Box</string>
+    <string name="date_bought">Date Bought</string>
+    <string name="set_number">Set Number</string>
+    <string name="price">Price</string>
+    <string name="quantity">Quantity</string>
+    <string name="date_sold">Date Sold</string>
 </resources>

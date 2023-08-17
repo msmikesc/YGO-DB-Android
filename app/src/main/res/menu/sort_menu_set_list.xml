@@ -3,15 +3,15 @@
 
     <item
             android:id="@+id/menuQuantity"
-            android:title="Quantity"/>
+            android:title="@string/quantity"/>
     <item
             android:id="@+id/menuCardName"
-            android:title="Card Name"/>
+            android:title="@string/card_name"/>
     <item
             android:id="@+id/menuSetNumber"
-            android:title="Set Number"/>
+            android:title="@string/set_number"/>
     <item
             android:id="@+id/menuPrice"
-            android:title="Price"/>
+            android:title="@string/price"/>
 
 </menu>

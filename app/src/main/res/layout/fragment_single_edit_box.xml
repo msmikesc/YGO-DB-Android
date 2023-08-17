@@ -25,7 +25,7 @@
             android:gravity="center_vertical"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:text="Set Name"
+            android:text="@string/set_name"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textViewSetPrefix"
@@ -35,7 +35,7 @@
             android:id="@+id/editTextBoxLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Box"
+            android:hint="@string/box"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
@@ -46,6 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintWidth_percent="0.15"
             android:inputType="textNoSuggestions"
+            android:importantForAutofill="no"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

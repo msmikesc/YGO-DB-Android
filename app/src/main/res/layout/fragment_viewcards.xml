@@ -34,7 +34,7 @@
                     android:paddingStart="4dp"
                     android:textSize="18sp"
                     android:inputType="text"
-                    android:hint="Card Name"
+                    android:hint="@string/card_name"
                     android:background="@drawable/edit_text_border"
                     app:hintTextColor="#8E8E8E"
                     android:textColor="#FFFFFF"/>

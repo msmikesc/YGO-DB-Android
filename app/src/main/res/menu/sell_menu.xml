@@ -3,19 +3,19 @@
 
     <item
             android:id="@+id/menuSave"
-            android:title="Save Cards"/>
+            android:title="@string/save_cards"/>
 
     <item
             android:id="@+id/menuEstimated"
-            android:title="Set Estimated Prices"/>
+            android:title="@string/set_estimated_prices"/>
 
     <item
             android:id="@+id/menuAPI"
-            android:title="Set API Prices"/>
+            android:title="@string/set_api_prices"/>
 
     <item
             android:id="@+id/menuZero"
-            android:title="Set Prices Zero"/>
+            android:title="@string/set_prices_zero"/>
 
 
 </menu>
