@@ -145,7 +145,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
 		if (current.getPriceBought() != null) {
 			double price = Double.parseDouble(current.getPriceBought());
-			viewHolder.cardPrice.setText("$" + String.format(Locale.ROOT, "%.2f", price));
+			viewHolder.cardPrice.setText(String.format(Locale.ROOT, "$%.2f", price));
 		}
 		viewHolder.cardDate.setText(current.getDateBought());
 

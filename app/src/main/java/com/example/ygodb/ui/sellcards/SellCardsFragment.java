@@ -15,15 +15,13 @@ import com.example.ygodb.databinding.FragmentSellcardsBinding;
 
 public class SellCardsFragment extends Fragment {
 
-	private FragmentSellcardsBinding binding;
-	private LinearLayoutManager layout;
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SellCardsViewModel sellCardsViewModel = new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(SellCardsViewModel.class);
 
-		binding = FragmentSellcardsBinding.inflate(inflater, container, false);
+		FragmentSellcardsBinding binding = FragmentSellcardsBinding.inflate(inflater, container, false);
 		View root = binding.getRoot();
 
 		RecyclerView cardsListView = binding.viewList;
@@ -31,12 +29,11 @@ public class SellCardsFragment extends Fragment {
 		SellCardToListAdapter adapter = new SellCardToListAdapter(sellCardsViewModel.getCardsList(), sellCardsViewModel);
 
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-		layout = linearLayoutManager;
 		cardsListView.setLayoutManager(linearLayoutManager);
 		cardsListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
-		binding.fab.setOnClickListener(new SellCardsButtonOnClickListener(binding.fab, getContext(), sellCardsViewModel, adapter, layout));
+		binding.fab.setOnClickListener(new SellCardsButtonOnClickListener(binding.fab, getContext(), sellCardsViewModel, adapter));
 
 		return root;
 	}

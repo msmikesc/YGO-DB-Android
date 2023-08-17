@@ -28,7 +28,7 @@ public class BoxLookupFragment extends Fragment {
 
 		RecyclerView boxListViewResults = binding.boxListViewResults;
 
-		SingleBoxToListAdapter adapter = new SingleBoxToListAdapter(viewBoxSetViewModel.getBoxList(), viewBoxSetViewModel);
+		SingleBoxToListAdapter adapter = new SingleBoxToListAdapter(viewBoxSetViewModel.getBoxList());
 
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
 		layout = linearLayoutManager;

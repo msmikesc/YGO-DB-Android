@@ -83,7 +83,7 @@ public class SoldCardToListAdapter extends RecyclerView.Adapter<SoldCardToListAd
 
 		if (current.getPriceSold() != null) {
 			double price = Double.parseDouble(current.getPriceSold());
-			viewHolder.cardPrice.setText("$" + String.format(Locale.ROOT, "%.2f", price));
+			viewHolder.cardPrice.setText(String.format(Locale.ROOT, "$%.2f", price));
 		}
 		viewHolder.cardDate.setText(current.getDateSold());
 

@@ -3,7 +3,6 @@ package com.example.ygodb.ui.addcards;
 import android.content.Context;
 import android.view.View;
 import android.widget.PopupMenu;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.AndroidUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,15 +15,13 @@ class AddCardsButtonOnClickListener implements View.OnClickListener {
 
 	private final AddCardsViewModel addCardsViewModel;
 	private final AddCardToListAdapter adapter;
-	private final LinearLayoutManager layout;
 	private final FloatingActionButton fab;
 	private final Context context;
 
 	public AddCardsButtonOnClickListener(FloatingActionButton fab, Context context, AddCardsViewModel addCardsViewModel,
-			AddCardToListAdapter adapter, LinearLayoutManager layout) {
+			AddCardToListAdapter adapter) {
 		this.addCardsViewModel = addCardsViewModel;
 		this.adapter = adapter;
-		this.layout = layout;
 		this.fab = fab;
 		this.context = context;
 	}

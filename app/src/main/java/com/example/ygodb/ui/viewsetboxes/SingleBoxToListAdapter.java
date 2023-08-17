@@ -17,11 +17,8 @@ import java.util.List;
 public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToListAdapter.ItemViewHolder> {
 	private List<SetBox> setBoxes;
 
-	private final ViewBoxSetViewModel viewBoxSetViewModel;
-
-	public SingleBoxToListAdapter(List<SetBox> setBoxes, ViewBoxSetViewModel viewBoxSetViewModel) {
+	public SingleBoxToListAdapter(List<SetBox> setBoxes) {
 		this.setBoxes = setBoxes;
-		this.viewBoxSetViewModel = viewBoxSetViewModel;
 
 	}
 
