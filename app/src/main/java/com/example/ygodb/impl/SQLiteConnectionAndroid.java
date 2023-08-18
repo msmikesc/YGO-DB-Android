@@ -568,6 +568,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public CardSet getRarityOfCardInSetByNumberAndRarity(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant)
+			throws SQLException {
+		DatabaseSelectQuery<CardSet, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getRarityOfCardInSetByNumberAndRarity(gamePlayCardUUID, setNumber, rarity, colorVariant, query,
+																		   new CardSetMapperSelectQuery());
+	}
+
+	@Override
 	public CardSet getRarityOfExactCardInSet(String gamePlayCardUUID, String setNumber, String rarity, String colorVariant, String setName)
 			throws SQLException {
 		DatabaseSelectQuery<CardSet, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());

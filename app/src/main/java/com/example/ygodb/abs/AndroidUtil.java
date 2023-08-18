@@ -159,8 +159,6 @@ public class AndroidUtil {
 		};
 	}
 
-	//TODO add all cards from a static set speed duel
-
 	public static String getSetRarityDisplayWithColorText(OwnedCard current) {
 		String setRarityText = current.getSetRarity();
 		String colorVariant = current.getColorVariant();

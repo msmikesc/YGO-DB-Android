@@ -401,6 +401,7 @@ public class CsvConnection {
 
 		GamePlayCard gamePlayCard = new GamePlayCard();
 
+		name = Util.removeSurroundingQuotes(name);
 		name = Util.checkForTranslatedCardName(name);
 		passcode = Util.checkForTranslatedPasscode(passcode);
 
@@ -450,6 +451,7 @@ public class CsvConnection {
 		} catch (Exception e) {
 			setName = defaultSetName;
 		}
+		name = Util.removeSurroundingQuotes(name);
 
 		name = Util.checkForTranslatedCardName(name);
 		rarity = Util.checkForTranslatedRarity(rarity);
@@ -475,6 +477,49 @@ public class CsvConnection {
 		}
 
 		db.insertOrIgnoreIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, name, null, null);
+	}
+
+	public OwnedCard getStaticSetOwnedCardFromCSV(CSVRecord current, SQLiteConnection db, int quantityMultiplier) throws SQLException {
+		String name = getStringOrNull(current, Const.CARD_NAME_CSV);
+		String cardNumber = getStringOrNull(current, Const.CARD_NUMBER_CSV);
+		String rarity = getStringOrNull(current, Const.RARITY_CSV);
+		int quantity = getIntOrNegativeOne(current, Const.QUANTITY_CSV);
+
+		if (quantity < 1) {
+			YGOLogger.error("Quantity not found for:" + name);
+			return null;
+		}
+		quantity = quantity * quantityMultiplier;
+
+		name = Util.removeSurroundingQuotes(name);
+
+		name = Util.checkForTranslatedCardName(name);
+		rarity = Util.checkForTranslatedRarity(rarity);
+		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
+
+		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
+
+		String gamePlayCardUUID = uuidAndName.getKey();
+
+		if (gamePlayCardUUID == null) {
+			YGOLogger.error("gamePlayCardUUID not found for:" + name);
+			return null;
+		}
+
+		CardSet cardSet = db.getRarityOfCardInSetByNumberAndRarity(gamePlayCardUUID, cardNumber, rarity, Const.DEFAULT_COLOR_VARIANT);
+
+		if (cardSet == null) {
+			YGOLogger.error("CardSet not found for:" + name);
+			return null;
+		}
+
+		String dateBought = dateFormat.format(new Date());
+		int passcode = getPasscodeOrNegativeOne(db, cardSet.getCardName(), gamePlayCardUUID);
+
+		return new OwnedCard(Const.FOLDER_UNSYNCED, cardSet.getCardName(), String.valueOf(quantity), "NearMint",
+							 Const.CARD_PRINTING_FIRST_EDITION, cardSet.getBestExistingPrice(Const.CARD_PRINTING_FIRST_EDITION),
+							 dateBought,
+							 cardSet, passcode);
 	}
 
 	public void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {

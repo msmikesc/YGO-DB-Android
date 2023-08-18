@@ -28,6 +28,8 @@ public class SQLConst {
 			SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX + " where gamePlayCardUUID=?";
 	public static final String GET_RARITIES_OF_CARD_IN_SET_BY_GAME_PLAY_CARD_UUID =
 			SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX + " where gamePlayCardUUID=? and UPPER(cardSets.setName) = UPPER(?)";
+	public static final String GET_RARITIES_OF_CARD_IN_SET_BY_NUMBER_AND_RARITY = SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX +
+			" where gamePlayCardUUID=? and setNumber = ? and setRarity = ? and colorVariant = ?";
 	public static final String GET_RARITIES_OF_EXACT_CARD_IN_SET = SELECT_STAR_FROM_CARD_SETS_WITH_SET_PREFIX +
 			" where gamePlayCardUUID=? and setNumber = ? and setRarity = ? and colorVariant = ? and UPPER(cardSets.setName) = UPPER(?)";
 	public static final String GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID = "Select * from gamePlayCard where gamePlayCardUUID=?";

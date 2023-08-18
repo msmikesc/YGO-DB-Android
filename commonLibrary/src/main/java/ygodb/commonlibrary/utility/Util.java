@@ -768,4 +768,32 @@ public class Util {
 		}
 		return Const.CARD_PRINTING_LIMITED;
 	}
+
+	private static final Set<Character> validQuoteChars = new HashSet<>();
+
+	static {
+		validQuoteChars.add('"');
+		validQuoteChars.add('“');
+		validQuoteChars.add('”');
+		validQuoteChars.add('ʺ');
+		validQuoteChars.add('„');
+		validQuoteChars.add('‟');
+		validQuoteChars.add('＂');
+		validQuoteChars.add('⹂');
+		validQuoteChars.add('❝');
+		validQuoteChars.add('❞');
+	}
+
+	public static String removeSurroundingQuotes(String input) {
+		if (input.length() >= 2) {
+			char startChar = input.charAt(0);
+			char endChar = input.charAt(input.length() - 1);
+
+			if (validQuoteChars.contains(startChar) && validQuoteChars.contains(endChar)) {
+				return input.substring(1, input.length() - 1);
+			}
+		}
+
+		return input;
+	}
 }
