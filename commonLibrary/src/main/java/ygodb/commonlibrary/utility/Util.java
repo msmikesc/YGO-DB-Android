@@ -411,6 +411,11 @@ public class Util {
 			setName = setName.trim();
 		}
 
+		if (setName.contains("Sneak Peek participation cards")) {
+			setName = setName.replace("Sneak Peek participation cards", "");
+			setName = setName.trim();
+		}
+
 		if (setName.contains(": Special Edition")) {
 			setName = setName.replace(": Special Edition", "");
 			setName = setName.trim();
@@ -790,7 +795,7 @@ public class Util {
 			char endChar = input.charAt(input.length() - 1);
 
 			if (validQuoteChars.contains(startChar) && validQuoteChars.contains(endChar)) {
-				return input.substring(1, input.length() - 1);
+				return input.substring(1, input.length() - 1).trim();
 			}
 		}
 

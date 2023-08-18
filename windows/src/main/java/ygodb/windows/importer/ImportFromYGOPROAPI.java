@@ -26,10 +26,10 @@ public class ImportFromYGOPROAPI {
 
 	public static void main(String[] args) throws SQLException, IOException, InterruptedException {
 
-		String setName = "Legendary Duelists: Soulburning Volcano";
+		String setName = "Speed Duel: Battle City Box";
+		boolean importCardImages = false;
 
 		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();
-
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
 		boolean successful = mainObj.run(db, setName);
@@ -38,15 +38,16 @@ public class ImportFromYGOPROAPI {
 		} else {
 			YGOLogger.info("Set Data Import Finished");
 
-			DownloadCardImagesBySet downloadCardImagesBySet = new DownloadCardImagesBySet();
+			if (importCardImages) {
+				DownloadCardImagesBySet downloadCardImagesBySet = new DownloadCardImagesBySet();
 
-			successful = downloadCardImagesBySet.run(db, setName);
-			if (!successful) {
-				YGOLogger.info("Images Import Failed");
-			} else {
-				YGOLogger.info("Images Import Finished");
+				successful = downloadCardImagesBySet.run(db, setName);
+				if (!successful) {
+					YGOLogger.info("Images Import Failed");
+				} else {
+					YGOLogger.info("Images Import Finished");
+				}
 			}
-
 		}
 		db.closeInstance();
 	}
