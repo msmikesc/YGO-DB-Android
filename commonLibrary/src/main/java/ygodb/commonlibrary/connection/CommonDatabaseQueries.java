@@ -243,7 +243,7 @@ public class CommonDatabaseQueries {
 
 		List<CardSet> resultsFound = query.executeQuery(mapper);
 
-		if (resultsFound.size() > 0) {
+		if (!resultsFound.isEmpty()) {
 			return resultsFound.get(0);
 		}
 

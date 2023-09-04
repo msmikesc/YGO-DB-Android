@@ -48,6 +48,10 @@ public class CardSet {
 		return OPEN + getSetNumber() + SEP + getCardName() + SEP + getSetRarity() + SEP + getSetName() + CLOSE + getSetPrice();
 	}
 
+	public String getCardSetIdentifier() {
+		return OPEN + getSetNumber() + SEP + getCardName() + SEP + getSetRarity() + SEP + getSetName() + "\"";
+	}
+
 	public String getLowestExistingPrice() {
 		return Util.getLowestPriceString(getSetPrice(), getSetPriceFirst(), getSetPriceLimited());
 	}

@@ -26,7 +26,7 @@ public class ImportFromYGOPROAPI {
 
 	public static void main(String[] args) throws SQLException, IOException, InterruptedException {
 
-		String setName = "Speed Duel: Battle City Box";
+		String setName = "25th Anniversary Tin: Dueling Heroes Mega Pack";
 		boolean importCardImages = false;
 
 		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();

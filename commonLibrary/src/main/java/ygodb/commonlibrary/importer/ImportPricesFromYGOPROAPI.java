@@ -13,10 +13,13 @@ import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +40,8 @@ public class ImportPricesFromYGOPROAPI {
 	private final HashSet<String> updatedKeysSet = new HashSet<>();
 	private final HashMap<String, Integer> updatedMoreThanOnceKeysMap = new HashMap<>();
 	private boolean shouldAddToUpdatedKeySetAndMap = true;
+
+	OutputStreamWriter cardSetImportFileWriter;
 
 	private void addToSetAndMap(String key) {
 
@@ -83,7 +88,7 @@ public class ImportPricesFromYGOPROAPI {
 		return value;
 	}
 
-	public boolean run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports)
+	public boolean run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports, String cardSetImportFilename)
 			throws SQLException, IOException {
 
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardinfo.php?tcgplayer_data=true";
@@ -112,6 +117,10 @@ public class ImportPricesFromYGOPROAPI {
 					try (FileWriter writer = new FileWriter(lastPriceLoadFilename, false)) {
 						writer.write(inline);
 					}
+				}
+
+				if(shouldAddToUpdatedKeySetAndMap && cardSetImportFilename != null) {
+					cardSetImportFileWriter = new OutputStreamWriter(new FileOutputStream(cardSetImportFilename), StandardCharsets.UTF_16);
 				}
 
 				inline = null;
@@ -164,6 +173,16 @@ public class ImportPricesFromYGOPROAPI {
 		updatedURLsMap.clear();
 		editionToPreparedStatementMap.clear();
 		DatabaseHashMap.closeRaritiesInstance();
+
+		if(cardSetImportFileWriter != null){
+			try {
+				cardSetImportFileWriter.close();
+			} catch (IOException e) {
+				YGOLogger.error("Unable to close cardSetImportFileWriter");
+				YGOLogger.logException(e);
+			}
+		}
+
 	}
 
 	private void updateAllPricesForAllCards(SQLiteConnection db, JsonNode gamePlayCardsNode) throws SQLException {
@@ -262,7 +281,8 @@ public class ImportPricesFromYGOPROAPI {
 			YGOLogger.error("Creating gamePlayCard here for:" + logIdentifier);
 			GamePlayCard inserted = ApiUtil.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCardNode, ownedCardsToCheck, db);
 
-			ApiUtil.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
+			//TODO possibly remove below line permanently
+			//ApiUtil.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
 		}
 
 		if (existingGamePlayCards != null && existingGamePlayCards.size() == 1 &&
@@ -484,6 +504,15 @@ public class ImportPricesFromYGOPROAPI {
 
 				YGOLogger.info("Found " + size + " matches for all matching url key:" + allMatchUrlKey + ":" +
 									   currentSetFromAPI.getCardLogIdentifier());
+				if(shouldAddToUpdatedKeySetAndMap && cardSetImportFileWriter != null) {
+					try {
+						cardSetImportFileWriter.append(currentSetFromAPI.getCardSetIdentifier());
+						cardSetImportFileWriter.append("\n");
+					} catch (IOException e) {
+						YGOLogger.error("Error writing to cardSetImportFileWriter:" + currentSetFromAPI.getCardSetIdentifier());
+						YGOLogger.logException(e);
+					}
+				}
 			}
 		}
 	}

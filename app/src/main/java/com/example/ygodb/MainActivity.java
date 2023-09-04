@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 			AndroidUtil.showProgressDialog(MainActivity.this);
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
-					runner.run(AndroidUtil.getDBInstance(), null, false);
+					runner.run(AndroidUtil.getDBInstance(), null, false, null);
 					AndroidUtil.hideProgressDialog();
 					binding.navView.post(
 							() -> Snackbar.make(binding.navView, "Price Import Finished", BaseTransientBottomBar.LENGTH_LONG).show());
