@@ -13,7 +13,6 @@ public abstract class TextChangedListener<T> implements TextWatcher {
 	}
 
 	private static final long DELAY = 500; // .5 seconds after user stops typing
-	private long lastTextEdit = 0;
 
 	TextChangedListener<T> objRef = null;
 
@@ -23,9 +22,7 @@ public abstract class TextChangedListener<T> implements TextWatcher {
 
 	private final Runnable inputFinishChecker = new Runnable() {
 		public void run() {
-			if (System.currentTimeMillis() > (lastTextEdit + DELAY)) {
-				objRef.onTextChanged(target, s);
-			}
+			objRef.onTextChanged(target, s);
 		}
 	};
 
@@ -41,7 +38,6 @@ public abstract class TextChangedListener<T> implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		lastTextEdit = System.currentTimeMillis() - DELAY;
 		this.s = s;
 		objRef = this;
 		handler.postDelayed(inputFinishChecker, DELAY);
