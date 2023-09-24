@@ -23,7 +23,7 @@ public abstract class TextChangedListener<T> implements TextWatcher {
 
 	private final Runnable inputFinishChecker = new Runnable() {
 		public void run() {
-			if (System.currentTimeMillis() > (lastTextEdit + DELAY - 500)) {
+			if (System.currentTimeMillis() > (lastTextEdit + DELAY)) {
 				objRef.onTextChanged(target, s);
 			}
 		}
@@ -41,7 +41,7 @@ public abstract class TextChangedListener<T> implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		lastTextEdit = System.currentTimeMillis();
+		lastTextEdit = System.currentTimeMillis() - DELAY;
 		this.s = s;
 		objRef = this;
 		handler.postDelayed(inputFinishChecker, DELAY);
