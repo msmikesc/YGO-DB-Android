@@ -20,8 +20,8 @@ public class ViewCardSetViewModel extends ViewModel {
 	protected String sortOption = null;
 	protected String cardNameSearch = null;
 	protected String setNameSearch = null;
-
 	protected boolean isCardNameMode = true;
+	protected long currentSearchStartTime = 0;
 
 	protected final List<String> setNamesDropdownList = new ArrayList<>();
 
@@ -185,5 +185,13 @@ public class ViewCardSetViewModel extends ViewModel {
 
 	public void setFilteredCardsList(List<OwnedCard> filteredCardsList) {
 		this.filteredCardsList = filteredCardsList;
+	}
+
+	public long getCurrentSearchStartTime() {
+		return currentSearchStartTime;
+	}
+
+	public void setCurrentSearchStartTime(long currentSearchStartTime) {
+		this.currentSearchStartTime = currentSearchStartTime;
 	}
 }

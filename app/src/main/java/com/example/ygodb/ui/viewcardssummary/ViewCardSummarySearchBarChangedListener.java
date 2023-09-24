@@ -34,6 +34,7 @@ class ViewCardSummarySearchBarChangedListener extends TextChangedListener<EditTe
 			return;
 		}
 
+		long startTime = System.currentTimeMillis();
 		viewCardsViewModel.setCardNameSearch(cardNameSearch);
 
 		Executors.newSingleThreadExecutor().execute(() -> {
@@ -42,12 +43,16 @@ class ViewCardSummarySearchBarChangedListener extends TextChangedListener<EditTe
 						viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT, 0,
 														cardNameSearch);
 
-				handler.post(() -> {
-					viewCardsViewModel.setCardsList(newList);
-					adapter.setOwnedCards(newList);
-					layout.scrollToPositionWithOffset(0, 0);
-					adapter.notifyDataSetChanged();
-				});
+				long lastSearchStartTime = viewCardsViewModel.getCurrentSearchStartTime();
+				if(startTime >= lastSearchStartTime) {
+					viewCardsViewModel.setCurrentSearchStartTime(startTime);
+					handler.post(() -> {
+						viewCardsViewModel.setCardsList(newList);
+						adapter.setOwnedCards(newList);
+						layout.scrollToPositionWithOffset(0, 0);
+						adapter.notifyDataSetChanged();
+					});
+				}
 			} catch (Exception e) {
 				YGOLogger.logException(e);
 			}

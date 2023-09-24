@@ -17,6 +17,7 @@ public class ViewCardsViewModel extends ViewModel {
 	private String sortOrder = null;
 	private String sortOption = null;
 	private String cardNameSearch = null;
+	protected long currentSearchStartTime = 0;
 
 	public ViewCardsViewModel() {
 		sortOrder = "dateBought desc, modificationDate desc";
@@ -82,4 +83,11 @@ public class ViewCardsViewModel extends ViewModel {
 		this.cardsList = cardsList;
 	}
 
+	public long getCurrentSearchStartTime() {
+		return currentSearchStartTime;
+	}
+
+	public void setCurrentSearchStartTime(long currentSearchStartTime) {
+		this.currentSearchStartTime = currentSearchStartTime;
+	}
 }

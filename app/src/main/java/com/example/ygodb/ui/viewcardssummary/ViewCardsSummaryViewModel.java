@@ -15,6 +15,7 @@ public class ViewCardsSummaryViewModel extends ViewModel {
 	private String sortOrder = null;
 	private String sortOption = null;
 	private String cardNameSearch = null;
+	protected long currentSearchStartTime = 0;
 
 	public ViewCardsSummaryViewModel() {
 		sortOrder = "maxDate desc, cardName asc";
@@ -78,5 +79,13 @@ public class ViewCardsSummaryViewModel extends ViewModel {
 
 	public void setCardsList(List<OwnedCard> cardsList) {
 		this.cardsList = cardsList;
+	}
+
+	public long getCurrentSearchStartTime() {
+		return currentSearchStartTime;
+	}
+
+	public void setCurrentSearchStartTime(long currentSearchStartTime) {
+		this.currentSearchStartTime = currentSearchStartTime;
 	}
 }
