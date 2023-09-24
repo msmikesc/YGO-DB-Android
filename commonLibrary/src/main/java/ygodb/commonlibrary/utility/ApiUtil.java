@@ -185,7 +185,7 @@ public class ApiUtil {
 			}
 
 		} catch (IOException e) {
-			YGOLogger.error("Error downloading card image for '" + card.getCardName());
+			YGOLogger.error("Error downloading card image for " + card.getCardName());
 			YGOLogger.logException(e);
 			return false;
 		}

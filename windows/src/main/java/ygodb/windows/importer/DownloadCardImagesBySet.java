@@ -11,7 +11,7 @@ import java.util.List;
 public class DownloadCardImagesBySet {
 
 	public static void main(String[] args) throws SQLException, InterruptedException {
-		String setName = "Photon Hypernova";
+		String setName = "Structure Deck: The Crimson King";
 
 		DownloadCardImagesBySet mainObj = new DownloadCardImagesBySet();
 
@@ -32,6 +32,9 @@ public class DownloadCardImagesBySet {
 		if (cardsList == null || cardsList.isEmpty()) {
 			YGOLogger.error("No Cards found in set:" + setName);
 			return false;
+		}
+		else{
+			YGOLogger.info("Downloading " + cardsList.size() + " card images for set:" + setName);
 		}
 
 		return WindowsUtil.downloadAllCardImagesForList(cardsList);

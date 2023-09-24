@@ -2,17 +2,20 @@ package ygodb.windows.importer;
 
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DownloadCardImagesByCardName {
 
 	public static void main(String[] args) throws SQLException, InterruptedException {
-		String cardName = "Senju of the Thousand Hands";
+		String cardName = "Last Day Of Witch";
 
 		DownloadCardImagesByCardName mainObj = new DownloadCardImagesByCardName();
 
@@ -39,6 +42,17 @@ public class DownloadCardImagesByCardName {
 			YGOLogger.error("No Cards found for name:" + cardName);
 			return false;
 		}
+
+		Set<Integer> codeSet = new HashSet<>(codes);
+
+		for (Integer passcode : codes) {
+			int manualUpdatePasscode = Util.checkForTranslatedYgoProImagePasscode(passcode);
+			if(manualUpdatePasscode != passcode){
+				codeSet.add(manualUpdatePasscode);
+			}
+		}
+
+		codes = new ArrayList<>(codeSet);
 
 		List<GamePlayCard> artCardsList = new ArrayList<>();
 

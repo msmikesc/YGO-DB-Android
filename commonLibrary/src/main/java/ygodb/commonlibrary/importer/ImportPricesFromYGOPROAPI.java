@@ -279,10 +279,7 @@ public class ImportPricesFromYGOPROAPI {
 		if (setListNode != null && (existingGamePlayCards == null || existingGamePlayCards.isEmpty())) {
 			//no gameplay card, create
 			YGOLogger.error("Creating gamePlayCard here for:" + logIdentifier);
-			GamePlayCard inserted = ApiUtil.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCardNode, ownedCardsToCheck, db);
-
-			//TODO possibly remove below line permanently
-			//ApiUtil.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
+			ApiUtil.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCardNode, ownedCardsToCheck, db);
 		}
 
 		if (existingGamePlayCards != null && existingGamePlayCards.size() == 1 &&
