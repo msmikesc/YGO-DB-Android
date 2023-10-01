@@ -32,6 +32,7 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 			String newSetName = Util.checkForTranslatedSetName(card.getSetName());
 
 			card.setSetName(newSetName);
+			card.setCardName(Util.checkForTranslatedCardName(card.getCardName()));
 
 			CardSet setIdentified = db.getFirstCardSetForCardInSet(card.getCardName(), newSetName);
 
