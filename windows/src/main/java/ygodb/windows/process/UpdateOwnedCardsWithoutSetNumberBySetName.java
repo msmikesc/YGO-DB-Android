@@ -45,6 +45,7 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 			card.setSetNumber(setIdentified.getSetNumber());
 			card.setSetPrefix(setIdentified.getSetPrefix());
 			card.setRarityUnsure(0);
+			//TODO fix setting passcode
 
 			try {
 				db.updateOwnedCardByUUID(card);

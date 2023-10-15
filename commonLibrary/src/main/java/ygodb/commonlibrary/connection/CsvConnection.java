@@ -440,6 +440,8 @@ public class CsvConnection {
 		String cardNumber = getStringOrNull(current, Const.CARD_NUMBER_CSV);
 		String rarity = getStringOrNull(current, Const.RARITY_CSV);
 
+		//TODO handle multiple raries on one cell
+
 		String setName = null;
 
 		try {

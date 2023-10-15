@@ -26,7 +26,7 @@ public class ImportFromYGOPROAPI {
 
 	public static void main(String[] args) throws SQLException, IOException, InterruptedException {
 
-		String setName = "Structure Deck: The Crimson King";
+		String setName = "Speed Duel Tournament Pack 6";
 		boolean importCardImages = false;
 
 		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();
