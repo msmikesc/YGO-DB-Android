@@ -115,6 +115,9 @@ public interface SQLiteConnection {
 	int insertOrIgnoreIntoCardSet(String setNumber, String rarity, String setName, String gamePlayCardUUID, String cardName,
 			String colorVariant, String url) throws SQLException;
 
+	int insertOrIgnoreIntoCardSetWithAltArtPasscode(String setNumber, String rarity, String setName, String gamePlayCardUUID,
+			String cardName, String colorVariant, String url, Integer altArtPasscode) throws SQLException;
+
 	void updateSetName(String original, String newName) throws SQLException;
 
 	int updateCardSetPrice(String setNumber, String rarity, String price, String edition) throws SQLException;

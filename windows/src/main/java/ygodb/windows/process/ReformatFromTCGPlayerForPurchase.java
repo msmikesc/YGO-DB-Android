@@ -5,6 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
@@ -30,7 +31,10 @@ public class ReformatFromTCGPlayerForPurchase {
 
 		CsvConnection csvConnection = new CsvConnection();
 
-		CSVParser parser = csvConnection.getParser("C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\csv\\TCGPlayer.csv",
+		String filename = "TCGPlayer.csv";
+		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
+
+		CSVParser parser = csvConnection.getParser(resourcePath,
 												   StandardCharsets.UTF_16LE);
 
 		Iterator<CSVRecord> it = parser.iterator();
@@ -50,7 +54,6 @@ public class ReformatFromTCGPlayerForPurchase {
 				if (map.containsKey(key)) {
 					map.get(key).setQuantity(map.get(key).getQuantity() + card.getQuantity());
 				} else {
-
 					map.put(key, card);
 				}
 

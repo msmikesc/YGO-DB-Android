@@ -582,6 +582,30 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
+	public static int insertOrIgnoreIntoCardSetWithAltArt(DatabaseUpdateQuery query, String setNumber, String rarity, String setName,
+			String gamePlayCardUUID, String cardName, String colorVariant, String url, Integer altArtPasscode) throws SQLException {
+
+		if (colorVariant == null || colorVariant.isBlank()) {
+			colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+		if(altArtPasscode != null && altArtPasscode == 0){
+			altArtPasscode = null;
+		}
+
+		query.prepareStatement(SQLConst.INSERT_OR_IGNORE_INTO_CARD_SETS_WITH_ALT_ART);
+
+		query.bindString(1, gamePlayCardUUID);
+		query.bindString(2, setNumber);
+		query.bindString(3, setName);
+		query.bindString(4, rarity);
+		query.bindString(5, cardName);
+		query.bindString(6, colorVariant);
+		query.bindString(7, url);
+		query.bindInteger(8, altArtPasscode);
+
+		return query.executeUpdate();
+	}
+
 	public static int updateCardSetPrice(DatabaseUpdateQuery query, String setNumber, String rarity, String price, String edition)
 			throws SQLException {
 		String editionTarget = Util.identifyEditionPrinting(edition);

@@ -37,6 +37,9 @@ public class ImportPricesFromYGOPROAPI {
 		setNamesList.add(currentSetFromAPI.getCardName() + " " + currentSetFromAPI.getSetNumber());
 	}
 
+	//TODO update url for 0 price entries
+	//TODO update entries with 0 price bought to match market price
+
 	private final HashSet<String> updatedKeysSet = new HashSet<>();
 	private final HashMap<String, Integer> updatedMoreThanOnceKeysMap = new HashMap<>();
 	private boolean shouldAddToUpdatedKeySetAndMap = true;
@@ -364,8 +367,9 @@ public class ImportPricesFromYGOPROAPI {
 		} else {
 			//insert new record
 			YGOLogger.info("adding new entry for " + color + " with URL:" + url);
-			db.insertOrIgnoreIntoCardSet(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(),
-										 existingEntry.getGamePlayCardUUID(), existingEntry.getCardName(), color, url);
+			db.insertOrIgnoreIntoCardSetWithAltArtPasscode(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(),
+										 existingEntry.getGamePlayCardUUID(), existingEntry.getCardName(), color, url,
+														   existingEntry.getAltArtPasscode());
 		}
 	}
 
@@ -374,8 +378,8 @@ public class ImportPricesFromYGOPROAPI {
 		if (previouslyFoundDefault) {
 			//insert new record
 			YGOLogger.info("adding new entry for " + color + " with URL:" + url);
-			db.insertOrIgnoreIntoCardSet(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(),
-										 existingEntry.getGamePlayCardUUID(), existingEntry.getCardName(), color, url);
+			db.insertOrIgnoreIntoCardSetWithAltArtPasscode(existingEntry.getSetNumber(), existingEntry.getSetRarity(), existingEntry.getSetName(),
+										 existingEntry.getGamePlayCardUUID(), existingEntry.getCardName(), color, url, existingEntry.getAltArtPasscode());
 		} else {
 			//update existing record to whatever the remaining color is
 			YGOLogger.info("Updating existing entry to " + color + " with URL:" + url);

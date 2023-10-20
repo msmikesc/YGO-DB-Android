@@ -329,35 +329,25 @@ public class Util {
 			setUrlsThatDoNotExist = new HashSet<>();
 
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/duelist-league-promo/enemy-controller?partner=YGOPRODeck&utm_campaign=affiliate" +
-							"&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fduelist-league-promo%2Fenemy-controller");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/legendary-duelists-season-3/number-15-gimmick-puppet-giant-grinder?partner" +
-							"=YGOPRODeck&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Flegendary-duelists-season-3%2Fnumber-15-gimmick-puppet-giant-grinder");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/duelist-league-promo/axe-of-despair?partner=YGOPRODeck&utm_campaign=affiliate" +
-							"&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fduelist-league-promo%2Faxe-of-despair");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/tactical-evolution/gemini-summoner-taev-ensp1?partner=YGOPRODeck&utm_campaign" +
-							"=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftactical-evolution%2Fgemini-summoner-taev-ensp1");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/colossal-fighter-common?partner=YGOPRODeck&utm_campaign" +
-							"=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2F5ds-2008-starter-deck%2Fcolossal-fighter-common");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/gaia-knight-the-force-of-earth-common?partner=YGOPRODeck" +
-							"&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2F5ds-2008-starter-deck%2Fgaia-knight-the-force-of-earth-common");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/5ds-2008-starter-deck/junk-warrior-common?partner=YGOPRODeck&utm_campaign" +
-							"=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2F5ds-2008-starter-deck%2Fjunk-warrior-common");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/maze-of-memories/psi-beast-cr?partner=YGOPRODeck&utm_campaign=affiliate" +
-							"&utm_medium" + "=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaze-of-memories%2Fpsi-beast-cr");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/toon-chaos/psy-frame-driver-cr?partner=YGOPRODeck&utm_campaign=affiliate" +
-							"&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftoon-chaos%2Fpsy-frame-driver-cr");
 			setUrlsThatDoNotExist.add(
-					"https://store.tcgplayer.com/yugioh/dark-legends-promo-card/gorz-the-emissary-of-darkness?partner=YGOPRODeck" +
-							"&utm_campaign=affiliate&utm_medium=card_set_url_api&utm_source=YGOPRODeck");
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fdark-legends-promo-card%2Fgorz-the-emissary-of-darkness");
 			//setUrlsThatDoNotExist.add();
 		}
 
@@ -673,25 +663,25 @@ public class Util {
 	public static String extractColorFromUrl(String url) {
 		String tester = url.replace("blue-eyes", "").replace("red-eyes", "").replace("eyes-of-blue", "");
 
-		if (tester.contains("-red?")) {
+		if (tester.endsWith("-red")) {
 			return "r";
 		}
-		if (tester.contains("-blue?")) {
+		if (tester.endsWith("-blue")) {
 			return "b";
 		}
-		if (tester.contains("-green?")) {
+		if (tester.endsWith("-green")) {
 			return "g";
 		}
-		if (tester.contains("-purple?")) {
+		if (tester.endsWith("-purple")) {
 			return "p";
 		}
-		if (tester.contains("-bronze?")) {
+		if (tester.endsWith("-bronze")) {
 			return "brz";
 		}
-		if (tester.contains("-silver?")) {
+		if (tester.endsWith("-silver")) {
 			return "s";
 		}
-		if (tester.contains("-alternate-art?")) {
+		if (tester.endsWith("-alternate-art")) {
 			return "a";
 		}
 		return Const.DEFAULT_COLOR_VARIANT;

@@ -101,6 +101,9 @@ public class SQLConst {
 					"datetime('now','localtime'),datetime('now','localtime'),?,?)";
 	public static final String INSERT_OR_IGNORE_INTO_CARD_SETS = "INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName," +
 			"setRarity,cardName,colorVariant,setURL) values(?,?,?,?,?,?,?)";
+
+	public static final String INSERT_OR_IGNORE_INTO_CARD_SETS_WITH_ALT_ART = "INSERT OR IGNORE into cardSets(gamePlayCardUUID,setNumber,setName," +
+			"setRarity,cardName,colorVariant,setURL, altArtPasscode) values(?,?,?,?,?,?,?,?)";
 	public static final String UPDATE_CARD_SETS_SET_NAME = "update cardSets set setName = ? where setName = ?";
 	public static final String UPDATE_OWNED_CARDS_SET_NAME = "update ownedCards set setName = ? where setName = ?";
 	public static final String UPDATE_SET_DATA_SET_NAME = "update setData set setName = ? where setName = ?";

@@ -600,6 +600,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public int insertOrIgnoreIntoCardSetWithAltArtPasscode(String setNumber, String rarity, String setName, String gamePlayCardUUID, String cardName,
+			String colorVariant, String url, Integer altArtPasscode) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
+		return CommonDatabaseQueries.insertOrIgnoreIntoCardSetWithAltArt(query, setNumber, rarity, setName, gamePlayCardUUID, cardName, colorVariant,
+															   url, altArtPasscode);
+	}
+
+	@Override
 	public void updateSetName(String original, String newName) throws SQLException {
 
 		Connection connection = this.getInstance();

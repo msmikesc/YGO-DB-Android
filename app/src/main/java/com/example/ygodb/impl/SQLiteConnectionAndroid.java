@@ -870,6 +870,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public int insertOrIgnoreIntoCardSetWithAltArtPasscode(String setNumber, String rarity, String setName, String gamePlayCardUUID,
+			String cardName, String colorVariant, String url, Integer altArtPasscode) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+		return CommonDatabaseQueries.insertOrIgnoreIntoCardSetWithAltArt(query, setNumber, rarity, setName, gamePlayCardUUID, cardName, colorVariant,
+															   url, altArtPasscode);
+	}
+
+	@Override
 	public void updateSetName(String original, String newName) {
 		SQLiteDatabase connection = this.getInstance();
 
