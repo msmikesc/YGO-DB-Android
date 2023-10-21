@@ -41,7 +41,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	public Connection getInstance() throws SQLException {
 		if (connectionInstance == null) {
 			connectionInstance =
-					DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Mike\\Documents\\GitHub\\YGO-DB\\YGO-DB\\db\\YGO-DB.db");
+					DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\db\\YGO-DB.db");
 		}
 
 		return connectionInstance;
