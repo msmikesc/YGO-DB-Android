@@ -191,6 +191,13 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		}
 	}
 
+	public static class PasscodeMapperSelectQuery implements SelectQueryResultMapper<Integer, ResultSet> {
+		@Override
+		public Integer mapRow(ResultSet resultSet) throws SQLException {
+			return resultSet.getInt(Const.PASSCODE);
+		}
+	}
+
 	public static class SetNumberMapperSelectQuery implements SelectQueryResultMapper<String, ResultSet> {
 		@Override
 		public String mapRow(ResultSet resultSet) throws SQLException {
@@ -333,6 +340,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	public String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException {
 		DatabaseSelectQuery<String, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
 		return CommonDatabaseQueries.getGamePlayCardUUIDFromPasscode(passcode, query, new GamePlayCardUUIDMapperSelectQuery());
+	}
+
+	@Override
+	public Integer getPasscodeFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+		DatabaseSelectQuery<Integer, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getPasscodeFromGamePlayCardUUID(gamePlayCardUUID, query, new PasscodeMapperSelectQuery());
 	}
 
 	public static class AnalyzeDataOwnedCardSummaryMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, ResultSet> {

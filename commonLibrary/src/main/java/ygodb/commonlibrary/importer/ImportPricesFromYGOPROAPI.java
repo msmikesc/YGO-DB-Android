@@ -37,7 +37,6 @@ public class ImportPricesFromYGOPROAPI {
 		setNamesList.add(currentSetFromAPI.getCardName() + " " + currentSetFromAPI.getSetNumber());
 	}
 
-	//TODO update url for 0 price entries
 	//TODO update entries with 0 price bought to match market price
 
 	private final HashSet<String> updatedKeysSet = new HashSet<>();
@@ -111,6 +110,8 @@ public class ImportPricesFromYGOPROAPI {
 				return false;
 			} else {
 
+				shouldAddToUpdatedKeySetAndMap = handleOptionalDBImports;
+
 				String inline = ApiUtil.getApiResponseFromURL(url);
 
 				ObjectMapper objectMapper = new ObjectMapper();
@@ -135,9 +136,7 @@ public class ImportPricesFromYGOPROAPI {
 
 				JsonNode gamePlayCardsNode = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
-				shouldAddToUpdatedKeySetAndMap = handleOptionalDBImports;
-
-				if (handleOptionalDBImports) {
+				if (shouldAddToUpdatedKeySetAndMap) {
 					addAllMissingGamePlayCards(db, gamePlayCardsNode);
 					addAllMissingSetUrls(db, gamePlayCardsNode);
 				}

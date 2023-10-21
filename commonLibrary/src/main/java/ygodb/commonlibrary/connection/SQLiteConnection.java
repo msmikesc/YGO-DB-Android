@@ -44,6 +44,8 @@ public interface SQLiteConnection {
 
 	String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException;
 
+	Integer getPasscodeFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException;
+
 	List<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String name) throws SQLException;
 
 	List<OwnedCard> getAllOwnedCards() throws SQLException;

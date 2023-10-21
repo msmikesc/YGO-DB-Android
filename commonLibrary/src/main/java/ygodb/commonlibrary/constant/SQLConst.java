@@ -35,12 +35,13 @@ public class SQLConst {
 	public static final String GET_CARD_TITLE_FROM_GAME_PLAY_CARD_UUID = "Select * from gamePlayCard where gamePlayCardUUID=?";
 	public static final String GET_GAME_PLAY_CARD_UUID_FROM_TITLE = "Select * from gamePlayCard where UPPER(title)=UPPER(?)";
 	public static final String GET_GAME_PLAY_CARD_UUID_FROM_PASSCODE = "Select * from gamePlayCard where passcode = ?";
+	public static final String GET_PASSCODE_FROM_GAME_PLAY_CARD_UUID = "Select * from gamePlayCard where gamePlayCardUUID = ?";
 	public static final String GET_ANALYZE_DATA_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID = "select sum(quantity), cardName, group_concat" +
 			"(DISTINCT setName), MAX(dateBought) as maxDate, sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice, " +
 			"gamePlayCardUUID from ownedCards where gamePlayCardUUID = ? group by cardName";
 	public static final String GET_ALL_OWNED_CARDS = "select * from ownedCards order by setName, setRarity, cardName";
 	public static final String GET_ALL_OWNED_CARDS_WITHOUT_SET_PREFIX = "select * from ownedCards where setPrefix is null";
-	public static final String GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE = "select * from ownedCards where passcode = -1";
+	public static final String GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE = "select * from ownedCards where passcode < 0";
 	public static final String GET_ALL_OWNED_CARDS_FOR_HASH_MAP = "select * from ownedCards order by setName, setRarity, cardName";
 	public static final String GET_RARITY_UNSURE_OWNED_CARDS = "select * from ownedCards where rarityUnsure = 1 order by setName";
 	public static final String GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME =

@@ -459,6 +459,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		}
 	}
 
+	public static class PasscodeMapperSelectQuery implements SelectQueryResultMapper<Integer, Cursor> {
+		@Override
+		public Integer mapRow(Cursor resultSet) throws SQLException {
+			String[] col = resultSet.getColumnNames();
+			return resultSet.getInt(getColumn(col, Const.PASSCODE));
+		}
+	}
+
 	public static class SetNumberMapperSelectQuery implements SelectQueryResultMapper<String, Cursor> {
 		@Override
 		public String mapRow(Cursor resultSet) throws SQLException {
@@ -606,6 +614,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public String getGamePlayCardUUIDFromPasscode(int passcode) throws SQLException {
 		DatabaseSelectQuery<String, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
 		return CommonDatabaseQueries.getGamePlayCardUUIDFromPasscode(passcode, query, new GamePlayCardUUIDMapperSelectQuery());
+	}
+
+	@Override
+	public Integer getPasscodeFromGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+		DatabaseSelectQuery<Integer, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getPasscodeFromGamePlayCardUUID(gamePlayCardUUID, query, new PasscodeMapperSelectQuery());
 	}
 
 	public static class AnalyzeDataOwnedCardSummaryMapperSelectQuery implements SelectQueryResultMapper<OwnedCard, Cursor> {

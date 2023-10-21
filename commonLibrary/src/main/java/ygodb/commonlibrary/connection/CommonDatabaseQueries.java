@@ -129,6 +129,21 @@ public class CommonDatabaseQueries {
 		return null;
 	}
 
+	public static <R> Integer getPasscodeFromGamePlayCardUUID(String gamePlayCardUUID, DatabaseSelectQuery<Integer, R> query,
+			SelectQueryResultMapper<Integer, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_PASSCODE_FROM_GAME_PLAY_CARD_UUID);
+
+		query.bindString(1, gamePlayCardUUID);
+
+		List<Integer> resultsFound = query.executeQuery(mapper);
+
+		if (resultsFound.size() == 1) {
+			return resultsFound.get(0);
+		}
+
+		return null;
+	}
+
 	public static <R> List<OwnedCard> getAnalyzeDataOwnedCardSummaryByGamePlayCardUUID(String gamePlayCardUUID,
 			DatabaseSelectQuery<OwnedCard, R> query, SelectQueryResultMapper<OwnedCard, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_ANALYZE_DATA_OWNED_CARDS_BY_GAME_PLAY_CARD_UUID);

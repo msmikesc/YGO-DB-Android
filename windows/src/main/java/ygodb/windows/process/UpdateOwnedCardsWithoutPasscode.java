@@ -10,10 +10,10 @@ import ygodb.windows.utility.WindowsUtil;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UpdateOwnedCardsWithoutSetNumberBySetName {
+public class UpdateOwnedCardsWithoutPasscode {
 
 	public static void main(String[] args) throws SQLException {
-		UpdateOwnedCardsWithoutSetNumberBySetName mainObj = new UpdateOwnedCardsWithoutSetNumberBySetName();
+		UpdateOwnedCardsWithoutPasscode mainObj = new UpdateOwnedCardsWithoutPasscode();
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
@@ -23,7 +23,7 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 
 	public void run(SQLiteConnection db) throws SQLException {
 
-		List<OwnedCard> cards = db.getAllOwnedCardsWithoutSetNumber();
+		List<OwnedCard> cards = db.getAllOwnedCardsWithoutPasscode();
 
 		int count = 0;
 
@@ -46,6 +46,11 @@ public class UpdateOwnedCardsWithoutSetNumberBySetName {
 			if(passcode == null || passcode == 0){
 				YGOLogger.info("Unknown passcode for card name and set: " + card.getCardName() + ":" + newSetName);
 				passcode = 0;
+			}
+
+			if(card.getPasscode() == passcode){
+				//skip, nothing to update
+				continue;
 			}
 
 			card.setGamePlayCardUUID(setIdentified.getGamePlayCardUUID());
