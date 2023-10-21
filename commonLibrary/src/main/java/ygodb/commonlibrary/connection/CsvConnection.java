@@ -9,6 +9,7 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.NameAndColor;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.ReadCSVRecord;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
@@ -30,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -438,9 +440,8 @@ public class CsvConnection {
 
 		String name = getStringOrNull(current, Const.CARD_NAME_CSV);
 		String cardNumber = getStringOrNull(current, Const.CARD_NUMBER_CSV);
-		String rarity = getStringOrNull(current, Const.RARITY_CSV);
-
-		//TODO handle multiple raries on one cell
+		String rawRarityInput = getStringOrNull(current, Const.RARITY_CSV);
+		List<String> rarityInputList = List.of(rawRarityInput.split("\\r?\\n"));
 
 		String setName = null;
 
@@ -456,9 +457,22 @@ public class CsvConnection {
 		name = Util.removeSurroundingQuotes(name);
 
 		name = Util.checkForTranslatedCardName(name);
-		rarity = Util.checkForTranslatedRarity(rarity);
 		setName = Util.checkForTranslatedSetName(setName);
 		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
+
+		ArrayList<String> confirmedRarites = new ArrayList<>();
+
+		for(String inputRarity: rarityInputList){
+			String currentRarity = Util.checkForTranslatedRarity(inputRarity.trim());
+			Rarity rarityObject = Rarity.fromString(currentRarity);
+
+			if(rarityObject.equals(Rarity.nullRarity)){
+				YGOLogger.error("Rarity unable to be read:" + currentRarity);
+			}
+			else{
+				confirmedRarites.add(rarityObject.toString());
+			}
+		}
 
 		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
 
@@ -478,7 +492,9 @@ public class CsvConnection {
 
 		}
 
-		db.insertOrIgnoreIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, name, null, null);
+		for(String rarity: confirmedRarites) {
+			db.insertOrIgnoreIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, name, null, null);
+		}
 	}
 
 	public OwnedCard getStaticSetOwnedCardFromCSV(CSVRecord current, SQLiteConnection db, int quantityMultiplier) throws SQLException {
