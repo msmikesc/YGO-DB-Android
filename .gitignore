@@ -20,3 +20,4 @@ local.properties
 /log
 /app/src/main/assets/pics/desktop.ini
 /csv/import/static-set-ownedcards.csv
+/db/
