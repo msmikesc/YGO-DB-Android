@@ -507,7 +507,7 @@ public class ImportPricesFromYGOPROAPI {
 				if(shouldAddToUpdatedKeySetAndMap && cardSetImportFileWriter != null) {
 					try {
 						cardSetImportFileWriter.append(currentSetFromAPI.getCardSetIdentifier());
-						cardSetImportFileWriter.append(','+currentSetFromAPI.getSetUrl());
+						cardSetImportFileWriter.append(",\"").append(currentSetFromAPI.getSetUrl()).append("\"");
 						cardSetImportFileWriter.append("\n");
 					} catch (IOException e) {
 						YGOLogger.error("Error writing to cardSetImportFileWriter:" + currentSetFromAPI.getCardSetIdentifier());
