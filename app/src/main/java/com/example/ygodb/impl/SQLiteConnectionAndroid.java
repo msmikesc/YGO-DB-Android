@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -664,6 +665,14 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	public List<OwnedCard> getAllOwnedCardsWithoutPasscode() throws SQLException {
 		DatabaseSelectQuery<OwnedCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
 		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE);
+
+		return query.executeQuery(new OwnedCardMapperSelectQuery());
+	}
+
+	@Override
+	public List<OwnedCard> getAllOwnedCardsWithoutPriceBought() throws SQLException {
+		DatabaseSelectQuery<OwnedCard, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PRICE_BOUGHT);
 
 		return query.executeQuery(new OwnedCardMapperSelectQuery());
 	}

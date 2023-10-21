@@ -395,6 +395,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public List<OwnedCard> getAllOwnedCardsWithoutPriceBought() throws SQLException {
+		DatabaseSelectQuery<OwnedCard, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		query.prepareStatement(SQLConst.GET_ALL_OWNED_CARDS_WITHOUT_PRICE_BOUGHT);
+
+		return query.executeQuery(new OwnedCardMapperSelectQuery());
+	}
+
+	@Override
 	public List<OwnedCard> getRarityUnsureOwnedCards() throws SQLException {
 		DatabaseSelectQuery<OwnedCard, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
 		query.prepareStatement(SQLConst.GET_RARITY_UNSURE_OWNED_CARDS);

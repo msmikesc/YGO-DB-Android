@@ -37,8 +37,6 @@ public class ImportPricesFromYGOPROAPI {
 		setNamesList.add(currentSetFromAPI.getCardName() + " " + currentSetFromAPI.getSetNumber());
 	}
 
-	//TODO update entries with 0 price bought to match market price
-
 	private final HashSet<String> updatedKeysSet = new HashSet<>();
 	private final HashMap<String, Integer> updatedMoreThanOnceKeysMap = new HashMap<>();
 	private boolean shouldAddToUpdatedKeySetAndMap = true;

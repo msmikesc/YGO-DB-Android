@@ -64,6 +64,8 @@ public interface SQLiteConnection {
 
 	Map<String, List<OwnedCard>> getAllOwnedCardsForHashMap() throws SQLException;
 
+	List<OwnedCard> getAllOwnedCardsWithoutPriceBought() throws SQLException;
+
 	List<OwnedCard> getRarityUnsureOwnedCards() throws SQLException;
 
 	List<String> getDistinctGamePlayCardUUIDsInSetByName(String setName) throws SQLException;

@@ -42,6 +42,7 @@ public class SQLConst {
 	public static final String GET_ALL_OWNED_CARDS = "select * from ownedCards order by setName, setRarity, cardName";
 	public static final String GET_ALL_OWNED_CARDS_WITHOUT_SET_PREFIX = "select * from ownedCards where setPrefix is null";
 	public static final String GET_ALL_OWNED_CARDS_WITHOUT_PASSCODE = "select * from ownedCards where passcode < 0";
+	public static final String GET_ALL_OWNED_CARDS_WITHOUT_PRICE_BOUGHT = "select * from ownedCards where priceBought = 0";
 	public static final String GET_ALL_OWNED_CARDS_FOR_HASH_MAP = "select * from ownedCards order by setName, setRarity, cardName";
 	public static final String GET_RARITY_UNSURE_OWNED_CARDS = "select * from ownedCards where rarityUnsure = 1 order by setName";
 	public static final String GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME =
