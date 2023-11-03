@@ -114,7 +114,11 @@ public class AddCardsViewModel extends ViewModel {
 				//assume ots unlimited, everything else 1st
 				if (newCard.getSetName().contains("OTS")) {
 					newCard.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
-				} else {
+				}
+				else if(newCard.getSetName().contains("Lost Art")){
+					newCard.setEditionPrinting(Const.CARD_PRINTING_LIMITED);
+				}
+				else {
 					newCard.setEditionPrinting(Const.CARD_PRINTING_FIRST_EDITION);
 				}
 

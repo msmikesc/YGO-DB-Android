@@ -17,6 +17,7 @@ public enum Rarity {
 	UltraRarePharohsRare("Ultra Rare (Pharaoh's Rare)"), SecretRarePharohsRare("Secret Rare (Pharaoh's Rare)"),
 	StarlightRare("Starlight Rare"), GhostRare("Ghost Rare"), UltimateRare("Ultimate Rare"),
 	QuarterCenturySecretRare("Quarter Century Secret Rare"), MillenniumSecretRare("Millennium Secret Rare"), Oversized("Oversized"),
+	PrismaticCollectorsRare("Prismatic Collector’s Rare"), PrismaticUltimateRare("Prismatic Ultimate Rare"),
 	nullRarity("nullRarity");
 
 	private final String name;
@@ -42,6 +43,6 @@ public enum Rarity {
 	public static final Set<String> androidShinyRarities =
 			Set.of(QuarterCenturySecretRare.toString(), MillenniumSecretRare.toString(), UltimateRare.toString(), StarlightRare.toString(),
 				   SecretRareTenThousand.toString(), SecretRarePharohsRare.toString(), UltraRarePharohsRare.toString(),
-				   CollectorsRare.toString());
+				   CollectorsRare.toString(), PrismaticCollectorsRare.toString(), PrismaticUltimateRare.toString(), PlatinumSecretRare.toString());
 
 }
