@@ -34,9 +34,9 @@ import java.util.Map;
 
 public class SQLiteConnectionWindows implements SQLiteConnection {
 
-	//TODO fix sorting being wierd sometimes
-	//TODO fix opening new window with existing search in state
 	//TODO add filtering by rarity/other
+	//TODO add sort by opposite order
+	//TODO add sort highlighting
 
 	public static final int BATCH_SIZE = 1000;
 

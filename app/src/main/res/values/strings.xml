@@ -9,6 +9,7 @@
     <string name="action_import">Import DB</string>
     <string name="action_export">Export DB</string>
     <string name="action_prices">Import Prices</string>
+    <string name="test_db_reload">Test Fake DB Reload</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_viewCards">View Card Details</string>

@@ -48,6 +48,9 @@ public class AnalyzeCardsFragment extends Fragment {
 		cardsListView.setLayoutManager(linearLayoutManager);
 		cardsListView.setAdapter(adapter);
 
+		binding.cardSearch.setText(analyzeCardsViewModel.getCardNameSearch());
+		binding.setSearch.setText(analyzeCardsViewModel.getSetNameSearch());
+
 		binding.fab.setOnClickListener(
 				new ViewCardSetSortButtonOnClickListener(binding.fab, getContext(), analyzeCardsViewModel, adapter, layout));
 

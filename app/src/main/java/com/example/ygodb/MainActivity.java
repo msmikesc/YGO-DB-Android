@@ -155,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
 
 			return true;
 		}
+		else if(id == R.id.test_db_reload){
+			AndroidUtil.updateViewsAfterDBLoad();
+		}
 
 		return super.onOptionsItemSelected(item);
 	}

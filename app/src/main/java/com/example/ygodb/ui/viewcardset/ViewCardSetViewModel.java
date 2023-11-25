@@ -52,10 +52,12 @@ public class ViewCardSetViewModel extends ViewModel {
 			List<OwnedCard> filteredResults = getFilteredList(results, cardNameSearch);
 			filteredCardsList.clear();
 			filteredCardsList.addAll(filteredResults);
+			sortData(filteredCardsList, currentComparator);
 		} else {
 			List<OwnedCard> results = getInitialCardNameData(cardNameSearch);
 			filteredCardsList.clear();
 			filteredCardsList.addAll(results);
+			sortData(filteredCardsList, currentComparator);
 		}
 
 		this.dbRefreshIndicator.postValue(true);

@@ -51,6 +51,9 @@ public class ViewCardSetFragment extends Fragment {
 		binding.fab.setOnClickListener(
 				new ViewCardSetSortButtonOnClickListener(binding.fab, getContext(), viewCardSetViewModel, adapter, layout));
 
+		binding.cardSearch.setText(viewCardSetViewModel.getCardNameSearch());
+		binding.setSearch.setText(viewCardSetViewModel.getSetNameSearch());
+
 		binding.cardSearch.addTextChangedListener(
 				new ViewCardSetCardSearchBarChangedListener(binding.cardSearch, viewCardSetViewModel, adapter, layout));
 

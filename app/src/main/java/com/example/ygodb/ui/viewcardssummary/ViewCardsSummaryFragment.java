@@ -50,6 +50,8 @@ public class ViewCardsSummaryFragment extends Fragment {
 		binding.cardSearch.addTextChangedListener(
 				new ViewCardSummarySearchBarChangedListener(binding.cardSearch, viewCardsViewModel, adapter, layout));
 
+		binding.cardSearch.setText(viewCardsViewModel.getCardNameSearch());
+
 		if (viewCardsViewModel.getCardsList().isEmpty()) {
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {

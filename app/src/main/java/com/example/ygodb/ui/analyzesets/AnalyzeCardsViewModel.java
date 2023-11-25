@@ -59,8 +59,6 @@ public class AnalyzeCardsViewModel extends ViewCardSetViewModel {
 			newList.add(currentCard);
 		}
 
-		sortData(newList, currentComparator);
-
 		if (!newList.isEmpty()) {
 			isCardNameMode = false;
 		}

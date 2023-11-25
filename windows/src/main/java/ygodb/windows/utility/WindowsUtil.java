@@ -4,6 +4,7 @@ import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
+import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.connection.SQLiteConnectionWindows;
 
 import java.nio.file.Path;
@@ -30,6 +31,11 @@ public class WindowsUtil {
 		boolean anyFailed = false;
 
 		for (GamePlayCard card : cardsList) {
+
+			if(card.getPasscode() < 1){
+				YGOLogger.info("Skipping image for:" + card.getCardName());
+				continue;
+			}
 
 			int destinationPasscode = Util.checkForTranslatedYgoProImagePasscode(card.getPasscode());
 

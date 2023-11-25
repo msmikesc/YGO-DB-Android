@@ -38,6 +38,8 @@ public class BoxLookupFragment extends Fragment {
 		binding.fab.setOnClickListener(
 				new BoxLookupFABOnClickListener(binding.fab, getContext(), viewBoxSetViewModel, adapter, binding.boxSearchEditText));
 
+		binding.boxSearchEditText.setText(viewBoxSetViewModel.getCurrentSearchText());
+
 		binding.boxSearchEditText.addTextChangedListener(
 				new BoxLookupSearchBarChangedListener(binding.boxSearchEditText, viewBoxSetViewModel, adapter, layout));
 
