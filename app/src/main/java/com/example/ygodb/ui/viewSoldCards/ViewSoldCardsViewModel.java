@@ -3,10 +3,14 @@ package com.example.ygodb.ui.viewSoldCards;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
+import com.example.ygodb.abs.MenuItemBean;
+import com.example.ygodb.abs.MenuState;
 import ygodb.commonlibrary.bean.SoldCard;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ViewSoldCardsViewModel extends ViewModel {
 
@@ -14,15 +18,46 @@ public class ViewSoldCardsViewModel extends ViewModel {
 
 	public static final int LOADING_LIMIT = 100;
 
-	private String sortOrder = null;
-	private String sortOption = null;
 	private String cardNameSearch = null;
 	protected long currentSearchStartTime = 0;
 
+	private final MenuState menuState;
+
 	public ViewSoldCardsViewModel() {
-		sortOrder = "dateSold desc, modificationDate desc";
-		sortOption = "Date Sold";
 		cardsList = new ArrayList<>();
+		menuState = new MenuState(createMenuMap(), 0);
+	}
+
+	private Map<Integer, MenuItemBean> createMenuMap(){
+
+		Map<Integer, MenuItemBean> menuItemMap = new HashMap<>();
+
+		menuItemMap.put(0, new MenuItemBean(
+				0,
+				"Date Sold",
+				"dateSold desc, modificationDate desc",
+				"dateSold asc, modificationDate asc",
+				false));
+		menuItemMap.put(1, new MenuItemBean(
+				1,
+				"Card Name",
+				"cardName desc, dateSold desc",
+				"cardName asc, dateSold desc",
+				true));
+		menuItemMap.put(2, new MenuItemBean(
+				2,
+				"Set Number",
+				"setName desc, setNumber desc",
+				"setName asc, setNumber asc",
+				true));
+		menuItemMap.put(3, new MenuItemBean(
+				3,
+				"Price",
+				"priceSold desc, cardName asc",
+				"priceSold asc, cardName asc",
+				false));
+
+		return menuItemMap;
 	}
 
 	private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<>(false);
@@ -37,7 +72,7 @@ public class ViewSoldCardsViewModel extends ViewModel {
 
 	public void refreshViewDBUpdate() {
 		cardsList.clear();
-		cardsList.addAll(loadMoreData(sortOrder, LOADING_LIMIT, 0, cardNameSearch));
+		cardsList.addAll(loadMoreData(getSortOrder(), LOADING_LIMIT, 0, cardNameSearch));
 
 		this.dbRefreshIndicator.postValue(true);
 	}
@@ -51,19 +86,7 @@ public class ViewSoldCardsViewModel extends ViewModel {
 	}
 
 	public String getSortOrder() {
-		return sortOrder;
-	}
-
-	public void setSortOrder(String sortOrder) {
-		this.sortOrder = sortOrder;
-	}
-
-	public String getSortOption() {
-		return sortOption;
-	}
-
-	public void setSortOption(String sortOption) {
-		this.sortOption = sortOption;
+		return menuState.getCurrentSelectionSql();
 	}
 
 	public String getCardNameSearch() {
@@ -89,5 +112,9 @@ public class ViewSoldCardsViewModel extends ViewModel {
 
 	public void setCurrentSearchStartTime(long currentSearchStartTime) {
 		this.currentSearchStartTime = currentSearchStartTime;
+	}
+
+	public MenuState getMenuState() {
+		return menuState;
 	}
 }

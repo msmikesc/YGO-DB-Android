@@ -1,11 +1,14 @@
 package com.example.ygodb.ui.viewcardssummary;
 
 import android.content.Context;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
+import com.example.ygodb.abs.MenuState;
 import com.example.ygodb.ui.singlecard.SummaryCardToListAdapter;
+import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;
@@ -38,44 +41,30 @@ class ViewCardSummarySortButtonOnClickListener implements View.OnClickListener {
 
 		// Inflating popup menu from popup_menu.xml file
 		popupMenu.getMenuInflater().inflate(R.menu.sort_menu_summary, popupMenu.getMenu());
+		MenuState menuState = viewCardsViewModel.getMenuState();
+		MenuItem menuItemCurrent = popupMenu.getMenu().getItem(menuState.getCurrentSelectionID());
+		menuItemCurrent.setTitle(menuState.getCurrentSelectionText());
+
 		popupMenu.setOnMenuItemClickListener(menuItem -> {
+			menuState.clickOnMenuItem(menuItem.getOrder());
+			List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
+			String finalSortOrder = menuState.getCurrentSelectionSql();
+			Executors.newSingleThreadExecutor().execute(() -> {
+				try {
+					cardsList.clear();
+					List<OwnedCard> moreCards = viewCardsViewModel.loadMoreData(finalSortOrder, ViewCardsViewModel.LOADING_LIMIT, 0,
+																				viewCardsViewModel.getCardNameSearch());
+					cardsList.addAll(moreCards);
 
-			String sortOption = viewCardsViewModel.getSortOption();
-
-			String sortOrder = viewCardsViewModel.getSortOrder();
-
-			if (!sortOption.contentEquals(menuItem.getTitle())) {
-				sortOption = (String) menuItem.getTitle();
-
-				switch (sortOption) {
-					case "Date Bought" -> sortOrder = "maxDate desc, cardName asc";
-					case "Card Name" -> sortOrder = "cardName asc, dateBought desc";
-					case "Quantity" -> sortOrder = "totalQuantity desc, cardName asc";
-					case "Price" -> sortOrder = "avgPrice desc, cardName asc";
+					view.post(() -> {
+						layout.scrollToPositionWithOffset(0, 0);
+						adapter.notifyDataSetChanged();
+					});
+				} catch (Exception e) {
+					YGOLogger.logException(e);
 				}
-				viewCardsViewModel.setSortOption(sortOption);
-				viewCardsViewModel.setSortOrder(sortOrder);
+			});
 
-				List<OwnedCard> cardsList = viewCardsViewModel.getCardsList();
-
-				String finalSortOrder = sortOrder;
-				Executors.newSingleThreadExecutor().execute(() -> {
-					try {
-						cardsList.clear();
-						List<OwnedCard> moreCards =
-								viewCardsViewModel.loadMoreData(finalSortOrder, ViewCardsSummaryViewModel.LOADING_LIMIT, 0,
-																viewCardsViewModel.getCardNameSearch());
-						cardsList.addAll(moreCards);
-
-						view.post(() -> {
-							layout.scrollToPositionWithOffset(0, 0);
-							adapter.notifyDataSetChanged();
-						});
-					} catch (Exception e) {
-						YGOLogger.logException(e);
-					}
-				});
-			}
 			return true;
 		});
 		// Showing the popup menu
