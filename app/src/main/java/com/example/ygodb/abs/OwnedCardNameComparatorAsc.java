@@ -4,12 +4,18 @@ import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.Comparator;
 
-public class OwnedCardQuantityComparator implements Comparator<OwnedCard> {
+public class OwnedCardNameComparatorAsc implements Comparator<OwnedCard> {
 
 	@Override
 	public int compare(OwnedCard ownedCard, OwnedCard t1) {
 
-		int val = ownedCard.getQuantity() - t1.getQuantity();
+		int val = ownedCard.getCardName().compareTo(t1.getCardName());
+
+		if (val != 0) {
+			return val;
+		}
+
+		val = ownedCard.getQuantity() - t1.getQuantity();
 
 		if (val != 0) {
 			return val;
@@ -21,7 +27,7 @@ public class OwnedCardQuantityComparator implements Comparator<OwnedCard> {
 			return val;
 		}
 
-		val = ownedCard.getCardName().compareTo(t1.getCardName());
+		val = ownedCard.getSetRarity().compareTo(t1.getSetRarity());
 
 		return val;
 	}

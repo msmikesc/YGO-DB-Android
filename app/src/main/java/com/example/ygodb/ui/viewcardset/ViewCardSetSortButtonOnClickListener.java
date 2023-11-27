@@ -1,16 +1,12 @@
 package com.example.ygodb.ui.viewcardset;
 
 import android.content.Context;
-import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
-import com.example.ygodb.abs.OwnedCardNameComparator;
-import com.example.ygodb.abs.OwnedCardPriceComparator;
-import com.example.ygodb.abs.OwnedCardQuantityComparator;
-import com.example.ygodb.abs.OwnedCardSetNumberComparator;
-import com.example.ygodb.ui.addcards.AddCardsFragment;
+import com.example.ygodb.abs.MenuStateComparator;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import ygodb.commonlibrary.bean.OwnedCard;
@@ -44,47 +40,28 @@ public class ViewCardSetSortButtonOnClickListener implements View.OnClickListene
 
 		// Inflating popup menu from popup_menu.xml file
 		popupMenu.getMenuInflater().inflate(R.menu.sort_menu_set_list, popupMenu.getMenu());
+		MenuStateComparator menuState = viewCardsViewModel.getMenuState();
+		MenuItem menuItemCurrent = popupMenu.getMenu().getItem(menuState.getCurrentSelectionID());
+		menuItemCurrent.setTitle(menuState.getCurrentSelectionText());
+
 		popupMenu.setOnMenuItemClickListener(menuItem -> {
+			menuState.clickOnMenuItem(menuItem.getOrder());
+			Comparator<OwnedCard> currentComparator = viewCardsViewModel.getSortOption();
+			List<OwnedCard> filteredCardsList = viewCardsViewModel.getFilteredCardsList();
 
-			if ("Add Mode".contentEquals(menuItem.getTitle())) {
+			Executors.newSingleThreadExecutor().execute(() -> {
+				try {
+					viewCardsViewModel.sortData(filteredCardsList, currentComparator);
 
-				Intent intent = new Intent(context, AddCardsFragment.class);
-				context.startActivity(intent);
-				return true;
-			}
-
-			String sortOption = viewCardsViewModel.getSortOption();
-
-			Comparator<OwnedCard> currentComparator = viewCardsViewModel.getCurrentComparator();
-
-			if (!sortOption.contentEquals(menuItem.getTitle())) {
-				sortOption = (String) menuItem.getTitle();
-
-				switch (sortOption) {
-					case "Quantity" -> currentComparator = new OwnedCardQuantityComparator();
-					case "Card Name" -> currentComparator = new OwnedCardNameComparator();
-					case "Set Number" -> currentComparator = new OwnedCardSetNumberComparator();
-					case "Price" -> currentComparator = new OwnedCardPriceComparator();
+					view.post(() -> {
+						layout.scrollToPositionWithOffset(0, 0);
+						adapter.notifyDataSetChanged();
+					});
+				} catch (Exception e) {
+					YGOLogger.logException(e);
 				}
-				viewCardsViewModel.setSortOption(sortOption);
-				viewCardsViewModel.setCurrentComparator(currentComparator);
+			});
 
-				List<OwnedCard> filteredCardsList = viewCardsViewModel.getFilteredCardsList();
-
-				Comparator<OwnedCard> finalCurrentComparator = currentComparator;
-				Executors.newSingleThreadExecutor().execute(() -> {
-					try {
-						viewCardsViewModel.sortData(filteredCardsList, finalCurrentComparator);
-
-						view.post(() -> {
-							layout.scrollToPositionWithOffset(0, 0);
-							adapter.notifyDataSetChanged();
-						});
-					} catch (Exception e) {
-						YGOLogger.logException(e);
-					}
-				});
-			}
 			return true;
 		});
 		// Showing the popup menu

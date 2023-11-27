@@ -50,7 +50,7 @@ public class ViewCardSetCardSearchBarChangedListener extends TextChangedListener
 					results = viewCardsViewModel.getCardsList();
 					filteredResults = viewCardsViewModel.getFilteredList(viewCardsViewModel.getCardsList(), cardNameSearch);
 
-					viewCardsViewModel.sortData(filteredResults, viewCardsViewModel.getCurrentComparator());
+					viewCardsViewModel.sortData(filteredResults, viewCardsViewModel.getSortOption());
 				}
 
 				List<OwnedCard> finalResults = results;

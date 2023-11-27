@@ -3,15 +3,23 @@
 
     <item
         android:id="@+id/menuQuantity"
-        android:title="@string/quantity"/>
+        android:title="@string/quantity"
+        android:orderInCategory="0"
+    />
     <item
         android:id="@+id/menuCardName"
-        android:title="@string/card_name"/>
+        android:title="@string/card_name"
+        android:orderInCategory="1"
+    />
     <item
         android:id="@+id/menuSetNumber"
-        android:title="@string/set_number"/>
+        android:title="@string/set_number"
+        android:orderInCategory="2"
+    />
     <item
         android:id="@+id/menuPrice"
-        android:title="@string/price"/>
+        android:title="@string/price"
+        android:orderInCategory="3"
+    />
 
 </menu>

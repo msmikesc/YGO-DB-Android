@@ -3,34 +3,77 @@ package com.example.ygodb.ui.viewcardset;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
-import com.example.ygodb.abs.OwnedCardSetNumberComparator;
+import com.example.ygodb.abs.MenuItemComparatorBean;
+import com.example.ygodb.abs.MenuStateComparator;
+import com.example.ygodb.abs.OwnedCardNameComparatorAsc;
+import com.example.ygodb.abs.OwnedCardNameComparatorDesc;
+import com.example.ygodb.abs.OwnedCardPriceComparatorAsc;
+import com.example.ygodb.abs.OwnedCardPriceComparatorDesc;
+import com.example.ygodb.abs.OwnedCardQuantityComparatorAsc;
+import com.example.ygodb.abs.OwnedCardQuantityComparatorDesc;
+import com.example.ygodb.abs.OwnedCardSetNumberComparatorAsc;
+import com.example.ygodb.abs.OwnedCardSetNumberComparatorDesc;
 import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ViewCardSetViewModel extends ViewModel {
 
 	protected List<OwnedCard> cardsList;
 	protected List<OwnedCard> filteredCardsList;
-
-	protected Comparator<OwnedCard> currentComparator = null;
-	protected String sortOption = null;
 	protected String cardNameSearch = null;
 	protected String setNameSearch = null;
 	protected boolean isCardNameMode = true;
 	protected long currentSearchStartTime = 0;
-
 	protected final List<String> setNamesDropdownList = new ArrayList<>();
+	protected MenuStateComparator menuState;
 
 	public ViewCardSetViewModel() {
-		currentComparator = new OwnedCardSetNumberComparator();
-		sortOption = "Set Number";
 		cardsList = new ArrayList<>();
 		filteredCardsList = new ArrayList<>();
 		isCardNameMode = true;
+		menuState = new MenuStateComparator(createMenuMap(), 0);
+	}
+
+	protected Map<Integer, MenuItemComparatorBean> createMenuMap(){
+
+		Map<Integer, MenuItemComparatorBean> menuItemMap = new HashMap<>();
+
+		menuItemMap.put(0, new MenuItemComparatorBean(
+				0,
+				"Quantity",
+				new OwnedCardQuantityComparatorAsc(),
+				new OwnedCardQuantityComparatorDesc(),
+				true
+		));
+		menuItemMap.put(1, new MenuItemComparatorBean(
+				1,
+				"Card Name",
+				new OwnedCardNameComparatorAsc(),
+				new OwnedCardNameComparatorDesc(),
+				true
+		));
+		menuItemMap.put(2, new MenuItemComparatorBean(
+				2,
+				"Set Number",
+				new OwnedCardSetNumberComparatorAsc(),
+				new OwnedCardSetNumberComparatorDesc(),
+				true
+		));
+		menuItemMap.put(3, new MenuItemComparatorBean(
+				3,
+				"Price",
+				new OwnedCardPriceComparatorAsc(),
+				new OwnedCardPriceComparatorDesc(),
+				false
+		));
+
+		return menuItemMap;
 	}
 
 	private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<>(false);
@@ -52,12 +95,12 @@ public class ViewCardSetViewModel extends ViewModel {
 			List<OwnedCard> filteredResults = getFilteredList(results, cardNameSearch);
 			filteredCardsList.clear();
 			filteredCardsList.addAll(filteredResults);
-			sortData(filteredCardsList, currentComparator);
+			sortData(filteredCardsList, getSortOption());
 		} else {
 			List<OwnedCard> results = getInitialCardNameData(cardNameSearch);
 			filteredCardsList.clear();
 			filteredCardsList.addAll(results);
-			sortData(filteredCardsList, currentComparator);
+			sortData(filteredCardsList, getSortOption());
 		}
 
 		this.dbRefreshIndicator.postValue(true);
@@ -126,12 +169,8 @@ public class ViewCardSetViewModel extends ViewModel {
 		return filteredCardsList;
 	}
 
-	public String getSortOption() {
-		return sortOption;
-	}
-
-	public void setSortOption(String sortOption) {
-		this.sortOption = sortOption;
+	public Comparator<OwnedCard> getSortOption() {
+		return menuState.getCurrentComparator();
 	}
 
 	public String getCardNameSearch() {
@@ -169,14 +208,6 @@ public class ViewCardSetViewModel extends ViewModel {
 		setNamesDropdownList.addAll(input);
 	}
 
-	public Comparator<OwnedCard> getCurrentComparator() {
-		return currentComparator;
-	}
-
-	public void setCurrentComparator(Comparator<OwnedCard> currentComparator) {
-		this.currentComparator = currentComparator;
-	}
-
 	public boolean isCardNameMode() {
 		return isCardNameMode;
 	}
@@ -195,5 +226,9 @@ public class ViewCardSetViewModel extends ViewModel {
 
 	public void setCurrentSearchStartTime(long currentSearchStartTime) {
 		this.currentSearchStartTime = currentSearchStartTime;
+	}
+
+	public MenuStateComparator getMenuState() {
+		return menuState;
 	}
 }

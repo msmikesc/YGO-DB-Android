@@ -1,7 +1,7 @@
 package com.example.ygodb.ui.analyzesets;
 
 import com.example.ygodb.abs.AndroidUtil;
-import com.example.ygodb.abs.OwnedCardQuantityComparator;
+import com.example.ygodb.abs.MenuStateComparator;
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
 import ygodb.commonlibrary.bean.AnalyzeData;
@@ -14,13 +14,11 @@ import java.util.List;
 public class AnalyzeCardsViewModel extends ViewCardSetViewModel {
 
 	public AnalyzeCardsViewModel() {
-		currentComparator = new OwnedCardQuantityComparator();
-		sortOption = "Quantity";
 		cardsList = new ArrayList<>();
 		filteredCardsList = new ArrayList<>();
 		isCardNameMode = true;
+		menuState = new MenuStateComparator(createMenuMap(), 0);
 	}
-
 
 	@Override
 	public List<OwnedCard> getInitialData(String setName) {
