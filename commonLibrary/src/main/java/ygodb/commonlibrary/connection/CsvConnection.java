@@ -309,6 +309,10 @@ public class CsvConnection {
 		String setName = nameAndSet[1].trim();
 
 		name = name.replace("(Duel Terminal)", "").trim();
+		name = name.replace("(UR)", "").trim();
+		name = name.replace("(PUR)", "").trim();
+		name = name.replace("(UTR)", "").trim();
+		name = name.replace("(PCR)", "").trim();
 		name = Util.removeRarityStringsFromName(name);
 
 		NameAndColor nameAndColor = Util.getNameAndColor(name);
