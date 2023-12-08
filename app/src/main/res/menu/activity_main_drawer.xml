@@ -17,6 +17,10 @@
             android:icon="@drawable/layers"
             android:title="@string/menu_viewCardSet"/>
         <item
+            android:id="@+id/nav_analyzeSet"
+            android:icon="@drawable/layers"
+            android:title="@string/menu_analyzeSet"/>
+        <item
             android:id="@+id/nav_addCards"
             android:icon="@drawable/plus_circle"
             android:title="@string/menu_addCards"
@@ -33,9 +37,5 @@
             android:id="@+id/nav_boxLookup"
             android:icon="@drawable/box_icon"
             android:title="@string/menu_boxLookup"/>
-        <item
-            android:id="@+id/nav_analyzeSet"
-            android:icon="@drawable/layers"
-            android:title="@string/menu_analyzeSet"/>
     </group>
 </menu>
