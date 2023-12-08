@@ -1,7 +1,5 @@
 package com.example.ygodb.model;
 
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.abs.MenuItemComparatorBean;
 import com.example.ygodb.abs.MenuStateComparator;

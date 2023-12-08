@@ -2,7 +2,6 @@ package com.example.ygodb.ui.analyzesets;
 
 import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.abs.MenuItemComparatorBean;
-import com.example.ygodb.abs.MenuStateComparator;
 import com.example.ygodb.abs.OwnedCardNameComparatorAsc;
 import com.example.ygodb.abs.OwnedCardNameComparatorDesc;
 import com.example.ygodb.abs.OwnedCardPriceComparatorAsc;
@@ -12,7 +11,6 @@ import com.example.ygodb.abs.OwnedCardQuantityComparatorDesc;
 import com.example.ygodb.abs.OwnedCardSetNumberComparatorAsc;
 import com.example.ygodb.abs.OwnedCardSetNumberComparatorDesc;
 import com.example.ygodb.model.ViewCardsLoadCompleteDataViewModel;
-import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
 import ygodb.commonlibrary.bean.AnalyzeData;
 import ygodb.commonlibrary.bean.OwnedCard;

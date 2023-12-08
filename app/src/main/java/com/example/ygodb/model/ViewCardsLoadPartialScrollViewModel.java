@@ -1,11 +1,8 @@
 package com.example.ygodb.model;
 
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.MenuItemBean;
 import com.example.ygodb.abs.MenuState;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

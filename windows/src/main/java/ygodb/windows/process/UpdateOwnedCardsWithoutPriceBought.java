@@ -4,7 +4,6 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
