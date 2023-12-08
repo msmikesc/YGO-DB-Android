@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.ygodb.model.PartialScrollEndlessScrollListener;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.model.EndlessScrollListener;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
@@ -38,7 +39,7 @@ public class ViewSoldCardsFragment extends Fragment {
 		cardsListView.setLayoutManager(linearLayoutManager);
 		cardsListView.setAdapter(adapter);
 
-		EndlessScrollListener scrollListener = new ViewSoldCardsEndlessScrollListener(linearLayoutManager, viewSoldCardsViewModel,
+		EndlessScrollListener scrollListener = new PartialScrollEndlessScrollListener<>(linearLayoutManager, viewSoldCardsViewModel,
 																					  adapter);
 		cardsListView.addOnScrollListener(scrollListener);
 
