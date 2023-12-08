@@ -16,7 +16,6 @@ import com.example.ygodb.model.partialscroll.PartialScrollSortButtonOnClickListe
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.model.EndlessScrollListener;
 import com.example.ygodb.databinding.FragmentViewcardsSummaryBinding;
-import com.example.ygodb.ui.singlecard.SummaryCardToListAdapter;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import ygodb.commonlibrary.utility.YGOLogger;
 

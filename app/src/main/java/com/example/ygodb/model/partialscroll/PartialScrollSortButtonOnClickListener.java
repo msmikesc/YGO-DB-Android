@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.model.popupmenu.MenuState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import ygodb.commonlibrary.utility.YGOLogger;
@@ -16,14 +17,14 @@ import java.util.concurrent.Executors;
 public class PartialScrollSortButtonOnClickListener<T, U extends RecyclerView.ViewHolder> implements View.OnClickListener {
 
 	private final ViewCardsLoadPartialScrollViewModel<T> viewModel;
-	private final PartialScrollToListAdapter<T, U> adapter;
+	private final ItemsListAdapter<T, U> adapter;
 	private final LinearLayoutManager layout;
 	private final FloatingActionButton fab;
 	private final Context context;
 	private final int menuIdentifier;
 
 	public PartialScrollSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardsLoadPartialScrollViewModel<T> viewModel,
-			PartialScrollToListAdapter<T, U> adapter, LinearLayoutManager layout, int menuIdentifier) {
+			ItemsListAdapter<T, U> adapter, LinearLayoutManager layout, int menuIdentifier) {
 		this.viewModel = viewModel;
 		this.adapter = adapter;
 		this.layout = layout;

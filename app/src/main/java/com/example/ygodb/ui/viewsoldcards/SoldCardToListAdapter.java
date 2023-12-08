@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
-import com.example.ygodb.model.partialscroll.PartialScrollToListAdapter;
+import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.SoldCard;
@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
-public class SoldCardToListAdapter extends PartialScrollToListAdapter<SoldCard, SoldCardToListAdapter.ItemViewHolder> {
+public class SoldCardToListAdapter extends ItemsListAdapter<SoldCard, SoldCardToListAdapter.ItemViewHolder> {
 	private Drawable firstDrawableSmall;
 	private Drawable limitedDrawableSmall;
 
@@ -56,7 +56,7 @@ public class SoldCardToListAdapter extends PartialScrollToListAdapter<SoldCard, 
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		SoldCard current = cardsList.get(position);
+		SoldCard current = itemsList.get(position);
 
 		LinearLayout buttonContainer = viewHolder.itemView.findViewById(R.id.incrementQuantityButtonContainer);
 

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
-import com.example.ygodb.model.partialscroll.PartialScrollToListAdapter;
+import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
-public class SingleCardToListAdapter extends PartialScrollToListAdapter<OwnedCard, SingleCardToListAdapter.ItemViewHolder> {
+public class SingleCardToListAdapter extends ItemsListAdapter<OwnedCard, SingleCardToListAdapter.ItemViewHolder> {
 	private final AddCardsViewModel addCardsViewModel;
 	private final SellCardsViewModel sellCardsViewModel;
 	private final boolean isManyPlusButtons;
@@ -78,7 +78,7 @@ public class SingleCardToListAdapter extends PartialScrollToListAdapter<OwnedCar
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		OwnedCard current = cardsList.get(position);
+		OwnedCard current = itemsList.get(position);
 
 		LinearLayout buttonContainer = viewHolder.itemView.findViewById(R.id.incrementQuantityButtonContainer);
 

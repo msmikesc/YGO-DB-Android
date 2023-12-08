@@ -4,6 +4,7 @@ import android.text.Editable;
 import android.widget.EditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.model.TextChangedListener;
 import ygodb.commonlibrary.utility.YGOLogger;
 
@@ -13,11 +14,11 @@ import java.util.concurrent.Executors;
 public class PartialScrollSearchBarChangedListener<T, U extends RecyclerView.ViewHolder> extends TextChangedListener<EditText> {
 
 	private final ViewCardsLoadPartialScrollViewModel<T> viewModel;
-	private final PartialScrollToListAdapter<T,U> adapter;
+	private final ItemsListAdapter<T,U> adapter;
 	private final LinearLayoutManager layout;
 
 	public PartialScrollSearchBarChangedListener(EditText searchBar, ViewCardsLoadPartialScrollViewModel<T> viewModel,
-			PartialScrollToListAdapter<T,U> adapter, LinearLayoutManager layout) {
+			ItemsListAdapter<T,U> adapter, LinearLayoutManager layout) {
 		super(searchBar);
 		this.viewModel = viewModel;
 		this.adapter = adapter;
@@ -47,7 +48,7 @@ public class PartialScrollSearchBarChangedListener<T, U extends RecyclerView.Vie
 					viewModel.setCurrentSearchStartTime(startTime);
 					handler.post(() -> {
 						viewModel.setCardsList(newList);
-						adapter.setCardsList(newList);
+						adapter.setItemsList(newList);
 						layout.scrollToPositionWithOffset(0, 0);
 						adapter.notifyDataSetChanged();
 					});

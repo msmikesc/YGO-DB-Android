@@ -55,7 +55,7 @@ public class LoadCompleteDataSetSearchBarChangedListener extends TextChangedList
 					handler.post(() -> {
 						viewCardsViewModel.setCardsList(finalResults);
 						viewCardsViewModel.setFilteredCardsList(finalFilteredResults);
-						adapter.setCardsList(finalFilteredResults);
+						adapter.setItemsList(finalFilteredResults);
 
 						layout.scrollToPositionWithOffset(0, 0);
 						adapter.notifyDataSetChanged();

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
+import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.Rarity;
@@ -25,8 +26,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
-public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdapter.ItemViewHolder> {
-	private final List<OwnedCard> addingOwnedCards;
+public class AddCardToListAdapter extends ItemsListAdapter<OwnedCard, AddCardToListAdapter.ItemViewHolder> {
 
 	private final AddCardsViewModel addCardsViewModel;
 
@@ -37,7 +37,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 	private Context context;
 
 	public AddCardToListAdapter(List<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel) {
-		this.addingOwnedCards = ownedCards;
+		super(ownedCards);
 		this.addCardsViewModel = addCardsViewModel;
 
 		try {
@@ -122,7 +122,7 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		OwnedCard current = addingOwnedCards.get(position);
+		OwnedCard current = itemsList.get(position);
 
 		ImageButton button = viewHolder.itemView.findViewById(R.id.plusButton);
 		button.setOnClickListener(view -> onPlusButtonClick(viewHolder, current));
@@ -206,11 +206,6 @@ public class AddCardToListAdapter extends RecyclerView.Adapter<AddCardToListAdap
 			viewHolder.cardImage.setImageDrawable(null);
 		}
 
-	}
-
-	@Override
-	public int getItemCount() {
-		return addingOwnedCards.size();
 	}
 
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {

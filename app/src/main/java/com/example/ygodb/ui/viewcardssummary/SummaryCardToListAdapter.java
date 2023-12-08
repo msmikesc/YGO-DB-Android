@@ -1,4 +1,4 @@
-package com.example.ygodb.ui.singlecard;
+package com.example.ygodb.ui.viewcardssummary;
 
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
-import com.example.ygodb.model.partialscroll.PartialScrollToListAdapter;
+import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 
@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
-public class SummaryCardToListAdapter extends PartialScrollToListAdapter<OwnedCard,SummaryCardToListAdapter.ItemViewHolder> {
+public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,SummaryCardToListAdapter.ItemViewHolder> {
 
 	public SummaryCardToListAdapter(List<OwnedCard> ownedCards) {
 		super(ownedCards);
@@ -33,7 +33,7 @@ public class SummaryCardToListAdapter extends PartialScrollToListAdapter<OwnedCa
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		OwnedCard current = cardsList.get(position);
+		OwnedCard current = itemsList.get(position);
 
 		viewHolder.title.setText(current.getCardName());
 		viewHolder.setName.setText(current.getSetName());

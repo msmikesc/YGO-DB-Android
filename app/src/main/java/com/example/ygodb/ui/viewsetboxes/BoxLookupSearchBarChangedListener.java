@@ -46,7 +46,7 @@ class BoxLookupSearchBarChangedListener extends TextChangedListener<EditText> {
 
 				handler.post(() -> {
 					viewBoxSetViewModel.setBoxList(results);
-					adapter.setSetBoxes(results);
+					adapter.setItemsList(results);
 
 					layout.scrollToPositionWithOffset(0, 0);
 					adapter.notifyDataSetChanged();

@@ -9,21 +9,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
+import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.SetBox;
 
 import java.util.List;
 
-public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToListAdapter.ItemViewHolder> {
-	private List<SetBox> setBoxes;
+public class SingleBoxToListAdapter extends ItemsListAdapter<SetBox, SingleBoxToListAdapter.ItemViewHolder> {
 
 	public SingleBoxToListAdapter(List<SetBox> setBoxes) {
-		this.setBoxes = setBoxes;
+		super(setBoxes);
 
-	}
-
-	public void setSetBoxes(List<SetBox> setBoxes) {
-		this.setBoxes = setBoxes;
 	}
 
 	@NonNull
@@ -37,7 +33,7 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		SetBox current = setBoxes.get(position);
+		SetBox current = itemsList.get(position);
 		viewHolder.boxLabel.setTag(current); // Set the SetBox as the tag of the EditText for the text changed listener
 
 		viewHolder.removeTextWatcher();
@@ -45,11 +41,6 @@ public class SingleBoxToListAdapter extends RecyclerView.Adapter<SingleBoxToList
 		viewHolder.boxLabel.setText(current.getBoxLabel());
 		viewHolder.setPrefix.setText(current.getSetPrefix());
 		viewHolder.addTextWatcher();
-	}
-
-	@Override
-	public int getItemCount() {
-		return setBoxes.size();
 	}
 
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {

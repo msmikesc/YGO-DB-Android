@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
+import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.SoldCard;
@@ -25,15 +26,14 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
-public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAdapter.ItemViewHolder> {
-	private final List<SoldCard> sellingOwnedCards;
+public class SellCardToListAdapter extends ItemsListAdapter<SoldCard, SellCardToListAdapter.ItemViewHolder> {
 	private final SellCardsViewModel sellCardsViewModel;
 	private Drawable firstDrawableSmall;
 
 	private Context context;
 
 	public SellCardToListAdapter(List<SoldCard> ownedCards, SellCardsViewModel sellCardsViewModel) {
-		this.sellingOwnedCards = ownedCards;
+		super(ownedCards);
 		this.sellCardsViewModel = sellCardsViewModel;
 
 		try {
@@ -99,7 +99,7 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		SoldCard current = sellingOwnedCards.get(position);
+		SoldCard current = itemsList.get(position);
 
 		ImageButton button = viewHolder.itemView.findViewById(R.id.plusButton);
 		button.setOnClickListener(view -> onPlusButtonClick(viewHolder, current));
@@ -175,11 +175,6 @@ public class SellCardToListAdapter extends RecyclerView.Adapter<SellCardToListAd
 			viewHolder.cardImage.setImageDrawable(null);
 		}
 
-	}
-
-	@Override
-	public int getItemCount() {
-		return sellingOwnedCards.size();
 	}
 
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {
