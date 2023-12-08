@@ -1,9 +1,10 @@
-package com.example.ygodb.model;
+package com.example.ygodb.model.partialscroll;
 
 import android.text.Editable;
 import android.widget.EditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.ygodb.model.TextChangedListener;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;

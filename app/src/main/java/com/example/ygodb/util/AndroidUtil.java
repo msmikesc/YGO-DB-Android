@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.ygodb.R;
 import com.example.ygodb.db.SQLiteConnectionAndroid;
 import com.example.ygodb.ui.analyzesets.AnalyzeCardsViewModel;
-import com.example.ygodb.ui.viewSoldCards.ViewSoldCardsViewModel;
+import com.example.ygodb.ui.viewsoldcards.ViewSoldCardsViewModel;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;

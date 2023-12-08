@@ -1,4 +1,4 @@
-package com.example.ygodb.model;
+package com.example.ygodb.model.partialscroll;
 
 import androidx.recyclerview.widget.RecyclerView;
 

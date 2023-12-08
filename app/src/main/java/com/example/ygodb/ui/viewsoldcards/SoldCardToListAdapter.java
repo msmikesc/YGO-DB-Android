@@ -1,4 +1,4 @@
-package com.example.ygodb.ui.viewSoldCards;
+package com.example.ygodb.ui.viewsoldcards;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
-import com.example.ygodb.model.PartialScrollToListAdapter;
+import com.example.ygodb.model.partialscroll.PartialScrollToListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.Rarity;
 import ygodb.commonlibrary.bean.SoldCard;

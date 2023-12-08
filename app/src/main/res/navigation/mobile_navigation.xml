@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/nav_soldCards"
-        android:name="com.example.ygodb.ui.viewSoldCards.ViewSoldCardsFragment"
+        android:name="com.example.ygodb.ui.viewsoldcards.ViewSoldCardsFragment"
         android:label="@string/menu_soldCards"
         tools:layout="@layout/fragment_soldcards"/>
 

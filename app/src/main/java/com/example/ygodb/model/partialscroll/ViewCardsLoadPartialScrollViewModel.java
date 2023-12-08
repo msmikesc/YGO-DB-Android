@@ -1,5 +1,6 @@
-package com.example.ygodb.model;
+package com.example.ygodb.model.partialscroll;
 
+import com.example.ygodb.model.ViewCardsBaseViewModel;
 import com.example.ygodb.popupmenu.MenuItemBean;
 import com.example.ygodb.popupmenu.MenuState;
 

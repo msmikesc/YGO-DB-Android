@@ -10,7 +10,7 @@ import com.example.ygodb.comparator.OwnedCardQuantityComparatorAsc;
 import com.example.ygodb.comparator.OwnedCardQuantityComparatorDesc;
 import com.example.ygodb.comparator.OwnedCardSetNumberComparatorAsc;
 import com.example.ygodb.comparator.OwnedCardSetNumberComparatorDesc;
-import com.example.ygodb.model.ViewCardsLoadCompleteDataViewModel;
+import com.example.ygodb.model.completedata.ViewCardsLoadCompleteDataViewModel;
 import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
 import ygodb.commonlibrary.bean.AnalyzeData;
 import ygodb.commonlibrary.bean.OwnedCard;

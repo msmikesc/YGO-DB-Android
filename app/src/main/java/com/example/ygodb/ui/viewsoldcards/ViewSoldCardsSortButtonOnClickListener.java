@@ -1,4 +1,4 @@
-package com.example.ygodb.ui.viewSoldCards;
+package com.example.ygodb.ui.viewsoldcards;
 
 import android.content.Context;
 import android.view.MenuItem;

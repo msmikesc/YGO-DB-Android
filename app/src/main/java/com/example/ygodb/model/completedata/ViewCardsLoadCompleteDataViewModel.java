@@ -1,5 +1,6 @@
-package com.example.ygodb.model;
+package com.example.ygodb.model.completedata;
 
+import com.example.ygodb.model.ViewCardsBaseViewModel;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.popupmenu.MenuItemComparatorBean;
 import com.example.ygodb.popupmenu.MenuStateComparator;

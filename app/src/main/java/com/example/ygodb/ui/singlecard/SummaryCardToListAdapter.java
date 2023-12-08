@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
-import com.example.ygodb.model.PartialScrollToListAdapter;
+import com.example.ygodb.model.partialscroll.PartialScrollToListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 

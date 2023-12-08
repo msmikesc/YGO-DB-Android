@@ -1,4 +1,4 @@
-package com.example.ygodb.ui.viewSoldCards;
+package com.example.ygodb.ui.viewsoldcards;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.ygodb.model.PartialScrollEndlessScrollListener;
-import com.example.ygodb.model.PartialScrollSearchBarChangedListener;
+import com.example.ygodb.model.partialscroll.PartialScrollEndlessScrollListener;
+import com.example.ygodb.model.partialscroll.PartialScrollSearchBarChangedListener;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.model.EndlessScrollListener;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;

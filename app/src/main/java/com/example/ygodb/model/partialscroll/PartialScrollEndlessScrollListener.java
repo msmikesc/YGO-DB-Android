@@ -1,7 +1,8 @@
-package com.example.ygodb.model;
+package com.example.ygodb.model.partialscroll;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.ygodb.model.EndlessScrollListener;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;
