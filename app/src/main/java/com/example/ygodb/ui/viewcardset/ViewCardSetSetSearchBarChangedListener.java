@@ -4,6 +4,7 @@ import android.text.Editable;
 import android.widget.EditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.abs.TextChangedListener;
+import com.example.ygodb.model.ViewCardsLoadCompleteDataViewModel;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;
@@ -12,11 +13,11 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 public class ViewCardSetSetSearchBarChangedListener extends TextChangedListener<EditText> {
-	private final ViewCardSetViewModel viewCardsViewModel;
+	private final ViewCardsLoadCompleteDataViewModel viewCardsViewModel;
 	private final SingleCardToListAdapter adapter;
 	private final LinearLayoutManager layout;
 
-	public ViewCardSetSetSearchBarChangedListener(EditText searchBar, ViewCardSetViewModel viewCardsViewModel,
+	public ViewCardSetSetSearchBarChangedListener(EditText searchBar, ViewCardsLoadCompleteDataViewModel viewCardsViewModel,
 			SingleCardToListAdapter adapter, LinearLayoutManager layout) {
 		super(searchBar);
 		this.viewCardsViewModel = viewCardsViewModel;

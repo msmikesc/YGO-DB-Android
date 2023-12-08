@@ -1,32 +1,21 @@
 package com.example.ygodb.ui.viewcardssummary;
 
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import com.example.ygodb.abs.AndroidUtil;
 import com.example.ygodb.abs.MenuItemBean;
-import com.example.ygodb.abs.MenuState;
+import com.example.ygodb.model.ViewCardsLoadPartialScrollViewModel;
 import ygodb.commonlibrary.bean.OwnedCard;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViewCardsSummaryViewModel extends ViewModel {
-
-	private List<OwnedCard> cardsList;
-	public static final int LOADING_LIMIT = 100;
-	private String cardNameSearch = null;
-	protected long currentSearchStartTime = 0;
-
-	private final MenuState menuState;
+public class ViewCardsSummaryViewModel extends ViewCardsLoadPartialScrollViewModel<OwnedCard> {
 
 	public ViewCardsSummaryViewModel() {
-		cardsList = new ArrayList<>();
-		menuState = new MenuState(createMenuMap(), 0);
+		super();
 	}
 
-	private Map<Integer, MenuItemBean> createMenuMap(){
+	protected Map<Integer, MenuItemBean> createMenuMap(){
 
 		Map<Integer, MenuItemBean> menuItemMap = new HashMap<>();
 
@@ -58,61 +47,7 @@ public class ViewCardsSummaryViewModel extends ViewModel {
 		return menuItemMap;
 	}
 
-	private final MutableLiveData<Boolean> dbRefreshIndicator = new MutableLiveData<>(false);
-
-	public MutableLiveData<Boolean> getDbRefreshIndicator() {
-		return dbRefreshIndicator;
-	}
-
-	public void setDbRefreshIndicatorFalse() {
-		this.dbRefreshIndicator.setValue(false);
-	}
-
-	public void refreshViewDBUpdate() {
-		cardsList.clear();
-		cardsList.addAll(loadMoreData(getSortOrder(), LOADING_LIMIT, 0, cardNameSearch));
-
-		this.dbRefreshIndicator.postValue(true);
-	}
-
-	public List<OwnedCard> getCardsList() {
-		return cardsList;
-	}
-
 	public List<OwnedCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch) {
 		return AndroidUtil.getDBInstance().queryOwnedCardsGrouped(orderBy, limit, offset, cardNameSearch);
-	}
-
-	public String getSortOrder() {
-		return menuState.getCurrentSelectionSql();
-	}
-
-	public String getCardNameSearch() {
-
-		if (cardNameSearch == null) {
-			return "";
-		}
-
-		return cardNameSearch;
-	}
-
-	public void setCardNameSearch(String cardNameSearch) {
-		this.cardNameSearch = cardNameSearch;
-	}
-
-	public void setCardsList(List<OwnedCard> cardsList) {
-		this.cardsList = cardsList;
-	}
-
-	public long getCurrentSearchStartTime() {
-		return currentSearchStartTime;
-	}
-
-	public void setCurrentSearchStartTime(long currentSearchStartTime) {
-		this.currentSearchStartTime = currentSearchStartTime;
-	}
-
-	public MenuState getMenuState() {
-		return menuState;
 	}
 }

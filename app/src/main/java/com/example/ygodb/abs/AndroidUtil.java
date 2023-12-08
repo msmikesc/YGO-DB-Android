@@ -104,7 +104,7 @@ public class AndroidUtil {
 		viewCardSetViewModel.refreshViewDBUpdate();
 
 		AnalyzeCardsViewModel analyzeCardsViewModel =
-				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(com.example.ygodb.ui.analyzesets.AnalyzeCardsViewModel.class);
+				new ViewModelProvider(AndroidUtil.getViewModelOwner()).get(AnalyzeCardsViewModel.class);
 
 		analyzeCardsViewModel.updateSetNamesDropdownList(setNamesArrayList);
 		analyzeCardsViewModel.refreshViewDBUpdate();

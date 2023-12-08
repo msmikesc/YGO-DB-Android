@@ -1,7 +1,17 @@
 package com.example.ygodb.ui.analyzesets;
 
 import com.example.ygodb.abs.AndroidUtil;
+import com.example.ygodb.abs.MenuItemComparatorBean;
 import com.example.ygodb.abs.MenuStateComparator;
+import com.example.ygodb.abs.OwnedCardNameComparatorAsc;
+import com.example.ygodb.abs.OwnedCardNameComparatorDesc;
+import com.example.ygodb.abs.OwnedCardPriceComparatorAsc;
+import com.example.ygodb.abs.OwnedCardPriceComparatorDesc;
+import com.example.ygodb.abs.OwnedCardQuantityComparatorAsc;
+import com.example.ygodb.abs.OwnedCardQuantityComparatorDesc;
+import com.example.ygodb.abs.OwnedCardSetNumberComparatorAsc;
+import com.example.ygodb.abs.OwnedCardSetNumberComparatorDesc;
+import com.example.ygodb.model.ViewCardsLoadCompleteDataViewModel;
 import com.example.ygodb.ui.viewcardset.ViewCardSetViewModel;
 import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
 import ygodb.commonlibrary.bean.AnalyzeData;
@@ -9,15 +19,50 @@ import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class AnalyzeCardsViewModel extends ViewCardSetViewModel {
+public class AnalyzeCardsViewModel extends ViewCardsLoadCompleteDataViewModel {
 
 	public AnalyzeCardsViewModel() {
-		cardsList = new ArrayList<>();
-		filteredCardsList = new ArrayList<>();
-		isCardNameMode = true;
-		menuState = new MenuStateComparator(createMenuMap(), 0);
+		super();
+	}
+
+	protected Map<Integer, MenuItemComparatorBean> createMenuMap(){
+
+		Map<Integer, MenuItemComparatorBean> menuItemMap = new HashMap<>();
+
+		menuItemMap.put(0, new MenuItemComparatorBean(
+				0,
+				"Quantity",
+				new OwnedCardQuantityComparatorAsc(),
+				new OwnedCardQuantityComparatorDesc(),
+				true
+		));
+		menuItemMap.put(1, new MenuItemComparatorBean(
+				1,
+				"Card Name",
+				new OwnedCardNameComparatorAsc(),
+				new OwnedCardNameComparatorDesc(),
+				true
+		));
+		menuItemMap.put(2, new MenuItemComparatorBean(
+				2,
+				"Set Number",
+				new OwnedCardSetNumberComparatorAsc(),
+				new OwnedCardSetNumberComparatorDesc(),
+				true
+		));
+		menuItemMap.put(3, new MenuItemComparatorBean(
+				3,
+				"Price",
+				new OwnedCardPriceComparatorAsc(),
+				new OwnedCardPriceComparatorDesc(),
+				false
+		));
+
+		return menuItemMap;
 	}
 
 	@Override

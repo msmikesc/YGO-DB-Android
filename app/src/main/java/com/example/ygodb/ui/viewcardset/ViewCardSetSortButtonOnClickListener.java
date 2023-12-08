@@ -7,6 +7,7 @@ import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
 import com.example.ygodb.abs.MenuStateComparator;
+import com.example.ygodb.model.ViewCardsLoadCompleteDataViewModel;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import ygodb.commonlibrary.bean.OwnedCard;
@@ -18,13 +19,13 @@ import java.util.concurrent.Executors;
 
 public class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
 
-	private final ViewCardSetViewModel viewCardsViewModel;
+	private final ViewCardsLoadCompleteDataViewModel viewCardsViewModel;
 	private final SingleCardToListAdapter adapter;
 	private final LinearLayoutManager layout;
 	private final FloatingActionButton fab;
 	private final Context context;
 
-	public ViewCardSetSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardSetViewModel viewCardsViewModel,
+	public ViewCardSetSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardsLoadCompleteDataViewModel viewCardsViewModel,
 			SingleCardToListAdapter adapter, LinearLayoutManager layout) {
 		this.viewCardsViewModel = viewCardsViewModel;
 		this.adapter = adapter;

@@ -85,13 +85,7 @@ public class SellCardsViewModel extends ViewModel {
 			sellingCard.setAltArtPasscode(current.getAltArtPasscode());
 
 			sellingCard.setPriceBought(current.getPriceBought());
-
-			if (current.getEditionPrinting() == null || current.getEditionPrinting().equals("")) {
-				//assume unlimited
-				sellingCard.setEditionPrinting(Const.CARD_PRINTING_UNLIMITED);
-			} else {
-				sellingCard.setEditionPrinting(current.getEditionPrinting());
-			}
+			sellingCard.setEditionPrinting(current.getEditionPrinting());
 
 			sellingCard.setAnalyzeResultsCardSets(current.getAnalyzeResultsCardSets());
 
