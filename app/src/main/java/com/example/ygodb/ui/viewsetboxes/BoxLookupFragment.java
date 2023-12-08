@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.databinding.FragmentBoxLookupBinding;
+import com.example.ygodb.util.AndroidUtil;
 
 public class BoxLookupFragment extends Fragment {
 

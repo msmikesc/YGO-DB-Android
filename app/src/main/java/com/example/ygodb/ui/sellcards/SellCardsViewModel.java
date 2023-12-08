@@ -1,32 +1,23 @@
 package com.example.ygodb.ui.sellcards;
 
-import androidx.lifecycle.ViewModel;
+import com.example.ygodb.model.addorsell.AddOrSellViewModel;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-public class SellCardsViewModel extends ViewModel {
-
-	private final HashMap<String, Integer> keyToPosition;
-	private final ArrayList<SoldCard> cardsList;
-
-	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+public class SellCardsViewModel extends AddOrSellViewModel<SoldCard> {
 
 	public SellCardsViewModel() {
-		cardsList = new ArrayList<>();
-		keyToPosition = new HashMap<>();
+		super();
 	}
 
+	protected String getKeyForOwnedCard(OwnedCard input) {
+		return input.getUuid();
+	}
 
 	public void saveToDB() {
 		for (SoldCard current : cardsList) {
@@ -38,9 +29,9 @@ public class SellCardsViewModel extends ViewModel {
 		cardsList.clear();
 	}
 
-
-	public List<SoldCard> getCardsList() {
-		return cardsList;
+	public void addNewFromOwnedCard(OwnedCard current, int quantity) {
+		//quantity ignored, only one at a time allowed
+		addNewFromOwnedCard(current);
 	}
 
 	public void addNewFromOwnedCard(OwnedCard current) {
@@ -50,7 +41,7 @@ public class SellCardsViewModel extends ViewModel {
 			return;
 		}
 
-		String key = current.getUuid();
+		String key = getKeyForOwnedCard(current);
 
 		Integer position = keyToPosition.get(key);
 
@@ -99,55 +90,6 @@ public class SellCardsViewModel extends ViewModel {
 				sellingCard.setCondition(current.getCondition());
 			}
 		}
-	}
-
-	public void setAllPricesEstimate() {
-		for (SoldCard current : cardsList) {
-			current.setPriceSold(Util.getEstimatePriceFromRarity(current.getSetRarity()));
-		}
-	}
-
-	public void setAllPricesAPI() {
-		for (SoldCard current : cardsList) {
-			current.setPriceSold(Util.getAPIPriceFromRarity(current, AndroidUtil.getDBInstance()));
-		}
-	}
-
-	public void setAllPricesZero() {
-		for (SoldCard current : cardsList) {
-			current.setPriceSold(Const.ZERO_PRICE_STRING);
-		}
-	}
-
-	public void removeNewFromOwnedCard(OwnedCard current) {
-
-		String key = current.getUuid();
-
-		Integer position = keyToPosition.get(key);
-		OwnedCard newCard = null;
-
-		if (position != null) {
-			newCard = cardsList.get(position);
-		}
-		if (newCard == null) {
-			return;
-		}
-
-		for (Map.Entry<String, Integer> testEntry : keyToPosition.entrySet()) {
-
-			String testKey = testEntry.getKey();
-
-			Integer testPos = testEntry.getValue();
-
-			if (testPos > position) {
-				testPos--;
-				keyToPosition.put(testKey, testPos);
-			}
-		}
-
-		keyToPosition.remove(key);
-		cardsList.remove(position.intValue());
-
 	}
 
 }

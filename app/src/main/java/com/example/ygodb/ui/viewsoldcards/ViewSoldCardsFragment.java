@@ -10,12 +10,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
+import com.example.ygodb.databinding.FragmentViewcardsBinding;
+import com.example.ygodb.model.EndlessScrollListener;
 import com.example.ygodb.model.partialscroll.PartialScrollEndlessScrollListener;
 import com.example.ygodb.model.partialscroll.PartialScrollSearchBarChangedListener;
 import com.example.ygodb.model.partialscroll.PartialScrollSortButtonOnClickListener;
 import com.example.ygodb.util.AndroidUtil;
-import com.example.ygodb.model.EndlessScrollListener;
-import com.example.ygodb.databinding.FragmentViewcardsBinding;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.concurrent.Executors;

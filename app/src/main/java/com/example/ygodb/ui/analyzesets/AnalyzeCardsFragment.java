@@ -12,12 +12,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
-import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.databinding.FragmentViewcardsetBinding;
-import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.example.ygodb.model.completedata.LoadCompleteDataCardSearchBarChangedListener;
 import com.example.ygodb.model.completedata.LoadCompleteDataSetSearchBarChangedListener;
 import com.example.ygodb.model.completedata.LoadCompleteDataSortButtonOnClickListener;
+import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
+import com.example.ygodb.util.AndroidUtil;
 
 public class AnalyzeCardsFragment extends Fragment {
 

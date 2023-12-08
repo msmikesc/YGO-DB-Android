@@ -1,9 +1,9 @@
 package com.example.ygodb.model.completedata;
 
 import com.example.ygodb.model.ViewCardsBaseViewModel;
-import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.model.popupmenu.MenuItemComparatorBean;
 import com.example.ygodb.model.popupmenu.MenuStateComparator;
+import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.ArrayList;
