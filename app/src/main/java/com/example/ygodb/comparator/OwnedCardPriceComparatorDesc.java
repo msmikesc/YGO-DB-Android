@@ -1,11 +1,11 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.comparator;
 
 import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
 
-public class OwnedCardPriceComparatorAsc implements Comparator<OwnedCard> {
+public class OwnedCardPriceComparatorDesc implements Comparator<OwnedCard> {
 
 	@Override
 	public int compare(OwnedCard ownedCard, OwnedCard t1) {
@@ -13,7 +13,7 @@ public class OwnedCardPriceComparatorAsc implements Comparator<OwnedCard> {
 		BigDecimal p1 = ownedCard.getPriceBought() != null ? new BigDecimal(ownedCard.getPriceBought()) : new BigDecimal(0);
 		BigDecimal p2 = t1.getPriceBought() != null ? new BigDecimal(t1.getPriceBought()) : new BigDecimal(0);
 
-		int val = p1.compareTo(p2);
+		int val = p2.compareTo(p1);
 
 		if (val != 0) {
 			return val;

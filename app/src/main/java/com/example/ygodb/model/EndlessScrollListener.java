@@ -1,4 +1,4 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.model;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;

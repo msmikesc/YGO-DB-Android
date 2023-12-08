@@ -3,7 +3,7 @@ package com.example.ygodb.ui.viewsetboxes;
 import android.text.Editable;
 import android.widget.EditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.ygodb.abs.TextChangedListener;
+import com.example.ygodb.model.TextChangedListener;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.utility.YGOLogger;
 

@@ -1,4 +1,4 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.model;
 
 import android.os.Handler;
 import android.os.Looper;

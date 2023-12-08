@@ -2,7 +2,7 @@ package com.example.ygodb.ui.viewcardssummary;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.ygodb.abs.EndlessScrollListener;
+import com.example.ygodb.model.EndlessScrollListener;
 import com.example.ygodb.ui.singlecard.SummaryCardToListAdapter;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;

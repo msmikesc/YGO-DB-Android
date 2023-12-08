@@ -1,7 +1,7 @@
 package com.example.ygodb.ui.viewcardssummary;
 
-import com.example.ygodb.abs.AndroidUtil;
-import com.example.ygodb.abs.MenuItemBean;
+import com.example.ygodb.util.AndroidUtil;
+import com.example.ygodb.popupmenu.MenuItemBean;
 import com.example.ygodb.model.ViewCardsLoadPartialScrollViewModel;
 import ygodb.commonlibrary.bean.OwnedCard;
 

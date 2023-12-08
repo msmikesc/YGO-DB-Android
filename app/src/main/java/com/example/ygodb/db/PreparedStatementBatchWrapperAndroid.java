@@ -1,4 +1,4 @@
-package com.example.ygodb.impl;
+package com.example.ygodb.db;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;

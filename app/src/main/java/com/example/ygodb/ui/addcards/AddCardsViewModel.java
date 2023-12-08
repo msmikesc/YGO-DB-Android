@@ -1,7 +1,7 @@
 package com.example.ygodb.ui.addcards;
 
 import androidx.lifecycle.ViewModel;
-import com.example.ygodb.abs.AndroidUtil;
+import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;

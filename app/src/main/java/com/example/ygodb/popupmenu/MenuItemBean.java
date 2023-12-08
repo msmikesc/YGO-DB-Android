@@ -1,4 +1,4 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.popupmenu;
 
 public class MenuItemBean {
 

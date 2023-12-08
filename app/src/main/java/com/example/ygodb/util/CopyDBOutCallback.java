@@ -1,4 +1,4 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.util;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,12 +11,13 @@ import com.google.android.material.snackbar.Snackbar;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.Executors;
 
-public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> {
+public class CopyDBOutCallback implements ActivityResultCallback<ActivityResult> {
 	private final MainActivity activity;
 
-	public CopyDBInCallback(MainActivity activity) {
+	public CopyDBOutCallback(MainActivity activity) {
 		this.activity = activity;
 	}
 
@@ -41,8 +42,10 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 		}
 
 		Uri finalChosenURI = chosenURI;
+
 		AndroidUtil.showProgressDialog(activity);
-		Executors.newSingleThreadExecutor().execute(() -> importDBFromURI(finalChosenURI));
+		Executors.newSingleThreadExecutor().execute(() -> exportDBFileToURI(finalChosenURI));
+
 	}
 
 	public Uri getFileURIFromActivityResult(ActivityResult result) throws IOException {
@@ -76,23 +79,30 @@ public class CopyDBInCallback implements ActivityResultCallback<ActivityResult> 
 		return chosenURI;
 	}
 
-	public void importDBFromURI(Uri chosenURI) {
+	public void exportDBFileToURI(Uri chosenURI) {
+
 		DrawerLayout view = activity.getBinding().getRoot();
+		OutputStream file = null;
+
 		try {
-			String responseMessage = AndroidUtil.getDBInstance().copyDataBaseFromURI(activity, chosenURI);
+			file = activity.getContentResolver().openOutputStream(chosenURI);
+			AndroidUtil.getDBInstance().copyDataBaseToURI(activity, file);
 
-			AndroidUtil.updateViewsAfterDBLoad();
+			AndroidUtil.hideProgressDialog();
+			Snackbar.make(view, "DB Exported", BaseTransientBottomBar.LENGTH_LONG).show();
 
-			view.post(() -> {
-				AndroidUtil.hideProgressDialog();
-				Snackbar.make(view, responseMessage, BaseTransientBottomBar.LENGTH_LONG).show();
-			});
 		} catch (Exception e) {
+			AndroidUtil.hideProgressDialog();
 			YGOLogger.logException(e);
-			view.post(() -> {
-				AndroidUtil.hideProgressDialog();
-				Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
-			});
+			Snackbar.make(view, "Error: Exception " + e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+		} finally {
+			if (file != null) {
+				try {
+					file.close();
+				} catch (IOException e) {
+					YGOLogger.logException(e);
+				}
+			}
 		}
 	}
 }

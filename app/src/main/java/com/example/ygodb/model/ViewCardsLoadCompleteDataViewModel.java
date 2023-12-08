@@ -1,8 +1,8 @@
 package com.example.ygodb.model;
 
-import com.example.ygodb.abs.AndroidUtil;
-import com.example.ygodb.abs.MenuItemComparatorBean;
-import com.example.ygodb.abs.MenuStateComparator;
+import com.example.ygodb.util.AndroidUtil;
+import com.example.ygodb.popupmenu.MenuItemComparatorBean;
+import com.example.ygodb.popupmenu.MenuStateComparator;
 import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.ArrayList;

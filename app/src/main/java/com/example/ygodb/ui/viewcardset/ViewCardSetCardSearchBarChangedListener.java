@@ -3,7 +3,7 @@ package com.example.ygodb.ui.viewcardset;
 import android.text.Editable;
 import android.widget.EditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.ygodb.abs.TextChangedListener;
+import com.example.ygodb.model.TextChangedListener;
 import com.example.ygodb.model.ViewCardsLoadCompleteDataViewModel;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import ygodb.commonlibrary.bean.OwnedCard;

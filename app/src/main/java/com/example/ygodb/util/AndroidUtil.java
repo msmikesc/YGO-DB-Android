@@ -1,4 +1,4 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.ygodb.R;
-import com.example.ygodb.impl.SQLiteConnectionAndroid;
+import com.example.ygodb.db.SQLiteConnectionAndroid;
 import com.example.ygodb.ui.analyzesets.AnalyzeCardsViewModel;
 import com.example.ygodb.ui.viewSoldCards.ViewSoldCardsViewModel;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;

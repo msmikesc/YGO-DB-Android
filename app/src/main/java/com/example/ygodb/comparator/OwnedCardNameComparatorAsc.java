@@ -1,4 +1,4 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.comparator;
 
 import ygodb.commonlibrary.bean.OwnedCard;
 

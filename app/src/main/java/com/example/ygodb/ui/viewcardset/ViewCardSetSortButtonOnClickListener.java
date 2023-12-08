@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
-import com.example.ygodb.abs.MenuStateComparator;
+import com.example.ygodb.popupmenu.MenuStateComparator;
 import com.example.ygodb.model.ViewCardsLoadCompleteDataViewModel;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

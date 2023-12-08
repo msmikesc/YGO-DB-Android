@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
-import com.example.ygodb.abs.AndroidUtil;
+import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.databinding.FragmentViewcardsetBinding;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;

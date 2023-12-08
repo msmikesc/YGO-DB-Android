@@ -1,4 +1,4 @@
-package com.example.ygodb.impl;
+package com.example.ygodb.db;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
-import com.example.ygodb.abs.AndroidUtil;
+import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.AnalyzePrintedOnceData;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;

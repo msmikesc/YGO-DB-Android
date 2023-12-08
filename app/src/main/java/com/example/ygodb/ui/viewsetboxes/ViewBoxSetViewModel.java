@@ -2,7 +2,7 @@ package com.example.ygodb.ui.viewsetboxes;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.example.ygodb.abs.AndroidUtil;
+import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.SetBox;
 import ygodb.commonlibrary.utility.YGOLogger;
 

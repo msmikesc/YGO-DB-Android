@@ -1,4 +1,4 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.popupmenu;
 
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;

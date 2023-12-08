@@ -1,4 +1,4 @@
-package com.example.ygodb.impl;
+package com.example.ygodb.db;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

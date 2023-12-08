@@ -1,21 +1,21 @@
-package com.example.ygodb.abs;
+package com.example.ygodb.comparator;
 
 import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.Comparator;
 
-public class OwnedCardQuantityComparatorAsc implements Comparator<OwnedCard> {
+public class OwnedCardSetNumberComparatorDesc implements Comparator<OwnedCard> {
 
 	@Override
 	public int compare(OwnedCard ownedCard, OwnedCard t1) {
 
-		int val = ownedCard.getQuantity() - t1.getQuantity();
+		int val = t1.getSetNumber().compareTo(ownedCard.getSetNumber());
 
 		if (val != 0) {
 			return val;
 		}
 
-		val = ownedCard.getSetNumber().compareTo(t1.getSetNumber());
+		val = ownedCard.getQuantity() - t1.getQuantity();
 
 		if (val != 0) {
 			return val;

@@ -1,7 +1,7 @@
 package com.example.ygodb.model;
 
-import com.example.ygodb.abs.MenuItemBean;
-import com.example.ygodb.abs.MenuState;
+import com.example.ygodb.popupmenu.MenuItemBean;
+import com.example.ygodb.popupmenu.MenuState;
 
 import java.util.List;
 import java.util.Map;
