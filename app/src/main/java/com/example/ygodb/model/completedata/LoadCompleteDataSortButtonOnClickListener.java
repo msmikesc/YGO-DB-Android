@@ -1,4 +1,4 @@
-package com.example.ygodb.ui.viewcardset;
+package com.example.ygodb.model.completedata;
 
 import android.content.Context;
 import android.view.MenuItem;
@@ -6,8 +6,7 @@ import android.view.View;
 import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
-import com.example.ygodb.popupmenu.MenuStateComparator;
-import com.example.ygodb.model.completedata.ViewCardsLoadCompleteDataViewModel;
+import com.example.ygodb.model.popupmenu.MenuStateComparator;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import ygodb.commonlibrary.bean.OwnedCard;
@@ -17,7 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class ViewCardSetSortButtonOnClickListener implements View.OnClickListener {
+public class LoadCompleteDataSortButtonOnClickListener implements View.OnClickListener {
 
 	private final ViewCardsLoadCompleteDataViewModel viewCardsViewModel;
 	private final SingleCardToListAdapter adapter;
@@ -25,7 +24,7 @@ public class ViewCardSetSortButtonOnClickListener implements View.OnClickListene
 	private final FloatingActionButton fab;
 	private final Context context;
 
-	public ViewCardSetSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardsLoadCompleteDataViewModel viewCardsViewModel,
+	public LoadCompleteDataSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardsLoadCompleteDataViewModel viewCardsViewModel,
 			SingleCardToListAdapter adapter, LinearLayoutManager layout) {
 		this.viewCardsViewModel = viewCardsViewModel;
 		this.adapter = adapter;

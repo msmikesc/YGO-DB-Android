@@ -1,4 +1,4 @@
-package com.example.ygodb.popupmenu;
+package com.example.ygodb.model.popupmenu;
 
 import ygodb.commonlibrary.utility.YGOLogger;
 

@@ -1,7 +1,7 @@
 package com.example.ygodb.ui.viewcardset;
 
 import com.example.ygodb.util.AndroidUtil;
-import com.example.ygodb.popupmenu.MenuItemComparatorBean;
+import com.example.ygodb.model.popupmenu.MenuItemComparatorBean;
 import com.example.ygodb.comparator.OwnedCardNameComparatorAsc;
 import com.example.ygodb.comparator.OwnedCardNameComparatorDesc;
 import com.example.ygodb.comparator.OwnedCardPriceComparatorAsc;

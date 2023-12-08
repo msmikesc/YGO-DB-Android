@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
+import com.example.ygodb.model.completedata.LoadCompleteDataCardSearchBarChangedListener;
+import com.example.ygodb.model.completedata.LoadCompleteDataSetSearchBarChangedListener;
+import com.example.ygodb.model.completedata.LoadCompleteDataSortButtonOnClickListener;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.databinding.FragmentViewcardsetBinding;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
@@ -49,16 +52,16 @@ public class ViewCardSetFragment extends Fragment {
 		cardsListView.setAdapter(adapter);
 
 		binding.fab.setOnClickListener(
-				new ViewCardSetSortButtonOnClickListener(binding.fab, getContext(), viewCardSetViewModel, adapter, layout));
+				new LoadCompleteDataSortButtonOnClickListener(binding.fab, getContext(), viewCardSetViewModel, adapter, layout));
 
 		binding.cardSearch.setText(viewCardSetViewModel.getCardNameSearch());
 		binding.setSearch.setText(viewCardSetViewModel.getSetNameSearch());
 
 		binding.cardSearch.addTextChangedListener(
-				new ViewCardSetCardSearchBarChangedListener(binding.cardSearch, viewCardSetViewModel, adapter, layout));
+				new LoadCompleteDataCardSearchBarChangedListener(binding.cardSearch, viewCardSetViewModel, adapter, layout));
 
 		binding.setSearch.addTextChangedListener(
-				new ViewCardSetSetSearchBarChangedListener(binding.setSearch, viewCardSetViewModel, adapter, layout));
+				new LoadCompleteDataSetSearchBarChangedListener(binding.setSearch, viewCardSetViewModel, adapter, layout));
 
 		viewCardSetViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), aBoolean -> {
 			if (aBoolean) {

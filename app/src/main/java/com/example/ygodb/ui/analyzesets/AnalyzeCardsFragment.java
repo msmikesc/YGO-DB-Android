@@ -15,9 +15,9 @@ import com.example.ygodb.R;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.databinding.FragmentViewcardsetBinding;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
-import com.example.ygodb.ui.viewcardset.ViewCardSetCardSearchBarChangedListener;
-import com.example.ygodb.ui.viewcardset.ViewCardSetSetSearchBarChangedListener;
-import com.example.ygodb.ui.viewcardset.ViewCardSetSortButtonOnClickListener;
+import com.example.ygodb.model.completedata.LoadCompleteDataCardSearchBarChangedListener;
+import com.example.ygodb.model.completedata.LoadCompleteDataSetSearchBarChangedListener;
+import com.example.ygodb.model.completedata.LoadCompleteDataSortButtonOnClickListener;
 
 public class AnalyzeCardsFragment extends Fragment {
 
@@ -52,13 +52,13 @@ public class AnalyzeCardsFragment extends Fragment {
 		binding.setSearch.setText(analyzeCardsViewModel.getSetNameSearch());
 
 		binding.fab.setOnClickListener(
-				new ViewCardSetSortButtonOnClickListener(binding.fab, getContext(), analyzeCardsViewModel, adapter, layout));
+				new LoadCompleteDataSortButtonOnClickListener(binding.fab, getContext(), analyzeCardsViewModel, adapter, layout));
 
 		binding.cardSearch.addTextChangedListener(
-				new ViewCardSetCardSearchBarChangedListener(binding.cardSearch, analyzeCardsViewModel, adapter, layout));
+				new LoadCompleteDataCardSearchBarChangedListener(binding.cardSearch, analyzeCardsViewModel, adapter, layout));
 
 		binding.setSearch.addTextChangedListener(
-				new ViewCardSetSetSearchBarChangedListener(binding.setSearch, analyzeCardsViewModel, adapter, layout));
+				new LoadCompleteDataSetSearchBarChangedListener(binding.setSearch, analyzeCardsViewModel, adapter, layout));
 
 		analyzeCardsViewModel.getDbRefreshIndicator().observe(getViewLifecycleOwner(), aBoolean -> {
 			if (aBoolean) {
