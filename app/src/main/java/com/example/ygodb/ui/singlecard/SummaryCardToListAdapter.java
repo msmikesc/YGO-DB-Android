@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
+import com.example.ygodb.model.PartialScrollToListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 
@@ -16,15 +17,10 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
-public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardToListAdapter.ItemViewHolder> {
-	List<OwnedCard> ownedCards;
+public class SummaryCardToListAdapter extends PartialScrollToListAdapter<OwnedCard,SummaryCardToListAdapter.ItemViewHolder> {
 
 	public SummaryCardToListAdapter(List<OwnedCard> ownedCards) {
-		this.ownedCards = ownedCards;
-	}
-
-	public void setOwnedCards(List<OwnedCard> ownedCards) {
-		this.ownedCards = ownedCards;
+		super(ownedCards);
 	}
 
 	@NonNull
@@ -37,7 +33,7 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		OwnedCard current = ownedCards.get(position);
+		OwnedCard current = cardsList.get(position);
 
 		viewHolder.title.setText(current.getCardName());
 		viewHolder.setName.setText(current.getSetName());
@@ -65,11 +61,6 @@ public class SummaryCardToListAdapter extends RecyclerView.Adapter<SummaryCardTo
 		} catch (Exception ex) {
 			viewHolder.cardImage.setImageDrawable(null);
 		}
-	}
-
-	@Override
-	public int getItemCount() {
-		return ownedCards.size();
 	}
 
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {

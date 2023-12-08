@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
+import com.example.ygodb.model.PartialScrollToListAdapter;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
@@ -25,9 +26,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
-public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToListAdapter.ItemViewHolder> {
-	private List<OwnedCard> ownedCards;
-
+public class SingleCardToListAdapter extends PartialScrollToListAdapter<OwnedCard, SingleCardToListAdapter.ItemViewHolder> {
 	private final AddCardsViewModel addCardsViewModel;
 	private final SellCardsViewModel sellCardsViewModel;
 	private final boolean isManyPlusButtons;
@@ -38,7 +37,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 
 	public SingleCardToListAdapter(List<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel,
 			boolean isManyPlusButtons) {
-		this.ownedCards = ownedCards;
+		super(ownedCards);
 		this.addCardsViewModel = addCardsViewModel;
 		this.sellCardsViewModel = sellCardsViewModel;
 		this.isManyPlusButtons = isManyPlusButtons;
@@ -52,10 +51,6 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 		}
-	}
-
-	public void setOwnedCards(List<OwnedCard> ownedCards) {
-		this.ownedCards = ownedCards;
 	}
 
 	@NonNull
@@ -83,7 +78,7 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 	@Override
 	public void onBindViewHolder(@NonNull ItemViewHolder viewHolder, int position) {
 
-		OwnedCard current = ownedCards.get(position);
+		OwnedCard current = cardsList.get(position);
 
 		LinearLayout buttonContainer = viewHolder.itemView.findViewById(R.id.incrementQuantityButtonContainer);
 
@@ -188,11 +183,6 @@ public class SingleCardToListAdapter extends RecyclerView.Adapter<SingleCardToLi
 			viewHolder.cardImage.setImageDrawable(null);
 		}
 
-	}
-
-	@Override
-	public int getItemCount() {
-		return ownedCards.size();
 	}
 
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {

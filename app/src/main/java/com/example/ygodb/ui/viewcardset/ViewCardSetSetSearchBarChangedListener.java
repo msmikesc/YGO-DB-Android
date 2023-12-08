@@ -56,7 +56,7 @@ public class ViewCardSetSetSearchBarChangedListener extends TextChangedListener<
 					handler.post(() -> {
 						viewCardsViewModel.setCardsList(finalResults);
 						viewCardsViewModel.setFilteredCardsList(finalFilteredResults);
-						adapter.setOwnedCards(finalFilteredResults);
+						adapter.setCardsList(finalFilteredResults);
 
 						layout.scrollToPositionWithOffset(0, 0);
 						adapter.notifyDataSetChanged();

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.model.PartialScrollEndlessScrollListener;
+import com.example.ygodb.model.PartialScrollSearchBarChangedListener;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.model.EndlessScrollListener;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
@@ -49,7 +50,7 @@ public class ViewSoldCardsFragment extends Fragment {
 		binding.cardSearch.setText(viewSoldCardsViewModel.getCardNameSearch());
 
 		binding.cardSearch.addTextChangedListener(
-				new ViewSoldCardsSearchBarChangedListener(binding.cardSearch, viewSoldCardsViewModel, adapter, layout));
+				new PartialScrollSearchBarChangedListener<>(binding.cardSearch, viewSoldCardsViewModel, adapter, layout));
 
 		if (viewSoldCardsViewModel.getCardsList().isEmpty()) {
 			Executors.newSingleThreadExecutor().execute(() -> {
