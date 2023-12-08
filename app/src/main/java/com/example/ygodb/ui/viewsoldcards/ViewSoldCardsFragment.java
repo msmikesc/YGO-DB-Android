@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.ygodb.R;
 import com.example.ygodb.model.partialscroll.PartialScrollEndlessScrollListener;
 import com.example.ygodb.model.partialscroll.PartialScrollSearchBarChangedListener;
+import com.example.ygodb.model.partialscroll.PartialScrollSortButtonOnClickListener;
 import com.example.ygodb.util.AndroidUtil;
 import com.example.ygodb.model.EndlessScrollListener;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
@@ -45,7 +47,7 @@ public class ViewSoldCardsFragment extends Fragment {
 		cardsListView.addOnScrollListener(scrollListener);
 
 		binding.fab.setOnClickListener(
-				new ViewSoldCardsSortButtonOnClickListener(binding.fab, getContext(), viewSoldCardsViewModel, adapter, layout));
+				new PartialScrollSortButtonOnClickListener<>(binding.fab, getContext(), viewSoldCardsViewModel, adapter, layout, R.menu.sort_menu_sold));
 
 		binding.cardSearch.setText(viewSoldCardsViewModel.getCardNameSearch());
 

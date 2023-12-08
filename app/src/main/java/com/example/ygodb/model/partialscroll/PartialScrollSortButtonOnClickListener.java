@@ -1,35 +1,35 @@
-package com.example.ygodb.ui.viewsoldcards;
+package com.example.ygodb.model.partialscroll;
 
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.ygodb.R;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.popupmenu.MenuState;
-import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import ygodb.commonlibrary.bean.SoldCard;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 
-class ViewSoldCardsSortButtonOnClickListener implements View.OnClickListener {
+public class PartialScrollSortButtonOnClickListener<T, U extends RecyclerView.ViewHolder> implements View.OnClickListener {
 
-	private final ViewSoldCardsViewModel viewSoldCardsViewModel;
-	private final SoldCardToListAdapter adapter;
+	private final ViewCardsLoadPartialScrollViewModel<T> viewModel;
+	private final PartialScrollToListAdapter<T, U> adapter;
 	private final LinearLayoutManager layout;
 	private final FloatingActionButton fab;
 	private final Context context;
+	private final int menuIdentifier;
 
-	public ViewSoldCardsSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewSoldCardsViewModel viewSoldCardsViewModel,
-			SoldCardToListAdapter adapter, LinearLayoutManager layout) {
-		this.viewSoldCardsViewModel = viewSoldCardsViewModel;
+	public PartialScrollSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardsLoadPartialScrollViewModel<T> viewModel,
+			PartialScrollToListAdapter<T, U> adapter, LinearLayoutManager layout, int menuIdentifier) {
+		this.viewModel = viewModel;
 		this.adapter = adapter;
 		this.layout = layout;
 		this.fab = fab;
 		this.context = context;
+		this.menuIdentifier = menuIdentifier;
 	}
 
 	@Override
@@ -38,20 +38,21 @@ class ViewSoldCardsSortButtonOnClickListener implements View.OnClickListener {
 		PopupMenu popupMenu = new PopupMenu(context, fab);
 
 		// Inflating popup menu from popup_menu.xml file
-		popupMenu.getMenuInflater().inflate(R.menu.sort_menu_sold, popupMenu.getMenu());
-		MenuState menuState = viewSoldCardsViewModel.getMenuState();
+		popupMenu.getMenuInflater().inflate(menuIdentifier, popupMenu.getMenu());
+
+		MenuState menuState = viewModel.getMenuState();
 		MenuItem menuItemCurrent = popupMenu.getMenu().getItem(menuState.getCurrentSelectionID());
 		menuItemCurrent.setTitle(menuState.getCurrentSelectionText());
 
 		popupMenu.setOnMenuItemClickListener(menuItem -> {
 			menuState.clickOnMenuItem(menuItem.getOrder());
-			List<SoldCard> cardsList = viewSoldCardsViewModel.getCardsList();
+			List<T> cardsList = viewModel.getCardsList();
 			String finalSortOrder = menuState.getCurrentSelectionSql();
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
 					cardsList.clear();
-					List<SoldCard> moreCards = viewSoldCardsViewModel.loadMoreData(finalSortOrder, ViewCardsViewModel.LOADING_LIMIT, 0,
-																					viewSoldCardsViewModel.getCardNameSearch());
+					List<T> moreCards = viewModel.loadMoreData(finalSortOrder, ViewCardsLoadPartialScrollViewModel.LOADING_LIMIT, 0,
+																	   viewModel.getCardNameSearch());
 					cardsList.addAll(moreCards);
 
 					view.post(() -> {
