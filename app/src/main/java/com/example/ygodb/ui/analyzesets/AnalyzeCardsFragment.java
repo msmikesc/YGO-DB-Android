@@ -54,6 +54,8 @@ public class AnalyzeCardsFragment extends Fragment {
 		binding.fab.setOnClickListener(
 				new LoadCompleteDataSortButtonOnClickListener(binding.fab, getContext(), analyzeCardsViewModel, adapter, layout));
 
+		binding.fabFilterRarity.hide();
+
 		binding.cardSearch.addTextChangedListener(
 				new LoadCompleteDataCardSearchBarChangedListener(binding.cardSearch, analyzeCardsViewModel, adapter, layout));
 
