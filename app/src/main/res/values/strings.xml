@@ -14,12 +14,12 @@
     <string name="menu_home">Home</string>
     <string name="menu_viewCards">View Card Details</string>
     <string name="menu_viewCardsSummary">View Card Summary</string>
-    <string name="menu_viewCardSet">View Card Sets</string>
+    <string name="menu_viewCardSet">View Set Details</string>
     <string name="menu_addCards">Add Cards</string>
     <string name="menu_sellCards">Sell Cards</string>
     <string name="menu_soldCards">Sold Cards</string>
     <string name="menu_boxLookup">Box Lookup</string>
-    <string name="menu_analyzeSet">Analyze Card Sets</string>
+    <string name="menu_analyzeSet">View Set Summary</string>
     <string name="set_name_or_code">Set Name or Code</string>
     <string name="box">Box</string>
     <string name="set_name">Set Name</string>

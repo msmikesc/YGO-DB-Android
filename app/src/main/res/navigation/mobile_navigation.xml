@@ -18,15 +18,15 @@
         tools:layout="@layout/fragment_viewcards"/>
 
     <fragment
-        android:id="@+id/nav_viewCardSet"
-        android:name="com.example.ygodb.ui.viewcardset.ViewCardSetFragment"
-        android:label="@string/menu_viewCardSet"
-        tools:layout="@layout/fragment_viewcardset"/>
-
-    <fragment
         android:id="@+id/nav_analyzeSet"
         android:name="com.example.ygodb.ui.analyzesets.AnalyzeCardsFragment"
         android:label="@string/menu_analyzeSet"
+        tools:layout="@layout/fragment_viewcardset"/>
+
+    <fragment
+        android:id="@+id/nav_viewCardSet"
+        android:name="com.example.ygodb.ui.viewcardset.ViewCardSetFragment"
+        android:label="@string/menu_viewCardSet"
         tools:layout="@layout/fragment_viewcardset"/>
 
     <fragment

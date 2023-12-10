@@ -13,13 +13,13 @@
             android:icon="@android:drawable/ic_menu_zoom"
             android:title="@string/menu_viewCards"/>
         <item
-            android:id="@+id/nav_viewCardSet"
-            android:icon="@drawable/layers"
-            android:title="@string/menu_viewCardSet"/>
-        <item
             android:id="@+id/nav_analyzeSet"
             android:icon="@drawable/layers"
             android:title="@string/menu_analyzeSet"/>
+        <item
+            android:id="@+id/nav_viewCardSet"
+            android:icon="@drawable/layers"
+            android:title="@string/menu_viewCardSet"/>
         <item
             android:id="@+id/nav_addCards"
             android:icon="@drawable/plus_circle"
