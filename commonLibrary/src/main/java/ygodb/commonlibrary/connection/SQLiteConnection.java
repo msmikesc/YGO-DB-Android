@@ -52,7 +52,7 @@ public interface SQLiteConnection {
 
 	OwnedCard getExistingOwnedCardByObject(OwnedCard query);
 
-	List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch);
+	List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch, String rarityFilter);
 
 	List<SoldCard> querySoldCards(String orderBy, int limit, int offset, String cardNameSearch);
 

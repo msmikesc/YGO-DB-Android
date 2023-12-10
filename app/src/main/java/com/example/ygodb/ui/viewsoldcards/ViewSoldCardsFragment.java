@@ -57,9 +57,10 @@ public class ViewSoldCardsFragment extends Fragment {
 		if (viewSoldCardsViewModel.getCardsList().isEmpty()) {
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
-					viewSoldCardsViewModel.getCardsList().addAll(viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(),
-																									 ViewSoldCardsViewModel.LOADING_LIMIT,
-																									 0, null));
+					viewSoldCardsViewModel.getCardsList().addAll(
+							viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(),
+							ViewSoldCardsViewModel.LOADING_LIMIT,
+							0, null, null));
 
 					root.post(adapter::notifyDataSetChanged);
 				} catch (Exception e) {

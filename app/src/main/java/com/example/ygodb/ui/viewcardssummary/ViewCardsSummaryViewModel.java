@@ -1,7 +1,7 @@
 package com.example.ygodb.ui.viewcardssummary;
 
 import com.example.ygodb.model.partialscroll.ViewCardsLoadPartialScrollViewModel;
-import com.example.ygodb.model.popupmenu.MenuItemBean;
+import com.example.ygodb.model.popupsortmenu.MenuItemBean;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 
@@ -47,7 +47,7 @@ public class ViewCardsSummaryViewModel extends ViewCardsLoadPartialScrollViewMod
 		return menuItemMap;
 	}
 
-	public List<OwnedCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch, String rarityFilter) {
 		return AndroidUtil.getDBInstance().queryOwnedCardsGrouped(orderBy, limit, offset, cardNameSearch);
 	}
 }

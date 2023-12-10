@@ -35,6 +35,7 @@ import java.util.Map;
 public class SQLiteConnectionWindows implements SQLiteConnection {
 
 	//TODO add filtering by rarity/other
+	// add unique functionality for pure card name search between the two set screens
 
 	public static final int BATCH_SIZE = 1000;
 
@@ -774,7 +775,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
-	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch, String rarityFilter) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,16 +1,21 @@
 package com.example.ygodb.model.completedata;
 
 import com.example.ygodb.model.ViewCardsBaseViewModel;
-import com.example.ygodb.model.popupmenu.MenuItemComparatorBean;
-import com.example.ygodb.model.popupmenu.MenuStateComparator;
+import com.example.ygodb.model.popupfiltermenu.FilterItemBean;
+import com.example.ygodb.model.popupfiltermenu.FilterState;
+import com.example.ygodb.model.popupsortmenu.MenuItemComparatorBean;
+import com.example.ygodb.model.popupsortmenu.MenuStateComparator;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseViewModel<OwnedCard> {
 	protected List<OwnedCard> filteredCardsList;
@@ -18,12 +23,14 @@ public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseVi
 	protected boolean isCardNameMode = true;
 	protected final List<String> setNamesDropdownList = new ArrayList<>();
 	protected MenuStateComparator menuState;
+	protected FilterState filterState;
 
 	protected ViewCardsLoadCompleteDataViewModel() {
 		super();
 		filteredCardsList = new ArrayList<>();
 		isCardNameMode = true;
 		menuState = new MenuStateComparator(createMenuMap(), 0);
+		filterState = new FilterState(getFiltersMap(getRarityFiltersList()), null);
 	}
 
 	protected abstract Map<Integer, MenuItemComparatorBean> createMenuMap();
@@ -62,21 +69,68 @@ public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseVi
 			isCardNameMode = true;
 		}
 
+		Set<String> raritySet = new HashSet<>();
+
+		for (OwnedCard current : results) {
+			raritySet.add(current.getSetRarity());
+		}
+
+		updateFilterStateFromRaritySet(raritySet);
+
 		return results;
 	}
 
 	public List<OwnedCard> getFilteredList(List<OwnedCard> inputList, String filter) {
 
 		ArrayList<OwnedCard> newList = new ArrayList<>();
+		String rarityFilter = getCurrentlySelectedRarityFilter();
+
+		Set<String> raritySet = new HashSet<>();
 
 		for (OwnedCard current : inputList) {
-			if (filter == null || filter.equals("") ||
-					current.getCardName().toLowerCase(Locale.ROOT).contains(filter.toLowerCase(Locale.ROOT))) {
+			raritySet.add(current.getSetRarity());
+			if ((filter == null || filter.isBlank() ||
+					current.getCardName().toLowerCase(Locale.ROOT).contains(filter.toLowerCase(Locale.ROOT)))
+			&& (rarityFilter == null || rarityFilter.isBlank() ||
+					rarityFilter.equals(current.getSetRarity()))) {
 				newList.add(current);
 			}
 		}
 
+		updateFilterStateFromRaritySet(raritySet);
+
 		return newList;
+	}
+
+	private void updateFilterStateFromRaritySet(Set<String> raritySet) {
+		rarityFiltersList.clear();
+		rarityFiltersList.addAll(raritySet);
+
+		Map<Integer, FilterItemBean> filterMap = getFiltersMap(getRarityFiltersList());
+
+		String currentFilter = filterState.getCurrentSelectionFilterString();
+
+		Integer currentItemPosition = null;
+
+		for(FilterItemBean currentMenuItem: filterMap.values()){
+			if(currentMenuItem.getMenuFilterString().equals(currentFilter)){
+				currentItemPosition = currentMenuItem.getPositionIndex();
+				break;
+			}
+		}
+
+		filterState = new FilterState(filterMap, currentItemPosition);
+	}
+
+	public Map<Integer, FilterItemBean> getFiltersMap(List<String> filterList){
+
+		Map<Integer, FilterItemBean> results = new HashMap<>();
+
+		for(int i =0 ; i< filterList.size(); i++){
+			results.put(i,new FilterItemBean(i,filterList.get(i), filterList.get(i)));
+		}
+
+		return results;
 	}
 
 	public void sortData(List<OwnedCard> cardsList, Comparator<OwnedCard> cardComparator) {
@@ -125,4 +179,7 @@ public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseVi
 		return menuState;
 	}
 
+	public FilterState getFilterState() {
+		return filterState;
+	}
 }

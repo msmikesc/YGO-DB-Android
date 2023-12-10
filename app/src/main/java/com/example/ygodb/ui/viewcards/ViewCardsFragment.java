@@ -65,7 +65,7 @@ public class ViewCardsFragment extends Fragment {
 				try {
 					viewCardsViewModel.getCardsList()
 							.addAll(viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT, 0,
-																	null));
+																	null, viewCardsViewModel.getCurrentlySelectedRarityFilter()));
 
 					root.post(adapter::notifyDataSetChanged);
 				} catch (Exception e) {

@@ -41,7 +41,7 @@ public class PartialScrollSearchBarChangedListener<T, U extends RecyclerView.Vie
 			try {
 				List<T> newList =
 						viewModel.loadMoreData(viewModel.getSortOrder(), ViewCardsLoadPartialScrollViewModel.LOADING_LIMIT, 0,
-											   cardNameSearch);
+											   cardNameSearch, viewModel.getCurrentlySelectedRarityFilter());
 
 				long lastSearchStartTime = viewModel.getCurrentSearchStartTime();
 				if(startTime >= lastSearchStartTime) {

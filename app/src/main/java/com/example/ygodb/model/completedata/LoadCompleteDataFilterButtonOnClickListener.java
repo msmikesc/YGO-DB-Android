@@ -1,11 +1,15 @@
 package com.example.ygodb.model.completedata;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.ygodb.R;
+import com.example.ygodb.model.popupfiltermenu.FilterItemBean;
+import com.example.ygodb.model.popupfiltermenu.FilterState;
 import com.example.ygodb.model.popupsortmenu.MenuStateComparator;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class LoadCompleteDataSortButtonOnClickListener implements View.OnClickListener {
+public class LoadCompleteDataFilterButtonOnClickListener implements View.OnClickListener {
 
 	private final ViewCardsLoadCompleteDataViewModel viewCardsViewModel;
 	private final SingleCardToListAdapter adapter;
@@ -24,7 +28,9 @@ public class LoadCompleteDataSortButtonOnClickListener implements View.OnClickLi
 	private final FloatingActionButton fab;
 	private final Context context;
 
-	public LoadCompleteDataSortButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardsLoadCompleteDataViewModel viewCardsViewModel,
+	protected Handler handler = new Handler(Looper.getMainLooper());
+
+	public LoadCompleteDataFilterButtonOnClickListener(FloatingActionButton fab, Context context, ViewCardsLoadCompleteDataViewModel viewCardsViewModel,
 			SingleCardToListAdapter adapter, LinearLayoutManager layout) {
 		this.viewCardsViewModel = viewCardsViewModel;
 		this.adapter = adapter;
@@ -38,22 +44,36 @@ public class LoadCompleteDataSortButtonOnClickListener implements View.OnClickLi
 		// Initializing the popup menu and giving the reference as current context
 		PopupMenu popupMenu = new PopupMenu(context, fab);
 
-		// Inflating popup menu from popup_menu.xml file
-		popupMenu.getMenuInflater().inflate(R.menu.sort_menu_set_list, popupMenu.getMenu());
-		MenuStateComparator menuState = viewCardsViewModel.getMenuState();
-		MenuItem menuItemCurrent = popupMenu.getMenu().getItem(menuState.getCurrentSelectionID());
-		menuItemCurrent.setTitle(menuState.getCurrentSelectionText());
+		FilterState filterState = viewCardsViewModel.getFilterState();
+
+		//inflate menu dynamically from state
+		for(int i = 0; i < viewCardsViewModel.getRarityFiltersList().size(); i++){
+			String current = viewCardsViewModel.getRarityFiltersList().get(i);
+			popupMenu.getMenu().add(0, i, i, current);
+		}
+
+		if(filterState.getCurrentSelectionID() != null){
+			MenuItem menuItemCurrent = popupMenu.getMenu().getItem(filterState.getCurrentSelectionID());
+			menuItemCurrent.setTitle(filterState.getCurrentSelectionText());
+		}
 
 		popupMenu.setOnMenuItemClickListener(menuItem -> {
-			menuState.clickOnMenuItem(menuItem.getOrder());
+			filterState.clickOnMenuItem(menuItem.getOrder());
+			viewCardsViewModel.setCurrentlySelectedRarityFilter(filterState.getCurrentSelectionFilterString());
 			Comparator<OwnedCard> currentComparator = viewCardsViewModel.getSortOption();
-			List<OwnedCard> filteredCardsList = viewCardsViewModel.getFilteredCardsList();
+			List<OwnedCard> fullCardsList = viewCardsViewModel.getCardsList();
 
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
+					List<OwnedCard> filteredCardsList =
+							viewCardsViewModel.getFilteredList(fullCardsList, viewCardsViewModel.getCardNameSearch());
+
 					viewCardsViewModel.sortData(filteredCardsList, currentComparator);
 
-					view.post(() -> {
+					handler.post(() -> {
+						viewCardsViewModel.setFilteredCardsList(filteredCardsList);
+						adapter.setItemsList(filteredCardsList);
+
 						layout.scrollToPositionWithOffset(0, 0);
 						adapter.notifyDataSetChanged();
 					});

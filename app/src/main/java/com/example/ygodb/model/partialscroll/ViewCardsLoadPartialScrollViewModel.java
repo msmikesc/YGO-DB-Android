@@ -1,8 +1,8 @@
 package com.example.ygodb.model.partialscroll;
 
 import com.example.ygodb.model.ViewCardsBaseViewModel;
-import com.example.ygodb.model.popupmenu.MenuItemBean;
-import com.example.ygodb.model.popupmenu.MenuState;
+import com.example.ygodb.model.popupsortmenu.MenuItemBean;
+import com.example.ygodb.model.popupsortmenu.MenuState;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +20,11 @@ public abstract class ViewCardsLoadPartialScrollViewModel<T> extends ViewCardsBa
 
 	protected abstract Map<Integer, MenuItemBean> createMenuMap();
 
-	public abstract List<T> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch);
+	public abstract List<T> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch, String rarityFilter);
 
 	public void refreshViewDBUpdate() {
 		cardsList.clear();
-		cardsList.addAll(loadMoreData(getSortOrder(), LOADING_LIMIT, 0, cardNameSearch));
+		cardsList.addAll(loadMoreData(getSortOrder(), LOADING_LIMIT, 0, cardNameSearch, getCurrentlySelectedRarityFilter()));
 
 		this.dbRefreshIndicator.postValue(true);
 	}

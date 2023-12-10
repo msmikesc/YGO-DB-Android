@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.databinding.FragmentViewcardsetBinding;
 import com.example.ygodb.model.completedata.LoadCompleteDataCardSearchBarChangedListener;
+import com.example.ygodb.model.completedata.LoadCompleteDataFilterButtonOnClickListener;
 import com.example.ygodb.model.completedata.LoadCompleteDataSetSearchBarChangedListener;
 import com.example.ygodb.model.completedata.LoadCompleteDataSortButtonOnClickListener;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
@@ -53,6 +54,9 @@ public class ViewCardSetFragment extends Fragment {
 
 		binding.fab.setOnClickListener(
 				new LoadCompleteDataSortButtonOnClickListener(binding.fab, getContext(), viewCardSetViewModel, adapter, layout));
+
+		binding.fabFilterRarity.setOnClickListener(
+				new LoadCompleteDataFilterButtonOnClickListener(binding.fabFilterRarity, getContext(), viewCardSetViewModel, adapter, layout));
 
 		binding.cardSearch.setText(viewCardSetViewModel.getCardNameSearch());
 		binding.setSearch.setText(viewCardSetViewModel.getSetNameSearch());

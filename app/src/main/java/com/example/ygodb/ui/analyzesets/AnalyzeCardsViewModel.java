@@ -9,7 +9,7 @@ import com.example.ygodb.comparator.OwnedCardQuantityComparatorDesc;
 import com.example.ygodb.comparator.OwnedCardSetNumberComparatorAsc;
 import com.example.ygodb.comparator.OwnedCardSetNumberComparatorDesc;
 import com.example.ygodb.model.completedata.ViewCardsLoadCompleteDataViewModel;
-import com.example.ygodb.model.popupmenu.MenuItemComparatorBean;
+import com.example.ygodb.model.popupsortmenu.MenuItemComparatorBean;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.analyze.AnalyzeCardsInSet;
 import ygodb.commonlibrary.bean.AnalyzeData;

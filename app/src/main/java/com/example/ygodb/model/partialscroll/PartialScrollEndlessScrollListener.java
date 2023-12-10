@@ -26,7 +26,8 @@ public class PartialScrollEndlessScrollListener<T, U extends RecyclerView.ViewHo
 			try {
 				List<T> moreCards =
 						viewModel.loadMoreData(viewModel.getSortOrder(), ViewCardsLoadPartialScrollViewModel.LOADING_LIMIT,
-											   page * ViewCardsLoadPartialScrollViewModel.LOADING_LIMIT, viewModel.getCardNameSearch());
+											   page * ViewCardsLoadPartialScrollViewModel.LOADING_LIMIT, viewModel.getCardNameSearch(),
+											   viewModel.getCurrentlySelectedRarityFilter());
 				int curSize = adapter.getItemCount();
 
 				List<T> cardsList = viewModel.getCardsList();

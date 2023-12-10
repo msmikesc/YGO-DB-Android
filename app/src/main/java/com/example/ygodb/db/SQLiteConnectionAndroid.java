@@ -1234,7 +1234,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
-	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch) {
+	public List<OwnedCard> queryOwnedCards(String orderBy, int limit, int offset, String cardNameSearch, String rarityFilter) {
 		SQLiteDatabase connection = this.getInstance();
 
 		String[] columns = new String[]{"a." + Const.GAME_PLAY_CARD_UUID + " as " + Const.GAME_PLAY_CARD_UUID,
@@ -1247,14 +1247,19 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				"a." + Const.EDITION_PRINTING + " as " + Const.EDITION_PRINTING, "a." + Const.DATE_BOUGHT + " as " + Const.DATE_BOUGHT,
 				"a." + Const.PRICE_BOUGHT + " as " + Const.PRICE_BOUGHT, "a." + Const.CREATION_DATE + " as " + Const.CREATION_DATE,
 				"a." + Const.MODIFICATION_DATE + " as " + Const.MODIFICATION_DATE, "a." + Const.UUID + " as " + Const.UUID,
-				"a." + Const.PASSCODE + " as " + Const.PASSCODE, "b.altArtPasscode"};
+				"a." + Const.PASSCODE + " as " + Const.PASSCODE, "b."+Const.ALT_ART_PASSCODE};
 
 		String selection = null;
 		String[] selectionArgs = null;
 
-		if (cardNameSearch != null && !cardNameSearch.equals("")) {
-			selection = "upper(a.cardName) like upper(?)";
+		if (cardNameSearch != null && !cardNameSearch.isBlank()) {
+			selection = "upper(a."+Const.CARD_NAME+") like upper(?)";
 			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
+		}
+
+		if (rarityFilter != null && !rarityFilter.isBlank()) {
+			selection = "a."+Const.SET_RARITY+"=(?)";
+			selectionArgs = new String[]{rarityFilter};
 		}
 
 		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE_JOIN_CARD_SETS, columns, selection, selectionArgs, null, null,

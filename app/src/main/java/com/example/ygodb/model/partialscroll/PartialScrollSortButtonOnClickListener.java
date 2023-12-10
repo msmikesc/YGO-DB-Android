@@ -7,7 +7,7 @@ import android.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.model.ItemsListAdapter;
-import com.example.ygodb.model.popupmenu.MenuState;
+import com.example.ygodb.model.popupsortmenu.MenuState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import ygodb.commonlibrary.utility.YGOLogger;
 
@@ -53,7 +53,7 @@ public class PartialScrollSortButtonOnClickListener<T, U extends RecyclerView.Vi
 				try {
 					cardsList.clear();
 					List<T> moreCards = viewModel.loadMoreData(finalSortOrder, ViewCardsLoadPartialScrollViewModel.LOADING_LIMIT, 0,
-																	   viewModel.getCardNameSearch());
+						viewModel.getCardNameSearch(), viewModel.getCurrentlySelectedRarityFilter());
 					cardsList.addAll(moreCards);
 
 					view.post(() -> {

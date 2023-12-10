@@ -1,4 +1,4 @@
-package com.example.ygodb.model.popupmenu;
+package com.example.ygodb.model.popupsortmenu;
 
 import ygodb.commonlibrary.bean.OwnedCard;
 

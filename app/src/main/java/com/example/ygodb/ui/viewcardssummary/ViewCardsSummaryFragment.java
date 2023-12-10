@@ -60,7 +60,7 @@ public class ViewCardsSummaryFragment extends Fragment {
 				try {
 					viewCardsViewModel.getCardsList()
 							.addAll(viewCardsViewModel.loadMoreData(viewCardsViewModel.getSortOrder(), ViewCardsViewModel.LOADING_LIMIT, 0,
-																	null));
+																	null, null));
 
 					root.post(adapter::notifyDataSetChanged);
 				} catch (Exception e) {
