@@ -15,6 +15,7 @@ import com.example.ygodb.model.EndlessScrollListener;
 import com.example.ygodb.model.partialscroll.PartialScrollEndlessScrollListener;
 import com.example.ygodb.model.partialscroll.PartialScrollSearchBarChangedListener;
 import com.example.ygodb.model.partialscroll.PartialScrollSortButtonOnClickListener;
+import com.example.ygodb.model.partialscroll.ViewCardsLoadPartialScrollViewModel;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.utility.YGOLogger;
 
@@ -48,6 +49,7 @@ public class ViewSoldCardsFragment extends Fragment {
 
 		binding.fab.setOnClickListener(
 				new PartialScrollSortButtonOnClickListener<>(binding.fab, getContext(), viewSoldCardsViewModel, adapter, layout, R.menu.sort_menu_sold));
+		binding.fabFilterRarity.hide();
 
 		binding.cardSearch.setText(viewSoldCardsViewModel.getCardNameSearch());
 
@@ -58,9 +60,10 @@ public class ViewSoldCardsFragment extends Fragment {
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
 					viewSoldCardsViewModel.getCardsList().addAll(
-							viewSoldCardsViewModel.loadMoreData(viewSoldCardsViewModel.getSortOrder(),
-							ViewSoldCardsViewModel.LOADING_LIMIT,
-							0, null, null));
+							viewSoldCardsViewModel.loadMoreData(
+									viewSoldCardsViewModel.getSortOrder(),
+									ViewCardsLoadPartialScrollViewModel.LOADING_LIMIT,
+									0, null, null));
 
 					root.post(adapter::notifyDataSetChanged);
 				} catch (Exception e) {
