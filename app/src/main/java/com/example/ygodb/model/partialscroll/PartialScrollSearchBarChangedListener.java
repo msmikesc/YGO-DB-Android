@@ -49,6 +49,7 @@ public class PartialScrollSearchBarChangedListener<T, U extends RecyclerView.Vie
 					handler.post(() -> {
 						viewModel.setCardsList(newList);
 						adapter.setItemsList(newList);
+						viewModel.updateFilterStateFromRarityCollection(viewModel.getRarityListFor(viewModel.getCardNameSearch()));
 						layout.scrollToPositionWithOffset(0, 0);
 						adapter.notifyDataSetChanged();
 					});

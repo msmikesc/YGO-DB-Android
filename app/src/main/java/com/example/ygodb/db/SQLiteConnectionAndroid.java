@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteConnection {
 
@@ -1250,19 +1251,27 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				"a." + Const.PASSCODE + " as " + Const.PASSCODE, "b."+Const.ALT_ART_PASSCODE};
 
 		String selection = null;
-		String[] selectionArgs = null;
+		List<String> selectionArgs = new ArrayList<>();
 
 		if (cardNameSearch != null && !cardNameSearch.isBlank()) {
 			selection = "upper(a."+Const.CARD_NAME+") like upper(?)";
-			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
+			selectionArgs.add("%" + cardNameSearch + "%");
 		}
 
 		if (rarityFilter != null && !rarityFilter.isBlank()) {
-			selection = "a."+Const.SET_RARITY+"=(?)";
-			selectionArgs = new String[]{rarityFilter};
+			if(selection == null){
+				selection = "";
+			}else {
+				selection += " and ";
+			}
+			selectionArgs.add(rarityFilter);
+			selection += "a."+Const.SET_RARITY+"=(?)";
 		}
 
-		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE_JOIN_CARD_SETS, columns, selection, selectionArgs, null, null,
+		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE_JOIN_CARD_SETS, columns,
+										  selection,
+										  selectionArgs.toArray(new String[0]),
+										  null, null,
 										  orderBy,
 										  offset + "," + limit)) {
 
@@ -1277,6 +1286,36 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 			}
 
 			return cardsInSetList;
+		}
+	}
+
+	@Override
+	public List<String> queryRaritiesFor(String cardNameSearch) {
+		SQLiteDatabase connection = this.getInstance();
+
+		String[] columns = new String[]{"distinct " + Const.SET_RARITY + " as " + Const.SET_RARITY
+				};
+
+		String selection = null;
+		String[] selectionArgs = null;
+
+		if (cardNameSearch != null && !cardNameSearch.isBlank()) {
+			selection = "upper("+Const.CARD_NAME+") like upper(?)";
+			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
+		}
+
+		try (Cursor rs = connection.query(SQLConst.OWNED_CARDS_TABLE, columns, selection, selectionArgs,
+										  null, null, null, null)) {
+
+			ArrayList<String> rarityList = new ArrayList<>();
+			String[] col = rs.getColumnNames();
+
+			while (rs.moveToNext()) {
+				String current = rs.getString(getColumn(col, Const.SET_RARITY));
+				rarityList.add(current);
+			}
+
+			return rarityList;
 		}
 	}
 

@@ -51,12 +51,12 @@ public class PartialScrollSortButtonOnClickListener<T, U extends RecyclerView.Vi
 			String finalSortOrder = menuState.getCurrentSelectionSql();
 			Executors.newSingleThreadExecutor().execute(() -> {
 				try {
-					cardsList.clear();
 					List<T> moreCards = viewModel.loadMoreData(finalSortOrder, ViewCardsLoadPartialScrollViewModel.LOADING_LIMIT, 0,
 						viewModel.getCardNameSearch(), viewModel.getCurrentlySelectedRarityFilter());
-					cardsList.addAll(moreCards);
 
 					view.post(() -> {
+						cardsList.clear();
+						cardsList.addAll(moreCards);
 						layout.scrollToPositionWithOffset(0, 0);
 						adapter.notifyDataSetChanged();
 					});

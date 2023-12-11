@@ -755,6 +755,11 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public List<String> queryRaritiesFor(String cardNameSearch) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public List<OwnedCard> getAllPossibleCardsByNameSearch(String cardName, String orderBy) {
 		throw new UnsupportedOperationException();
 	}

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -98,21 +99,12 @@ public class AnalyzePrintedOnceData implements Comparable<AnalyzePrintedOnceData
 	}
 
 	public String getStringOfRarities() {
-		HashSet<Rarity> enumList = new HashSet<>();
+		List<String> sortedList = Rarity.getSortedListFromCollection(getSetRarities());
 
-		for (String s : getSetRarities()) {
-			Rarity rarityValue = Rarity.fromString(s);
-			enumList.add(rarityValue);
-		}
+		StringBuilder output = new StringBuilder("(" + sortedList.get(0));
 
-		ArrayList<Rarity> enumList2 = new ArrayList<>(enumList);
-
-		Collections.sort(enumList2);
-
-		StringBuilder output = new StringBuilder("(" + enumList2.get(0).toString());
-
-		for (int i = 1; i < enumList.size(); i++) {
-			output.append(", ").append(enumList2.get(i).toString());
+		for (int i = 1; i < sortedList.size(); i++) {
+			output.append(", ").append(sortedList.get(i));
 		}
 
 		output.append(")");

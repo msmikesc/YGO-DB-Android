@@ -3,9 +3,14 @@ package com.example.ygodb.model.partialscroll;
 import com.example.ygodb.model.ViewCardsBaseViewModel;
 import com.example.ygodb.model.popupsortmenu.MenuItemBean;
 import com.example.ygodb.model.popupsortmenu.MenuState;
+import com.example.ygodb.util.AndroidUtil;
+import ygodb.commonlibrary.bean.Rarity;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class ViewCardsLoadPartialScrollViewModel<T> extends ViewCardsBaseViewModel<T> {
 
@@ -35,6 +40,13 @@ public abstract class ViewCardsLoadPartialScrollViewModel<T> extends ViewCardsBa
 
 	public MenuState getMenuState() {
 		return menuState;
+	}
+
+	public List<String> getRarityListFor(String cardNameSearch) {
+
+		List<String> dbResults = AndroidUtil.getDBInstance().queryRaritiesFor(cardNameSearch);
+
+		return Rarity.getSortedListFromCollection(dbResults);
 	}
 
 }

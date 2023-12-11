@@ -708,15 +708,15 @@ public class Util {
 	public static String getEstimatePriceFromRarity(String rarity) {
 		String trimmed = rarity.trim();
 
-		if (trimmed.equalsIgnoreCase(Rarity.Common.toString())) {
+		if (trimmed.equalsIgnoreCase(Rarity.COMMON.toString())) {
 			return "0.15";
 		}
 
-		if (trimmed.equalsIgnoreCase(Rarity.Rare.toString())) {
+		if (trimmed.equalsIgnoreCase(Rarity.RARE.toString())) {
 			return "0.15";
 		}
 
-		if (trimmed.equalsIgnoreCase(Rarity.SuperRare.toString())) {
+		if (trimmed.equalsIgnoreCase(Rarity.SUPER_RARE.toString())) {
 			return "0.25";
 		}
 

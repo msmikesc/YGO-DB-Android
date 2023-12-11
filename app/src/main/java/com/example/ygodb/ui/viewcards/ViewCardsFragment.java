@@ -12,13 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.databinding.FragmentViewcardsBinding;
 import com.example.ygodb.model.EndlessScrollListener;
+import com.example.ygodb.model.completedata.LoadCompleteDataFilterButtonOnClickListener;
 import com.example.ygodb.model.partialscroll.PartialScrollEndlessScrollListener;
+import com.example.ygodb.model.partialscroll.PartialScrollFilterButtonOnClickListener;
 import com.example.ygodb.model.partialscroll.PartialScrollSearchBarChangedListener;
 import com.example.ygodb.model.partialscroll.PartialScrollSortButtonOnClickListener;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
 import com.example.ygodb.ui.singlecard.SingleCardToListAdapter;
 import com.example.ygodb.util.AndroidUtil;
+import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.concurrent.Executors;
@@ -54,6 +57,9 @@ public class ViewCardsFragment extends Fragment {
 
 		binding.fab.setOnClickListener(
 				new PartialScrollSortButtonOnClickListener<>(binding.fab, getContext(), viewCardsViewModel, adapter, layout, R.menu.sort_menu));
+
+		binding.fabFilterRarity.setOnClickListener(
+				new PartialScrollFilterButtonOnClickListener<>(binding.fabFilterRarity, getContext(), viewCardsViewModel, adapter, layout));
 
 		binding.cardSearch.setText(viewCardsViewModel.getCardNameSearch());
 

@@ -470,7 +470,7 @@ public class CsvConnection {
 			String currentRarity = Util.checkForTranslatedRarity(inputRarity.trim());
 			Rarity rarityObject = Rarity.fromString(currentRarity);
 
-			if(rarityObject.equals(Rarity.nullRarity)){
+			if(rarityObject.equals(Rarity.NULL_RARITY)){
 				YGOLogger.error("Rarity unable to be read:" + currentRarity);
 			}
 			else{

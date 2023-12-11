@@ -155,4 +155,6 @@ public interface SQLiteConnection {
 	PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited() throws SQLException;
 
 	PreparedStatementBatchWrapper getBatchedPreparedStatementUrlLimited() throws SQLException;
+
+	List<String> queryRaritiesFor(String cardNameSearch);
 }

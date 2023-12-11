@@ -1,18 +1,26 @@
 package com.example.ygodb.ui.viewcards;
 
 import com.example.ygodb.model.partialscroll.ViewCardsLoadPartialScrollViewModel;
+import com.example.ygodb.model.popupfiltermenu.FilterState;
 import com.example.ygodb.model.popupsortmenu.MenuItemBean;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.bean.Rarity;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ViewCardsViewModel extends ViewCardsLoadPartialScrollViewModel<OwnedCard> {
 
 	public ViewCardsViewModel() {
 		super();
+		rarityFiltersList = getRarityListFor(null);
+		filterState = new FilterState(getFiltersMap(getRarityFiltersList()), null);
 	}
 
 	protected Map<Integer, MenuItemBean> createMenuMap(){

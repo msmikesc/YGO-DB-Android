@@ -120,29 +120,16 @@ public class AnalyzeData implements Comparable<AnalyzeData> {
 			return "";
 		}
 
-		HashSet<Rarity> enumList = new HashSet<>();
+		List<String> sortedList = Rarity.getSortedListFromCollection(getSetRarities());
 
-		for (String s : getSetRarities()) {
-			Rarity rarityValue = Rarity.fromString(s);
-			enumList.add(rarityValue);
-		}
-
-		ArrayList<Rarity> enumList2 = new ArrayList<>(enumList);
-
-		if (enumList2.size() == 1) {
-			return enumList2.get(0).toString();
-		}
-
-		if (enumList2.isEmpty()) {
+		if (sortedList.isEmpty()) {
 			return "None Found";
 		}
 
-		Collections.sort(enumList2);
+		StringBuilder output = new StringBuilder(sortedList.get(0));
 
-		StringBuilder output = new StringBuilder(enumList2.get(0).toString());
-
-		for (int i = 1; i < enumList.size(); i++) {
-			output.append(", ").append(enumList2.get(i).toString());
+		for (int i = 1; i < sortedList.size(); i++) {
+			output.append(", ").append(sortedList.get(i));
 		}
 
 		return output.toString();

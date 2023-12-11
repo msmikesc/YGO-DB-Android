@@ -1,7 +1,6 @@
 package com.example.ygodb.model.completedata;
 
 import com.example.ygodb.model.ViewCardsBaseViewModel;
-import com.example.ygodb.model.popupfiltermenu.FilterItemBean;
 import com.example.ygodb.model.popupfiltermenu.FilterState;
 import com.example.ygodb.model.popupsortmenu.MenuItemComparatorBean;
 import com.example.ygodb.model.popupsortmenu.MenuStateComparator;
@@ -10,7 +9,6 @@ import ygodb.commonlibrary.bean.OwnedCard;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -23,7 +21,6 @@ public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseVi
 	protected boolean isCardNameMode = true;
 	protected final List<String> setNamesDropdownList = new ArrayList<>();
 	protected MenuStateComparator menuState;
-	protected FilterState filterState;
 
 	protected ViewCardsLoadCompleteDataViewModel() {
 		super();
@@ -75,7 +72,7 @@ public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseVi
 			raritySet.add(current.getSetRarity());
 		}
 
-		updateFilterStateFromRaritySet(raritySet);
+		updateFilterStateFromRarityCollection(raritySet);
 
 		return results;
 	}
@@ -97,40 +94,9 @@ public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseVi
 			}
 		}
 
-		updateFilterStateFromRaritySet(raritySet);
+		updateFilterStateFromRarityCollection(raritySet);
 
 		return newList;
-	}
-
-	private void updateFilterStateFromRaritySet(Set<String> raritySet) {
-		rarityFiltersList.clear();
-		rarityFiltersList.addAll(raritySet);
-
-		Map<Integer, FilterItemBean> filterMap = getFiltersMap(getRarityFiltersList());
-
-		String currentFilter = filterState.getCurrentSelectionFilterString();
-
-		Integer currentItemPosition = null;
-
-		for(FilterItemBean currentMenuItem: filterMap.values()){
-			if(currentMenuItem.getMenuFilterString().equals(currentFilter)){
-				currentItemPosition = currentMenuItem.getPositionIndex();
-				break;
-			}
-		}
-
-		filterState = new FilterState(filterMap, currentItemPosition);
-	}
-
-	public Map<Integer, FilterItemBean> getFiltersMap(List<String> filterList){
-
-		Map<Integer, FilterItemBean> results = new HashMap<>();
-
-		for(int i =0 ; i< filterList.size(); i++){
-			results.put(i,new FilterItemBean(i,filterList.get(i), filterList.get(i)));
-		}
-
-		return results;
 	}
 
 	public void sortData(List<OwnedCard> cardsList, Comparator<OwnedCard> cardComparator) {
@@ -177,9 +143,5 @@ public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseVi
 
 	public MenuStateComparator getMenuState() {
 		return menuState;
-	}
-
-	public FilterState getFilterState() {
-		return filterState;
 	}
 }
