@@ -1339,7 +1339,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String[] selectionArgs = null;
 
 		if (cardNameSearch != null && !cardNameSearch.equals("")) {
-			selection = "upper(cardName) like upper(?)";
+			selection = "upper(a.cardName) like upper(?)";
 			selectionArgs = new String[]{"%" + cardNameSearch + "%"};
 		}
 

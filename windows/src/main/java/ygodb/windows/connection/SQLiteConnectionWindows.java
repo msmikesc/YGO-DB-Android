@@ -34,8 +34,7 @@ import java.util.Map;
 
 public class SQLiteConnectionWindows implements SQLiteConnection {
 
-	//TODO add filtering by rarity/other
-	// add unique functionality for pure card name search between the two set screens
+	//TODO add unique functionality for pure card name search between the two set screens
 
 	public static final int BATCH_SIZE = 1000;
 

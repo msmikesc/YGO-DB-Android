@@ -5,6 +5,7 @@ import com.example.ygodb.model.popupsortmenu.MenuItemBean;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.SoldCard;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,5 +50,10 @@ public class ViewSoldCardsViewModel extends ViewCardsLoadPartialScrollViewModel<
 
 	public List<SoldCard> loadMoreData(String orderBy, int limit, int offset, String cardNameSearch, String rarityFilter) {
 		return AndroidUtil.getDBInstance().querySoldCards(orderBy, limit, offset, cardNameSearch);
+	}
+
+	@Override
+	public void updateFilterStateFromRarityCollection(Collection<String> raritySet) {
+		//Filters not supported
 	}
 }
