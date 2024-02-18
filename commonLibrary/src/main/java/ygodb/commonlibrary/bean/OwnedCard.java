@@ -3,10 +3,11 @@ package ygodb.commonlibrary.bean;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class OwnedCard {
+public class OwnedCard implements Serializable {
 
 	private String gamePlayCardUUID;
 	private String folderName;

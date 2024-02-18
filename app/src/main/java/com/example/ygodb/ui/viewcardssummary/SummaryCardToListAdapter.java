@@ -1,15 +1,19 @@
 package com.example.ygodb.ui.viewcardssummary;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.model.ItemsListAdapter;
+import com.example.ygodb.ui.fullscreendetails.ViewCardFullScreenFragment;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 
@@ -19,8 +23,11 @@ import java.util.Locale;
 
 public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,SummaryCardToListAdapter.ItemViewHolder> {
 
-	public SummaryCardToListAdapter(List<OwnedCard> ownedCards) {
+	private final FragmentActivity context;
+
+	public SummaryCardToListAdapter(FragmentActivity context, List<OwnedCard> ownedCards) {
 		super(ownedCards);
+		this.context = context;
 	}
 
 	@NonNull
@@ -61,6 +68,26 @@ public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,Summary
 		} catch (Exception ex) {
 			viewHolder.cardImage.setImageDrawable(null);
 		}
+
+		viewHolder.cardImage.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view) {
+				ViewCardFullScreenFragment fullCardScreen = new ViewCardFullScreenFragment();
+				Bundle args = new Bundle();
+				args.putSerializable("OwnedCard", current);
+				fullCardScreen.setArguments(args);
+
+				//fullCardScreen.show(context.getSupportFragmentManager(), "ViewCardFullScreenFragment");
+
+
+				context.getSupportFragmentManager().beginTransaction()
+						.replace(R.id.viewCardsSummaryScreen, fullCardScreen)
+						.addToBackStack(null)
+						.commit();
+
+
+			}
+		});
 	}
 
 	public static class ItemViewHolder extends RecyclerView.ViewHolder {
