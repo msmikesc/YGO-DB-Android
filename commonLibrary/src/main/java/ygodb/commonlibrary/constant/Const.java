@@ -8,6 +8,8 @@ public class Const {
 	public static final String YGOPRO_API_IMAGES_BASE_URL = "https://images.ygoprodeck.com/images/cards_small/";
 	public static final String PROJECT_CARD_IMAGES_DIRECTORY = "./app/src/main/assets/pics/";
 
+	public static final String BACKSTACK_DETAIL_VIEW_NAME = "DetailViewName";
+
 	private Const() {
 	}
 

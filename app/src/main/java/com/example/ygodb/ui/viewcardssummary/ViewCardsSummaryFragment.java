@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.example.ygodb.model.partialscroll.PartialScrollSearchBarChangedListen
 import com.example.ygodb.model.partialscroll.PartialScrollSortButtonOnClickListener;
 import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import com.example.ygodb.util.AndroidUtil;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.util.concurrent.Executors;
@@ -78,6 +80,13 @@ public class ViewCardsSummaryFragment extends Fragment {
 		});
 
 		return root;
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		getActivity().getSupportFragmentManager().popBackStack(
+				Const.BACKSTACK_DETAIL_VIEW_NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 	}
 
 	@Override

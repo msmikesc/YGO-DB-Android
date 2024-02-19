@@ -83,21 +83,16 @@ public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,Summary
 
 				context.getSupportFragmentManager().beginTransaction()
 						.replace(R.id.viewCardsSummaryScreen, fullCardScreen)
-						.addToBackStack(null)
+						.addToBackStack(Const.BACKSTACK_DETAIL_VIEW_NAME)
 						.commit();
 
-				context.getSupportFragmentManager().addOnBackStackChangedListener(
-						new FragmentManager.OnBackStackChangedListener() {
-					@Override
-					public void onBackStackChanged() {
-						if (context.getSupportFragmentManager().getBackStackEntryCount() == 0) {
-							// Back stack is empty, transaction reversed
-							// Perform your desired action here
-							context.findViewById(R.id.fab).setVisibility(View.VISIBLE);
-						}
+				context.getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+					if (context.getSupportFragmentManager().getBackStackEntryCount() == 0) {
+						// Back stack is empty, transaction reversed
+						// Perform your desired action here
+						context.findViewById(R.id.fab).setVisibility(View.VISIBLE);
 					}
 				});
-
 			}
 		});
 	}
