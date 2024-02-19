@@ -63,7 +63,14 @@ public class ViewCardFullScreenFragment extends Fragment {
 			binding.cardPendScale.setText(current.getScale());
 			binding.cardSubtypeText.setText(current.getRace());
 			binding.cardTypeText.setText(current.getCardType());
-			binding.cardTextBox.setText(insertNewLineAfterPeriod(current.getDesc()));
+
+			String textBox = current.getDesc();
+
+			if(!current.getCardType().contains("Normal")){
+				textBox = insertNewLineAfterPeriod(textBox);
+			}
+
+			binding.cardTextBox.setText(textBox);
 
 			String level = current.getLevel();
 			String linkRating = current.getLinkVal();
@@ -97,9 +104,13 @@ public class ViewCardFullScreenFragment extends Fragment {
 		while (i < paragraph.length()) {
 			char currentChar = paragraph.charAt(i);
 			result.append(currentChar);
-			if (currentChar == '.' && i + 1 < paragraph.length() && paragraph.charAt(i + 1) == ' ') {
+			if (currentChar == '.' && i + 1 < paragraph.length() && paragraph.charAt(i + 1) == ' ' &&
+					(i + 2 < paragraph.length() && paragraph.charAt(i + 2) != '(') ){
 				result.append("\n\n");
 				i++; // Skipping the white space
+			}
+			if (currentChar == '\n' && i + 1 < paragraph.length()) {
+				result.append("\n");
 			}
 			i++;
 		}

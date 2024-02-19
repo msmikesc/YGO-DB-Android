@@ -23,7 +23,7 @@
 
         android:textAlignment="textStart"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/cardIcon"
         app:layout_constraintStart_toEndOf="@+id/cardImage"
         app:layout_constraintTop_toTopOf="@+id/cardImage"/>
