@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:background="#232020"
-                                                   tools:context=".ui.viewcards.ViewCardsFragment">
+                                                   android:clickable="true"
+                                                   tools:context=".ui.fullscreendetails.ViewCardFullScreenFragment"
+                                                   android:focusable="true">
 
     <TextView
         android:id="@+id/cardTitle"
@@ -164,7 +172,7 @@
         android:id="@+id/cardPasscode"
         android:layout_width="0sp"
         android:layout_height="wrap_content"
-        android:paddingTop="2sp"
+        android:paddingTop="6sp"
         android:paddingLeft="6sp"
 
         android:textAlignment="textStart"
@@ -178,7 +186,7 @@
         android:id="@+id/cardArchetype"
         android:layout_width="0sp"
         android:layout_height="wrap_content"
-        android:paddingTop="2sp"
+        android:paddingTop="6sp"
         android:paddingRight="6sp"
 
         android:textAlignment="textEnd"
@@ -189,3 +197,5 @@
         app:layout_constraintTop_toBottomOf="@+id/cardTextBox"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

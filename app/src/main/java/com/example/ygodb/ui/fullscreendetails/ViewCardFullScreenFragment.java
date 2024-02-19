@@ -63,7 +63,7 @@ public class ViewCardFullScreenFragment extends Fragment {
 			binding.cardPendScale.setText(current.getScale());
 			binding.cardSubtypeText.setText(current.getRace());
 			binding.cardTypeText.setText(current.getCardType());
-			binding.cardTextBox.setText(current.getDesc());
+			binding.cardTextBox.setText(insertNewLineAfterPeriod(current.getDesc()));
 
 			String level = current.getLevel();
 			String linkRating = current.getLinkVal();
@@ -89,6 +89,21 @@ public class ViewCardFullScreenFragment extends Fragment {
 
 
 		return root;
+	}
+
+	public static String insertNewLineAfterPeriod(String paragraph) {
+		StringBuilder result = new StringBuilder();
+		int i = 0;
+		while (i < paragraph.length()) {
+			char currentChar = paragraph.charAt(i);
+			result.append(currentChar);
+			if (currentChar == '.' && i + 1 < paragraph.length() && paragraph.charAt(i + 1) == ' ') {
+				result.append("\n\n");
+				i++; // Skipping the white space
+			}
+			i++;
+		}
+		return result.toString();
 	}
 
 	@Override

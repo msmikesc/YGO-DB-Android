@@ -78,14 +78,12 @@ public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,Summary
 				args.putString(Const.GAME_PLAY_CARD_UUID, current.getGamePlayCardUUID());
 				fullCardScreen.setArguments(args);
 
-				//fullCardScreen.show(context.getSupportFragmentManager(), "ViewCardFullScreenFragment");
-
+				context.findViewById(R.id.fab).setVisibility(View.GONE);
 
 				context.getSupportFragmentManager().beginTransaction()
 						.replace(R.id.viewCardsSummaryScreen, fullCardScreen)
 						.addToBackStack(null)
 						.commit();
-
 
 			}
 		});
