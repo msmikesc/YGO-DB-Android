@@ -16,6 +16,7 @@ import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.ui.fullscreendetails.ViewCardFullScreenFragment;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
 
 import java.io.InputStream;
 import java.util.List;
@@ -74,7 +75,7 @@ public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,Summary
 			public void onClick(View view) {
 				ViewCardFullScreenFragment fullCardScreen = new ViewCardFullScreenFragment();
 				Bundle args = new Bundle();
-				args.putSerializable("OwnedCard", current);
+				args.putString(Const.GAME_PLAY_CARD_UUID, current.getGamePlayCardUUID());
 				fullCardScreen.setArguments(args);
 
 				//fullCardScreen.show(context.getSupportFragmentManager(), "ViewCardFullScreenFragment");

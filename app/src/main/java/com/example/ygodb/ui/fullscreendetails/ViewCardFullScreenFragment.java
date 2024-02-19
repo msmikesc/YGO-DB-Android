@@ -21,10 +21,13 @@ import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
 import com.example.ygodb.ui.viewcardssummary.SummaryCardToListAdapter;
 import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
 import com.example.ygodb.util.AndroidUtil;
+import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
@@ -40,22 +43,41 @@ public class ViewCardFullScreenFragment extends Fragment {
 
 		Bundle input = getArguments();
 
-		OwnedCard current = (OwnedCard) input.getSerializable("OwnedCard");
+		GamePlayCard current = null;
+
+		try {
+			String gameplayCardUUID = input.getString(Const.GAME_PLAY_CARD_UUID);
+			current = AndroidUtil.getDBInstance().getGamePlayCardByUUID(gameplayCardUUID);
+		} catch (SQLException e) {
+			YGOLogger.logException(e);
+		}
 
 		if(current != null) {
 
 			binding.cardTitle.setText(current.getCardName());
-			//binding.cardPasscode.setText(current.getPasscode());
+			binding.cardPasscode.setText(String.valueOf(current.getPasscode()));
+			binding.cardArchetype.setText(current.getArchetype());
+			binding.cardAttack.setText(current.getAtk());
+			binding.cardDefense.setText(current.getDef());
+			binding.cardAttributeText.setText(current.getAttribute());
+			binding.cardPendScale.setText(current.getScale());
+			binding.cardSubtypeText.setText(current.getRace());
+			binding.cardTypeText.setText(current.getCardType());
+			binding.cardTextBox.setText(current.getDesc());
 
-			int imagePasscode = current.getPasscode();
+			String level = current.getLevel();
+			String linkRating = current.getLinkVal();
 
-			if (current.getAltArtPasscode() != null && current.getAltArtPasscode() != 0) {
-				imagePasscode = current.getAltArtPasscode();
+			if(linkRating != null && !linkRating.isEmpty()){
+				binding.cardLevelRankLinkRating.setText(linkRating);
+			}
+			else{
+				binding.cardLevelRankLinkRating.setText(level);
 			}
 
 			try {
 				// get input stream
-				InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + imagePasscode + ".jpg");
+				InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + current.getPasscode() + ".jpg");
 				// load image as Drawable
 				Drawable d = Drawable.createFromStream(ims, null);
 				// set image to ImageView
