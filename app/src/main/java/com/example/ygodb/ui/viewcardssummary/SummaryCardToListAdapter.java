@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.model.ItemsListAdapter;
@@ -84,6 +85,18 @@ public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,Summary
 						.replace(R.id.viewCardsSummaryScreen, fullCardScreen)
 						.addToBackStack(null)
 						.commit();
+
+				context.getSupportFragmentManager().addOnBackStackChangedListener(
+						new FragmentManager.OnBackStackChangedListener() {
+					@Override
+					public void onBackStackChanged() {
+						if (context.getSupportFragmentManager().getBackStackEntryCount() == 0) {
+							// Back stack is empty, transaction reversed
+							// Perform your desired action here
+							context.findViewById(R.id.fab).setVisibility(View.VISIBLE);
+						}
+					}
+				});
 
 			}
 		});
