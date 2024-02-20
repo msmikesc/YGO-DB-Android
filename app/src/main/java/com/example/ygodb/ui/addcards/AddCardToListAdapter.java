@@ -2,6 +2,7 @@ package com.example.ygodb.ui.addcards;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.model.ItemsListAdapter;
@@ -205,6 +207,12 @@ public class AddCardToListAdapter extends ItemsListAdapter<OwnedCard, AddCardToL
 		} catch (Exception ex) {
 			viewHolder.cardImage.setImageDrawable(null);
 		}
+
+		viewHolder.cardImage.setOnClickListener(view -> {
+			Bundle args = new Bundle();
+			args.putString(Const.GAME_PLAY_CARD_UUID, current.getGamePlayCardUUID());
+			Navigation.findNavController(view).navigate(R.id.nav_ViewCardFullScreenFragment, args);
+		});
 
 	}
 

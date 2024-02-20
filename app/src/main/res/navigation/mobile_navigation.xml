@@ -9,48 +9,90 @@
         android:id="@+id/nav_viewCardsSummary"
         android:name="com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryFragment"
         android:label="@string/menu_viewCardsSummary"
-        tools:layout="@layout/fragment_viewcards_summary"/>
+        tools:layout="@layout/fragment_viewcards_summary">
+        <action android:id="@+id/action_nav_viewCardsSummary_to_nav_ViewCardFullScreenFragment"
+                app:destination="@id/nav_ViewCardFullScreenFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_viewCards"
         android:name="com.example.ygodb.ui.viewcards.ViewCardsFragment"
         android:label="@string/menu_viewCards"
-        tools:layout="@layout/fragment_viewcards"/>
+        tools:layout="@layout/fragment_viewcards">
+        <action android:id="@+id/action_nav_viewCards_to_nav_ViewCardFullScreenFragment"
+                app:destination="@id/nav_ViewCardFullScreenFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_analyzeSet"
         android:name="com.example.ygodb.ui.analyzesets.AnalyzeCardsFragment"
         android:label="@string/menu_analyzeSet"
-        tools:layout="@layout/fragment_viewcardset"/>
+        tools:layout="@layout/fragment_viewcardset">
+        <action android:id="@+id/action_nav_analyzeSet_to_nav_ViewCardFullScreenFragment"
+                app:destination="@id/nav_ViewCardFullScreenFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_viewCardSet"
         android:name="com.example.ygodb.ui.viewcardset.ViewCardSetFragment"
         android:label="@string/menu_viewCardSet"
-        tools:layout="@layout/fragment_viewcardset"/>
+        tools:layout="@layout/fragment_viewcardset">
+        <action android:id="@+id/action_nav_viewCardSet_to_nav_ViewCardFullScreenFragment"
+                app:destination="@id/nav_ViewCardFullScreenFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_addCards"
         android:name="com.example.ygodb.ui.addcards.AddCardsFragment"
         android:label="@string/menu_addCards"
-        tools:layout="@layout/fragment_addcards"/>
+        tools:layout="@layout/fragment_addcards">
+        <action android:id="@+id/action_nav_addCards_to_nav_ViewCardFullScreenFragment"
+                app:destination="@id/nav_ViewCardFullScreenFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_sellCards"
         android:name="com.example.ygodb.ui.sellcards.SellCardsFragment"
         android:label="@string/menu_sellCards"
-        tools:layout="@layout/fragment_sellcards"/>
+        tools:layout="@layout/fragment_sellcards">
+        <action android:id="@+id/action_nav_sellCards_to_nav_ViewCardFullScreenFragment"
+                app:destination="@id/nav_ViewCardFullScreenFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_soldCards"
         android:name="com.example.ygodb.ui.viewsoldcards.ViewSoldCardsFragment"
         android:label="@string/menu_soldCards"
-        tools:layout="@layout/fragment_soldcards"/>
+        tools:layout="@layout/fragment_soldcards">
+        <action android:id="@+id/action_nav_soldCards_to_nav_ViewCardFullScreenFragment"
+                app:destination="@id/nav_ViewCardFullScreenFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_boxLookup"
         android:name="com.example.ygodb.ui.viewsetboxes.BoxLookupFragment"
         android:label="@string/menu_boxLookup"
         tools:layout="@layout/fragment_box_lookup"/>
+
+    <fragment
+        android:id="@+id/nav_ViewCardFullScreenFragment"
+        android:name="com.example.ygodb.ui.fullscreendetails.ViewCardFullScreenFragment"
+        android:label="Card Specifics"
+        tools:layout="@layout/fragment_cardfullscreen">
+        <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_viewCardsSummary"
+                app:destination="@id/nav_viewCardsSummary"/>
+        <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_viewCards"
+                app:destination="@id/nav_viewCards"/>
+        <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_addCards"
+                app:destination="@id/nav_addCards"/>
+        <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_sellCards"
+                app:destination="@id/nav_sellCards"/>
+        <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_viewCardSet"
+                app:destination="@id/nav_viewCardSet"/>
+        <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_analyzeSet"
+                app:destination="@id/nav_analyzeSet"/>
+        <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_soldCards"
+                app:destination="@id/nav_soldCards"/>
+    </fragment>
 
 </navigation>

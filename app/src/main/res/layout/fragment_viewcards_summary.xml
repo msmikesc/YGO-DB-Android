@@ -4,7 +4,7 @@
                                                      xmlns:tools="http://schemas.android.com/tools"
                                                      android:layout_width="match_parent"
                                                      android:layout_height="match_parent"
-                                                     android:id="@+id/viewCardsSummaryScreen"
+                                                     android:id="@+id/mainScreenContainer"
                                                      tools:context=".ui.viewcardssummary.ViewCardsSummaryFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout

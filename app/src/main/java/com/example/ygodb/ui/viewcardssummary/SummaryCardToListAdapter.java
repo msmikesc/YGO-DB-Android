@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.model.ItemsListAdapter;
@@ -25,11 +24,11 @@ import java.util.Locale;
 
 public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,SummaryCardToListAdapter.ItemViewHolder> {
 
-	private final FragmentActivity context;
+	private final FragmentActivity fragmentActivity;
 
-	public SummaryCardToListAdapter(FragmentActivity context, List<OwnedCard> ownedCards) {
+	public SummaryCardToListAdapter(FragmentActivity fragmentActivity, List<OwnedCard> ownedCards) {
 		super(ownedCards);
-		this.context = context;
+		this.fragmentActivity = fragmentActivity;
 	}
 
 	@NonNull
@@ -71,29 +70,10 @@ public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,Summary
 			viewHolder.cardImage.setImageDrawable(null);
 		}
 
-		viewHolder.cardImage.setOnClickListener(new View.OnClickListener(){
-			@Override
-			public void onClick(View view) {
-				ViewCardFullScreenFragment fullCardScreen = new ViewCardFullScreenFragment();
-				Bundle args = new Bundle();
-				args.putString(Const.GAME_PLAY_CARD_UUID, current.getGamePlayCardUUID());
-				fullCardScreen.setArguments(args);
-
-				context.findViewById(R.id.fab).setVisibility(View.GONE);
-
-				context.getSupportFragmentManager().beginTransaction()
-						.replace(R.id.viewCardsSummaryScreen, fullCardScreen)
-						.addToBackStack(Const.BACKSTACK_DETAIL_VIEW_NAME)
-						.commit();
-
-				context.getSupportFragmentManager().addOnBackStackChangedListener(() -> {
-					if (context.getSupportFragmentManager().getBackStackEntryCount() == 0) {
-						// Back stack is empty, transaction reversed
-						// Perform your desired action here
-						context.findViewById(R.id.fab).setVisibility(View.VISIBLE);
-					}
-				});
-			}
+		viewHolder.cardImage.setOnClickListener(view -> {
+			Bundle args = new Bundle();
+			args.putString(Const.GAME_PLAY_CARD_UUID, current.getGamePlayCardUUID());
+			Navigation.findNavController(view).navigate(R.id.nav_ViewCardFullScreenFragment, args);
 		});
 	}
 
