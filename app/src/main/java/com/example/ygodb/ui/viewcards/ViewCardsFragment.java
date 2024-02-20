@@ -91,14 +91,6 @@ public class ViewCardsFragment extends Fragment {
 		return root;
 	}
 
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		getActivity().getSupportFragmentManager().popBackStack(
-				Const.BACKSTACK_DETAIL_VIEW_NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-	}
-
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
