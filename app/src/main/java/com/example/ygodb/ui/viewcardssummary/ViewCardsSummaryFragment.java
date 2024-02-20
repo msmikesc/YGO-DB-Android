@@ -38,7 +38,7 @@ public class ViewCardsSummaryFragment extends Fragment {
 
 		RecyclerView cardsListView = binding.viewList;
 
-		SummaryCardToListAdapter adapter = new SummaryCardToListAdapter(getActivity(), viewCardsViewModel.getCardsList());
+		SummaryCardToListAdapter adapter = new SummaryCardToListAdapter(viewCardsViewModel.getCardsList());
 
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
 		layout = linearLayoutManager;

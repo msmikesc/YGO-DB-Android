@@ -41,7 +41,7 @@ public class AnalyzeCardsFragment extends Fragment {
 		textView.setThreshold(3);
 		textView.setAdapter(autoCompleteAdapter);
 
-		SingleCardToListAdapter adapter = new SingleCardToListAdapter(getActivity(), analyzeCardsViewModel.getFilteredCardsList(), null, null, false);
+		SingleCardToListAdapter adapter = new SingleCardToListAdapter(analyzeCardsViewModel.getFilteredCardsList(), null, null, false);
 
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
 		layout = linearLayoutManager;

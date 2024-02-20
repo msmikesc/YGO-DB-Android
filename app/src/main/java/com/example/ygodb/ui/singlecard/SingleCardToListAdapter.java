@@ -12,13 +12,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.model.ItemsListAdapter;
 import com.example.ygodb.ui.addcards.AddCardsViewModel;
-import com.example.ygodb.ui.fullscreendetails.ViewCardFullScreenFragment;
 import com.example.ygodb.ui.sellcards.SellCardsViewModel;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
@@ -34,19 +32,17 @@ public class SingleCardToListAdapter extends ItemsListAdapter<OwnedCard, SingleC
 	private final AddCardsViewModel addCardsViewModel;
 	private final SellCardsViewModel sellCardsViewModel;
 	private final boolean isManyPlusButtons;
-	private final FragmentActivity fragmentActivity;
 	private Drawable firstDrawableSmall;
 	private Drawable limitedDrawableSmall;
 
 	private Context context;
 
-	public SingleCardToListAdapter(FragmentActivity activity, List<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel,
+	public SingleCardToListAdapter(List<OwnedCard> ownedCards, AddCardsViewModel addCardsViewModel, SellCardsViewModel sellCardsViewModel,
 			boolean isManyPlusButtons) {
 		super(ownedCards);
 		this.addCardsViewModel = addCardsViewModel;
 		this.sellCardsViewModel = sellCardsViewModel;
 		this.isManyPlusButtons = isManyPlusButtons;
-		this.fragmentActivity = activity;
 
 		try {
 			InputStream firstInputStreamSmall = AndroidUtil.getAppContext().getAssets().open(Const.FIRST_ICON_PNG);

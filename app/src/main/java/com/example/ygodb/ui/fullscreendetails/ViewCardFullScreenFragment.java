@@ -7,29 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import com.example.ygodb.R;
 import com.example.ygodb.databinding.FragmentCardfullscreenBinding;
-import com.example.ygodb.databinding.FragmentViewcardsSummaryBinding;
-import com.example.ygodb.model.EndlessScrollListener;
-import com.example.ygodb.model.partialscroll.PartialScrollEndlessScrollListener;
-import com.example.ygodb.model.partialscroll.PartialScrollSearchBarChangedListener;
-import com.example.ygodb.model.partialscroll.PartialScrollSortButtonOnClickListener;
-import com.example.ygodb.ui.viewcards.ViewCardsViewModel;
-import com.example.ygodb.ui.viewcardssummary.SummaryCardToListAdapter;
-import com.example.ygodb.ui.viewcardssummary.ViewCardsSummaryViewModel;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.GamePlayCard;
-import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Locale;
-import java.util.concurrent.Executors;
 
 public class ViewCardFullScreenFragment extends Fragment {
 

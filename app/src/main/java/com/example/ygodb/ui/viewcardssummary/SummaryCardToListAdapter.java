@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ygodb.R;
 import com.example.ygodb.model.ItemsListAdapter;
-import com.example.ygodb.ui.fullscreendetails.ViewCardFullScreenFragment;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.constant.Const;
@@ -24,11 +22,8 @@ import java.util.Locale;
 
 public class SummaryCardToListAdapter extends ItemsListAdapter<OwnedCard,SummaryCardToListAdapter.ItemViewHolder> {
 
-	private final FragmentActivity fragmentActivity;
-
-	public SummaryCardToListAdapter(FragmentActivity fragmentActivity, List<OwnedCard> ownedCards) {
+	public SummaryCardToListAdapter(List<OwnedCard> ownedCards) {
 		super(ownedCards);
-		this.fragmentActivity = fragmentActivity;
 	}
 
 	@NonNull
