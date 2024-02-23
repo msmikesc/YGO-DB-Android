@@ -49,16 +49,49 @@
         tools:src="@tools:sample/avatars"/>
 
     <LinearLayout
-        android:id="@+id/cardAttribute"
-        android:layout_width="0sp"
+        android:id="@+id/cardDetailsRow"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="2sp"
         android:orientation="horizontal"
 
-        app:layout_constraintEnd_toStartOf="@+id/cardSubtype"
         app:layout_constraintStart_toEndOf="@+id/cardImage"
         app:layout_constraintTop_toBottomOf="@+id/cardTitle"
-    >
+        >
+
+    <LinearLayout
+        android:id="@+id/cardLevelRankLinkRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="2sp"
+        android:paddingRight="10sp"
+
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/cardLevelRankLinkRatingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"/>
+        <ImageView
+            android:id="@+id/cardLevelRankLinkRatingIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="18sp"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="2sp"
+            android:paddingRight="2sp"
+        />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cardAttribute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="2sp"
+        android:paddingRight="10sp"
+        android:orientation="horizontal"
+        >
         <ImageView
             android:id="@+id/cardAttributeIcon"
             android:layout_width="wrap_content"
@@ -81,14 +114,10 @@
 
     <LinearLayout
         android:id="@+id/cardSubtype"
-        android:layout_width="0sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="2sp"
         android:orientation="horizontal"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardAttribute"
-        app:layout_constraintTop_toBottomOf="@+id/cardTitle"
         >
         <ImageView
             android:id="@+id/cardSubTypeIcon"
@@ -109,47 +138,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/cardLevelRankLinkRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="2sp"
-
-        app:layout_constraintEnd_toStartOf="@+id/cardTypeText"
-        app:layout_constraintStart_toEndOf="@+id/cardImage"
-        app:layout_constraintTop_toBottomOf="@+id/cardAttribute"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/cardLevelRankLinkRatingText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"/>
-        <ImageView
-            android:id="@+id/cardLevelRankLinkRatingIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="18sp"
-            android:adjustViewBounds="true"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="2sp"
-            android:paddingRight="2sp"
-        />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/cardTypeText"
-        android:layout_width="0sp"
-        android:layout_height="wrap_content"
-        android:paddingTop="2sp"
-        android:paddingLeft="10sp"
-
-        android:textAlignment="textStart"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/cardPendScale"
-        app:layout_constraintStart_toEndOf="@+id/cardLevelRankLinkRating"
-        app:layout_constraintTop_toBottomOf="@+id/cardAttribute"/>
 
     <LinearLayout
         android:id="@+id/cardPendScale"
@@ -158,7 +147,7 @@
         android:paddingTop="2sp"
         android:paddingRight="5sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardAttribute"
+        app:layout_constraintTop_toBottomOf="@+id/cardTitle"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/cardPendScaleText"
@@ -179,36 +168,81 @@
         />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/cardAttackAndDefense"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cardTypeAndAttackDefenseContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingTop="2sp"
-        android:paddingRight="6sp"
-        app:layout_constraintTop_toBottomOf="@+id/cardLevelRankLinkRating"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cardImage"
+        app:layout_constraintTop_toBottomOf="@+id/cardDetailsRow"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:constraint_referenced_ids="cardTypeText, cardAttackAndDefense"
+            app:flow_horizontalGap="4sp"
+            app:flow_horizontalStyle="spread_inside"
+            app:flow_horizontalBias="0.0"
+            app:flow_wrapMode="chain"/>
+
+        <TextView
+            android:id="@+id/cardTypeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+        />
+
+        <LinearLayout
+            android:id="@+id/cardAttackAndDefense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="2sp"
+            android:paddingRight="6sp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
         >
 
-    <TextView
-        android:id="@+id/cardAttack"
+            <TextView
+                android:id="@+id/cardAttack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+
+                android:maxLines="1"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/cardDefense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10sp"
+                android:layout_gravity="right"
+
+                android:maxLines="1"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_above_text_box"
+        app:barrierDirection="bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:textAlignment="textEnd"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"/>
-
-    <TextView
-        android:id="@+id/cardDefense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10sp"
-
-        android:textAlignment="textEnd"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"/>
-
-    </LinearLayout>
+        app:constraint_referenced_ids="cardImage,cardTypeAndAttackDefenseContainer"/>
 
     <TextView
         android:id="@+id/cardTextBox"
@@ -223,7 +257,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardAttackAndDefense"/>
+        app:layout_constraintTop_toBottomOf="@+id/barrier_above_text_box"/>
 
     <TextView
         android:id="@+id/cardPasscode"

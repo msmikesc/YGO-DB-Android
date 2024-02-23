@@ -65,10 +65,12 @@ public class ViewCardFullScreenFragment extends Fragment {
 			if(current.getCardType().equals("Spell Card")){
 				cardAttributeIcon = "images/SPELL.png";
 				renderCardSpellTrapSubtypeIcon(current);
+				binding.cardAttribute.setVisibility(View.GONE);
 			}
 			else if(current.getCardType().equals("Trap Card")){
 				cardAttributeIcon = "images/TRAP.png";
 				renderCardSpellTrapSubtypeIcon(current);
+				binding.cardAttribute.setVisibility(View.GONE);
 			}
 			else{
 				cardAttributeIcon = "images/"+current.getAttribute()+".png";
@@ -115,6 +117,9 @@ public class ViewCardFullScreenFragment extends Fragment {
 				else{
 					levelIconResource = "images/Star.png";
 				}
+			}
+			else{
+				binding.cardLevelRankLinkRating.setVisibility(View.GONE);
 			}
 
 			if(levelIconResource != null) {
