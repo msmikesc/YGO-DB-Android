@@ -42,12 +42,53 @@ public class ViewCardFullScreenFragment extends Fragment {
 			binding.cardTitle.setText(current.getCardName());
 			binding.cardPasscode.setText(String.valueOf(current.getPasscode()));
 			binding.cardArchetype.setText(current.getArchetype());
-			binding.cardAttack.setText(current.getAtk());
-			binding.cardDefense.setText(current.getDef());
 			binding.cardAttributeText.setText(current.getAttribute());
-			binding.cardPendScale.setText(current.getScale());
+			binding.cardPendScaleText.setText(current.getScale());
 			binding.cardSubtypeText.setText(current.getRace());
 			binding.cardTypeText.setText(current.getCardType());
+
+			if(current.getAtk() != null) {
+				binding.cardAttack.setText("ATK/"+current.getAtk());
+			}
+			else{
+				binding.cardAttack.setVisibility(View.GONE);
+			}
+			if(current.getDef()!= null) {
+				binding.cardDefense.setText("DEF/"+current.getDef());
+			}
+			else{
+				binding.cardDefense.setVisibility(View.GONE);
+			}
+
+			String cardAttributeIcon = null;
+
+			if(current.getCardType().equals("Spell Card")){
+				cardAttributeIcon = "images/SPELL.png";
+				renderCardSpellTrapSubtypeIcon(current);
+			}
+			else if(current.getCardType().equals("Trap Card")){
+				cardAttributeIcon = "images/TRAP.png";
+				renderCardSpellTrapSubtypeIcon(current);
+			}
+			else{
+				cardAttributeIcon = "images/"+current.getAttribute()+".png";
+				renderCardSubtypeIcon(current);
+				try {
+					InputStream ims = AndroidUtil.getAppContext().getAssets().open(cardAttributeIcon);
+					Drawable d = Drawable.createFromStream(ims, null);
+					binding.cardAttributeIcon.setImageDrawable(d);
+				} catch (Exception ex) {
+					binding.cardAttributeIcon.setImageDrawable(null);
+				}
+			}
+
+			try {
+				InputStream ims = AndroidUtil.getAppContext().getAssets().open(cardAttributeIcon);
+				Drawable d = Drawable.createFromStream(ims, null);
+				binding.cardIcon.setImageDrawable(d);
+			} catch (Exception ex) {
+				binding.cardIcon.setImageDrawable(null);
+			}
 
 			String textBox = current.getDesc();
 
@@ -60,19 +101,45 @@ public class ViewCardFullScreenFragment extends Fragment {
 			String level = current.getLevel();
 			String linkRating = current.getLinkVal();
 
+			String levelIconResource = null;
+
 			if(linkRating != null && !linkRating.isEmpty()){
-				binding.cardLevelRankLinkRating.setText(linkRating);
+				binding.cardLevelRankLinkRatingText.setText(linkRating);
+				levelIconResource = "images/Link_arrows.webp";
 			}
-			else{
-				binding.cardLevelRankLinkRating.setText(level);
+			else if(level != null && !level.isEmpty()){
+				binding.cardLevelRankLinkRatingText.setText(level);
+				if(current.getCardType().contains("XYZ")){
+					levelIconResource = "images/Rank.png";
+				}
+				else{
+					levelIconResource = "images/Star.png";
+				}
+			}
+
+			if(levelIconResource != null) {
+				try {
+					InputStream ims = AndroidUtil.getAppContext().getAssets().open(levelIconResource);
+					Drawable d = Drawable.createFromStream(ims, null);
+					binding.cardLevelRankLinkRatingIcon.setImageDrawable(d);
+				} catch (Exception ex) {
+					binding.cardLevelRankLinkRatingIcon.setImageDrawable(null);
+				}
+			}
+
+			if(current.getScale() != null){
+				try {
+					InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/Pendulum_Scales.webp");
+					Drawable d = Drawable.createFromStream(ims, null);
+					binding.cardPendScaleIcon.setImageDrawable(d);
+				} catch (Exception ex) {
+					binding.cardPendScaleIcon.setImageDrawable(null);
+				}
 			}
 
 			try {
-				// get input stream
 				InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + current.getPasscode() + ".jpg");
-				// load image as Drawable
 				Drawable d = Drawable.createFromStream(ims, null);
-				// set image to ImageView
 				binding.cardImage.setImageDrawable(d);
 			} catch (Exception ex) {
 				binding.cardImage.setImageDrawable(null);
@@ -81,6 +148,32 @@ public class ViewCardFullScreenFragment extends Fragment {
 
 
 		return root;
+	}
+
+	private void renderCardSubtypeIcon(GamePlayCard current) {
+		if( current.getRace() != null) {
+			try {
+				String subtypeText = current.getRace().replace(' ', '-');
+				InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/"+subtypeText+"-MD.webp");
+				Drawable d = Drawable.createFromStream(ims, null);
+				binding.cardSubTypeIcon.setImageDrawable(d);
+			} catch (Exception ex) {
+				binding.cardSubTypeIcon.setImageDrawable(null);
+			}
+		}
+	}
+
+	private void renderCardSpellTrapSubtypeIcon(GamePlayCard current) {
+		if( current.getRace() != null) {
+			try {
+				String subtypeText = current.getRace();
+				InputStream ims = AndroidUtil.getAppContext().getAssets().open("images/"+subtypeText+".png");
+				Drawable d = Drawable.createFromStream(ims, null);
+				binding.cardSubTypeIcon.setImageDrawable(d);
+			} catch (Exception ex) {
+				binding.cardSubTypeIcon.setImageDrawable(null);
+			}
+		}
 	}
 
 	public static String insertNewLineAfterPeriod(String paragraph) {

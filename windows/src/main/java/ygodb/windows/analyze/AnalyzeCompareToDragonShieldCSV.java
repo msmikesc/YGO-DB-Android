@@ -10,6 +10,7 @@ import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
+import ygodb.windows.export.ExportUnSyncedForUpload;
 import ygodb.windows.utility.WindowsUtil;
 
 import java.io.IOException;
@@ -153,7 +154,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 		for (List<OwnedCard> rarityList : ownedCardsMap.values()) {
 			for (OwnedCard card : rarityList) {
 
-				if (!card.getFolderName().equals(Const.FOLDER_MANUAL)) {
+				if (!card.getFolderName().equals(Const.FOLDER_MANUAL) && !ExportUnSyncedForUpload.DO_NOT_UPLOAD_SET_PREFIX.contains(card.getSetPrefix())) {
 					YGOLogger.info(
 							"Card in DB but not in CSV: " + card.getCardName() + " " + card.getSetNumber() + " " + card.getSetRarity() +
 									" " + card.getColorVariant() + " " + card.getPriceBought() + " " + card.getDateBought());

@@ -12,11 +12,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class ExportUnSyncedForUpload {
+
+	public static final List<String> DO_NOT_UPLOAD_SET_PREFIX = Arrays.asList("OP23", "OP24", "BLC1");
 
 	public static void main(String[] args) throws SQLException, IOException {
 		ExportUnSyncedForUpload mainObj = new ExportUnSyncedForUpload();
@@ -30,7 +33,7 @@ public class ExportUnSyncedForUpload {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 		Date readTime = new Date();
 
-		String filename = "all-upload.csv";
+		String filename = "all-upload" + dateFormat.format(readTime) + ".csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
 		List<OwnedCard> list = db.getAllOwnedCards();
@@ -43,7 +46,7 @@ public class ExportUnSyncedForUpload {
 
 		for (OwnedCard current : list) {
 
-			if (current.getFolderName().equals(Const.FOLDER_UNSYNCED)) {
+			if (current.getFolderName().equals(Const.FOLDER_UNSYNCED) && !DO_NOT_UPLOAD_SET_PREFIX.contains(current.getSetPrefix())) {
 				quantityCount += current.getQuantity();
 				current.setFolderName(Const.FOLDER_EXPORT_PREFIX + dateFormat.format(readTime));
 				db.updateOwnedCardByUUID(current);

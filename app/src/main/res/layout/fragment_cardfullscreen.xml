@@ -5,15 +5,15 @@
             android:fillViewport="true"
             xmlns:android="http://schemas.android.com/apk/res/android">
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   android:background="#232020"
-                                                   android:clickable="true"
-                                                   tools:context=".ui.fullscreendetails.ViewCardFullScreenFragment"
-                                                   android:focusable="true">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#232020"
+    android:clickable="true"
+    tools:context=".ui.fullscreendetails.ViewCardFullScreenFragment"
+    android:focusable="true">
 
     <TextView
         android:id="@+id/cardTitle"
@@ -28,15 +28,14 @@
         app:layout_constraintStart_toEndOf="@+id/cardImage"
         app:layout_constraintTop_toTopOf="@+id/cardImage"/>
 
-    <TextView
+    <ImageView
         android:id="@+id/cardIcon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="2sp"
+        android:layout_height="30sp"
+        android:paddingTop="5sp"
         android:paddingRight="5sp"
-        android:textAlignment="textEnd"
-        android:textColor="#56D848"
-        android:textSize="18sp"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardTitle"/>
 
@@ -49,56 +48,94 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars"/>
 
-    <TextView
-        android:id="@+id/cardAttributeText"
+    <LinearLayout
+        android:id="@+id/cardAttribute"
         android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:paddingTop="2sp"
+        android:orientation="horizontal"
 
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/cardSubtypeText"
+        app:layout_constraintEnd_toStartOf="@+id/cardSubtype"
         app:layout_constraintStart_toEndOf="@+id/cardImage"
-        app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
+        app:layout_constraintTop_toBottomOf="@+id/cardTitle"
+    >
+        <ImageView
+            android:id="@+id/cardAttributeIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="18sp"
+            android:paddingRight="2sp"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_vertical"
+        />
+        <TextView
+            android:id="@+id/cardAttributeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    <TextView
-        android:id="@+id/cardSubtypeText"
+            android:textAlignment="textStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cardSubtype"
         android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:paddingTop="2sp"
+        android:orientation="horizontal"
 
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/cardSubTypeIcon"
-        app:layout_constraintStart_toEndOf="@+id/cardAttributeText"
-        app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
-
-    <TextView
-        android:id="@+id/cardSubTypeIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="2sp"
-        android:paddingRight="5sp"
-        android:textAlignment="textEnd"
-        android:textColor="#56D848"
-        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardTitle"/>
+        app:layout_constraintStart_toEndOf="@+id/cardAttribute"
+        app:layout_constraintTop_toBottomOf="@+id/cardTitle"
+        >
+        <ImageView
+            android:id="@+id/cardSubTypeIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="18sp"
+            android:paddingRight="2sp"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/cardSubtypeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    <TextView
+            android:textAlignment="textStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/cardLevelRankLinkRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="2sp"
 
-        android:textAlignment="textStart"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/cardTypeText"
         app:layout_constraintStart_toEndOf="@+id/cardImage"
-        app:layout_constraintTop_toBottomOf="@+id/cardAttributeText"/>
+        app:layout_constraintTop_toBottomOf="@+id/cardAttribute"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/cardLevelRankLinkRatingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"/>
+        <ImageView
+            android:id="@+id/cardLevelRankLinkRatingIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="18sp"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="2sp"
+            android:paddingRight="2sp"
+        />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/cardTypeText"
@@ -112,52 +149,72 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/cardPendScale"
         app:layout_constraintStart_toEndOf="@+id/cardLevelRankLinkRating"
-        app:layout_constraintTop_toBottomOf="@+id/cardAttributeText"/>
+        app:layout_constraintTop_toBottomOf="@+id/cardAttribute"/>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/cardPendScale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="2sp"
         android:paddingRight="5sp"
-        android:textAlignment="textEnd"
-        android:textColor="#56D848"
-        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardAttributeText"/>
+        app:layout_constraintTop_toBottomOf="@+id/cardAttribute"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/cardPendScaleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:textColor="#56D848"
+            android:textSize="18sp"
+        />
+        <ImageView
+            android:id="@+id/cardPendScaleIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="18sp"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="2sp"
+            android:paddingRight="2sp"
+        />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/cardAttack"
-        android:layout_width="0sp"
-        android:layout_height="wrap_content"
-        android:paddingTop="2sp"
-
-        android:textAlignment="textEnd"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/cardDefense"
-        app:layout_constraintStart_toEndOf="@+id/cardImage"
-        app:layout_constraintTop_toBottomOf="@+id/cardLevelRankLinkRating"/>
-
-    <TextView
-        android:id="@+id/cardDefense"
-        android:layout_width="0sp"
+    <LinearLayout
+        android:id="@+id/cardAttackAndDefense"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="2sp"
         android:paddingRight="6sp"
+        app:layout_constraintTop_toBottomOf="@+id/cardLevelRankLinkRating"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+    <TextView
+        android:id="@+id/cardAttack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
         android:textAlignment="textEnd"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardAttack"
-        app:layout_constraintTop_toBottomOf="@+id/cardLevelRankLinkRating"/>
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/cardDefense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10sp"
+
+        android:textAlignment="textEnd"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/cardTextBox"
         android:layout_width="0sp"
         android:layout_height="wrap_content"
-        android:paddingTop="6sp"
+        android:paddingTop="4sp"
         android:paddingLeft="6sp"
         android:paddingRight="6sp"
 
@@ -166,7 +223,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardAttack"/>
+        app:layout_constraintTop_toBottomOf="@+id/cardAttackAndDefense"/>
 
     <TextView
         android:id="@+id/cardPasscode"
