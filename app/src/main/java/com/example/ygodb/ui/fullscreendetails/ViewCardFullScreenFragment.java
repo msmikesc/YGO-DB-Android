@@ -182,6 +182,11 @@ public class ViewCardFullScreenFragment extends Fragment {
 	}
 
 	public static String insertNewLineAfterPeriod(String paragraph) {
+
+		if(paragraph == null){
+			return "";
+		}
+
 		StringBuilder result = new StringBuilder();
 		int i = 0;
 		while (i < paragraph.length()) {
