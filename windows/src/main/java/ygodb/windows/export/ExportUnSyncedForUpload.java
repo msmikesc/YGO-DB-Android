@@ -5,6 +5,7 @@ import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
@@ -46,7 +47,8 @@ public class ExportUnSyncedForUpload {
 
 		for (OwnedCard current : list) {
 
-			if (current.getFolderName().equals(Const.FOLDER_UNSYNCED) && !DO_NOT_UPLOAD_SET_PREFIX.contains(current.getSetPrefix())) {
+			if (current.getFolderName().equals(Const.FOLDER_UNSYNCED) && !DO_NOT_UPLOAD_SET_PREFIX.contains(current.getSetPrefix())
+					&& !Util.normalizePrice(current.getPriceBought()).equals(Const.ZERO_PRICE_STRING)) {
 				quantityCount += current.getQuantity();
 				current.setFolderName(Const.FOLDER_EXPORT_PREFIX + dateFormat.format(readTime));
 				db.updateOwnedCardByUUID(current);

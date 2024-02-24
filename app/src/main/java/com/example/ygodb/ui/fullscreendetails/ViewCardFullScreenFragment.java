@@ -72,6 +72,11 @@ public class ViewCardFullScreenFragment extends Fragment {
 				renderCardSpellTrapSubtypeIcon(current);
 				binding.cardAttribute.setVisibility(View.GONE);
 			}
+			else if(current.getCardType().equals("Skill Card")){
+				binding.cardAttribute.setVisibility(View.GONE);
+				binding.cardIcon.setVisibility(View.GONE);
+				binding.cardLevelRankLinkRating.setVisibility(View.GONE);
+			}
 			else{
 				cardAttributeIcon = "images/"+current.getAttribute()+".png";
 				renderCardSubtypeIcon(current);

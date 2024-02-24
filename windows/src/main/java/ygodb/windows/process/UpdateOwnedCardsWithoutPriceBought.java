@@ -4,6 +4,7 @@ import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.OwnedCard;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
@@ -44,7 +45,7 @@ public class UpdateOwnedCardsWithoutPriceBought {
 				priceBought = setIdentified.getSetPrice();
 			}
 
-			if(priceBought == null || priceBought.equals(Const.ZERO_PRICE_STRING)){
+			if(priceBought == null || Util.normalizePrice(priceBought).equals(Const.ZERO_PRICE_STRING)){
 				continue;
 			}
 
