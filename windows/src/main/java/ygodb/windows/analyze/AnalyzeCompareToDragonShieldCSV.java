@@ -16,6 +16,8 @@ import ygodb.windows.utility.WindowsUtil;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +25,20 @@ import java.util.Map;
 
 public class AnalyzeCompareToDragonShieldCSV {
 
+	public static class SetRarityTranslate{
+		String setPrefix;
+		String originalRarity;
+		String updateRarity;
+
+		public SetRarityTranslate(String setPrefix, String originalRarity, String updateRarity) {
+			this.setPrefix = setPrefix;
+			this.originalRarity = originalRarity;
+			this.updateRarity = updateRarity;
+		}
+	}
+
 	private static final Map<String, String> longRareMap = new HashMap<>();
+	private static final Map<String, List<SetRarityTranslate>> setRarityTranslateMap = new HashMap<>();
 
 	static {
 		longRareMap.put("SR", "Super Rare");
@@ -45,6 +60,15 @@ public class AnalyzeCompareToDragonShieldCSV {
 		longRareMap.put("DNPR", "Duel Terminal Normal Parallel Rare");
 		longRareMap.put("SFR", "Starfoil Rare");
 		longRareMap.put("QCScR", "Quarter Century Secret Rare");
+		longRareMap.put("PlScR", "Platinum Secret Rare");
+
+		setRarityTranslateMap.put("RA01", Arrays.asList(
+				new SetRarityTranslate("RA01", "Collector's Rare", "Prismatic Collector’s Rare"),
+				new SetRarityTranslate("RA01", "Ultimate Rare", "Prismatic Ultimate Rare")
+		));
+		setRarityTranslateMap.put("DT07", List.of(
+				new SetRarityTranslate("DT07", "Duel Terminal Normal Parallel Rare", "Duel Terminal Rare Parallel Rare")));
+
 	}
 
 
@@ -85,7 +109,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 			String setName = csvConnection.getStringOrNull(current, Const.SET_NAME_CSV);
 			String rarity = csvConnection.getStringOrNull(current, Const.RARITY_CSV);
 
-			rarity = convertRarityToLongForm(rarity);
+			rarity = convertRarityToLongForm(rarity, setPrefix);
 
 			String colorCode = Const.DEFAULT_COLOR_VARIANT;
 
@@ -164,11 +188,20 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 	}
 
-	public String convertRarityToLongForm(String input) {
+	public String convertRarityToLongForm(String input, String setPrefix) {
 		String output = longRareMap.get(input);
 		if (output == null) {
 			return input;
 		}
+
+		if(setRarityTranslateMap.containsKey(setPrefix)){
+			for(SetRarityTranslate current: setRarityTranslateMap.get(setPrefix)){
+				if(current.originalRarity.equals(output)){
+					return current.updateRarity;
+				}
+			}
+		}
+
 		return output;
 	}
 
