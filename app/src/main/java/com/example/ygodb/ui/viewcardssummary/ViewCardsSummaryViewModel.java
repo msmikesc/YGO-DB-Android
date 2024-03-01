@@ -23,14 +23,14 @@ public class ViewCardsSummaryViewModel extends ViewCardsLoadPartialScrollViewMod
 		menuItemMap.put(0, new MenuItemBean(
 				0,
 				"Date Bought",
-				"maxDate desc, cardName asc",
-				"maxDate asc, cardName asc",
+				"maxDate desc, maxModificationDate desc, cardName asc",
+				"maxDate asc, maxModificationDate asc, cardName asc",
 				false));
 		menuItemMap.put(1, new MenuItemBean(
 				1,
 				"Card Name",
-				"cardName desc, dateBought desc",
-				"cardName asc, dateBought desc",
+				"cardName desc",
+				"cardName asc",
 				true));
 		menuItemMap.put(2, new MenuItemBean(
 				2,

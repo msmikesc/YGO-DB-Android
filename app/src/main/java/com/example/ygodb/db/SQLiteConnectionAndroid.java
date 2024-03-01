@@ -1366,7 +1366,9 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 
 		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID, "sum(quantity) as totalQuantity", Const.CARD_NAME,
 				"group_concat(DISTINCT " + "setName)", "MAX(dateBought) as maxDate",
-				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice", "group_concat(DISTINCT setRarity) as rs", Const.PASSCODE};
+				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice", "group_concat(DISTINCT setRarity) as rs", Const.PASSCODE,
+				"MAX(strftime('%Y-%m-%d %H:%M', modificationDate)) as maxModificationDate"
+		};
 
 		String selection = null;
 		String[] selectionArgs = null;
@@ -1391,6 +1393,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				current.setPriceBought(rs.getString(5));
 				current.setSetRarity(rs.getString(6));
 				current.setPasscode(rs.getInt(7));
+				current.setModificationDate(rs.getString(8));
 				cardsInSetList.add(current);
 			}
 
