@@ -25,8 +25,8 @@ public class ViewCardsViewModel extends ViewCardsLoadPartialScrollViewModel<Owne
 		menuItemMap.put(0, new MenuItemBean(
 				0,
 				"Date Bought",
-				"dateBought desc, modificationDate desc",
-				"dateBought asc, modificationDate asc",
+				"dateBought desc, modificationDate desc, cardName asc",
+				"dateBought asc, modificationDate asc, cardName asc",
 				false));
 		menuItemMap.put(1, new MenuItemBean(
 				1,

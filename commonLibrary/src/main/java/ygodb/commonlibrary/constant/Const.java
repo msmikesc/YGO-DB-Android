@@ -49,6 +49,7 @@ public class Const {
 	public static final String PRICE_SOLD = "priceSold";
 	public static final String CREATION_DATE = "creationDate";
 	public static final String MODIFICATION_DATE = "modificationDate";
+	public static final String MODIFICATION_DATE_FORMATTED_NO_SECONDS = "strftime('%Y-%m-%d %H:%M', modificationDate)";
 	public static final String UUID = "UUID";
 	public static final String PASSCODE = "passcode";
 	public static final String GAME_PLAY_CARD_NAME = "title";

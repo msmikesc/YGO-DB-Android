@@ -1246,7 +1246,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 				"a." + Const.FOLDER_NAME + " as " + Const.FOLDER_NAME, "a." + Const.CONDITION + " as " + Const.CONDITION,
 				"a." + Const.EDITION_PRINTING + " as " + Const.EDITION_PRINTING, "a." + Const.DATE_BOUGHT + " as " + Const.DATE_BOUGHT,
 				"a." + Const.PRICE_BOUGHT + " as " + Const.PRICE_BOUGHT, "a." + Const.CREATION_DATE + " as " + Const.CREATION_DATE,
-				"a." + Const.MODIFICATION_DATE + " as " + Const.MODIFICATION_DATE, "a." + Const.UUID + " as " + Const.UUID,
+				"strftime('%Y-%m-%d %H:%M', a.modificationDate)" + " as " + Const.MODIFICATION_DATE, "a." + Const.UUID + " as " + Const.UUID,
 				"a." + Const.PASSCODE + " as " + Const.PASSCODE, "b."+Const.ALT_ART_PASSCODE};
 
 		String selection = null;
@@ -1367,7 +1367,7 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		String[] columns = new String[]{Const.GAME_PLAY_CARD_UUID, "sum(quantity) as totalQuantity", Const.CARD_NAME,
 				"group_concat(DISTINCT " + "setName)", "MAX(dateBought) as maxDate",
 				"sum((1.0*priceBought)*quantity)/sum(quantity) as avgPrice", "group_concat(DISTINCT setRarity) as rs", Const.PASSCODE,
-				"MAX(strftime('%Y-%m-%d %H:%M', modificationDate)) as maxModificationDate"
+				"MAX("+Const.MODIFICATION_DATE_FORMATTED_NO_SECONDS+") as maxModificationDate"
 		};
 
 		String selection = null;
