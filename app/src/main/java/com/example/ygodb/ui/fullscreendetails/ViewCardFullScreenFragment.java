@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.example.ygodb.databinding.FragmentCardfullscreenBinding;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.GamePlayCard;
@@ -147,12 +150,28 @@ public class ViewCardFullScreenFragment extends Fragment {
 				}
 			}
 
-			try {
-				InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + current.getPasscode() + ".jpg");
-				Drawable d = Drawable.createFromStream(ims, null);
-				binding.cardImage.setImageDrawable(d);
-			} catch (Exception ex) {
-				binding.cardImage.setImageDrawable(null);
+			if(current.getPasscode() > 0) {
+				ImageView imageView = binding.cardFullSize;
+				String imageUrl = Const.YGOPRO_API_IMAGES_FULLSIZE_BASE_URL + current.getPasscode() + ".jpg";
+				Glide.with(this).load(imageUrl).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(imageView);
+				try {
+					InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + current.getPasscode() + ".jpg");
+					Drawable d = Drawable.createFromStream(ims, null);
+					binding.cardImage.setImageDrawable(d);
+				} catch (Exception ex) {
+					binding.cardImage.setImageDrawable(null);
+				}
+			}
+			else{
+				try {
+					InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + current.getPasscode() + ".jpg");
+					Drawable d = Drawable.createFromStream(ims, null);
+					binding.cardImage.setImageDrawable(d);
+					binding.cardFullSize.setImageDrawable(d);
+				} catch (Exception ex) {
+					binding.cardImage.setImageDrawable(null);
+					binding.cardFullSize.setImageDrawable(null);
+				}
 			}
 		}
 

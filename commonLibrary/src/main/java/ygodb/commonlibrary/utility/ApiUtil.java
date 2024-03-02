@@ -168,7 +168,7 @@ public class ApiUtil {
 	public static boolean downloadCardImageFromYGOPRO(GamePlayCard card, Path filePathDestination) {
 		String url = Const.YGOPRO_API_IMAGES_BASE_URL;
 
-		url += "/" + card.getPasscode() + ".jpg";
+		url += card.getPasscode() + ".jpg";
 
 		try {
 			URL imageUrl = new URL(url);

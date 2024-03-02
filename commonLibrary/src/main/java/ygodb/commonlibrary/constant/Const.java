@@ -6,6 +6,7 @@ import java.util.Set;
 public class Const {
 
 	public static final String YGOPRO_API_IMAGES_BASE_URL = "https://images.ygoprodeck.com/images/cards_small/";
+	public static final String YGOPRO_API_IMAGES_FULLSIZE_BASE_URL = "https://images.ygoprodeck.com/images/cards/";
 	public static final String PROJECT_CARD_IMAGES_DIRECTORY = "./app/src/main/assets/pics/";
 
 	private Const() {
