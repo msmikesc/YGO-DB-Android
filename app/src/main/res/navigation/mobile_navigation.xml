@@ -93,6 +93,17 @@
                 app:destination="@id/nav_analyzeSet"/>
         <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_soldCards"
                 app:destination="@id/nav_soldCards"/>
+        <action android:id="@+id/action_nav_ViewCardFullScreenFragment_to_nav_ViewCardImageFullScreenFragment"
+                app:destination="@id/nav_ViewCardImageFullScreenFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_ViewCardImageFullScreenFragment"
+        android:name="com.example.ygodb.ui.fullscreendetails.ViewCardImageFullScreenFragment"
+        android:label="Card Image"
+        tools:layout="@layout/fragment_cardimagefullscreen">
+        <action android:id="@+id/action_nav_ViewCardImageFullScreenFragment_to_nav_ViewCardFullScreenFragment"
+                app:destination="@id/nav_ViewCardFullScreenFragment"/>
     </fragment>
 
 </navigation>
