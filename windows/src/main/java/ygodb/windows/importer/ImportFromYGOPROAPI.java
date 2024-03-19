@@ -26,7 +26,7 @@ public class ImportFromYGOPROAPI {
 
 	public static void main(String[] args) throws SQLException, IOException, InterruptedException {
 
-		String setName = "OTS Tournament Pack 24";
+		String setName = "25th Anniversary Ultimate Kaiba Set";
 		boolean importCardImages = false;
 
 		ImportFromYGOPROAPI mainObj = new ImportFromYGOPROAPI();

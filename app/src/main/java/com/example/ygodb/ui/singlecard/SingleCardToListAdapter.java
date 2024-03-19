@@ -129,7 +129,14 @@ public class SingleCardToListAdapter extends ItemsListAdapter<OwnedCard, SingleC
 		String setRarityText = AndroidUtil.getSetRarityDisplayWithColorText(current);
 		viewHolder.cardRarity.setText(setRarityText);
 
-		viewHolder.setNumber.setText(current.getSetNumber());
+		if(current.getSetNumber() == null || current.getSetNumber().isBlank()){
+			viewHolder.setNumber.setVisibility(View.GONE);
+		}
+		else{
+			viewHolder.setNumber.setText(current.getSetNumber());
+			viewHolder.setNumber.setVisibility(View.VISIBLE);
+		}
+
 		viewHolder.setName.setMaxLines(2);
 
 		if (sellCardsViewModel == null) {
