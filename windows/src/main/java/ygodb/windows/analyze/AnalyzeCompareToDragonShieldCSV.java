@@ -16,7 +16,6 @@ import ygodb.windows.utility.WindowsUtil;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -87,7 +86,7 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 		CsvConnection csvConnection = new CsvConnection();
 
-		CSVParser parser = csvConnection.getParserSkipFirstLine(resourcePath, StandardCharsets.UTF_16LE);
+		CSVParser parser = csvConnection.getParserSkipFirstLine(resourcePath, StandardCharsets.UTF_8);
 
 		Iterator<CSVRecord> it = parser.iterator();
 

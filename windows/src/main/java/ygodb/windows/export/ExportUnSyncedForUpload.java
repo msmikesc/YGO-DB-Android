@@ -20,21 +20,29 @@ import java.util.Locale;
 
 public class ExportUnSyncedForUpload {
 
-	public static final List<String> DO_NOT_UPLOAD_SET_PREFIX = Arrays.asList("OP23", "OP24", "BLC1");
+	public static final List<String> DO_NOT_UPLOAD_SET_PREFIX = Arrays.asList("OP24");
 
 	public static void main(String[] args) throws SQLException, IOException {
 		ExportUnSyncedForUpload mainObj = new ExportUnSyncedForUpload();
 		SQLiteConnection db = WindowsUtil.getDBInstance();
-		mainObj.run(db);
+
+		//String exportFolderName = Const.FOLDER_UNSYNCED;
+		String exportFolderName = "Export 2024-03-21";
+
+		mainObj.run(db, exportFolderName);
 		db.closeInstance();
 	}
 
-	public void run(SQLiteConnection db) throws SQLException, IOException {
+	public void run(SQLiteConnection db, String exportFolderName) throws SQLException, IOException {
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 		Date readTime = new Date();
 
 		String filename = "all-upload" + dateFormat.format(readTime) + ".csv";
+		if(!exportFolderName.equals(Const.FOLDER_UNSYNCED)){
+			filename = exportFolderName + ".csv";
+		}
+
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
 		List<OwnedCard> list = db.getAllOwnedCards();
@@ -47,11 +55,14 @@ public class ExportUnSyncedForUpload {
 
 		for (OwnedCard current : list) {
 
-			if (current.getFolderName().equals(Const.FOLDER_UNSYNCED) && !DO_NOT_UPLOAD_SET_PREFIX.contains(current.getSetPrefix())
+			if (current.getFolderName().equals(exportFolderName) && !DO_NOT_UPLOAD_SET_PREFIX.contains(current.getSetPrefix())
 					&& !Util.normalizePrice(current.getPriceBought()).equals(Const.ZERO_PRICE_STRING)) {
 				quantityCount += current.getQuantity();
-				current.setFolderName(Const.FOLDER_EXPORT_PREFIX + dateFormat.format(readTime));
-				db.updateOwnedCardByUUID(current);
+
+				if(exportFolderName.equals(Const.FOLDER_UNSYNCED)) {
+					current.setFolderName(Const.FOLDER_EXPORT_PREFIX + dateFormat.format(readTime));
+					db.updateOwnedCardByUUID(current);
+				}
 
 				//temporary changes
 				if (current.getSetName().contains("(25th Anniversary Edition)")) {

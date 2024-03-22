@@ -155,7 +155,14 @@ public class CsvConnection {
 
 		if (!current.getColorVariant().equalsIgnoreCase(Const.DEFAULT_COLOR_VARIANT) &&
 				!Const.setColorVariantUnsupportedDragonShield.contains(current.getSetName())) {
-			outputSetNumber += current.getColorVariant();
+
+			String colorModifier = current.getColorVariant();
+
+			if(colorModifier.equals("s")){
+				colorModifier = "S";
+			}
+
+			outputSetNumber += colorModifier;
 		}
 
 		p.printRecord(current.getFolderName(), current.getQuantity(), 0, current.getCardName(), current.getSetPrefix(),
