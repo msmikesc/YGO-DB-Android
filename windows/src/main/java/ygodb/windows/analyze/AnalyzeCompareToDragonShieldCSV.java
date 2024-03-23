@@ -25,9 +25,9 @@ import java.util.Map;
 public class AnalyzeCompareToDragonShieldCSV {
 
 	public static class SetRarityTranslate{
-		String setPrefix;
-		String originalRarity;
-		String updateRarity;
+		final String setPrefix;
+		final String originalRarity;
+		final String updateRarity;
 
 		public SetRarityTranslate(String setPrefix, String originalRarity, String updateRarity) {
 			this.setPrefix = setPrefix;

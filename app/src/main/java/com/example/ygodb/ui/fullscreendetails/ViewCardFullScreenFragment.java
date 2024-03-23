@@ -16,7 +16,6 @@ import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.InputStream;
-import java.sql.SQLException;
 
 public class ViewCardFullScreenFragment extends Fragment {
 
@@ -35,7 +34,7 @@ public class ViewCardFullScreenFragment extends Fragment {
 		try {
 			String gameplayCardUUID = input.getString(Const.GAME_PLAY_CARD_UUID);
 			current = AndroidUtil.getDBInstance().getGamePlayCardByUUID(gameplayCardUUID);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			YGOLogger.logException(e);
 		}
 
@@ -66,30 +65,32 @@ public class ViewCardFullScreenFragment extends Fragment {
 
 			String cardAttributeIcon = null;
 
-			if(current.getCardType().equals("Spell Card")){
-				cardAttributeIcon = "images/SPELL.png";
-				renderCardSpellTrapSubtypeIcon(current);
-				binding.cardAttribute.setVisibility(View.GONE);
-			}
-			else if(current.getCardType().equals("Trap Card")){
-				cardAttributeIcon = "images/TRAP.png";
-				renderCardSpellTrapSubtypeIcon(current);
-				binding.cardAttribute.setVisibility(View.GONE);
-			}
-			else if(current.getCardType().equals("Skill Card")){
-				binding.cardAttribute.setVisibility(View.GONE);
-				binding.cardIcon.setVisibility(View.GONE);
-				binding.cardLevelRankLinkRating.setVisibility(View.GONE);
-			}
-			else{
-				cardAttributeIcon = "images/"+current.getAttribute()+".png";
-				renderCardSubtypeIcon(current);
-				try {
-					InputStream ims = AndroidUtil.getAppContext().getAssets().open(cardAttributeIcon);
-					Drawable d = Drawable.createFromStream(ims, null);
-					binding.cardAttributeIcon.setImageDrawable(d);
-				} catch (Exception ex) {
-					binding.cardAttributeIcon.setImageDrawable(null);
+			switch (current.getCardType()) {
+				case "Spell Card" -> {
+					cardAttributeIcon = "images/SPELL.png";
+					renderCardSpellTrapSubtypeIcon(current);
+					binding.cardAttribute.setVisibility(View.GONE);
+				}
+				case "Trap Card" -> {
+					cardAttributeIcon = "images/TRAP.png";
+					renderCardSpellTrapSubtypeIcon(current);
+					binding.cardAttribute.setVisibility(View.GONE);
+				}
+				case "Skill Card" -> {
+					binding.cardAttribute.setVisibility(View.GONE);
+					binding.cardIcon.setVisibility(View.GONE);
+					binding.cardLevelRankLinkRating.setVisibility(View.GONE);
+				}
+				default -> {
+					cardAttributeIcon = "images/" + current.getAttribute() + ".png";
+					renderCardSubtypeIcon(current);
+					try {
+						InputStream ims = AndroidUtil.getAppContext().getAssets().open(cardAttributeIcon);
+						Drawable d = Drawable.createFromStream(ims, null);
+						binding.cardAttributeIcon.setImageDrawable(d);
+					} catch (Exception ex) {
+						binding.cardAttributeIcon.setImageDrawable(null);
+					}
 				}
 			}
 
