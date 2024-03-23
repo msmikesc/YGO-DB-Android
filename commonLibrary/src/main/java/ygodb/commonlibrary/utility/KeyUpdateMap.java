@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class KeyUpdateMap {
@@ -19,15 +20,19 @@ public class KeyUpdateMap {
 	}
 
 	public void addMapping(String key, String values) {
-		map.put(key, values);
+		map.put(key.toLowerCase(Locale.ROOT), values);
 	}
 
 	public String getValue(String key) {
-		String value = map.get(key);
+		String value = map.get(key.toLowerCase(Locale.ROOT));
 		if (value != null) {
 			return value;
 		}
 		return key;
+	}
+
+	public String getRawValue(String key) {
+		return map.get(key.toLowerCase(Locale.ROOT));
 	}
 
 	private void loadMappings(InputStream input) throws IOException {

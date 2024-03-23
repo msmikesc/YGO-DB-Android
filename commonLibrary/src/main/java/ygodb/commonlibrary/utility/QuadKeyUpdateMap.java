@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class QuadKeyUpdateMap {
@@ -26,7 +27,9 @@ public class QuadKeyUpdateMap {
 	}
 
 	public List<String> getValues(String key1, String key2, String key3, String key4) {
-		String key = String.join(delimiter, key1, key2, key3, key4);
+		String key = String.join(delimiter,
+								 key1.toLowerCase(Locale.ROOT), key2.toLowerCase(Locale.ROOT),
+								 key3.toLowerCase(Locale.ROOT), key4.toLowerCase(Locale.ROOT));
 		List<String> values = map.get(key);
 		if (values != null) {
 			return values;
@@ -57,7 +60,9 @@ public class QuadKeyUpdateMap {
 				continue;
 			}
 
-			String key = String.join(delimiter, name, cardNumber, rarity, setName);
+			String key = String.join(delimiter,
+									 name.toLowerCase(Locale.ROOT), cardNumber.toLowerCase(Locale.ROOT),
+									 rarity.toLowerCase(Locale.ROOT), setName.toLowerCase(Locale.ROOT));
 			List<String> values = List.of(nameValue, cardNumberValue, rarityValue, setNameValue);
 			addMapping(key, values);
 		}

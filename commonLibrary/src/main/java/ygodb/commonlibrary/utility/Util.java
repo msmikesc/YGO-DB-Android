@@ -30,6 +30,7 @@ public class Util {
 	private static KeyUpdateMap cardNameMap = null;
 	private static KeyUpdateMap rarityMap = null;
 	private static KeyUpdateMap setNumberMap = null;
+	private static KeyUpdateMap editionMap = null;
 	private static KeyUpdateMap passcodeMap = null;
 	private static KeyUpdateMap ygoProImagePasscodeMap = null;
 	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
@@ -291,6 +292,22 @@ public class Util {
 		return setNumberMap;
 	}
 
+	public static KeyUpdateMap getEditionMapInstance() {
+		if (editionMap == null) {
+			try {
+				String filename = "editionUpdateMapping.csv";
+
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
+
+				editionMap = new KeyUpdateMap(inputStream);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
+
+		return editionMap;
+	}
+
 	public static KeyUpdateMap getPasscodeMapInstance() {
 		if (passcodeMap == null) {
 			try {
@@ -462,25 +479,25 @@ public class Util {
 	public static String checkForTranslatedRarity(String rarity) {
 		KeyUpdateMap instance = getRarityMapInstance();
 
-		String newRarity = instance.getValue(rarity);
-
-		if (newRarity == null) {
-			return rarity;
-		}
-
-		return newRarity;
+		return instance.getValue(rarity);
 	}
 
 	public static String checkForTranslatedSetNumber(String setNumber) {
 		KeyUpdateMap instance = getSetNumberMapInstance();
 
-		String newSetNumber = instance.getValue(setNumber);
+		return instance.getValue(setNumber);
+	}
 
-		if (newSetNumber == null) {
-			return setNumber;
+	public static String checkForTranslatedEdition(String setNumber, String editionPrinting) {
+		KeyUpdateMap instance = getEditionMapInstance();
+
+		String newEdition = instance.getRawValue(setNumber);
+
+		if (newEdition == null) {
+			return editionPrinting;
 		}
 
-		return newSetNumber;
+		return newEdition;
 	}
 
 	public static String checkForTranslatedCardName(String cardName) {
@@ -491,25 +508,13 @@ public class Util {
 
 		KeyUpdateMap instance = getCardNameMapInstance();
 
-		String lowerCaseName = cardName.toLowerCase(Locale.ROOT);
-
-		String newName = instance.getValue(lowerCaseName);
-
-		if (newName == null || newName.equals(lowerCaseName)) {
-			return cardName;
-		}
-
-		return newName;
+		return instance.getValue(cardName);
 	}
 
 	public static int checkForTranslatedPasscode(int passcode) {
 		KeyUpdateMap instance = getPasscodeMapInstance();
 
 		String newPasscode = instance.getValue(String.valueOf(passcode));
-
-		if (newPasscode == null) {
-			return passcode;
-		}
 
 		try {
 			return Integer.parseInt(newPasscode);
@@ -524,10 +529,6 @@ public class Util {
 		KeyUpdateMap instance = getYgoProImagePasscodeMapInstance();
 
 		String newPasscode = instance.getValue(String.valueOf(passcode));
-
-		if (newPasscode == null) {
-			return passcode;
-		}
 
 		try {
 			return Integer.parseInt(newPasscode);

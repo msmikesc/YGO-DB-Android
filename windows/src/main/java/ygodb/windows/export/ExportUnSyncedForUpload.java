@@ -27,7 +27,7 @@ public class ExportUnSyncedForUpload {
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
 		//String exportFolderName = Const.FOLDER_UNSYNCED;
-		String exportFolderName = "Export 2024-03-21";
+		String exportFolderName = "Export 2024-03-21 BLC1";
 
 		mainObj.run(db, exportFolderName);
 		db.closeInstance();
@@ -38,7 +38,7 @@ public class ExportUnSyncedForUpload {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 		Date readTime = new Date();
 
-		String filename = "all-upload" + dateFormat.format(readTime) + ".csv";
+		String filename = Const.FOLDER_EXPORT_PREFIX + dateFormat.format(readTime) + ".csv";
 		if(!exportFolderName.equals(Const.FOLDER_UNSYNCED)){
 			filename = exportFolderName + ".csv";
 		}

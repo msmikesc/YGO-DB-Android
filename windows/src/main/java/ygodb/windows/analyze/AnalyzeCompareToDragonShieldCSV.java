@@ -98,17 +98,28 @@ public class AnalyzeCompareToDragonShieldCSV {
 
 			String folder = csvConnection.getStringOrNull(current, Const.FOLDER_NAME_CSV);
 			String name = csvConnection.getStringOrNull(current, Const.CARD_NAME_CSV);
+			name = Util.checkForTranslatedCardName(name);
 			String quantity = csvConnection.getStringOrNull(current, Const.QUANTITY_CSV);
 			String setPrefix = csvConnection.getStringOrNull(current, Const.SET_CODE_CSV);
 			String setNumber = csvConnection.getStringOrNull(current, Const.CARD_NUMBER_CSV);
+			setNumber = Util.checkForTranslatedSetNumber(setNumber);
 			String condition = csvConnection.getStringOrNull(current, Const.CONDITION_CSV);
 			String printing = csvConnection.getStringOrNull(current, Const.PRINTING_CSV);
+			printing = Util.checkForTranslatedEdition(setNumber, printing);
 			String priceBought = Util.normalizePrice(csvConnection.getStringOrNull(current, Const.PRICE_BOUGHT_CSV));
 			String dateBought = csvConnection.getStringOrNull(current, Const.DATE_BOUGHT_CSV);
 			String setName = csvConnection.getStringOrNull(current, Const.SET_NAME_CSV);
+			setName = Util.checkForTranslatedSetName(setName);
 			String rarity = csvConnection.getStringOrNull(current, Const.RARITY_CSV);
 
 			rarity = convertRarityToLongForm(rarity, setPrefix);
+			rarity = Util.checkForTranslatedRarity(rarity);
+
+			List<String> updates = Util.checkForTranslatedQuadKey(name, setNumber, rarity, setName);
+			name = updates.get(0);
+			setNumber = updates.get(1);
+			rarity = updates.get(2);
+			setName = updates.get(3);
 
 			String colorCode = Const.DEFAULT_COLOR_VARIANT;
 
