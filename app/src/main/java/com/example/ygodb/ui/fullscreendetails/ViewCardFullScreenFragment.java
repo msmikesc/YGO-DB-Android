@@ -64,8 +64,8 @@ public class ViewCardFullScreenFragment extends Fragment {
 			}
 
 			String cardAttributeIcon = null;
-
-			switch (current.getCardType()) {
+			String cardType = (current.getCardType() != null) ? current.getCardType() : "";
+			switch (cardType) {
 				case "Spell Card" -> {
 					cardAttributeIcon = "images/SPELL.png";
 					renderCardSpellTrapSubtypeIcon(current);
@@ -104,7 +104,7 @@ public class ViewCardFullScreenFragment extends Fragment {
 
 			String textBox = current.getDesc();
 
-			if(!current.getCardType().contains("Normal")){
+			if(!cardType.contains("Normal")){
 				textBox = insertNewLineAfterPeriod(textBox);
 			}
 
@@ -121,7 +121,7 @@ public class ViewCardFullScreenFragment extends Fragment {
 			}
 			else if(level != null && !level.isEmpty()){
 				binding.cardLevelRankLinkRatingText.setText(level);
-				if(current.getCardType().contains("XYZ")){
+				if(cardType.contains("XYZ")){
 					levelIconResource = "images/Rank.png";
 				}
 				else{
