@@ -367,6 +367,10 @@ public class Util {
 					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fdark-legends-promo-card%2Fgorz-the-emissary-of-darkness");
 			setUrlsThatDoNotExist.add(
 					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fpremium-pack-2%2Fwar-lion-ritual-sr");
+			setUrlsThatDoNotExist.add(
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543919%2Fyugioh-speed-duel-gx-midterm-destruction-white-veil-secret-rare");
+			setUrlsThatDoNotExist.add(
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543835%2Fyugioh-speed-duel-gx-midterm-destruction-en-shuffle-secret-rare");
 			//setUrlsThatDoNotExist.add();
 		}
 

@@ -6,6 +6,15 @@ public class SetMetaData {
 	private int numOfCards;
 	private String tcgDate;
 
+	public SetMetaData() {}
+
+	public SetMetaData(String setName, String setPrefix, int numOfCards, String tcgDate) {
+		this.setName = setName;
+		this.setPrefix = setPrefix;
+		this.numOfCards = numOfCards;
+		this.tcgDate = tcgDate;
+	}
+
 	public String getSetName() {
 		return setName;
 	}

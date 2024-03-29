@@ -450,26 +450,13 @@ public class CsvConnection {
 	public void insertCardSetFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
 
 		String name = getStringOrNull(current, Const.CARD_NAME_CSV);
-		String cardNumber = getStringOrNull(current, Const.CARD_NUMBER_CSV);
+		String cardNumber = getCardNumberFromCSVRecord(current);
 		String rawRarityInput = getStringOrNull(current, Const.RARITY_CSV);
 		List<String> rarityInputList = List.of(rawRarityInput.split("\\r?\\n"));
 
-		String setName = null;
-
-		try {
-			setName = getStringOrNull(current, Const.SET_NAME_CSV);
-
-			if (setName == null) {
-				setName = defaultSetName;
-			}
-		} catch (Exception e) {
-			setName = defaultSetName;
-		}
+		String setName = getSetNameFromCSVRecord(current, defaultSetName);
 		name = Util.removeSurroundingQuotes(name);
-
 		name = Util.checkForTranslatedCardName(name);
-		setName = Util.checkForTranslatedSetName(setName);
-		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
 
 		ArrayList<String> confirmedRarites = new ArrayList<>();
 
@@ -506,6 +493,28 @@ public class CsvConnection {
 		for(String rarity: confirmedRarites) {
 			db.insertOrIgnoreIntoCardSet(cardNumber, rarity, setName, gamePlayCardUUID, name, null, null);
 		}
+	}
+
+	public String getCardNumberFromCSVRecord(CSVRecord current) {
+		String cardNumber = getStringOrNull(current, Const.CARD_NUMBER_CSV);
+		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
+		return cardNumber;
+	}
+
+	public String getSetNameFromCSVRecord(CSVRecord current, String defaultSetName) {
+		String setName = null;
+
+		try {
+			setName = getStringOrNull(current, Const.SET_NAME_CSV);
+
+			if (setName == null) {
+				setName = defaultSetName;
+			}
+		} catch (Exception e) {
+			setName = defaultSetName;
+		}
+		setName = Util.checkForTranslatedSetName(setName);
+		return setName;
 	}
 
 	public OwnedCard getStaticSetOwnedCardFromCSV(CSVRecord current, SQLiteConnection db, int quantityMultiplier) throws SQLException {
