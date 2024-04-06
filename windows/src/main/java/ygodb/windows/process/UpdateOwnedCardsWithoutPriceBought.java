@@ -30,8 +30,12 @@ public class UpdateOwnedCardsWithoutPriceBought {
 
 		for (OwnedCard card : cards) {
 
-			CardSet setIdentified = db.getRarityOfCardInSetByNumberAndRarity(
-					card.getGamePlayCardUUID(), card.getSetNumber(), card.getSetRarity(), card.getColorVariant());
+			CardSet setIdentified = db.getRarityOfExactCardInSet(
+					card.getGamePlayCardUUID(), card.getSetNumber(), card.getSetRarity(), card.getColorVariant(), card.getSetName());
+
+			if(setIdentified == null){
+				continue;
+			}
 
 			String priceBought;
 

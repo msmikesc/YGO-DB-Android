@@ -522,10 +522,15 @@ public class CsvConnection {
 		String cardNumber = getStringOrNull(current, Const.CARD_NUMBER_CSV);
 		String rarity = getStringOrNull(current, Const.RARITY_CSV);
 		int quantity = getIntOrNegativeOne(current, Const.QUANTITY_CSV);
+		String setName = getStringOrNull(current, Const.SET_NAME_CSV);
+		String rarityColorVariant = getStringOrNull(current, Const.RARITY_COLOR_VARIANT_CSV);
+		if(rarityColorVariant == null){
+			rarityColorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+		String printing = getStringOrNull(current, Const.PRINTING_CSV);
 
 		if (quantity < 1) {
-			YGOLogger.error("Quantity not found for:" + name);
-			return null;
+			quantity = 1;
 		}
 		quantity = quantity * quantityMultiplier;
 
@@ -534,6 +539,13 @@ public class CsvConnection {
 		name = Util.checkForTranslatedCardName(name);
 		rarity = Util.checkForTranslatedRarity(rarity);
 		cardNumber = Util.checkForTranslatedSetNumber(cardNumber);
+		setName = Util.checkForTranslatedSetName(setName);
+
+		List<String> translatedList = Util.checkForTranslatedQuadKey(name, cardNumber, rarity, setName);
+		name = translatedList.get(0);
+		cardNumber = translatedList.get(1);
+		rarity = translatedList.get(2);
+		setName = translatedList.get(3);
 
 		Pair<String, String> uuidAndName = Util.getGamePlayCardUUIDFromTitleOrNullWithSkillCheck(name, db);
 
@@ -544,20 +556,21 @@ public class CsvConnection {
 			return null;
 		}
 
-		CardSet cardSet = db.getRarityOfCardInSetByNumberAndRarity(gamePlayCardUUID, cardNumber, rarity, Const.DEFAULT_COLOR_VARIANT);
+		CardSet cardSet = db.getRarityOfExactCardInSet(
+				gamePlayCardUUID, cardNumber, rarity, rarityColorVariant, setName);
 
 		if (cardSet == null) {
 			YGOLogger.error("CardSet not found for:" + name);
 			return null;
 		}
+		name = cardSet.getCardName();
 
 		String dateBought = dateFormat.format(new Date());
-		int passcode = getPasscodeOrNegativeOne(db, cardSet.getCardName(), gamePlayCardUUID);
+		int passcode = getPasscodeOrNegativeOne(db, name, gamePlayCardUUID);
 
-		return new OwnedCard(Const.FOLDER_UNSYNCED, cardSet.getCardName(), String.valueOf(quantity), "NearMint",
-							 Const.CARD_PRINTING_FIRST_EDITION, cardSet.getBestExistingPrice(Const.CARD_PRINTING_FIRST_EDITION),
-							 dateBought,
-							 cardSet, passcode);
+		return new OwnedCard(Const.FOLDER_UNSYNCED, name, String.valueOf(quantity), "NearMint",
+							 printing, cardSet.getBestExistingPrice(printing),
+							 dateBought, cardSet, passcode);
 	}
 
 	public void writeOwnedCardToCSV(CSVPrinter p, OwnedCard current) throws IOException {

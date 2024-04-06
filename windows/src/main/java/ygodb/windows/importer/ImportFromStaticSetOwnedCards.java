@@ -23,6 +23,8 @@ import java.util.List;
 
 public class ImportFromStaticSetOwnedCards {
 
+	//TODO export from db sets to csv
+
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportFromStaticSetOwnedCards mainObj = new ImportFromStaticSetOwnedCards();
 
