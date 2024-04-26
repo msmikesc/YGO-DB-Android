@@ -24,6 +24,8 @@ import java.util.List;
 public class ImportFromStaticSetOwnedCards {
 
 	//TODO export from db sets to csv
+	//TODO add link from card details view to card name search details
+	//TODO add way to view all alt arts
 
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportFromStaticSetOwnedCards mainObj = new ImportFromStaticSetOwnedCards();

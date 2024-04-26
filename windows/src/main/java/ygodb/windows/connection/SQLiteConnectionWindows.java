@@ -33,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 public class SQLiteConnectionWindows implements SQLiteConnection {
-
-	//TODO add unique functionality for pure card name search between the two set screens
-
 	public static final int BATCH_SIZE = 1000;
 
 	private Connection connectionInstance = null;

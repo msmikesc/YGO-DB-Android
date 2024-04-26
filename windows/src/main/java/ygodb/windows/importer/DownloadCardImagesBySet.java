@@ -11,7 +11,7 @@ import java.util.List;
 public class DownloadCardImagesBySet {
 
 	public static void main(String[] args) throws SQLException, InterruptedException {
-		String setName = "Battles of Legend: Chapter 1";
+		String setName = "Legacy of Destruction";
 
 		DownloadCardImagesBySet mainObj = new DownloadCardImagesBySet();
 

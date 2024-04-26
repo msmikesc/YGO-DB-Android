@@ -124,6 +124,10 @@ public abstract class ViewCardsLoadCompleteDataViewModel extends ViewCardsBaseVi
 		this.setNameSearch = setNameSearch;
 	}
 
+	public boolean hasCurrentSetNameSearch(){
+		return setNameSearch != null && !setNameSearch.isBlank() && setNameSearch.trim().length() >= 3;
+	}
+
 	public List<String> getSetNamesDropdownList() {
 		return setNamesDropdownList;
 	}

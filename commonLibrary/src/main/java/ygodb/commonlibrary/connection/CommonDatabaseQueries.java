@@ -13,6 +13,7 @@ import ygodb.commonlibrary.utility.YGOLogger;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class CommonDatabaseQueries {
 
@@ -166,7 +167,7 @@ public class CommonDatabaseQueries {
 			SelectQueryResultMapper<GamePlayCard, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME);
 
-		query.bindString(1, setName);
+		query.bindString(1, setName.toUpperCase(Locale.ROOT));
 
 		return query.executeQuery(mapper);
 	}

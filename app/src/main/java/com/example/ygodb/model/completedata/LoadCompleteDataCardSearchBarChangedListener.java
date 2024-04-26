@@ -43,7 +43,7 @@ public class LoadCompleteDataCardSearchBarChangedListener extends TextChangedLis
 				List<OwnedCard> results = null;
 				List<OwnedCard> filteredResults = null;
 
-				if (viewCardsViewModel.isCardNameMode()) {
+				if (!viewCardsViewModel.hasCurrentSetNameSearch()) {
 					results = viewCardsViewModel.getInitialCardNameData(cardNameSearch);
 					filteredResults = new ArrayList<>(results);
 				} else {

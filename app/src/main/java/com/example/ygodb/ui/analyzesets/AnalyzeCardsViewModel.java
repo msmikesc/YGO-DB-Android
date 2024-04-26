@@ -18,8 +18,10 @@ import ygodb.commonlibrary.bean.OwnedCard;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AnalyzeCardsViewModel extends ViewCardsLoadCompleteDataViewModel {
 
@@ -73,7 +75,12 @@ public class AnalyzeCardsViewModel extends ViewCardsLoadCompleteDataViewModel {
 
 		if (setName == null || setName.isBlank() || setName.trim().length() < 3) {
 			isCardNameMode = true;
-			return getInitialCardNameData(cardNameSearch);
+
+			if (cardNameSearch == null || cardNameSearch.isBlank() || cardNameSearch.trim().length() < 3) {
+				return new ArrayList<>();
+			}
+
+			setName = cardNameSearch;
 		}
 
 		try {
@@ -105,6 +112,11 @@ public class AnalyzeCardsViewModel extends ViewCardsLoadCompleteDataViewModel {
 		}
 
 		return newList;
+	}
+
+	@Override
+	public List<OwnedCard> getInitialCardNameData(String cardName) {
+		return getInitialData("");
 	}
 
 }

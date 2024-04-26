@@ -48,8 +48,8 @@ public class SQLConst {
 	public static final String GET_DISTINCT_GAME_PLAY_CARD_UUIDS_IN_SET_BY_NAME =
 			"select distinct gamePlayCardUUID from cardSets where setName = ?";
 	public static final String GET_DISTINCT_GAMEPLAYCARDS_IN_SET_BY_NAME =
-			"select distinct a.* from gamePlayCard a left join cardSets b on a.gamePlayCardUUID = b.gamePlayCardUUID where b" +
-					".setName = ?";
+			"select distinct a.* from gamePlayCard a left join cardSets b on a.gamePlayCardUUID = b.gamePlayCardUUID where " +
+					"UPPER(b.setName) = ?";
 	public static final String GET_DISTINCT_GAMEPLAYCARDS_BY_ARCHETYPE =
 			"select distinct * from gamePlayCard where UPPER(archetype) = UPPER(?) OR title like ?";
 	public static final String GET_SORTED_SET_NUMBERS_IN_SET_BY_NAME = "select setNumber from cardSets where setName = ?";
