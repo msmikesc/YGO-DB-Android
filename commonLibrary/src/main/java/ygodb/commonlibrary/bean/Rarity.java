@@ -33,7 +33,7 @@ public enum Rarity {
 	ULTIMATE_RARE("Ultimate Rare"),
 	PRISMATIC_ULTIMATE_RARE("Prismatic Ultimate Rare"),
 	COLLECTORS_RARE("Collector's Rare"),
-	PRISMATIC_COLLECTORS_RARE("Prismatic Collector’s Rare"),
+	PRISMATIC_COLLECTORS_RARE("Prismatic Collector's Rare"),
 	PLATINUM_SECRET_RARE("Platinum Secret Rare"),
 	QUARTER_CENTURY_SECRET_RARE("Quarter Century Secret Rare"),
 	STARLIGHT_RARE("Starlight Rare"),

@@ -26,6 +26,7 @@ public class ImportFromStaticSetOwnedCards {
 	//TODO export from db sets to csv
 	//TODO add link from card details view to card name search details
 	//TODO add way to view all alt arts
+	//select distinct altArtPasscode from cardSets where gamePlayCardUUID = "edb75569-b1ac-47a1-9e5b-359a7f7c9cc7" and altArtPasscode is not null
 
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportFromStaticSetOwnedCards mainObj = new ImportFromStaticSetOwnedCards();

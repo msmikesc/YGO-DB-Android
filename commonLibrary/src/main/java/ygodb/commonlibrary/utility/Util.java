@@ -483,7 +483,7 @@ public class Util {
 	public static String checkForTranslatedRarity(String rarity) {
 		KeyUpdateMap instance = getRarityMapInstance();
 
-		return instance.getValue(rarity);
+		return Util.standardizeSingleQuotes(instance.getValue(rarity));
 	}
 
 	public static String checkForTranslatedSetNumber(String setNumber) {
@@ -797,5 +797,13 @@ public class Util {
 		}
 
 		return input;
+	}
+
+	public static String standardizeSingleQuotes(String input){
+		// Define a regex pattern for different single quote characters
+		String singleQuotePattern = "[‘’'`]";
+
+		// Replace all variants of single quote characters with the standard single quote
+		return input.replaceAll(singleQuotePattern, "'");
 	}
 }
