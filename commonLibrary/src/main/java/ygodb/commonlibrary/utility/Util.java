@@ -821,6 +821,10 @@ public class Util {
 	}
 
 	public static String removeSurroundingQuotes(String input) {
+		if(input.contains("(alternate art)")){
+			input = input.replace("(alternate art)","").trim();
+		}
+
 		if (input.length() >= 2) {
 			char startChar = input.charAt(0);
 			char endChar = input.charAt(input.length() - 1);
