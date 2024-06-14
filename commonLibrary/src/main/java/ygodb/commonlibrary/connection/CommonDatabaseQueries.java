@@ -330,6 +330,13 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
+	public static <R> List<Integer> getAllArtPasscodes(DatabaseSelectQuery<Integer, R> query,
+			SelectQueryResultMapper<Integer, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_ALL_PASSCODES);
+
+		return query.executeQuery(mapper);
+	}
+
 	public static <R> List<SetBox> getAllSetBoxes(DatabaseSelectQuery<SetBox, R> query, SelectQueryResultMapper<SetBox, R> mapper)
 			throws SQLException {
 		query.prepareStatement(SQLConst.GET_ALL_SET_BOXES);

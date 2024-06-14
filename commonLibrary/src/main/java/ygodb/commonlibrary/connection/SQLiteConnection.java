@@ -146,6 +146,8 @@ public interface SQLiteConnection {
 
 	List<Integer> getAllArtPasscodesByName(String cardName) throws SQLException;
 
+	List<Integer> getAllArtPasscodes() throws SQLException;
+
 	List<SetBox> getAllSetBoxes() throws SQLException;
 
 	List<SetBox> getSetBoxesByNameOrCodeOrLabel(String searchText) throws SQLException;

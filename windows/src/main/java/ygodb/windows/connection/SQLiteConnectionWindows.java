@@ -552,6 +552,12 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public List<Integer> getAllArtPasscodes() throws SQLException {
+		DatabaseSelectQuery<Integer, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
+		return CommonDatabaseQueries.getAllArtPasscodes(query, new FirstIntMapperSelectQuery());
+	}
+
+	@Override
 	public List<SetBox> getAllSetBoxes() throws SQLException {
 		DatabaseSelectQuery<SetBox, ResultSet> query = new DatabaseSelectQueryWindows<>(getInstance());
 		return CommonDatabaseQueries.getAllSetBoxes(query, new SetBoxMapperSelectQuery());

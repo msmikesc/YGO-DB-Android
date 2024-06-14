@@ -29,6 +29,7 @@ public class WindowsUtil {
 
 	public static boolean downloadAllCardImagesForList(List<GamePlayCard> cardsList) throws InterruptedException {
 		boolean anyFailed = false;
+		int downloadCount = 0;
 
 		for (GamePlayCard card : cardsList) {
 
@@ -45,10 +46,14 @@ public class WindowsUtil {
 			if (!successful) {
 				anyFailed = true;
 			}
+			else{
+				downloadCount++;
+			}
 
 			//Don't flood the api
 			Thread.sleep(500);
 		}
+		YGOLogger.info("Downloaded this many images:" + downloadCount);
 
 		return !anyFailed;
 	}

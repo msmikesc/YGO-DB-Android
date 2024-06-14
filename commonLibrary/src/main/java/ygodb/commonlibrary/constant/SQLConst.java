@@ -219,4 +219,8 @@ public class SQLConst {
 	public static final String GET_ALL_ART_PASSCODES_BY_NAME =
 			"SELECT DISTINCT altArtPasscode from cardSets where upper(cardName) = upper(?) and altArtPasscode is not null union all " +
 					"select passcode from gamePlayCard where  upper(title) = upper(?)";
+
+	public static final String GET_ALL_PASSCODES =
+			"SELECT DISTINCT altArtPasscode from cardSets where altArtPasscode is not null union all " +
+					"select DISTINCT passcode from gamePlayCard where passcode > 0";
 }
