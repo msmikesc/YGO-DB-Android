@@ -371,6 +371,16 @@ public class Util {
 					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543919%2Fyugioh-speed-duel-gx-midterm-destruction-white-veil-secret-rare");
 			setUrlsThatDoNotExist.add(
 					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543835%2Fyugioh-speed-duel-gx-midterm-destruction-en-shuffle-secret-rare");
+			setUrlsThatDoNotExist.add(
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F91461%2Fyugioh-duelist-league-promo-enemy-controller");
+			setUrlsThatDoNotExist.add(
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183032%2Fyugioh-5ds-2008-starter-deck-colossal-fighter");
+			setUrlsThatDoNotExist.add(
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183031%2Fyugioh-5ds-2008-starter-deck-gaia-knight-the-force-of-earth-common");
+			setUrlsThatDoNotExist.add(
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183029%2Fyugioh-5ds-2008-starter-deck-junk-warrior");
+			setUrlsThatDoNotExist.add(
+					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaximum-gold%2Fharpies-feather-duster");
 			//setUrlsThatDoNotExist.add();
 		}
 
@@ -670,6 +680,15 @@ public class Util {
 	public static String extractColorFromUrl(String url) {
 		String tester = url.replace("blue-eyes", "").replace("red-eyes", "").replace("eyes-of-blue", "");
 
+		if(tester.endsWith("-version-4")){
+			return "v4";
+		}
+		if(tester.endsWith("-version-3")){
+			return "v3";
+		}
+		if(tester.endsWith("-version-2")){
+			return "v2";
+		}
 		if (tester.endsWith("-red")) {
 			return "r";
 		}
@@ -688,7 +707,22 @@ public class Util {
 		if (tester.endsWith("-silver")) {
 			return "s";
 		}
-		if (tester.endsWith("-alternate-art")) {
+		if (tester.endsWith("-chaos-neos-misprint")) {
+			return "original";
+		}
+		if (tester.endsWith("-trial-of-hell")) {
+			return "original";
+		}
+		if (tester.endsWith("-harpie-lady-original-artwork")) {
+			return "original";
+		}
+		if (tester.endsWith("-dark-paladin-1st-edition-artwork")) {
+			return "original";
+		}
+		if (tester.endsWith("-chaos-neos-ghost-rare-misprint")) {
+			return "original";
+		}
+		if (tester.contains("-alternate-art")) {
 			return "a";
 		}
 		return Const.DEFAULT_COLOR_VARIANT;

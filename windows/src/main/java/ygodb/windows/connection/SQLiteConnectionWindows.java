@@ -690,10 +690,24 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public int updateCardSetPriceWithCardAndSetNameAndColor(String setNumber, String rarity, String price, String setName, String cardName,
+			String edition, String colorVariant) throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
+		return CommonDatabaseQueries.updateCardSetPriceWithCardAndSetNameAndColor(query, setNumber, rarity, price, setName, cardName, edition, colorVariant);
+	}
+
+	@Override
 	public int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, String edition)
 			throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
 		return CommonDatabaseQueries.updateCardSetPriceWithCardName(query, setNumber, rarity, price, cardName, edition);
+	}
+
+	@Override
+	public int updateCardSetPriceWithCardNameAndColor(String setNumber, String rarity, String price, String cardName, String edition, String colorVariant)
+			throws SQLException {
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
+		return CommonDatabaseQueries.updateCardSetPriceWithCardNameAndColor(query, setNumber, rarity, price, cardName, edition, colorVariant);
 	}
 
 	@Override
@@ -708,6 +722,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
 		return CommonDatabaseQueries.updateCardSetUrl(query, setNumber, rarity, setName, cardName, setURL, colorVariant);
+	}
+
+	@Override
+	public int updateCardSetUrlWithoutSetName(String setNumber, String rarity, String cardName, String setURL, String colorVariant)
+			throws SQLException {
+
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
+		return CommonDatabaseQueries.updateCardSetUrlWithoutSetName(query, setNumber, rarity, cardName, setURL, colorVariant);
 	}
 
 	@Override

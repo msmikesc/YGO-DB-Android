@@ -690,6 +690,31 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
+	public static int updateCardSetPriceWithCardAndSetNameAndColor(DatabaseUpdateQuery query, String setNumber, String rarity, String price,
+			String setName, String cardName, String edition, String colorVariant) throws SQLException {
+
+		String editionTarget = Util.identifyEditionPrinting(edition);
+
+		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_COLOR;
+
+		if (editionTarget.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST_COLOR;
+		} else if (editionTarget.equals(Const.CARD_PRINTING_LIMITED)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_LIMITED_COLOR;
+		}
+
+		query.prepareStatement(update);
+
+		query.bindString(1, price);
+		query.bindString(2, setNumber);
+		query.bindString(3, rarity);
+		query.bindString(4, setName);
+		query.bindString(5, cardName);
+		query.bindString(6, colorVariant);
+
+		return query.executeUpdate();
+	}
+
 	public static int updateCardSetPriceWithCardName(DatabaseUpdateQuery query, String setNumber, String rarity, String price,
 			String cardName, String edition) throws SQLException {
 
@@ -709,6 +734,30 @@ public class CommonDatabaseQueries {
 		query.bindString(2, setNumber);
 		query.bindString(3, rarity);
 		query.bindString(4, cardName);
+
+		return query.executeUpdate();
+	}
+
+	public static int updateCardSetPriceWithCardNameAndColor(DatabaseUpdateQuery query, String setNumber, String rarity, String price,
+			String cardName, String edition, String colorVariant) throws SQLException {
+
+		String editionTarget = Util.identifyEditionPrinting(edition);
+
+		String update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_COLOR;
+
+		if (editionTarget.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST_COLOR;
+		} else if (editionTarget.equals(Const.CARD_PRINTING_LIMITED)) {
+			update = SQLConst.UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_LIMITED_COLOR;
+		}
+
+		query.prepareStatement(update);
+
+		query.bindString(1, price);
+		query.bindString(2, setNumber);
+		query.bindString(3, rarity);
+		query.bindString(4, cardName);
+		query.bindString(5, colorVariant);
 
 		return query.executeUpdate();
 	}
@@ -748,6 +797,24 @@ public class CommonDatabaseQueries {
 		query.bindString(4, setName);
 		query.bindString(5, cardName);
 		query.bindString(6, colorVariant);
+
+		return query.executeUpdate();
+	}
+
+	public static int updateCardSetUrlWithoutSetName(DatabaseUpdateQuery query, String setNumber, String rarity, String cardName,
+			String setURL, String colorVariant) throws SQLException {
+
+		if (colorVariant == null || colorVariant.isBlank()) {
+			colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		query.prepareStatement(SQLConst.UPDATE_CARD_SET_URL_WITHOUT_SET_NAME);
+
+		query.bindString(1, setURL);
+		query.bindString(2, setNumber);
+		query.bindString(3, rarity);
+		query.bindString(4, cardName);
+		query.bindString(5, colorVariant);
 
 		return query.executeUpdate();
 	}

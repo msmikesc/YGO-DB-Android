@@ -142,6 +142,18 @@ public class SQLConst {
 			"setPriceLimitedUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ? and UPPER" +
 			"(cardName) = UPPER(?)";
 
+	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_COLOR =
+			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? " +
+					"and setName = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST_COLOR = "update cardSets set setPriceFirst = ?, " +
+			"setPriceFirstUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ? and UPPER" +
+			"(cardName) = UPPER(?) and colorVariant = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_LIMITED_COLOR = "update cardSets set setPriceLimited = ?, " +
+			"setPriceLimitedUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and setName = ? and UPPER" +
+			"(cardName) = UPPER(?) and colorVariant = ?";
+
 	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME = "update cardSets set setPrice = ?, setPriceUpdateTime = datetime" +
 			"('now','localtime') where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?)";
 
@@ -150,6 +162,15 @@ public class SQLConst {
 
 	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_LIMITED = "update cardSets set setPriceLimited = ?, " +
 			"setPriceLimitedUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?)";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_COLOR = "update cardSets set setPrice = ?, setPriceUpdateTime = datetime" +
+			"('now','localtime') where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_FIRST_COLOR = "update cardSets set setPriceFirst = ?, " +
+			"setPriceFirstUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
+
+	public static final String UPDATE_CARD_SET_PRICE_WITH_CARD_NAME_LIMITED_COLOR = "update cardSets set setPriceLimited = ?, " +
+			"setPriceLimitedUpdateTime = datetime('now','localtime') where setNumber = ? and setRarity = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
 
 	public static final String UPDATE_CARD_SET_PRICE =
 			"update cardSets set setPrice = ?, setPriceUpdateTime = datetime('now','localtime') where setNumber = ?";
@@ -169,6 +190,9 @@ public class SQLConst {
 
 	public static final String UPDATE_CARD_SET_URL = "update cardSets set setURL = ? where setNumber = ? and setRarity = ? and " +
 			"setName = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
+
+	public static final String UPDATE_CARD_SET_URL_WITHOUT_SET_NAME = "update cardSets set setURL = ? where setNumber = ? and setRarity = ? and " +
+			"UPPER(cardName) = UPPER(?) and colorVariant = ?";
 
 	public static final String UPDATE_CARD_SET_URL_AND_COLOR = "update cardSets set setURL = ?, colorVariant = ? where setNumber = ? " +
 			"and setRarity = ? and setName = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";

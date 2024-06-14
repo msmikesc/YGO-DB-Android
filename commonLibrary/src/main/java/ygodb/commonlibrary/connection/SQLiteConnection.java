@@ -132,7 +132,13 @@ public interface SQLiteConnection {
 			String edition)
 			throws SQLException;
 
+	int updateCardSetPriceWithCardAndSetNameAndColor(String setNumber, String rarity, String price, String setName, String cardName,
+			String edition, String colorVariant)
+			throws SQLException;
+
 	int updateCardSetPriceWithCardName(String setNumber, String rarity, String price, String cardName, String edition) throws SQLException;
+
+	int updateCardSetPriceWithCardNameAndColor(String setNumber, String rarity, String price, String cardName, String edition, String colorVariant) throws SQLException;
 
 	int updateCardSetPrice(String setNumber, String price, String edition) throws SQLException;
 
@@ -145,6 +151,9 @@ public interface SQLiteConnection {
 	List<SetBox> getSetBoxesByNameOrCodeOrLabel(String searchText) throws SQLException;
 
 	int updateCardSetUrl(String setNumber, String rarity, String setName, String cardName, String setURL, String colorVariant)
+			throws SQLException;
+
+	int updateCardSetUrlWithoutSetName(String setNumber, String rarity, String cardName, String setURL, String colorVariant)
 			throws SQLException;
 
 	int updateCardSetUrlAndColor(String setNumber, String rarity, String setName, String cardName, String setURL,

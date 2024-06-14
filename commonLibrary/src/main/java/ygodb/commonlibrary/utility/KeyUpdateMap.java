@@ -43,7 +43,7 @@ public class KeyUpdateMap {
 
 		for (CSVRecord current : parser) {
 
-			String key = csvConnection.getStringOrNull(current, "Key");
+			String key = csvConnection.getStringOrNull(current, "Key").toLowerCase();
 
 			String value = csvConnection.getStringOrNull(current, "Value");
 
