@@ -13,7 +13,10 @@ import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -22,6 +25,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -88,12 +93,72 @@ public class ImportPricesFromYGOPROAPI {
 		return value;
 	}
 
+	private final Map<String, PreparedStatementBatchWrapper> editionToPreparedStatementMapAllProperties = new HashMap<>();
+
+	private PreparedStatementBatchWrapper getStatementForEditionAllProperties(String edition, SQLiteConnection db) throws SQLException {
+		PreparedStatementBatchWrapper value = editionToPreparedStatementMapAllProperties.get(edition);
+
+		if (value == null) {
+			if (edition.equals(Const.CARD_PRINTING_FIRST_EDITION)) {
+				value = db.getBatchedPreparedStatementAllPropertiesFirst();
+
+				editionToPreparedStatementMapAllProperties.put(edition, value);
+			} else if (edition.equals(Const.CARD_PRINTING_UNLIMITED)) {
+				value = db.getBatchedPreparedStatementAllPropertiesUnlimited();
+
+				editionToPreparedStatementMapAllProperties.put(edition, value);
+			} else {
+				value = db.getBatchedPreparedStatementAllPropertiesLimited();
+
+				editionToPreparedStatementMapAllProperties.put(edition, value);
+			}
+		}
+		return value;
+	}
+
+	private boolean wasModifiedToday(File file) {
+		long lastModified = file.lastModified();
+		Calendar fileCal = Calendar.getInstance();
+		fileCal.setTime(new Date(lastModified));
+
+		Calendar todayCal = Calendar.getInstance();
+		return fileCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
+				fileCal.get(Calendar.DAY_OF_YEAR) == todayCal.get(Calendar.DAY_OF_YEAR);
+	}
 	public boolean run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports, String cardSetImportFilename)
 			throws SQLException, IOException {
 
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardinfo.php?tcgplayer_data=true";
 
-		try {
+		try{
+			if(lastPriceLoadFilename != null) {
+				File existingFile = new File(lastPriceLoadFilename + "_RAW.txt");
+
+				if (existingFile.exists() && wasModifiedToday(existingFile)) {
+					try (BufferedReader reader = new BufferedReader(new FileReader(existingFile))) {
+						String line;
+						String inline = "";
+						while ((line = reader.readLine()) != null) {
+							inline += line;
+						}
+
+						ObjectMapper objectMapper = new ObjectMapper();
+						JsonNode jsonNode = objectMapper.readTree(inline);
+
+						if (shouldAddToUpdatedKeySetAndMap && cardSetImportFilename != null) {
+							cardSetImportFileWriter = new OutputStreamWriter(new FileOutputStream(cardSetImportFilename), StandardCharsets.UTF_16);
+						}
+
+						inline = null;
+
+						YGOLogger.info("Finished reading from Saved File");
+
+						runWithNode(db, jsonNode);
+						return true;
+					}
+				}
+			}
+
 			URL url = new URL(setAPI);
 
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -116,7 +181,11 @@ public class ImportPricesFromYGOPROAPI {
 				JsonNode jsonNode = objectMapper.readTree(inline);
 
 				if (lastPriceLoadFilename != null) {
-					try (FileWriter writer = new FileWriter(lastPriceLoadFilename, false)) {
+					try (FileWriter writer = new FileWriter(lastPriceLoadFilename+".txt", false)) {
+						writer.write(jsonNode.toPrettyString());
+					}
+					String rawInput = lastPriceLoadFilename + "_RAW.txt";
+					try (FileWriter writer = new FileWriter(rawInput, false)) {
 						writer.write(inline);
 					}
 				}
@@ -129,41 +198,45 @@ public class ImportPricesFromYGOPROAPI {
 
 				YGOLogger.info("Finished reading from API");
 
-				//start timer
-				long startTime = System.currentTimeMillis();
-
-				JsonNode gamePlayCardsNode = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
-
-				if (shouldAddToUpdatedKeySetAndMap) {
-					addAllMissingGamePlayCards(db, gamePlayCardsNode);
-					addAllMissingSetUrls(db, gamePlayCardsNode);
-				}
-
-				updateAllPricesForAllCards(db, gamePlayCardsNode);
-
-				//log details recorded for future fixes
-				List<String> namesList = new ArrayList<>(setNameUpdateMap.keySet());
-				for (String setName : namesList) {
-					YGOLogger.debug(
-							"Possibly need to handle set name issue count: " + setNameUpdateMap.get(setName).size() + " " + setName);
-					for (int j = 0; j < setNameUpdateMap.get(setName).size(); j++) {
-						YGOLogger.debug(setNameUpdateMap.get(setName).get(j));
-					}
-				}
-
-				for (String key : updatedMoreThanOnceKeysMap.keySet()) {
-					YGOLogger.info("Key updated more than once:" + key);
-				}
-
-				long endTime = System.currentTimeMillis();
-				YGOLogger.info("Time to load data to DB:" + Util.millisToShortDHMS(endTime - startTime));
-
-				emptyMaps();
+				runWithNode(db, jsonNode);
 			}
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 		}
 		return true;
+	}
+
+	private void runWithNode(SQLiteConnection db, JsonNode jsonNode) throws SQLException {
+		//start timer
+		long startTime = System.currentTimeMillis();
+
+		JsonNode gamePlayCardsNode = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
+
+		if (shouldAddToUpdatedKeySetAndMap) {
+			addAllMissingGamePlayCards(db, gamePlayCardsNode);
+			addAllMissingSetUrls(db, gamePlayCardsNode);
+		}
+
+		updateAllPricesForAllCards(db, gamePlayCardsNode);
+
+		//log details recorded for future fixes
+		List<String> namesList = new ArrayList<>(setNameUpdateMap.keySet());
+		for (String setName : namesList) {
+			YGOLogger.debug(
+					"Possibly need to handle set name issue count: " + setNameUpdateMap.get(setName).size() + " " + setName);
+			for (int j = 0; j < setNameUpdateMap.get(setName).size(); j++) {
+				YGOLogger.debug(setNameUpdateMap.get(setName).get(j));
+			}
+		}
+
+		for (String key : updatedMoreThanOnceKeysMap.keySet()) {
+			YGOLogger.info("Key updated more than once:" + key);
+		}
+
+		long endTime = System.currentTimeMillis();
+		YGOLogger.info("Time to load data to DB:" + Util.millisToShortDHMS(endTime - startTime));
+
+		emptyMaps();
 	}
 
 	private void emptyMaps() {
@@ -172,6 +245,7 @@ public class ImportPricesFromYGOPROAPI {
 		updatedMoreThanOnceKeysMap.clear();
 		updatedURLsMap.clear();
 		editionToPreparedStatementMap.clear();
+		editionToPreparedStatementMapAllProperties.clear();
 		DatabaseHashMap.closeRaritiesInstance();
 
 		if(cardSetImportFileWriter != null){
@@ -198,6 +272,9 @@ public class ImportPricesFromYGOPROAPI {
 			}
 		}
 		for (PreparedStatementBatchWrapper statement : editionToPreparedStatementMap.values()) {
+			statement.finalizeBatches();
+		}
+		for (PreparedStatementBatchWrapper statement : editionToPreparedStatementMapAllProperties.values()) {
 			statement.finalizeBatches();
 		}
 	}
@@ -259,6 +336,16 @@ public class ImportPricesFromYGOPROAPI {
 		YGOLogger.info("Overriding set url to new value for:" + DatabaseHashMap.getAllMatchingKeyWithUrl(updateTarget));
 		int urlsUpdated = db.updateCardSetUrlWithoutSetName(updateTarget.getSetNumber(), updateTarget.getSetRarity(),
 											  updateTarget.getCardName(), newUrl, updateTarget.getColorVariant());
+		if(urlsUpdated != 1){
+			YGOLogger.error("Set Urls updated is "+urlsUpdated+" for:"+DatabaseHashMap.getAllMatchingKeyWithUrl(updateTarget));
+		}
+		return urlsUpdated;
+	}
+
+	private int updateNewSetUrlForSingleRowSetNameAndColorMismatch(SQLiteConnection db, CardSet updateTarget, String newUrl) throws SQLException {
+		YGOLogger.info("Overriding set url to new value for:" + DatabaseHashMap.getAllMatchingKeyWithUrl(updateTarget));
+		int urlsUpdated = db.updateCardSetUrlWithoutSetNameOrColor(updateTarget.getSetNumber(), updateTarget.getSetRarity(),
+															updateTarget.getCardName(), newUrl);
 		if(urlsUpdated != 1){
 			YGOLogger.error("Set Urls updated is "+urlsUpdated+" for:"+DatabaseHashMap.getAllMatchingKeyWithUrl(updateTarget));
 		}
@@ -447,7 +534,8 @@ public class ImportPricesFromYGOPROAPI {
 		//update urls for zero price entries
 		List<CardSet> existingRows = rarityHashMap.get(DatabaseHashMap.getAllMatchingKeyWithColor(currentSetFromAPI));
 		if (existingRows != null && !existingRows.isEmpty()) {
-			if (existingRows.size() == 1 && !existingRows.get(0).getSetUrl().equals(currentSetFromAPI.getSetUrl())) {
+			if (existingRows.size() == 1 &&
+					(existingRows.get(0).getSetUrl() == null || !existingRows.get(0).getSetUrl().equals(currentSetFromAPI.getSetUrl()))) {
 				updateNewSetUrlForSingleRow(db, currentSetFromAPI, currentSetFromAPI.getSetUrl());
 			}
 			return;
@@ -568,26 +656,22 @@ public class ImportPricesFromYGOPROAPI {
 
 	private int updatePriceUsingMultipleStrategiesWithHashmap(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 
-		Integer rowsUpdated1 = attemptPriceUpdateUsingURLBatched(currentSetFromAPI, db);
-		if (rowsUpdated1 != null) {
-			return rowsUpdated1;
-		}
-
 		// try to assign color to api entry
 		String color = Util.extractColorFromUrl(currentSetFromAPI.getSetUrl());
 		currentSetFromAPI.setColorVariant(color);
 
-		Integer rowsUpdated2 = attemptPriceUpdateUsingAllProperties(currentSetFromAPI, db);
-		if (rowsUpdated2 != null) {
-			//if only one row updated, update url
-			if(rowsUpdated2 == 1){
-				updateNewSetUrlForSingleRow(db, currentSetFromAPI, currentSetFromAPI.getSetUrl());
-			}
-			return rowsUpdated2;
+		Integer rowsUpdated = attemptPriceUpdateUsingAllPropertiesBatched(currentSetFromAPI, db);
+		if (rowsUpdated != null && rowsUpdated != 0) {
+			return rowsUpdated;
+		}
+
+		Integer rowsUpdated1 = attemptPriceUpdateUsingURLBatched(currentSetFromAPI, db);
+		if (rowsUpdated1 != null && rowsUpdated1 != 0) {
+			return rowsUpdated1;
 		}
 
 		Integer rowsUpdated3 = attemptPriceUpdateSetNameMismatch(currentSetFromAPI, db);
-		if (rowsUpdated3 != null) {
+		if (rowsUpdated3 != null && rowsUpdated3 != 0) {
 			//if only one row updated, update url
 			if(rowsUpdated3 == 1){
 				updateNewSetUrlForSingleRowSetNameMismatch(db, currentSetFromAPI, currentSetFromAPI.getSetUrl());
@@ -596,22 +680,26 @@ public class ImportPricesFromYGOPROAPI {
 		}
 
 		Integer rowsUpdated3a = attemptPriceUpdateSetNameAndColorMismatch(currentSetFromAPI, db);
-		if (rowsUpdated3a != null) {
+		if (rowsUpdated3a != null && rowsUpdated3a != 0) {
+			//if only one row updated, update url
+			if(rowsUpdated3a == 1){
+				updateNewSetUrlForSingleRowSetNameAndColorMismatch(db, currentSetFromAPI, currentSetFromAPI.getSetUrl());
+			}
 			return rowsUpdated3a;
 		}
 
 		Integer rowsUpdated4 = attemptPriceUpdateCardNameMismatch(currentSetFromAPI, db);
-		if (rowsUpdated4 != null) {
+		if (rowsUpdated4 != null && rowsUpdated4 != 0) {
 			return rowsUpdated4;
 		}
 
 		Integer rowsUpdated5 = attemptPriceUpdateCardAndSetNameMismatch(currentSetFromAPI, db);
-		if (rowsUpdated5 != null) {
+		if (rowsUpdated5 != null && rowsUpdated5 != 0) {
 			return rowsUpdated5;
 		}
 
 		Integer rowsUpdated6 = attemptPriceUpdateSetNumberOnly(currentSetFromAPI, db);
-		if (rowsUpdated6 != null) {
+		if (rowsUpdated6 != null && rowsUpdated6 != 0) {
 			return rowsUpdated6;
 		}
 
@@ -775,6 +863,35 @@ public class ImportPricesFromYGOPROAPI {
 				addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + edition);
 			}
 			return rowsUpdated;
+		}
+		return null;
+	}
+
+	private Integer attemptPriceUpdateUsingAllPropertiesBatched(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
+		Map<String, List<CardSet>> rarityHashMap = DatabaseHashMap.getRaritiesInstance(db);
+		String edition = Util.identifyEditionPrinting(currentSetFromAPI.getEditionPrinting());
+		CardSet matcherInput = DatabaseHashMap.getRarityHashMapMatcherInputNoURL(currentSetFromAPI);
+
+		String key = DatabaseHashMap.getAllMatchingKeyWithColor(matcherInput);
+
+		List<CardSet> existingRows = rarityHashMap.get(key);
+		if (existingRows != null && !existingRows.isEmpty()) {
+			if (existingRows.size() > 1) {
+				// more than 1 exact match, color or art variant
+				YGOLogger.error("more than 1 exact match, color or art variant:" + currentSetFromAPI.getCardLogIdentifier());
+			}
+
+			PreparedStatementBatchWrapper statement = getStatementForEditionAllProperties(currentSetFromAPI.getEditionPrinting(), db);
+
+			statement.addSingleValuesSet(List.of(currentSetFromAPI.getSetPrice(), currentSetFromAPI.getSetNumber(),
+												 currentSetFromAPI.getSetRarity(), currentSetFromAPI.getSetName(),
+												 currentSetFromAPI.getCardName(), currentSetFromAPI.getColorVariant()));
+
+			for (CardSet set : existingRows) {
+				addToSetAndMap(DatabaseHashMap.getAllMatchingKeyWithUrl(set) + edition);
+			}
+
+			return existingRows.size();
 		}
 		return null;
 	}

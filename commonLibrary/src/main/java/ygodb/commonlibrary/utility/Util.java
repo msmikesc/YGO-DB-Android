@@ -381,7 +381,35 @@ public class Util {
 					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183029%2Fyugioh-5ds-2008-starter-deck-junk-warrior");
 			setUrlsThatDoNotExist.add(
 					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaximum-gold%2Fharpies-feather-duster");
-			//setUrlsThatDoNotExist.add();
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fduelist-league-promo%2Faxe-of-despair");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F592910%2Fyugioh-quarter-century-bonanza-card-of-safe-returnplatinum-secret-rare");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183032%2Fyugioh-5ds-2008-starter-deck-colossal-fighter");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543835%2Fyugioh-speed-duel-gx-midterm-destruction-en-shuffle-secret-rare\n");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F91461%2Fyugioh-duelist-league-promo-enemy-controller");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183031%2Fyugioh-5ds-2008-starter-deck-gaia-knight-the-force-of-earth-common");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fdark-legends-promo-card%2Fgorz-the-emissary-of-darkness");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaximum-gold%2Fharpies-feather-duster");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183029%2Fyugioh-5ds-2008-starter-deck-junk-warrior");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Flegendary-duelists-season-3%2Fnumber-15-gimmick-puppet-giant-grinder");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaze-of-memories%2Fpsi-beast-cr");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftoon-chaos%2Fpsy-frame-driver-cr");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F32208%2Fyugioh-premium-pack-2-war-lion-ritual");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543919%2Fyugioh-speed-duel-gx-midterm-destruction-white-veil-secret-rare");
+			//setUrlsThatDoNotExist.add("");
 		}
 
 		return setUrlsThatDoNotExist;
@@ -823,6 +851,9 @@ public class Util {
 	public static String removeSurroundingQuotes(String input) {
 		if(input.contains("(alternate art)")){
 			input = input.replace("(alternate art)","").trim();
+		}
+		if(input.contains("(alternate artwork)")){
+			input = input.replace("(alternate artwork)","").trim();
 		}
 
 		if (input.length() >= 2) {

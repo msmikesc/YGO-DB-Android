@@ -14,7 +14,7 @@ public class RunImportPricesFromYGOPROAPI {
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
-		boolean successful = mainObj.run(db, "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadJSON.txt",
+		boolean successful = mainObj.run(db, "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadJSON",
 										 true,"C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadMissingCardSets.csv");
 		if (!successful) {
 			YGOLogger.info("Import Failed");

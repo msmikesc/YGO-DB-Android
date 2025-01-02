@@ -194,6 +194,9 @@ public class SQLConst {
 	public static final String UPDATE_CARD_SET_URL_WITHOUT_SET_NAME = "update cardSets set setURL = ? where setNumber = ? and setRarity = ? and " +
 			"UPPER(cardName) = UPPER(?) and colorVariant = ?";
 
+	public static final String UPDATE_CARD_SET_URL_WITHOUT_SET_NAME_OR_COLOR = "update cardSets set setURL = ? where setNumber = ? and setRarity = ? and " +
+			"UPPER(cardName) = UPPER(?)";
+
 	public static final String UPDATE_CARD_SET_URL_AND_COLOR = "update cardSets set setURL = ?, colorVariant = ? where setNumber = ? " +
 			"and setRarity = ? and setName = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
 

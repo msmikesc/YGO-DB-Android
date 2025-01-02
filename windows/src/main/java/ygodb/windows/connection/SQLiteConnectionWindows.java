@@ -40,7 +40,7 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	public Connection getInstance() throws SQLException {
 		if (connectionInstance == null) {
 			connectionInstance =
-					DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\db\\YGO-DB.db");
+					DriverManager.getConnection("jdbc:sqlite:G:\\My Drive\\db\\YGO-DB.db");
 		}
 
 		return connectionInstance;
@@ -739,6 +739,14 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 	}
 
 	@Override
+	public int updateCardSetUrlWithoutSetNameOrColor(String setNumber, String rarity, String cardName, String setURL)
+			throws SQLException {
+
+		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
+		return CommonDatabaseQueries.updateCardSetUrlWithoutSetNameOrColor(query, setNumber, rarity, cardName, setURL);
+	}
+
+	@Override
 	public int updateCardSetUrlAndColor(String setNumber, String rarity, String setName, String cardName, String setURL,
 			String currentColorVariant, String newColorVariant) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryWindows(getInstance());
@@ -775,6 +783,45 @@ public class SQLiteConnectionWindows implements SQLiteConnection {
 		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_BATCHED_BY_URL_LIMITED, (stmt, params) -> {
 			stmt.setString(1, (String) params.get(0));
 			stmt.setString(2, (String) params.get(1));
+		});
+	}
+
+	@Override
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementAllPropertiesFirst() throws SQLException {
+
+		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_FIRST_COLOR, (stmt, params) -> {
+			stmt.setString(1, (String) params.get(0));
+			stmt.setString(2, (String) params.get(1));
+			stmt.setString(3, (String) params.get(2));
+			stmt.setString(4, (String) params.get(3));
+			stmt.setString(5, (String) params.get(4));
+			stmt.setString(6, (String) params.get(5));
+		});
+	}
+
+	@Override
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementAllPropertiesUnlimited() throws SQLException {
+
+		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_COLOR, (stmt, params) -> {
+			stmt.setString(1, (String) params.get(0));
+			stmt.setString(2, (String) params.get(1));
+			stmt.setString(3, (String) params.get(2));
+			stmt.setString(4, (String) params.get(3));
+			stmt.setString(5, (String) params.get(4));
+			stmt.setString(6, (String) params.get(5));
+		});
+	}
+
+	@Override
+	public PreparedStatementBatchWrapper getBatchedPreparedStatementAllPropertiesLimited() throws SQLException {
+
+		return getBatchedPreparedStatement(SQLConst.UPDATE_CARD_SET_PRICE_WITH_SET_NAME_AND_CARD_NAME_LIMITED_COLOR, (stmt, params) -> {
+			stmt.setString(1, (String) params.get(0));
+			stmt.setString(2, (String) params.get(1));
+			stmt.setString(3, (String) params.get(2));
+			stmt.setString(4, (String) params.get(3));
+			stmt.setString(5, (String) params.get(4));
+			stmt.setString(6, (String) params.get(5));
 		});
 	}
 

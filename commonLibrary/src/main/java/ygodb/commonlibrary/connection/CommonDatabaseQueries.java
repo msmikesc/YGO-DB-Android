@@ -826,6 +826,19 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
+	public static int updateCardSetUrlWithoutSetNameOrColor(DatabaseUpdateQuery query, String setNumber, String rarity, String cardName,
+			String setURL) throws SQLException {
+
+		query.prepareStatement(SQLConst.UPDATE_CARD_SET_URL_WITHOUT_SET_NAME_OR_COLOR);
+
+		query.bindString(1, setURL);
+		query.bindString(2, setNumber);
+		query.bindString(3, rarity);
+		query.bindString(4, cardName);
+
+		return query.executeUpdate();
+	}
+
 	public static int updateCardSetUrlAndColor(DatabaseUpdateQuery query, String setNumber, String rarity, String setName, String cardName,
 			String setURL, String currentColorVariant, String newColorVariant) throws SQLException {
 

@@ -158,6 +158,9 @@ public interface SQLiteConnection {
 	int updateCardSetUrlWithoutSetName(String setNumber, String rarity, String cardName, String setURL, String colorVariant)
 			throws SQLException;
 
+	int updateCardSetUrlWithoutSetNameOrColor(String setNumber, String rarity, String cardName, String setURL)
+			throws SQLException;
+
 	int updateCardSetUrlAndColor(String setNumber, String rarity, String setName, String cardName, String setURL,
 			String currentColorVariant, String newColorVariant) throws SQLException;
 
@@ -166,6 +169,12 @@ public interface SQLiteConnection {
 	PreparedStatementBatchWrapper getBatchedPreparedStatementUrlUnlimited() throws SQLException;
 
 	PreparedStatementBatchWrapper getBatchedPreparedStatementUrlLimited() throws SQLException;
+
+	PreparedStatementBatchWrapper getBatchedPreparedStatementAllPropertiesFirst() throws SQLException;
+
+	PreparedStatementBatchWrapper getBatchedPreparedStatementAllPropertiesUnlimited() throws SQLException;
+
+	PreparedStatementBatchWrapper getBatchedPreparedStatementAllPropertiesLimited() throws SQLException;
 
 	List<String> queryRaritiesFor(String cardNameSearch);
 }

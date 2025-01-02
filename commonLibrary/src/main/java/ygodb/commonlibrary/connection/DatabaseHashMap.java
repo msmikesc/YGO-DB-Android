@@ -3,6 +3,7 @@ package ygodb.commonlibrary.connection;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
+import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.Util;
 
 import java.sql.SQLException;
@@ -71,7 +72,9 @@ public class DatabaseHashMap {
 		list.add(getSetNameMismatchKey(input));
 		list.add(getCardAndSetNameMismatchKey(input));
 		list.add(getSetNumberOnlyKey(input));
-		list.add(getSetUrlKey(input));
+		if(getSetUrlKey(input) != null) {
+			list.add(getSetUrlKey(input));
+		}
 		list.add(getAllMatchingKeyWithUrl(input));
 		list.add(getSetNameMismatchKeyWithUrl(input));
 		list.add(getAllMatchingKeyWithColor(input));
@@ -89,7 +92,14 @@ public class DatabaseHashMap {
 	}
 
 	public static String getAllMatchingKeyWithColor(CardSet input) {
-		return input.getSetNumber() + input.getSetRarity() + input.getSetName() + input.getCardName()+input.getColorVariant();
+
+		String colorVariant = input.getColorVariant();
+
+		if (colorVariant == null) {
+			colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		return input.getSetNumber() + input.getSetRarity() + input.getSetName() + input.getCardName() + colorVariant;
 	}
 
 	public static String getCardNameMismatchKey(CardSet input) {
@@ -101,7 +111,14 @@ public class DatabaseHashMap {
 	}
 
 	public static String getSetNameMismatchKeyWithColor(CardSet input) {
-		return input.getSetNumber() + input.getSetRarity() + input.getCardName()+input.getColorVariant();
+
+		String colorVariant = input.getColorVariant();
+
+		if (colorVariant == null) {
+			colorVariant = Const.DEFAULT_COLOR_VARIANT;
+		}
+
+		return input.getSetNumber() + input.getSetRarity() + input.getCardName() + colorVariant;
 	}
 
 	public static String getSetNameMismatchKeyWithUrl(CardSet input) {
@@ -146,6 +163,7 @@ public class DatabaseHashMap {
 		matcherInput.setSetNumber(currentSetFromAPI.getSetNumber());
 		matcherInput.setCardName(currentSetFromAPI.getCardName());
 		matcherInput.setSetName(currentSetFromAPI.getSetName());
+		matcherInput.setColorVariant(currentSetFromAPI.getColorVariant());
 		return matcherInput;
 	}
 }
