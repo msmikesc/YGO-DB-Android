@@ -524,13 +524,19 @@ public class CsvConnection {
 		int quantity = getIntOrNegativeOne(current, Const.QUANTITY_CSV);
 		String setName = getStringOrNull(current, Const.SET_NAME_CSV);
 		String rarityColorVariant = getStringOrNull(current, Const.RARITY_COLOR_VARIANT_CSV);
-		if(rarityColorVariant == null){
+		if(rarityColorVariant == null || rarityColorVariant.isBlank()){
 			rarityColorVariant = Const.DEFAULT_COLOR_VARIANT;
 		}
 		String printing = getStringOrNull(current, Const.PRINTING_CSV);
 
+		if(printing == null || printing.isBlank()){
+			YGOLogger.error("printing not found for:" + name);
+			return null;
+		}
+
 		if (quantity < 1) {
-			quantity = 1;
+			YGOLogger.error("quantity not found for:" + name);
+			return null;
 		}
 		quantity = quantity * quantityMultiplier;
 
