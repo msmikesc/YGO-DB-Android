@@ -656,18 +656,22 @@ public class ImportPricesFromYGOPROAPI {
 
 	private int updatePriceUsingMultipleStrategiesWithHashmap(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 
+		Integer rowsUpdated1 = attemptPriceUpdateUsingURLBatched(currentSetFromAPI, db);
+		if (rowsUpdated1 != null && rowsUpdated1 != 0) {
+			return rowsUpdated1;
+		}
+
 		// try to assign color to api entry
 		String color = Util.extractColorFromUrl(currentSetFromAPI.getSetUrl());
 		currentSetFromAPI.setColorVariant(color);
 
-		Integer rowsUpdated = attemptPriceUpdateUsingAllPropertiesBatched(currentSetFromAPI, db);
-		if (rowsUpdated != null && rowsUpdated != 0) {
-			return rowsUpdated;
-		}
-
-		Integer rowsUpdated1 = attemptPriceUpdateUsingURLBatched(currentSetFromAPI, db);
-		if (rowsUpdated1 != null && rowsUpdated1 != 0) {
-			return rowsUpdated1;
+		Integer rowsUpdated2 = attemptPriceUpdateUsingAllPropertiesBatched(currentSetFromAPI, db);
+		if (rowsUpdated2 != null && rowsUpdated2 != 0) {
+			//if only one row updated, update url
+			if(rowsUpdated2 == 1){
+				updateNewSetUrlForSingleRow(db, currentSetFromAPI, currentSetFromAPI.getSetUrl());
+			}
+			return rowsUpdated2;
 		}
 
 		Integer rowsUpdated3 = attemptPriceUpdateSetNameMismatch(currentSetFromAPI, db);

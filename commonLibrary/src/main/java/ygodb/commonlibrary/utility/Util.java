@@ -406,9 +406,13 @@ public class Util {
 			setUrlsThatDoNotExist.add(
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftoon-chaos%2Fpsy-frame-driver-cr");
 			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F32208%2Fyugioh-premium-pack-2-war-lion-ritual");
-			setUrlsThatDoNotExist.add(
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543919%2Fyugioh-speed-duel-gx-midterm-destruction-white-veil-secret-rare");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543835%2Fyugioh-speed-duel-gx-midterm-destruction-en-shuffle-secret-rare");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftactical-evolution%2Fgemini-summoner-taev-ensp1");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fpremium-pack-2%2Fwar-lion-ritual-sr");
 			//setUrlsThatDoNotExist.add("");
 		}
 
@@ -708,6 +712,30 @@ public class Util {
 	public static String extractColorFromUrl(String url) {
 		String tester = url.replace("blue-eyes", "").replace("red-eyes", "").replace("eyes-of-blue", "");
 
+		boolean altArt = false;
+
+		if (tester.contains("-alternate-art")) {
+			altArt = true;
+		}
+
+		String colorVariant = getColorVariant(tester);
+		if (colorVariant != null) {
+			if(altArt) {
+				return colorVariant+":a";
+			}
+			else{
+				return colorVariant;
+			}
+		}
+
+		if (altArt) {
+			return "a";
+		}
+
+		return Const.DEFAULT_COLOR_VARIANT;
+	}
+
+	private static String getColorVariant(String tester) {
 		if(tester.endsWith("-version-4")){
 			return "v4";
 		}
@@ -750,10 +778,7 @@ public class Util {
 		if (tester.endsWith("-chaos-neos-ghost-rare-misprint")) {
 			return "original";
 		}
-		if (tester.contains("-alternate-art")) {
-			return "a";
-		}
-		return Const.DEFAULT_COLOR_VARIANT;
+		return null;
 	}
 
 	public static String millisToShortDHMS(long duration) {
