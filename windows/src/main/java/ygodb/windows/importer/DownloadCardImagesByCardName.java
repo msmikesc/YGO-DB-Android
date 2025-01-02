@@ -15,7 +15,7 @@ import java.util.Set;
 public class DownloadCardImagesByCardName {
 
 	public static void main(String[] args) throws SQLException, InterruptedException {
-		String cardName = "Anotherverse Gluttonia";
+		String cardName = "Mystic Tomato";
 
 		DownloadCardImagesByCardName mainObj = new DownloadCardImagesByCardName();
 

@@ -13,6 +13,7 @@ import com.example.ygodb.databinding.FragmentCardfullscreenBinding;
 import com.example.ygodb.util.AndroidUtil;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.InputStream;
@@ -162,7 +163,7 @@ public class ViewCardFullScreenFragment extends Fragment {
 
 			binding.cardImage.setOnClickListener(view -> {
 				Bundle args = new Bundle();
-				args.putInt(Const.PASSCODE, passcode);
+				args.putInt(Const.PASSCODE, Util.checkForTranslatedYgoProImagePasscode(passcode));
 				Navigation.findNavController(view).navigate(R.id.nav_ViewCardImageFullScreenFragment, args);
 			});
 
