@@ -824,6 +824,12 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 	}
 
 	@Override
+	public List<Integer> getOnlyArtPasscodesByGamePlayCardUUID(String gamePlayCardUUID) throws SQLException {
+		DatabaseSelectQuery<Integer, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
+		return CommonDatabaseQueries.getOnlyArtPasscodesByGamePlayCardUUID(query, gamePlayCardUUID, new FirstIntMapperSelectQuery());
+	}
+
+	@Override
 	public List<Integer> getAllArtPasscodes() throws SQLException {
 		DatabaseSelectQuery<Integer, Cursor> query = new DatabaseSelectQueryAndroid<>(getInstance());
 		return CommonDatabaseQueries.getAllArtPasscodes(query, new FirstIntMapperSelectQuery());

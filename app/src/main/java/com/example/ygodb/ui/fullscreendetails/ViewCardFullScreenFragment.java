@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -17,6 +20,8 @@ import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ViewCardFullScreenFragment extends Fragment {
 
@@ -167,10 +172,50 @@ public class ViewCardFullScreenFragment extends Fragment {
 				Navigation.findNavController(view).navigate(R.id.nav_ViewCardImageFullScreenFragment, args);
 			});
 
+			// Alt Arts listed
+			LinearLayout alternativeArtsContainer = binding.alternativeArtsContainer;
+
+			try {
+				List<Integer> passcodes = AndroidUtil.getDBInstance().getOnlyArtPasscodesByGamePlayCardUUID(current.getGamePlayCardUUID());
+
+				for (int altArtCode : passcodes) {
+					addOneAltArtImage(alternativeArtsContainer, altArtCode);
+				}
+			} catch (SQLException e) {
+				YGOLogger.error("Error getting alt arts:");
+				YGOLogger.logException(e);
+			}
 		}
 
-
 		return root;
+	}
+
+	private void addOneAltArtImage(LinearLayout alternativeArtsContainer, int altArtCode) {
+		// Inflate the layout for each alternative art
+		View altArtView = LayoutInflater.from(getContext()).inflate(R.layout.alt_art_item, alternativeArtsContainer, false);
+
+		// Set the art image
+		ImageView artImage = altArtView.findViewById(R.id.artImage);
+		try {
+			InputStream ims = AndroidUtil.getAppContext().getAssets().open("pics/" + altArtCode + ".jpg");
+			Drawable d = Drawable.createFromStream(ims, null);
+			artImage.setImageDrawable(d);
+		} catch (Exception ex) {
+			artImage.setImageDrawable(null);
+		}
+
+		// Set the passcode
+		TextView artPasscode = altArtView.findViewById(R.id.artPasscode);
+		artPasscode.setText(String.valueOf(altArtCode));
+
+		artImage.setOnClickListener(view -> {
+			Bundle args = new Bundle();
+			args.putInt(Const.PASSCODE, Util.checkForTranslatedYgoProImagePasscode(altArtCode));
+			Navigation.findNavController(view).navigate(R.id.nav_ViewCardImageFullScreenFragment, args);
+		});
+
+		// Add the view to the container
+		alternativeArtsContainer.addView(altArtView);
 	}
 
 	private void renderCardSubtypeIcon(GamePlayCard current) {

@@ -330,6 +330,15 @@ public class CommonDatabaseQueries {
 		return query.executeQuery(mapper);
 	}
 
+	public static <R> List<Integer> getOnlyArtPasscodesByGamePlayCardUUID(DatabaseSelectQuery<Integer, R> query, String gamePlayCardUUID,
+			SelectQueryResultMapper<Integer, R> mapper) throws SQLException {
+		query.prepareStatement(SQLConst.GET_ONLY_ART_PASSCODES_BY_GPC);
+
+		query.bindString(1, gamePlayCardUUID);
+
+		return query.executeQuery(mapper);
+	}
+
 	public static <R> List<Integer> getAllArtPasscodes(DatabaseSelectQuery<Integer, R> query,
 			SelectQueryResultMapper<Integer, R> mapper) throws SQLException {
 		query.prepareStatement(SQLConst.GET_ALL_PASSCODES);
