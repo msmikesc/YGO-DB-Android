@@ -34,6 +34,7 @@ public class Util {
 	private static KeyUpdateMap passcodeMap = null;
 	private static KeyUpdateMap ygoProImagePasscodeMap = null;
 	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
+	private static QuadKeyDoesNotExistSet quadKeyDoesNotExistSet = null;
 
 	private static Set<String> setUrlsThatDoNotExist = null;
 
@@ -242,6 +243,30 @@ public class Util {
 		return instance.getValues(cardName, setNumber, rarity, setName);
 	}
 
+	public static QuadKeyDoesNotExistSet getQuadKeyDoesNotExistSetInstance() {
+		if (quadKeyDoesNotExistSet == null) {
+
+			try {
+				String filename = "quadDoesNotExist.csv";
+
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
+
+				quadKeyDoesNotExistSet = new QuadKeyDoesNotExistSet(inputStream, "|");
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+
+		}
+
+		return quadKeyDoesNotExistSet;
+	}
+
+	public static boolean doesQuadKeyNotExist(String cardName, String setNumber, String rarity, String setName) {
+		QuadKeyDoesNotExistSet instance = getQuadKeyDoesNotExistSetInstance();
+
+		return instance.containsKey(cardName, setNumber, rarity, setName);
+	}
+
 	public static KeyUpdateMap getSetNameMapInstance() {
 		if (setNameMap == null) {
 
@@ -413,6 +438,10 @@ public class Util {
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftactical-evolution%2Fgemini-summoner-taev-ensp1");
 			setUrlsThatDoNotExist.add(
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fpremium-pack-2%2Fwar-lion-ritual-sr");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F562288%2Fyugioh-light-of-destruction-2020-date-reprint-soul-rope");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F562287%2Fyugioh-light-of-destruction-2020-date-reprint-kuraz-the-light-monarch");
 			//setUrlsThatDoNotExist.add("");
 		}
 

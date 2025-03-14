@@ -511,6 +511,14 @@ public class ImportPricesFromYGOPROAPI {
 			return;
 		}
 
+		if(Util.doesQuadKeyNotExist(
+				currentSetFromAPI.getCardName(),
+				currentSetFromAPI.getSetNumber(),
+				currentSetFromAPI.getSetRarity(),
+				currentSetFromAPI.getSetName())){
+			return;
+		}
+
 		if (currentSetFromAPI.getSetPrice() != null && !currentSetFromAPI.getSetPrice().equals(Const.ZERO_PRICE_STRING)) {
 			int rowsUpdated = updatePriceUsingMultipleStrategiesWithHashmap(currentSetFromAPI, db);
 			if (rowsUpdated != 1) {
