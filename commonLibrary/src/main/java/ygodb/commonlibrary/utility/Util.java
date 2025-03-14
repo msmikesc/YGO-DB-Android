@@ -371,77 +371,11 @@ public class Util {
 			setUrlsThatDoNotExist = new HashSet<>();
 
 			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fduelist-league-promo%2Fenemy-controller");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Flegendary-duelists-season-3%2Fnumber-15-gimmick-puppet-giant-grinder");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fduelist-league-promo%2Faxe-of-despair");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftactical-evolution%2Fgemini-summoner-taev-ensp1");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2F5ds-2008-starter-deck%2Fcolossal-fighter-common");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2F5ds-2008-starter-deck%2Fgaia-knight-the-force-of-earth-common");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2F5ds-2008-starter-deck%2Fjunk-warrior-common");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaze-of-memories%2Fpsi-beast-cr");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftoon-chaos%2Fpsy-frame-driver-cr");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fdark-legends-promo-card%2Fgorz-the-emissary-of-darkness");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fpremium-pack-2%2Fwar-lion-ritual-sr");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543919%2Fyugioh-speed-duel-gx-midterm-destruction-white-veil-secret-rare");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543835%2Fyugioh-speed-duel-gx-midterm-destruction-en-shuffle-secret-rare");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F91461%2Fyugioh-duelist-league-promo-enemy-controller");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183032%2Fyugioh-5ds-2008-starter-deck-colossal-fighter");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183031%2Fyugioh-5ds-2008-starter-deck-gaia-knight-the-force-of-earth-common");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183029%2Fyugioh-5ds-2008-starter-deck-junk-warrior");
-			setUrlsThatDoNotExist.add(
-					"https://tcgplayer.pxf.io/c/4913399/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaximum-gold%2Fharpies-feather-duster");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fduelist-league-promo%2Faxe-of-despair");
-			setUrlsThatDoNotExist.add(
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F592910%2Fyugioh-quarter-century-bonanza-card-of-safe-returnplatinum-secret-rare");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183032%2Fyugioh-5ds-2008-starter-deck-colossal-fighter");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543835%2Fyugioh-speed-duel-gx-midterm-destruction-en-shuffle-secret-rare\n");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F91461%2Fyugioh-duelist-league-promo-enemy-controller");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183031%2Fyugioh-5ds-2008-starter-deck-gaia-knight-the-force-of-earth-common");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fdark-legends-promo-card%2Fgorz-the-emissary-of-darkness");
 			setUrlsThatDoNotExist.add(
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaximum-gold%2Fharpies-feather-duster");
 			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F183029%2Fyugioh-5ds-2008-starter-deck-junk-warrior");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Flegendary-duelists-season-3%2Fnumber-15-gimmick-puppet-giant-grinder");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaze-of-memories%2Fpsi-beast-cr");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftoon-chaos%2Fpsy-frame-driver-cr");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543919%2Fyugioh-speed-duel-gx-midterm-destruction-white-veil-secret-rare");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F543835%2Fyugioh-speed-duel-gx-midterm-destruction-en-shuffle-secret-rare");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Ftactical-evolution%2Fgemini-summoner-taev-ensp1");
-			setUrlsThatDoNotExist.add(
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fpremium-pack-2%2Fwar-lion-ritual-sr");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F562288%2Fyugioh-light-of-destruction-2020-date-reprint-soul-rope");
-			setUrlsThatDoNotExist.add(
-					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F562287%2Fyugioh-light-of-destruction-2020-date-reprint-kuraz-the-light-monarch");
 			//setUrlsThatDoNotExist.add("");
 		}
 

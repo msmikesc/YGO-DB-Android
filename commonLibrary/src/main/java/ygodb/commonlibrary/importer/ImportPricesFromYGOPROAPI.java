@@ -604,7 +604,12 @@ public class ImportPricesFromYGOPROAPI {
 
 	private void recordEntriesWithMissingDBURL(CardSet currentSetFromAPI, SQLiteConnection db) throws SQLException {
 		if (currentSetFromAPI == null || currentSetFromAPI.getSetUrl() == null || currentSetFromAPI.getSetUrl().isBlank() ||
-				Util.getSetUrlsThatDoNotExistInstance().contains(currentSetFromAPI.getSetUrl())) {
+				Util.getSetUrlsThatDoNotExistInstance().contains(currentSetFromAPI.getSetUrl()) ||
+				Util.doesQuadKeyNotExist(
+						currentSetFromAPI.getCardName(),
+						currentSetFromAPI.getSetNumber(),
+						currentSetFromAPI.getSetRarity(),
+						currentSetFromAPI.getSetName())) {
 			return;
 		}
 
