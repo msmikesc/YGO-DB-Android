@@ -741,6 +741,33 @@ public class Util {
 		if (tester.endsWith("-chaos-neos-ghost-rare-misprint")) {
 			return "original";
 		}
+		if(tester.contains("-1st-art-")){
+			return "1st-a";
+		}
+		if(tester.contains("-2nd-art-")){
+			return "2nd-a";
+		}
+		if(tester.contains("-3rd-art-")){
+			return "3rd-a";
+		}
+		if(tester.contains("-4th-art-")){
+			return "4th-a";
+		}
+		if(tester.contains("-5th-art-")){
+			return "5th-a";
+		}
+		if(tester.contains("-6th-art-")){
+			return "6th-a";
+		}
+		if(tester.contains("-7th-art-")){
+			return "7th-a";
+		}
+		if(tester.contains("-8th-art-")){
+			return "8th-a";
+		}
+		if(tester.contains("-9th-art-")){
+			return "9th-a";
+		}
 		return null;
 	}
 

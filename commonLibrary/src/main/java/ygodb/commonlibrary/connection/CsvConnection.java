@@ -452,11 +452,14 @@ public class CsvConnection {
 		String name = getStringOrNull(current, Const.CARD_NAME_CSV);
 		String cardNumber = getCardNumberFromCSVRecord(current);
 		String rawRarityInput = getStringOrNull(current, Const.RARITY_CSV);
-		List<String> rarityInputList = List.of(rawRarityInput.split("\\r?\\n"));
-
 		String setName = getSetNameFromCSVRecord(current, defaultSetName);
+
 		name = Util.removeSurroundingQuotes(name);
 		name = Util.checkForTranslatedCardName(name);
+		cardNumber = Util.removeSurroundingQuotes(cardNumber);
+		rawRarityInput = Util.removeSurroundingQuotes(rawRarityInput);
+		List<String> rarityInputList = List.of(rawRarityInput.split("\\r?\\n"));
+		setName = Util.removeSurroundingQuotes(setName);
 
 		ArrayList<String> confirmedRarites = new ArrayList<>();
 
