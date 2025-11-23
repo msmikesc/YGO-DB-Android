@@ -359,7 +359,7 @@ public class CommonDatabaseQueries {
 
 		query.bindString(1, searchText);
 		query.bindString(2, "%" + searchText + "%");
-		query.bindString(3, searchText);
+		query.bindString(3, "%" + searchText + "%");
 
 		return query.executeQuery(mapper);
 	}
@@ -537,27 +537,10 @@ public class CommonDatabaseQueries {
 		return query.executeUpdate();
 	}
 
-	public static int insertOrUpdateSetBoxByUUID(DatabaseUpdateQuery query, SetBox setBox) throws SQLException {
-		if (setBox.getSetBoxUUID() == null || setBox.getSetBoxUUID().isBlank()) {
-			int rowsInserted = insertIntoSetBoxes(query, setBox);
-			if (rowsInserted != 1) {
-				YGOLogger.error(rowsInserted + " rows inserted for insert for:" + setBox);
-			}
-			return rowsInserted;
-		} else {
-			int rowsUpdated = updateSetBoxesByUUID(query, setBox);
-			if (rowsUpdated != 1) {
-				YGOLogger.error(rowsUpdated + " rows updated for update for:" + setBox);
-			}
-			return rowsUpdated;
-		}
-	}
-
 	public static int updateSetBoxesByUUID(DatabaseUpdateQuery query, SetBox setBox) throws SQLException {
 		String uuid = setBox.getSetBoxUUID();
 		String setPrefix = setBox.getSetPrefix();
 		String setName = setBox.getSetName();
-		String boxLabel = setBox.getBoxLabel();
 
 		if (uuid == null || uuid.isBlank()) {
 			YGOLogger.error("UUID null on updated set box card");
@@ -565,12 +548,36 @@ public class CommonDatabaseQueries {
 		}
 
 		query.prepareStatement(SQLConst.UPDATE_SET_BOX_BY_UUID);
+		query.bindString(1, setPrefix);
+		query.bindString(2, setName);
+		query.bindString(3, uuid);
+		return query.executeUpdate();
+	}
 
-		query.bindString(1, boxLabel);
-		query.bindString(2, setPrefix);
-		query.bindString(3, setName);
-		query.bindString(4, uuid);
+	public static int deleteSetBoxLabelsByUUID(DatabaseUpdateQuery query, SetBox setBox) throws SQLException {
+		String uuid = setBox.getSetBoxUUID();
 
+		if (uuid == null || uuid.isBlank()) {
+			YGOLogger.error("UUID null on updated set box card");
+			return 0;
+		}
+
+		query.prepareStatement(SQLConst.DELETE_LABELS_BY_UUID);
+		query.bindString(1, uuid);
+		return query.executeUpdate();
+	}
+
+	public static int insertSetBoxLabelByUUID(DatabaseUpdateQuery query, SetBox setBox, String label) throws SQLException {
+		String uuid = setBox.getSetBoxUUID();
+
+		if (uuid == null || uuid.isBlank()) {
+			YGOLogger.error("UUID null on updated set box card");
+			return 0;
+		}
+
+		query.prepareStatement(SQLConst.INSERT_LABEL);
+		query.bindString(1, uuid);
+		query.bindString(2, label);
 		return query.executeUpdate();
 	}
 
@@ -578,7 +585,6 @@ public class CommonDatabaseQueries {
 		String uuid = setBox.getSetBoxUUID();
 		String setPrefix = setBox.getSetPrefix();
 		String setName = setBox.getSetName();
-		String boxLabel = setBox.getBoxLabel();
 
 		if (uuid == null || uuid.isBlank()) {
 			uuid = java.util.UUID.randomUUID().toString();
@@ -586,10 +592,9 @@ public class CommonDatabaseQueries {
 
 		query.prepareStatement(SQLConst.INSERT_OR_IGNORE_INTO_SET_BOX);
 
-		query.bindString(1, boxLabel);
-		query.bindString(2, setPrefix);
-		query.bindString(3, setName);
-		query.bindString(4, uuid);
+		query.bindString(1, setPrefix);
+		query.bindString(2, setName);
+		query.bindString(3, uuid);
 
 		return query.executeUpdate();
 	}

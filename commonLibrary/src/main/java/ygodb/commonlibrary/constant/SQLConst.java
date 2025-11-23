@@ -183,10 +183,17 @@ public class SQLConst {
 
 	public static final String GET_NEW_LOWEST_PASSCODE = "select min(cast(passcode as INTEGER)) from gamePlayCard";
 
-	public static final String GET_ALL_SET_BOXES = "select * from setBoxes order by boxLabel";
+	public static final String GET_ALL_SET_BOXES =
+			"SELECT sb.setBoxUUID, sb.setPrefix, sb.setName, GROUP_CONCAT(lbl.boxLabel, ', ') AS boxLabel " +
+			"FROM setBoxes sb LEFT JOIN setBoxLabels lbl " +
+			"ON sb.setBoxUUID = lbl.setBoxUUID GROUP BY sb.setBoxUUID ORDER BY boxLabel";
 
 	public static final String GET_SET_BOXES_BY_NAME_OR_CODE_OR_LABEL =
-			"select * from setBoxes where setPrefix = UPPER(?) or setName like ? or UPPER(boxLabel) = UPPER(?) order by boxLabel";
+			"SELECT sb.setBoxUUID, sb.setPrefix, sb.setName, GROUP_CONCAT(lbl.boxLabel, ', ') AS boxLabel " +
+			"FROM setBoxes sb LEFT JOIN setBoxLabels lbl " +
+			"ON sb.setBoxUUID = lbl.setBoxUUID WHERE sb.setPrefix = UPPER(?) OR sb.setName LIKE ? "+
+			"OR sb.setBoxUUID IN (SELECT setBoxUUID FROM setBoxLabels " +
+			"WHERE UPPER(boxLabel) LIKE UPPER(?)) GROUP BY sb.setBoxUUID ORDER BY boxLabel";
 
 	public static final String UPDATE_CARD_SET_URL = "update cardSets set setURL = ? where setNumber = ? and setRarity = ? and " +
 			"setName = ? and UPPER(cardName) = UPPER(?) and colorVariant = ?";
@@ -210,10 +217,16 @@ public class SQLConst {
 			"update cardSets set setPriceLimited = ?, setPriceLimitedUpdateTime = datetime('now','localtime') where setURL = ?";
 
 	public static final String UPDATE_SET_BOX_BY_UUID =
-			"update setBoxes set boxLabel = ?, setPrefix = ?, setName = ? where setBoxUUID =" + " ?";
+			"UPDATE setBoxes SET setPrefix = ?, setName = ? WHERE setBoxUUID = ?";
+
+	public static final String DELETE_LABELS_BY_UUID =
+			"DELETE FROM setBoxLabels WHERE setBoxUUID = ?";
+
+	public static final String INSERT_LABEL =
+			"INSERT INTO setBoxLabels (setBoxUUID, boxLabel) VALUES (?, ?)";
 
 	public static final String INSERT_OR_IGNORE_INTO_SET_BOX =
-			"insert OR IGNORE into setBoxes(boxLabel,setPrefix,setName,setBoxUUID) values(?,?,?,?)";
+			"insert OR IGNORE into setBoxes(setPrefix,setName,setBoxUUID) values(?,?,?)";
 
 	public static final String GET_NEW_SET_BOX_DATA_FOR_VALID_SET_PREFIX =
 			"select setBoxUUID, setData.setPrefix, setData.setName, '' as boxLabel from setData left join setBoxes on setBoxes.setPrefix" +

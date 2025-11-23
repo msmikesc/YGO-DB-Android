@@ -22,13 +22,18 @@ class SingleBoxLabelChangedListener extends TextChangedListener<EditText> {
 		String textSearch = s.toString();
 
 		if (textSearch.isBlank()) {
-			return;
+			textSearch = "";
 		}
 
 		// Retrieve the associated SetBox from the tag of the EditText
 		SetBox setBox = (SetBox) target.getTag();
 
-		if (setBox.getBoxLabel().equalsIgnoreCase(textSearch)) {
+		String label = setBox.getBoxLabel();
+		if(label == null){
+			label = "";
+		}
+
+		if (label.equalsIgnoreCase(textSearch)) {
 			//nothing to update
 			return;
 		}

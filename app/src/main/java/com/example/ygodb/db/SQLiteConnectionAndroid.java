@@ -883,16 +883,64 @@ public class SQLiteConnectionAndroid extends SQLiteOpenHelper implements SQLiteC
 		return CommonDatabaseQueries.insertIntoOwnedCards(query, card);
 	}
 
+	private final Object lock = new Object();
+
 	@Override
 	public int insertOrUpdateSetBoxByUUID(SetBox setBox) throws SQLException {
-		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
-		return CommonDatabaseQueries.insertOrUpdateSetBoxByUUID(query, setBox);
+		synchronized (lock) {
+			DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+
+			if (setBox.getSetBoxUUID() == null || setBox.getSetBoxUUID().isBlank()) {
+
+				String uuid = java.util.UUID.randomUUID().toString();
+				setBox.setSetBoxUUID(uuid);
+
+				int rowsInserted = CommonDatabaseQueries.insertIntoSetBoxes(query, setBox);
+				if (rowsInserted != 1) {
+					YGOLogger.error(rowsInserted + " rows inserted for insert for:" + setBox);
+				}
+
+				insertAllLabels(setBox);
+
+				return rowsInserted;
+			} else {
+				int rowsUpdated = CommonDatabaseQueries.updateSetBoxesByUUID(query, setBox);
+				if (rowsUpdated != 1) {
+					YGOLogger.error(rowsUpdated + " rows updated for update for:" + setBox);
+				}
+				query = new DatabaseUpdateQueryAndroid(getInstance());
+				CommonDatabaseQueries.deleteSetBoxLabelsByUUID(query, setBox);
+
+				insertAllLabels(setBox);
+
+				return rowsUpdated;
+			}
+		}
+	}
+
+	private void insertAllLabels(SetBox setBox) throws SQLException {
+		String boxLabelCsv = setBox.getBoxLabel();
+		if (boxLabelCsv != null && !boxLabelCsv.isBlank()) {
+			String[] labels = boxLabelCsv.split(",");
+
+			for (String rawLabel : labels) {
+				String label = rawLabel.trim();
+				if (label.isEmpty()) continue;
+
+				DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
+				CommonDatabaseQueries.insertSetBoxLabelByUUID(query, setBox, label);
+			}
+		}
 	}
 
 	@Override
 	public int insertIntoSetBoxes(SetBox setBox) throws SQLException {
 		DatabaseUpdateQuery query = new DatabaseUpdateQueryAndroid(getInstance());
-		return CommonDatabaseQueries.insertIntoSetBoxes(query, setBox);
+		int rowsInserted = CommonDatabaseQueries.insertIntoSetBoxes(query, setBox);
+
+		insertAllLabels(setBox);
+
+		return rowsInserted;
 	}
 
 	@Override
