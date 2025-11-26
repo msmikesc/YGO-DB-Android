@@ -10,12 +10,15 @@ import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +36,7 @@ public class Util {
 	private static KeyUpdateMap editionMap = null;
 	private static KeyUpdateMap passcodeMap = null;
 	private static KeyUpdateMap ygoProImagePasscodeMap = null;
+	private static KeyUpdateMap yugipediaTableHeaderMap = null;
 	private static QuadKeyUpdateMap quadKeyUpdateMap = null;
 	private static QuadKeyDoesNotExistSet quadKeyDoesNotExistSet = null;
 
@@ -376,6 +380,8 @@ public class Util {
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fmaximum-gold%2Fharpies-feather-duster");
 			setUrlsThatDoNotExist.add(
 					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fstore.tcgplayer.com%2Fyugioh%2Fpremium-pack-2%2Fwar-lion-ritual-sr");
+			setUrlsThatDoNotExist.add(
+					"https://partner.tcgplayer.com/c/5616751/1830156/21018?u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F650956%2Fyugioh-legendary-duelists-magical-hero-elemental-hero-sunrise-2020-date-reprint");
 			//setUrlsThatDoNotExist.add("");
 		}
 
@@ -396,6 +402,22 @@ public class Util {
 		}
 
 		return cardNameMap;
+	}
+
+	public static KeyUpdateMap getYugipediaTableHeaderMapInstance() {
+		if (yugipediaTableHeaderMap == null) {
+			try {
+				String filename = "yugipediaTableHeaderUpdateMapping.csv";
+
+				InputStream inputStream = Util.class.getResourceAsStream("/" + filename);
+
+				yugipediaTableHeaderMap = new KeyUpdateMap(inputStream);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
+
+		return yugipediaTableHeaderMap;
 	}
 
 	public static String flipStructureEnding(String input, String match) {
@@ -546,6 +568,17 @@ public class Util {
 			YGOLogger.logException(e);
 			return passcode;
 		}
+	}
+
+	public static String checkForTranslatedYugipediaHeader(String header) {
+
+		if (header == null) {
+			return null;
+		}
+
+		KeyUpdateMap instance = getYugipediaTableHeaderMapInstance();
+
+		return instance.getValue(header);
 	}
 
 	public static String getLowestPriceString(String input1, String input2) {
@@ -889,5 +922,15 @@ public class Util {
 
 		// Replace all variants of single quote characters with the standard single quote
 		return input.replaceAll(singleQuotePattern, "'");
+	}
+
+	public static boolean wasModifiedToday(File file) {
+		long lastModified = file.lastModified();
+		Calendar fileCal = Calendar.getInstance();
+		fileCal.setTime(new Date(lastModified));
+
+		Calendar todayCal = Calendar.getInstance();
+		return fileCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
+				fileCal.get(Calendar.DAY_OF_YEAR) == todayCal.get(Calendar.DAY_OF_YEAR);
 	}
 }

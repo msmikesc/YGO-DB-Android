@@ -129,6 +129,7 @@ public class Const {
 	public static final String LEVEL_RANK_CSV = "Level/Rank";
 	public static final String ATTACK_CSV = "Attack";
 	public static final String DEFENSE_CSV = "Defense";
+	public static final String CATEGORY_CSV = "Category";
 
 
 	//YGOPRO API

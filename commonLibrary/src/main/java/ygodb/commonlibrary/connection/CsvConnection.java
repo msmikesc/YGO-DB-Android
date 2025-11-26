@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 public class CsvConnection {
@@ -134,6 +135,22 @@ public class CsvConnection {
 			p.printRecord(Const.FOLDER_NAME_CSV, Const.QUANTITY_CSV, Const.TRADE_QUANTITY_CSV, Const.CARD_NAME_CSV, Const.SET_CODE_CSV,
 						  Const.SET_NAME_CSV, Const.CARD_NUMBER_CSV, Const.CONDITION_CSV, Const.PRINTING_CSV, Const.LANGUAGE_CSV,
 						  Const.PRICE_BOUGHT_CSV, Const.DATE_BOUGHT_CSV, Const.LOW_CSV, Const.MID_CSV, Const.MARKET_CSV);
+
+			return p;
+
+		} catch (IOException e) {
+			YGOLogger.logException(e);
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	public CSVPrinter getWikiOutputFile(String filename) {
+
+		try {
+			Writer fw = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_16LE);
+			CSVPrinter p = new CSVPrinter(fw, CSVFormat.DEFAULT);
+
+			p.printRecord(Const.CARD_NUMBER_CSV, Const.CARD_NAME_CSV, Const.RARITY_CSV, Const.CATEGORY_CSV, Const.SET_NAME_CSV);
 
 			return p;
 
@@ -596,6 +613,12 @@ public class CsvConnection {
 					  getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_PRICE_CSV),
 					  getStringOrNull(current.getCsvRecord(), Const.TCGPLAYER_QUANTITY_CSV), current.getReadTime());
 
+	}
+
+	public void writeWikiCardToCSV(CSVPrinter p, Map<String,String> rowValues, String setName) throws IOException {
+		p.printRecord(rowValues.get(Const.CARD_NUMBER_CSV), rowValues.get(Const.CARD_NAME_CSV),
+					  rowValues.get(Const.RARITY_CSV), rowValues.get(Const.CATEGORY_CSV),
+					  setName);
 	}
 
 }

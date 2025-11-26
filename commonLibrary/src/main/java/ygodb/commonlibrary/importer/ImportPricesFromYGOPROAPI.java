@@ -25,8 +25,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -116,15 +114,6 @@ public class ImportPricesFromYGOPROAPI {
 		return value;
 	}
 
-	private boolean wasModifiedToday(File file) {
-		long lastModified = file.lastModified();
-		Calendar fileCal = Calendar.getInstance();
-		fileCal.setTime(new Date(lastModified));
-
-		Calendar todayCal = Calendar.getInstance();
-		return fileCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
-				fileCal.get(Calendar.DAY_OF_YEAR) == todayCal.get(Calendar.DAY_OF_YEAR);
-	}
 	public boolean run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports, String cardSetImportFilename)
 			throws SQLException, IOException {
 
@@ -134,7 +123,7 @@ public class ImportPricesFromYGOPROAPI {
 			if(lastPriceLoadFilename != null) {
 				File existingFile = new File(lastPriceLoadFilename + "_RAW.txt");
 
-				if (existingFile.exists() && wasModifiedToday(existingFile)) {
+				if (existingFile.exists() && Util.wasModifiedToday(existingFile)) {
 					try (BufferedReader reader = new BufferedReader(new FileReader(existingFile))) {
 						String line;
 						String inline = "";

@@ -17,6 +17,8 @@ public enum Rarity {
 	ULTRA_RARE("Ultra Rare"),
 	SECRET_RARE("Secret Rare"),
 	PRISMATIC_SECRET_RARE("Prismatic Secret Rare"),
+	EMBLAZONED_ULTRA_RARE("Emblazoned Ultra Rare"),
+	EMBLAZONED_SECRET_RARE("Emblazoned Secret Rare"),
 	GOLD_RARE("Gold Rare"),
 	PREMIUM_GOLD_RARE("Premium Gold Rare"),
 	GOLD_SECRET_RARE("Gold Secret Rare"),
