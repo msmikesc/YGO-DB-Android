@@ -6,11 +6,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.CsvConnection;
+import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
+import ygodb.windows.utility.WindowsUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,18 +27,20 @@ import java.util.Set;
 public class CreateCSVFromYugipedia {
 
 	public static void main(String[] args) throws IOException {
-		String page = "Yugi%27s_Legendary_Decks";
+		String page = "Quarter_Century_Bonanza";
+
+		SQLiteConnection db = WindowsUtil.getDBInstance();
 
 		CreateCSVFromYugipedia mainObj = new CreateCSVFromYugipedia();
-		mainObj.run(page, "yugipedia");
+		mainObj.run(db, page, "yugipedia");
 		YGOLogger.info("CSV Process Complete");
 	}
 
-	public void run(String pageName, String csvFile) throws IOException {
+	public void run(SQLiteConnection db, String pageName, String csvFile) throws IOException {
 		String filename = csvFile+".csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
-		List<Map<String, String>> rowValues = getMapsFromWikiAPI(pageName);
+		List<Map<String, String>> rowValues = getMapsFromWikiAPI(db, pageName);
 		if (rowValues == null) {
 			return;
 		}
@@ -57,7 +62,7 @@ public class CreateCSVFromYugipedia {
 		YGOLogger.info("CSV written: " + filename);
 	}
 
-	private List<Map<String, String>> getMapsFromWikiAPI(String pageName) {
+	private List<Map<String, String>> getMapsFromWikiAPI(SQLiteConnection db, String pageName) {
 		String apiUrl = "https://yugipedia.com/api.php?action=parse&page=" + pageName + "&prop=text&format=json";
 		String lastWikiLoadFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiLoadJSON-"+ pageName;
 		JsonNode page = this.getHTMLNode(lastWikiLoadFilename, apiUrl);
@@ -68,12 +73,12 @@ public class CreateCSVFromYugipedia {
 		}
 
 		String htmlContent = page.get("parse").get("text").get("*").asText();
-		String setName = page.get("parse").get("title").asText().trim();
+		String setName = Util.checkForTranslatedSetName(page.get("parse").get("title").asText().trim());
 
 		// Parse HTML with Jsoup
 		Document doc = Jsoup.parse(htmlContent);
 
-		this.logSetDetails(doc, setName);
+		this.saveSetMetaData(db, doc, setName);
 
 		Elements tables = doc.select("table.card-list, table.set-list__main, table.wikitable");
 
@@ -91,8 +96,28 @@ public class CreateCSVFromYugipedia {
 		return rowValues;
 	}
 
-	private void logSetDetails(Document doc, String pageName){
+	private void saveSetMetaData(SQLiteConnection db, Document doc, String pageName){
 
+		try {
+			List<SetMetaData> list = db.getAllSetMetaDataFromSetData();
+			HashMap<String, SetMetaData> setMetaDataHashMap = new HashMap<>();
+			for (SetMetaData s : list) {
+				setMetaDataHashMap.put(s.getSetName(), s);
+			}
+
+			if (setMetaDataHashMap.get(pageName) == null) {
+				//Entry does not yet exist, create it
+
+				SetMetaData setData = this.getSetMetaDataFromPage(doc, pageName);
+				db.replaceIntoCardSetMetaData(pageName, setData.getSetPrefix(), setData.getNumOfCards(), setData.getTcgDate());
+			}
+		} catch (Exception e) {
+			YGOLogger.error("Unable to update set data for " + pageName);
+			YGOLogger.logException(e);
+		}
+	}
+
+	private SetMetaData getSetMetaDataFromPage(Document doc, String pageName) {
 		// --- Extract sidebar / infobox fields ---
 		Element infoBox = doc.selectFirst("table.infobox, table.cardtable");
 
@@ -112,24 +137,7 @@ public class CreateCSVFromYugipedia {
 				String headerText = header.text().trim();
 				String valueText = value.text().trim();
 
-				if (headerText.equalsIgnoreCase("Prefix") &&
-					valueText.toLowerCase().contains("(en)")) {
-
-					// Example:
-					// "YGLD-EN (en) YGLD-FR (fr) YGLD-DE (de)"
-					String[] parts = valueText.split("\\s+");
-
-					for (int i = 0; i < parts.length; i++) {
-						if (parts[i].equalsIgnoreCase("(en)")) {
-
-							// The prefix is the token immediately before "(en)"
-							if (i > 0) {
-								englishPrefix = parts[i - 1].trim().split("-")[0];
-							}
-							break;
-						}
-					}
-				}
+				englishPrefix = this.getEnglishPrefix(headerText, valueText);
 
 				if (headerText.equalsIgnoreCase("Number of cards") ||
 						headerText.equalsIgnoreCase("No. of cards")) {
@@ -147,6 +155,38 @@ public class CreateCSVFromYugipedia {
 							   " | Cards: " + cardCount +
 							   " | English Release: " + englishReleaseDate);
 
+		int count = -1;
+
+		try{
+			count = Integer.parseInt(cardCount);
+		} catch (NumberFormatException e) {
+			YGOLogger.logException(e);
+		}
+
+		return new SetMetaData(pageName, englishPrefix, count, englishReleaseDate);
+	}
+
+	private String getEnglishPrefix(String headerText, String valueText) {
+		String englishPrefix = "";
+		if (headerText.equalsIgnoreCase("Prefix") &&
+			valueText.toLowerCase().contains("(en)")) {
+
+			// Example:
+			// "YGLD-EN (en) YGLD-FR (fr) YGLD-DE (de)"
+			String[] parts = valueText.split("\\s+");
+
+			for (int i = 0; i < parts.length; i++) {
+				if (parts[i].equalsIgnoreCase("(en)")) {
+
+					// The prefix is the token immediately before "(en)"
+					if (i > 0) {
+						englishPrefix = parts[i - 1].trim().split("-")[0];
+					}
+					break;
+				}
+			}
+		}
+		return englishPrefix;
 	}
 
 	private JsonNode getHTMLNode(String lastWikiLoadFilename, String apiUrl){
@@ -204,7 +244,7 @@ public class CreateCSVFromYugipedia {
 			thisRowValues.put(Const.SET_NAME_CSV, setName);
 
 			for (int c = 0; c < columnCount; c++) {
-				String value = c < cells.size() ? cells.get(c).text().trim() : "";
+				String value = c < cells.size() ? cells.get(c).wholeText().trim() : "";
 				thisRowValues.put(headerTexts.get(c), value);
 			}
 			rowValues.add(thisRowValues);
