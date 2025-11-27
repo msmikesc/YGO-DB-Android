@@ -615,10 +615,10 @@ public class CsvConnection {
 
 	}
 
-	public void writeWikiCardToCSV(CSVPrinter p, Map<String,String> rowValues, String setName) throws IOException {
+	public void writeWikiCardToCSV(CSVPrinter p, Map<String,String> rowValues) throws IOException {
 		p.printRecord(rowValues.get(Const.CARD_NUMBER_CSV), rowValues.get(Const.CARD_NAME_CSV),
 					  rowValues.get(Const.RARITY_CSV), rowValues.get(Const.CATEGORY_CSV),
-					  setName);
+					  rowValues.get(Const.SET_NAME_CSV));
 	}
 
 }

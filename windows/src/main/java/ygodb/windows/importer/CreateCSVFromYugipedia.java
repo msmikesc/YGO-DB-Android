@@ -12,12 +12,8 @@ import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,42 +27,17 @@ public class CreateCSVFromYugipedia {
 		String page = "Yugi%27s_Legendary_Decks";
 
 		CreateCSVFromYugipedia mainObj = new CreateCSVFromYugipedia();
-		mainObj.run(page);
+		mainObj.run(page, "yugipedia");
 		YGOLogger.info("CSV Process Complete");
 	}
 
-	public void run(String pageName) throws IOException {
-		String apiUrl = "https://yugipedia.com/api.php?action=parse&page=" + pageName + "&prop=text&format=json";
-
-		String filename = "yugipedia-"+pageName+".csv";
+	public void run(String pageName, String csvFile) throws IOException {
+		String filename = csvFile+".csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
-		String lastWikiLoadFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiLoadJSON-"+pageName;
-
-		JsonNode page = this.getHTMLNode(lastWikiLoadFilename, apiUrl);
-
-		if(page == null){
-			YGOLogger.error("Unable to get Wiki Page");
+		List<Map<String, String>> rowValues = getMapsFromWikiAPI(pageName);
+		if (rowValues == null) {
 			return;
-		}
-
-		String htmlContent = page.get("parse").get("text").get("*").asText();
-
-		// Parse HTML with Jsoup
-		Document doc = Jsoup.parse(htmlContent);
-
-		Elements tables = doc.select("table.card-list, table.set-list__main, table.wikitable");
-
-		if (tables.isEmpty()) {
-			YGOLogger.error("No tables found");
-			return;
-		}
-
-		Set<String> headers = new HashSet<>();
-		List<Map<String,String>> rowValues = new ArrayList<>();
-
-		for(Element table: tables) {
-			this.addTableToMap(table, headers, rowValues);
 		}
 
 		CsvConnection csvConnection = new CsvConnection();
@@ -74,7 +45,7 @@ public class CreateCSVFromYugipedia {
 
 		for(Map<String,String> row : rowValues){
 			if(row.get(Const.CARD_NAME_CSV) != null && !row.get(Const.CARD_NAME_CSV).isBlank()){
-				csvConnection.writeWikiCardToCSV(p, row, pageName);
+				csvConnection.writeWikiCardToCSV(p, row);
 			}
 			else{
 				YGOLogger.error("ROW WITHOUT NAME FOUND: " + row);
@@ -84,6 +55,98 @@ public class CreateCSVFromYugipedia {
 		p.close();
 
 		YGOLogger.info("CSV written: " + filename);
+	}
+
+	private List<Map<String, String>> getMapsFromWikiAPI(String pageName) {
+		String apiUrl = "https://yugipedia.com/api.php?action=parse&page=" + pageName + "&prop=text&format=json";
+		String lastWikiLoadFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiLoadJSON-"+ pageName;
+		JsonNode page = this.getHTMLNode(lastWikiLoadFilename, apiUrl);
+
+		if(page == null){
+			YGOLogger.error("Unable to get Wiki Page:" + pageName);
+			return null;
+		}
+
+		String htmlContent = page.get("parse").get("text").get("*").asText();
+		String setName = page.get("parse").get("title").asText().trim();
+
+		// Parse HTML with Jsoup
+		Document doc = Jsoup.parse(htmlContent);
+
+		this.logSetDetails(doc, setName);
+
+		Elements tables = doc.select("table.card-list, table.set-list__main, table.wikitable");
+
+		if (tables.isEmpty()) {
+			YGOLogger.error("No tables found");
+			return null;
+		}
+
+		Set<String> headers = new HashSet<>();
+		List<Map<String,String>> rowValues = new ArrayList<>();
+
+		for(Element table: tables) {
+			this.addTableToMap(table, headers, rowValues, setName);
+		}
+		return rowValues;
+	}
+
+	private void logSetDetails(Document doc, String pageName){
+
+		// --- Extract sidebar / infobox fields ---
+		Element infoBox = doc.selectFirst("table.infobox, table.cardtable");
+
+		String englishPrefix = "";
+		String cardCount = "";
+		String englishReleaseDate = "";
+
+		if (infoBox != null) {
+			Elements rows = infoBox.select("tr");
+
+			for (Element row : rows) {
+				Element header = row.selectFirst("th");
+				Element value = row.selectFirst("td");
+				if (header == null || value == null)
+					continue;
+
+				String headerText = header.text().trim();
+				String valueText = value.text().trim();
+
+				if (headerText.equalsIgnoreCase("Prefix") &&
+					valueText.toLowerCase().contains("(en)")) {
+
+					// Example:
+					// "YGLD-EN (en) YGLD-FR (fr) YGLD-DE (de)"
+					String[] parts = valueText.split("\\s+");
+
+					for (int i = 0; i < parts.length; i++) {
+						if (parts[i].equalsIgnoreCase("(en)")) {
+
+							// The prefix is the token immediately before "(en)"
+							if (i > 0) {
+								englishPrefix = parts[i - 1].trim().split("-")[0];
+							}
+							break;
+						}
+					}
+				}
+
+				if (headerText.equalsIgnoreCase("Number of cards") ||
+						headerText.equalsIgnoreCase("No. of cards")) {
+					cardCount = valueText;
+				}
+
+				if (headerText.toLowerCase().contains("english (na)")) {
+					englishReleaseDate = valueText.trim();
+				}
+			}
+		}
+
+		YGOLogger.info("Wiki Info for " + pageName +
+							   " | Prefix: " + englishPrefix +
+							   " | Cards: " + cardCount +
+							   " | English Release: " + englishReleaseDate);
+
 	}
 
 	private JsonNode getHTMLNode(String lastWikiLoadFilename, String apiUrl){
@@ -117,7 +180,7 @@ public class CreateCSVFromYugipedia {
 	}
 
 	private void addTableToMap(Element table,
-			Set<String> headers, List<Map<String,String>> rowValues ) {
+			Set<String> headers, List<Map<String,String>> rowValues, String setName ) {
 		Elements rows = table.select("tr");
 
 		// First row = header
@@ -138,6 +201,7 @@ public class CreateCSVFromYugipedia {
 			Elements cells = rows.get(r).select("td, th");
 
 			Map<String, String> thisRowValues = new HashMap<>();
+			thisRowValues.put(Const.SET_NAME_CSV, setName);
 
 			for (int c = 0; c < columnCount; c++) {
 				String value = c < cells.size() ? cells.get(c).text().trim() : "";
