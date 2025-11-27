@@ -85,6 +85,13 @@ public class ApiUtil {
 		String def = getStringOrNull(current, Const.YGOPRO_DEFENSE);
 		String archetype = getStringOrNull(current, Const.YGOPRO_ARCHETYPE);
 
+		if("null".equals(level)){
+			level = null;
+		}
+		if("null".equals(def)){
+			def = null;
+		}
+
 		GamePlayCard gamePlayCard = new GamePlayCard();
 
 		name = Util.checkForTranslatedCardName(name);

@@ -442,6 +442,8 @@ public class Util {
 			return null;
 		}
 
+		setName = Util.normalizeSpaces(setName);
+
 		if (setName.contains("The Lost Art Promotion")) {
 			setName = "The Lost Art Promotion";
 		}
@@ -515,17 +517,23 @@ public class Util {
 	public static String checkForTranslatedRarity(String rarity) {
 		KeyUpdateMap instance = getRarityMapInstance();
 
-		return Util.standardizeSingleQuotes(instance.getValue(rarity));
+		rarity = Util.normalizeSpaces(Util.standardizeSingleQuotes(rarity));
+
+		return instance.getValue(rarity);
 	}
 
 	public static String checkForTranslatedSetNumber(String setNumber) {
 		KeyUpdateMap instance = getSetNumberMapInstance();
+
+		setNumber = Util.normalizeSpaces(setNumber);
 
 		return instance.getValue(setNumber);
 	}
 
 	public static String checkForTranslatedEdition(String setNumber, String editionPrinting) {
 		KeyUpdateMap instance = getEditionMapInstance();
+
+		editionPrinting = Util.normalizeSpaces(editionPrinting);
 
 		String newEdition = instance.getRawValue(setNumber);
 
@@ -541,6 +549,8 @@ public class Util {
 		if (cardName == null) {
 			return null;
 		}
+
+		cardName = Util.normalizeSpaces(cardName);
 
 		KeyUpdateMap instance = getCardNameMapInstance();
 
@@ -580,6 +590,8 @@ public class Util {
 		if (header == null) {
 			return null;
 		}
+
+		header = Util.normalizeSpaces(header);
 
 		KeyUpdateMap instance = getYugipediaTableHeaderMapInstance();
 
@@ -968,4 +980,11 @@ public class Util {
 		}
 		return jsonNode;
 	}
+
+	public static String normalizeSpaces(String input) {
+		if (input == null) return null;
+
+		return input.replaceAll("\\p{Zs}+", " ").trim();
+	}
+
 }

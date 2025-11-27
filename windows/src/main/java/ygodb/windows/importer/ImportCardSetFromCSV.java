@@ -70,13 +70,11 @@ public class ImportCardSetFromCSV {
 		for(Map.Entry<String, Set<String>> setEntry: setNameToCardNumbers.entrySet()){
 			if(setMetaDataHashMap.get(setEntry.getKey()) == null){
 				//Entry does not yet exist, create it
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 				Set<String> cardNumbers = setNameToCardNumbers.get(setEntry.getKey());
 				int setCount = cardNumbers.size();
 				String setPrefix = Util.getPrefixFromSetNumber(cardNumbers.iterator().next());
-				String date = sdf.format(new Date());
 
-				db.replaceIntoCardSetMetaData(setEntry.getKey(), setPrefix, setCount, date);
+				db.replaceIntoCardSetMetaData(setEntry.getKey(), setPrefix, setCount, null);
 			}
 		}
 	}
