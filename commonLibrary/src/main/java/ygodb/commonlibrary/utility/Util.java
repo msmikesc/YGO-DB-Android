@@ -1,6 +1,8 @@
 package ygodb.commonlibrary.utility;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.util.Pair;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.NameAndColor;
@@ -10,7 +12,10 @@ import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -932,5 +937,35 @@ public class Util {
 		Calendar todayCal = Calendar.getInstance();
 		return fileCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
 				fileCal.get(Calendar.DAY_OF_YEAR) == todayCal.get(Calendar.DAY_OF_YEAR);
+	}
+
+	public static JsonNode getJsonNode(File existingFile) throws IOException {
+		try (BufferedReader reader = new BufferedReader(new FileReader(existingFile))) {
+			String line;
+			String inline = "";
+			while ((line = reader.readLine()) != null) {
+				inline += line;
+			}
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			return objectMapper.readTree(inline);
+		}
+	}
+
+	public static JsonNode getAndLogJsonNodeFromString(String logFileNameBase, String inline) throws IOException {
+		// Parse JSON
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode jsonNode = objectMapper.readTree(inline);
+
+		if (logFileNameBase != null) {
+			try (FileWriter writer = new FileWriter(logFileNameBase +".txt", false)) {
+				writer.write(jsonNode.toPrettyString());
+			}
+			String rawInput = logFileNameBase + "_RAW.txt";
+			try (FileWriter writer = new FileWriter(rawInput, false)) {
+				writer.write(inline);
+			}
+		}
+		return jsonNode;
 	}
 }

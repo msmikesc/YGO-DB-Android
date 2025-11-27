@@ -1,7 +1,6 @@
 package ygodb.windows.importer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.csv.CSVPrinter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,13 +8,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.constant.Const;
+import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -88,26 +86,15 @@ public class CreateCSVFromYugipedia {
 		YGOLogger.info("CSV written: " + filename);
 	}
 
-	//TODO most of this should be reusable with price functions
 	private JsonNode getHTMLNode(String lastWikiLoadFilename, String apiUrl){
 		if(lastWikiLoadFilename != null) {
 			File existingFile = new File(lastWikiLoadFilename + "_RAW.txt");
 
 			if (existingFile.exists() && Util.wasModifiedToday(existingFile)) {
 				try {
-					try (BufferedReader reader = new BufferedReader(new FileReader(existingFile))) {
-						String line;
-						String inline = "";
-						while ((line = reader.readLine()) != null) {
-							inline += line;
-						}
-
-						ObjectMapper objectMapper = new ObjectMapper();
-						JsonNode jsonNode = objectMapper.readTree(inline);
-
-						YGOLogger.info("Finished reading from Saved File");
-						return jsonNode;
-					}
+					JsonNode jsonNode = Util.getJsonNode(existingFile);
+					YGOLogger.info("Finished reading from Saved File");
+					return jsonNode;
 				} catch (Exception e) {
 					YGOLogger.error("Unable to read saved wiki file");
 					YGOLogger.logException(e);
@@ -117,47 +104,15 @@ public class CreateCSVFromYugipedia {
 		}
 
 		try {
-			String inline = fetch(apiUrl);
-
-			// Parse JSON
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode jsonNode = objectMapper.readTree(inline);
-
-			if (lastWikiLoadFilename != null) {
-				try (FileWriter writer = new FileWriter(lastWikiLoadFilename+".txt", false)) {
-					writer.write(jsonNode.toPrettyString());
-				}
-				String rawInput = lastWikiLoadFilename + "_RAW.txt";
-				try (FileWriter writer = new FileWriter(rawInput, false)) {
-					writer.write(inline);
-				}
-			}
+			String inline = ApiUtil.httpGet(apiUrl);
+			JsonNode jsonNode = Util.getAndLogJsonNodeFromString(lastWikiLoadFilename, inline);
 			YGOLogger.info("Finished reading from API");
-
 			return jsonNode;
 		}
 		catch (Exception e){
 			YGOLogger.error("Exception querying API");
 			YGOLogger.logException(e);
 			return null;
-		}
-	}
-
-	//TODO make reusable function?
-	private static String fetch(String urlStr) throws IOException {
-		URL url = new URL(urlStr);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestProperty("User-Agent", "YGO DB Importer/1.0");
-
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-			StringBuilder sb = new StringBuilder();
-			String line;
-
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
-
-			return sb.toString();
 		}
 	}
 

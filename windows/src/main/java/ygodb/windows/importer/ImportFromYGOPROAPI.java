@@ -68,48 +68,33 @@ public class ImportFromYGOPROAPI {
 				YGOLogger.error("updateDBWithSetsFromAPI was not successful");
 			}
 
-			URL url = new URL(apiURL);
+			String inline = ApiUtil.httpGet(apiURL);
 
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.connect();
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(inline);
 
-			// Getting the response code
-			int responseCode = conn.getResponseCode();
+			YGOLogger.info("Finished reading from API");
 
-			if (responseCode != 200) {
-				YGOLogger.error("HttpResponseCode: " + responseCode);
-				return false;
-			} else {
+			JsonNode cards = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
 
-				String inline = ApiUtil.getApiResponseFromURL(url);
+			List<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
 
-				ObjectMapper objectMapper = new ObjectMapper();
-				JsonNode jsonNode = objectMapper.readTree(inline);
+			for (JsonNode currentGamePlayCard : cards) {
 
-				YGOLogger.info("Finished reading from API");
+				GamePlayCard inserted = ApiUtil.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCard, ownedCardsToCheck, db);
+				JsonNode setListNode = currentGamePlayCard.get(Const.YGOPRO_CARD_SETS);
 
-				JsonNode cards = jsonNode.get(Const.YGOPRO_TOP_LEVEL_DATA);
-
-				List<OwnedCard> ownedCardsToCheck = db.getAllOwnedCardsWithoutPasscode();
-
-				for (JsonNode currentGamePlayCard : cards) {
-
-					GamePlayCard inserted = ApiUtil.replaceIntoGameplayCardFromYGOPRO(currentGamePlayCard, ownedCardsToCheck, db);
-					JsonNode setListNode = currentGamePlayCard.get(Const.YGOPRO_CARD_SETS);
-
-					if (setListNode != null) {
-						ApiUtil.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
-					}
-
+				if (setListNode != null) {
+					ApiUtil.insertOrIgnoreCardSetsForOneCard(setListNode, inserted.getCardName(), inserted.getGamePlayCardUUID(), db);
 				}
 
-				DatabaseHashMap.closeRaritiesInstance();
-
-				Util.checkForIssuesWithSet(setName, db);
-				Util.checkSetCounts(db);
-
 			}
+
+			DatabaseHashMap.closeRaritiesInstance();
+
+			Util.checkForIssuesWithSet(setName, db);
+			Util.checkSetCounts(db);
+
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 		}
@@ -120,37 +105,21 @@ public class ImportFromYGOPROAPI {
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardsets.php";
 
 		try {
-			URL url = new URL(setAPI);
+			String inline = ApiUtil.httpGet(setAPI);
 
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.connect();
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(inline);
 
-			// Getting the response code
-			int responseCode = conn.getResponseCode();
+			List<SetMetaData> list = db.getAllSetMetaDataFromSetData();
+			ArrayList<String> dbSetNames = new ArrayList<>();
 
-			if (responseCode != 200) {
-				YGOLogger.error("HttpResponseCode: " + responseCode);
-				return false;
-			} else {
-				String inline = ApiUtil.getApiResponseFromURL(url);
-
-				ObjectMapper objectMapper = new ObjectMapper();
-				JsonNode jsonNode = objectMapper.readTree(inline);
-
-				List<SetMetaData> list = db.getAllSetMetaDataFromSetData();
-				ArrayList<String> dbSetNames = new ArrayList<>();
-
-				for (SetMetaData current : list) {
-					dbSetNames.add(current.getSetName());
-				}
-
-				for (JsonNode setNode : jsonNode) {
-					handleSingleSetNode(inputSetName, db, dbSetNames, setNode);
-				}
-
+			for (SetMetaData current : list) {
+				dbSetNames.add(current.getSetName());
 			}
 
+			for (JsonNode setNode : jsonNode) {
+				handleSingleSetNode(inputSetName, db, dbSetNames, setNode);
+			}
 		} catch (Exception e) {
 			YGOLogger.logException(e);
 		}

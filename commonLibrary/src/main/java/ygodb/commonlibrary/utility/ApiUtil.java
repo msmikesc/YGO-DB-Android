@@ -13,8 +13,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.List;
@@ -40,33 +40,34 @@ public class ApiUtil {
 		}
 	}
 
-	public static String getApiResponseFromURL(URL url) throws IOException {
-		String inline = "";
-		InputStream inputStreamFromURL = null;
-		try {
-			inputStreamFromURL = url.openStream();
+	public static String httpGet(String urlStr) throws IOException {
+		URL url = new URL(urlStr);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-			ByteArrayOutputStream result = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			for (int length; (length = inputStreamFromURL.read(buffer)) != -1; ) {
-				result.write(buffer, 0, length);
-			}
-			inline = result.toString(StandardCharsets.UTF_8.name());
-		} catch (Exception e) {
-			YGOLogger.logException(e);
-			throw e;
-		} finally {
-			if (inputStreamFromURL != null) {
-				try {
-					inputStreamFromURL.close();
-				} catch (IOException e) {
-					YGOLogger.logException(e);
-				}
-			}
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("User-Agent", "YGO DB Importer/1.0");
+		conn.setConnectTimeout(15000);
+		conn.setReadTimeout(15000);
+
+		int responseCode = conn.getResponseCode();
+		if (responseCode != HttpURLConnection.HTTP_OK) {
+			throw new IOException("HTTP error code: " + responseCode);
 		}
 
-		return inline;
+		try (InputStream is = conn.getInputStream();
+			 ByteArrayOutputStream result = new ByteArrayOutputStream()) {
+
+			byte[] buffer = new byte[1024];
+			int length;
+
+			while ((length = is.read(buffer)) != -1) {
+				result.write(buffer, 0, length);
+			}
+
+			return result.toString("UTF-8");
+		}
 	}
+
 
 	public static GamePlayCard replaceIntoGameplayCardFromYGOPRO(JsonNode current, List<OwnedCard> ownedCardsToCheck, SQLiteConnection db)
 			throws SQLException {
