@@ -10,12 +10,10 @@ import ygodb.commonlibrary.bean.SetMetaData;
 import ygodb.commonlibrary.connection.CsvConnection;
 import ygodb.commonlibrary.connection.SQLiteConnection;
 import ygodb.commonlibrary.constant.Const;
-import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -86,7 +84,7 @@ public class CreateCSVFromYugipedia {
 		String lastWikiLoadFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiLoadJSON-"+ searchSetName;
 
 		YGOLogger.info("Requesting page: " + apiUrl);
-		JsonNode page = this.getHTMLNode(lastWikiLoadFilename, apiUrl);
+		JsonNode page = Util.getHTMLNodeFromApiOrCachedFile(lastWikiLoadFilename, apiUrl);
 
 		if(page == null){
 			YGOLogger.error("Unable to get Wiki Page:" + searchSetName);
@@ -116,36 +114,6 @@ public class CreateCSVFromYugipedia {
 		return rowValues;
 	}
 
-	private JsonNode getHTMLNode(String lastWikiLoadFilename, String apiUrl){
-		if(lastWikiLoadFilename != null) {
-			File existingFile = new File(lastWikiLoadFilename + "_RAW.txt");
-
-			if (existingFile.exists() && Util.wasModifiedToday(existingFile)) {
-				try {
-					JsonNode jsonNode = Util.getJsonNode(existingFile);
-					YGOLogger.info("Finished reading from Saved File for : " + lastWikiLoadFilename);
-					return jsonNode;
-				} catch (Exception e) {
-					YGOLogger.error("Unable to read saved wiki file for : " + lastWikiLoadFilename);
-					YGOLogger.logException(e);
-					return null;
-				}
-			}
-		}
-
-		try {
-			String inline = ApiUtil.httpGet(apiUrl);
-			JsonNode jsonNode = Util.getAndLogJsonNodeFromString(lastWikiLoadFilename, inline);
-			YGOLogger.info("Finished reading from API for: " + apiUrl);
-			return jsonNode;
-		}
-		catch (Exception e){
-			YGOLogger.error("Exception querying API for: " + apiUrl);
-			YGOLogger.logException(e);
-			return null;
-		}
-	}
-
 	private String getPageIdFromSearch(String setName) {
 		try {
 			setName = setName.trim();
@@ -155,7 +123,7 @@ public class CreateCSVFromYugipedia {
 
 			String lastWikiSearchFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiSearchJSON-"+ setName;
 
-			JsonNode root = this.getHTMLNode(lastWikiSearchFilename, apiUrl);
+			JsonNode root = Util.getHTMLNodeFromApiOrCachedFile(lastWikiSearchFilename, apiUrl);
 
 			if(root == null){
 				YGOLogger.error("JsonNode root was null");

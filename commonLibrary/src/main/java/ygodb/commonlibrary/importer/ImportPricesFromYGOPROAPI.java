@@ -1,7 +1,6 @@
 package ygodb.commonlibrary.importer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ygodb.commonlibrary.bean.CardSet;
 import ygodb.commonlibrary.bean.GamePlayCard;
 import ygodb.commonlibrary.bean.OwnedCard;
@@ -13,13 +12,9 @@ import ygodb.commonlibrary.utility.ApiUtil;
 import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -117,40 +112,17 @@ public class ImportPricesFromYGOPROAPI {
 
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardinfo.php?tcgplayer_data=true";
 
-		try{
-			if(lastPriceLoadFilename != null) {
-				File existingFile = new File(lastPriceLoadFilename + "_RAW.txt");
+		shouldAddToUpdatedKeySetAndMap = handleOptionalDBImports;
 
-				if (existingFile.exists() && Util.wasModifiedToday(existingFile)) {
-					JsonNode jsonNode = Util.getJsonNode(existingFile);
-
-					if (shouldAddToUpdatedKeySetAndMap && cardSetImportFilename != null) {
-						cardSetImportFileWriter = new OutputStreamWriter(new FileOutputStream(cardSetImportFilename), StandardCharsets.UTF_16);
-					}
-
-					YGOLogger.info("Finished reading from Saved File");
-
-					runWithNode(db, jsonNode);
-					return true;
-				}
-			}
-
-			shouldAddToUpdatedKeySetAndMap = handleOptionalDBImports;
-
-			String inline = ApiUtil.httpGet(setAPI);
-			JsonNode jsonNode = Util.getAndLogJsonNodeFromString(lastPriceLoadFilename, inline);
-
-			if(shouldAddToUpdatedKeySetAndMap && cardSetImportFilename != null) {
-				cardSetImportFileWriter = new OutputStreamWriter(new FileOutputStream(cardSetImportFilename), StandardCharsets.UTF_16);
-			}
-
-			YGOLogger.info("Finished reading from API");
-
-			runWithNode(db, jsonNode);
-
-		} catch (Exception e) {
-			YGOLogger.logException(e);
+		if (shouldAddToUpdatedKeySetAndMap && cardSetImportFilename != null) {
+			cardSetImportFileWriter = new OutputStreamWriter(new FileOutputStream(cardSetImportFilename), StandardCharsets.UTF_16);
 		}
+
+		JsonNode jsonNode = Util.getHTMLNodeFromApiOrCachedFile(lastPriceLoadFilename, setAPI);
+		if(jsonNode != null) {
+			runWithNode(db, jsonNode);
+		}
+
 		return true;
 	}
 

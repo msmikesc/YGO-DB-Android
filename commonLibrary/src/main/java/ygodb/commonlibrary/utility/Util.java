@@ -987,4 +987,33 @@ public class Util {
 		return input.replaceAll("\\p{Zs}+", " ").trim();
 	}
 
+	public static JsonNode getHTMLNodeFromApiOrCachedFile(String lastLoadFilename, String apiUrl){
+		if(lastLoadFilename != null) {
+			File existingFile = new File(lastLoadFilename + "_RAW.txt");
+
+			if (existingFile.exists() && wasModifiedToday(existingFile)) {
+				try {
+					JsonNode jsonNode = getJsonNode(existingFile);
+					YGOLogger.info("Finished reading from Saved File for : " + lastLoadFilename);
+					return jsonNode;
+				} catch (Exception e) {
+					YGOLogger.error("Unable to read saved wiki file for : " + lastLoadFilename);
+					YGOLogger.logException(e);
+					return null;
+				}
+			}
+		}
+
+		try {
+			String inline = ApiUtil.httpGet(apiUrl);
+			JsonNode jsonNode = getAndLogJsonNodeFromString(lastLoadFilename, inline);
+			YGOLogger.info("Finished reading from API for: " + apiUrl);
+			return jsonNode;
+		}
+		catch (Exception e){
+			YGOLogger.error("Exception querying API for: " + apiUrl);
+			YGOLogger.logException(e);
+			return null;
+		}
+	}
 }
