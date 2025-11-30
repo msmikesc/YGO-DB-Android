@@ -17,17 +17,25 @@ import ygodb.windows.utility.WindowsUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 public class CreateCSVFromYugipedia {
 
+	DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.ENGLISH);
+	DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 	public static void main(String[] args) throws IOException {
-		String page = "Quarter_Century_Bonanza";
+		String[] page = {"Phantom Revenge"};
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
@@ -36,19 +44,27 @@ public class CreateCSVFromYugipedia {
 		YGOLogger.info("CSV Process Complete");
 	}
 
-	public void run(SQLiteConnection db, String pageName, String csvFile) throws IOException {
+	public void run(SQLiteConnection db, String[] setNames, String csvFile) throws IOException {
 		String filename = csvFile+".csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
-		List<Map<String, String>> rowValues = getMapsFromWikiAPI(db, pageName);
-		if (rowValues == null) {
-			return;
+		List<Map<String, String>> multiPageRowValues = new ArrayList<>();
+
+		for(String setName: setNames) {
+			try{
+				String pageId = this.getPageIdFromSearch(setName);
+				List<Map<String, String>> rowValues = getMapsFromWikiAPI(db, pageId, setName);
+				multiPageRowValues.addAll(rowValues);
+			} catch (Exception e) {
+				YGOLogger.error("Unable to load set: " + setName);
+				YGOLogger.logException(e);
+			}
 		}
 
 		CsvConnection csvConnection = new CsvConnection();
 		CSVPrinter p = csvConnection.getWikiOutputFile(resourcePath);
 
-		for(Map<String,String> row : rowValues){
+		for(Map<String,String> row : multiPageRowValues){
 			if(row.get(Const.CARD_NAME_CSV) != null && !row.get(Const.CARD_NAME_CSV).isBlank()){
 				csvConnection.writeWikiCardToCSV(p, row);
 			}
@@ -62,14 +78,19 @@ public class CreateCSVFromYugipedia {
 		YGOLogger.info("CSV written: " + filename);
 	}
 
-	private List<Map<String, String>> getMapsFromWikiAPI(SQLiteConnection db, String pageName) {
-		String apiUrl = "https://yugipedia.com/api.php?action=parse&page=" + pageName + "&prop=text&format=json";
-		String lastWikiLoadFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiLoadJSON-"+ pageName;
+	private List<Map<String, String>> getMapsFromWikiAPI(SQLiteConnection db, String pageId, String searchSetName) {
+		List<Map<String,String>> rowValues = new ArrayList<>();
+
+		String apiUrl = "https://yugipedia.com/api.php?action=parse&pageid="
+				+ pageId + "&prop=text&format=json";
+		String lastWikiLoadFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiLoadJSON-"+ searchSetName;
+
+		YGOLogger.info("Requesting page: " + apiUrl);
 		JsonNode page = this.getHTMLNode(lastWikiLoadFilename, apiUrl);
 
 		if(page == null){
-			YGOLogger.error("Unable to get Wiki Page:" + pageName);
-			return null;
+			YGOLogger.error("Unable to get Wiki Page:" + searchSetName);
+			return rowValues;
 		}
 
 		String htmlContent = page.get("parse").get("text").get("*").asText();
@@ -84,109 +105,15 @@ public class CreateCSVFromYugipedia {
 
 		if (tables.isEmpty()) {
 			YGOLogger.error("No tables found");
-			return null;
+			return rowValues;
 		}
 
 		Set<String> headers = new HashSet<>();
-		List<Map<String,String>> rowValues = new ArrayList<>();
 
 		for(Element table: tables) {
 			this.addTableToMap(table, headers, rowValues, setName);
 		}
 		return rowValues;
-	}
-
-	private void saveSetMetaData(SQLiteConnection db, Document doc, String pageName){
-
-		try {
-			List<SetMetaData> list = db.getAllSetMetaDataFromSetData();
-			HashMap<String, SetMetaData> setMetaDataHashMap = new HashMap<>();
-			for (SetMetaData s : list) {
-				setMetaDataHashMap.put(s.getSetName(), s);
-			}
-
-			if (setMetaDataHashMap.get(pageName) == null) {
-				//Entry does not yet exist, create it
-
-				SetMetaData setData = this.getSetMetaDataFromPage(doc, pageName);
-				db.replaceIntoCardSetMetaData(pageName, setData.getSetPrefix(), setData.getNumOfCards(), setData.getTcgDate());
-			}
-		} catch (Exception e) {
-			YGOLogger.error("Unable to update set data for " + pageName);
-			YGOLogger.logException(e);
-		}
-	}
-
-	private SetMetaData getSetMetaDataFromPage(Document doc, String pageName) {
-		// --- Extract sidebar / infobox fields ---
-		Element infoBox = doc.selectFirst("table.infobox, table.cardtable");
-
-		String englishPrefix = "";
-		String cardCount = "";
-		String englishReleaseDate = "";
-
-		if (infoBox != null) {
-			Elements rows = infoBox.select("tr");
-
-			for (Element row : rows) {
-				Element header = row.selectFirst("th");
-				Element value = row.selectFirst("td");
-				if (header == null || value == null)
-					continue;
-
-				String headerText = header.text().trim();
-				String valueText = value.text().trim();
-
-				englishPrefix = this.getEnglishPrefix(headerText, valueText);
-
-				if (headerText.equalsIgnoreCase("Number of cards") ||
-						headerText.equalsIgnoreCase("No. of cards")) {
-					cardCount = valueText;
-				}
-
-				if (headerText.toLowerCase().contains("english (na)")) {
-					englishReleaseDate = valueText.trim();
-				}
-			}
-		}
-
-		YGOLogger.info("Wiki Info for " + pageName +
-							   " | Prefix: " + englishPrefix +
-							   " | Cards: " + cardCount +
-							   " | English Release: " + englishReleaseDate);
-
-		int count = -1;
-
-		try{
-			count = Integer.parseInt(cardCount);
-		} catch (NumberFormatException e) {
-			YGOLogger.logException(e);
-		}
-
-		return new SetMetaData(pageName, englishPrefix, count, englishReleaseDate);
-	}
-
-	private String getEnglishPrefix(String headerText, String valueText) {
-		String englishPrefix = "";
-		if (headerText.equalsIgnoreCase("Prefix") &&
-			valueText.toLowerCase().contains("(en)")) {
-
-			// Example:
-			// "YGLD-EN (en) YGLD-FR (fr) YGLD-DE (de)"
-			String[] parts = valueText.split("\\s+");
-
-			for (int i = 0; i < parts.length; i++) {
-				if (parts[i].equalsIgnoreCase("(en)")) {
-
-					// The prefix is the token immediately before "(en)"
-					if (i > 0) {
-						englishPrefix = parts[i - 1].trim().split("-")[0];
-					}
-					break;
-				}
-			}
-		}
-		return englishPrefix;
 	}
 
 	private JsonNode getHTMLNode(String lastWikiLoadFilename, String apiUrl){
@@ -196,10 +123,10 @@ public class CreateCSVFromYugipedia {
 			if (existingFile.exists() && Util.wasModifiedToday(existingFile)) {
 				try {
 					JsonNode jsonNode = Util.getJsonNode(existingFile);
-					YGOLogger.info("Finished reading from Saved File");
+					YGOLogger.info("Finished reading from Saved File for : " + lastWikiLoadFilename);
 					return jsonNode;
 				} catch (Exception e) {
-					YGOLogger.error("Unable to read saved wiki file");
+					YGOLogger.error("Unable to read saved wiki file for : " + lastWikiLoadFilename);
 					YGOLogger.logException(e);
 					return null;
 				}
@@ -209,14 +136,162 @@ public class CreateCSVFromYugipedia {
 		try {
 			String inline = ApiUtil.httpGet(apiUrl);
 			JsonNode jsonNode = Util.getAndLogJsonNodeFromString(lastWikiLoadFilename, inline);
-			YGOLogger.info("Finished reading from API");
+			YGOLogger.info("Finished reading from API for: " + apiUrl);
 			return jsonNode;
 		}
 		catch (Exception e){
-			YGOLogger.error("Exception querying API");
+			YGOLogger.error("Exception querying API for: " + apiUrl);
 			YGOLogger.logException(e);
 			return null;
 		}
+	}
+
+	private String getPageIdFromSearch(String setName) {
+		try {
+			setName = setName.trim();
+			String encoded = URLEncoder.encode(setName, StandardCharsets.UTF_8.toString());
+			String apiUrl = "https://yugipedia.com/api.php?action=query&list=search&srsearch="
+					+ encoded + "&format=json";
+
+			String lastWikiSearchFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiSearchJSON-"+ setName;
+
+			JsonNode root = this.getHTMLNode(lastWikiSearchFilename, apiUrl);
+
+			if(root == null){
+				YGOLogger.error("JsonNode root was null");
+				return null;
+			}
+			JsonNode searchResults = root.path("query").path("search");
+			if (searchResults.isArray() && !searchResults.isEmpty()) {
+				return searchResults.get(0).get("pageid").asText();
+			} else {
+				YGOLogger.error("No Yugipedia result found for: " + setName);
+				return null;
+			}
+		} catch (Exception e) {
+			YGOLogger.error("Error searching for Yugipedia page: " + setName);
+			YGOLogger.logException(e);
+			return null;
+		}
+	}
+
+
+	private void saveSetMetaData(SQLiteConnection db, Document doc, String pageName){
+		try {
+			List<SetMetaData> list = db.getAllSetMetaDataFromSetData();
+			HashMap<String, SetMetaData> setMetaDataHashMap = new HashMap<>();
+			for (SetMetaData s : list) {
+				setMetaDataHashMap.put(s.getSetName(), s);
+			}
+
+			if (setMetaDataHashMap.get(pageName) == null) {
+				//Entry does not yet exist, create it
+				SetMetaData setData = this.getSetMetaDataFromPage(doc, pageName);
+				if(setData != null) {
+					db.replaceIntoCardSetMetaData(pageName, setData.getSetPrefix(), setData.getNumOfCards(), setData.getTcgDate());
+				}
+			}
+		} catch (Exception e) {
+			YGOLogger.error("Unable to update set data for " + pageName);
+			YGOLogger.logException(e);
+		}
+	}
+
+	private SetMetaData getSetMetaDataFromPage(Document doc, String pageName) {
+		Element infoBox = doc.selectFirst("table.infobox, table.cardtable");
+		if (infoBox == null) {
+			YGOLogger.error("Unable to find infobox for: " + pageName);
+			return null;
+		}
+		Elements rows = infoBox.select("tr");
+
+		String englishPrefix = getPrefixFromRows(rows);
+		String cardCountText = getCardCountFromRows(rows);
+		String englishReleaseDate = getReleaseDateFromRows(rows);
+
+		// Format release date
+		if (englishReleaseDate != null && !englishReleaseDate.isBlank()) {
+			try {
+				LocalDate date = LocalDate.parse(englishReleaseDate, inputFormatter);
+				englishReleaseDate = date.format(outputFormatter);
+			} catch (Exception e) {
+				YGOLogger.logException(e);
+			}
+		}
+
+		// Convert card count
+		int cardCount = -1;
+		if (cardCountText != null && !cardCountText.isBlank()) {
+			try {
+				cardCount = Integer.parseInt(cardCountText);
+			} catch (NumberFormatException e) {
+				YGOLogger.logException(e);
+			}
+		}
+
+		YGOLogger.info("Wiki Info for " + pageName +
+							   " | Prefix: " + englishPrefix +
+							   " | Cards: " + cardCount +
+							   " | English Release: " + englishReleaseDate);
+
+		return new SetMetaData(pageName, englishPrefix, cardCount, englishReleaseDate);
+	}
+
+	private String getPrefixFromRows(Elements rows) {
+		for (Element row : rows) {
+			Element headerEl = row.selectFirst("th");
+			Element valueEl  = row.selectFirst("td");
+			if (headerEl == null || valueEl == null)
+				continue;
+
+			String header = headerEl.text().trim();
+			String value = valueEl.text().trim();
+
+			if (header.equalsIgnoreCase("Prefix") && value.toLowerCase().contains("(en)")){
+				// Split by whitespace, walk tokens
+				String[] parts = value.split("\\s+");
+
+				for (int i = 0; i < parts.length; i++) {
+					if (parts[i].equalsIgnoreCase("(en)") && i > 0) {
+						// Prefix is token before "(en)", before dash
+						return parts[i - 1].split("-")[0].trim();
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	private String getCardCountFromRows(Elements rows) {
+		for (Element row : rows) {
+			Element headerEl = row.selectFirst("th");
+			Element valueEl  = row.selectFirst("td");
+			if (headerEl == null || valueEl == null)
+				continue;
+
+			String headerLower = headerEl.text().trim().toLowerCase();
+
+			if (headerLower.equals("number of cards") || headerLower.equals("no. of cards")) {
+				return valueEl.text().trim();
+			}
+		}
+		return null;
+	}
+
+	private String getReleaseDateFromRows(Elements rows) {
+		for (Element row : rows) {
+			Element headerEl = row.selectFirst("th");
+			Element valueEl  = row.selectFirst("td");
+			if (headerEl == null || valueEl == null)
+				continue;
+
+			String headerLower = headerEl.text().trim().toLowerCase();
+
+			if (headerLower.contains("english (na)")) {
+				return valueEl.text().trim();
+			}
+		}
+		return null;
 	}
 
 	private void addTableToMap(Element table,
