@@ -13,12 +13,9 @@ import ygodb.windows.utility.WindowsUtil;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,15 +25,15 @@ public class ImportCardSetFromCSV {
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
-		mainObj.run(db);
+		String filename = "cardsets.csv";
+		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
+
+		mainObj.run(db, resourcePath);
 		db.closeInstance();
 		YGOLogger.info("Import Complete");
 	}
 
-	public void run(SQLiteConnection db) throws SQLException, IOException {
-
-		String filename = "cardsets.csv";
-		String resourcePath = Const.CSV_IMPORT_FOLDER + filename;
+	public void run(SQLiteConnection db, String resourcePath) throws SQLException, IOException {
 
 		CsvConnection csvConnection = new CsvConnection();
 
@@ -45,9 +42,9 @@ public class ImportCardSetFromCSV {
 		Map<String, Set<String>> setNameToCardNumbers = new HashMap<>();
 
 		for (CSVRecord current : parser) {
-			csvConnection.insertCardSetFromCSV(current, filename, db);
+			csvConnection.insertCardSetFromCSV(current, db);
 
-			String setName = csvConnection.getSetNameFromCSVRecord(current, filename);
+			String setName = csvConnection.getSetNameFromCSVRecord(current);
 			String cardNumber = csvConnection.getCardNumberFromCSVRecord(current);
 
 			setNameToCardNumbers.computeIfAbsent(setName, k -> new HashSet<>());

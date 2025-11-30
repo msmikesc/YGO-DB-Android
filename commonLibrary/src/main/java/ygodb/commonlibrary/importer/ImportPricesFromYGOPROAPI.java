@@ -35,6 +35,7 @@ public class ImportPricesFromYGOPROAPI {
 
 	private final HashSet<String> updatedKeysSet = new HashSet<>();
 	private final HashMap<String, Integer> updatedMoreThanOnceKeysMap = new HashMap<>();
+	private final HashSet<String> missingSetNames = new HashSet<>();
 	private boolean shouldAddToUpdatedKeySetAndMap = true;
 
 	OutputStreamWriter cardSetImportFileWriter;
@@ -107,7 +108,7 @@ public class ImportPricesFromYGOPROAPI {
 		return value;
 	}
 
-	public boolean run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports, String cardSetImportFilename)
+	public String[] run(SQLiteConnection db, String lastPriceLoadFilename, boolean handleOptionalDBImports, String cardSetImportFilename)
 			throws SQLException, IOException {
 
 		String setAPI = "https://db.ygoprodeck.com/api/v7/cardinfo.php?tcgplayer_data=true";
@@ -120,13 +121,13 @@ public class ImportPricesFromYGOPROAPI {
 
 		JsonNode jsonNode = Util.getHTMLNodeFromApiOrCachedFile(lastPriceLoadFilename, setAPI);
 		if(jsonNode != null) {
-			runWithNode(db, jsonNode);
+			return runWithNode(db, jsonNode);
 		}
 
-		return true;
+		return new String[] {};
 	}
 
-	private void runWithNode(SQLiteConnection db, JsonNode jsonNode) throws SQLException {
+	private String[] runWithNode(SQLiteConnection db, JsonNode jsonNode) throws SQLException {
 		//start timer
 		long startTime = System.currentTimeMillis();
 
@@ -156,7 +157,11 @@ public class ImportPricesFromYGOPROAPI {
 		long endTime = System.currentTimeMillis();
 		YGOLogger.info("Time to load data to DB:" + Util.millisToShortDHMS(endTime - startTime));
 
+		String[] setNames = missingSetNames.toArray(new String[0]);
+
 		emptyMaps();
+
+		return setNames;
 	}
 
 	private void emptyMaps() {
@@ -166,6 +171,7 @@ public class ImportPricesFromYGOPROAPI {
 		updatedURLsMap.clear();
 		editionToPreparedStatementMap.clear();
 		editionToPreparedStatementMapAllProperties.clear();
+		missingSetNames.clear();
 		DatabaseHashMap.closeRaritiesInstance();
 
 		if(cardSetImportFileWriter != null){
@@ -570,11 +576,11 @@ public class ImportPricesFromYGOPROAPI {
 				CardSet existingRowWithNullUrl = existingRows.get(0);
 				addToUpdatedURLsMap(DatabaseHashMap.getAllMatchingKey(existingRowWithNullUrl), currentSetFromAPI.getSetUrl());
 			} else {
-				//No match at all found, log for manual fix
 				int size = 0;
 				if (existingRows != null) {
 					size = existingRows.size();
 				}
+				missingSetNames.add(currentSetFromAPI.getSetName());
 
 				YGOLogger.info("Found " + size + " matches for all matching url key:" + allMatchUrlKey + ":" +
 									   currentSetFromAPI.getCardLogIdentifier());

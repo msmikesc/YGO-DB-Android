@@ -14,6 +14,7 @@ import ygodb.commonlibrary.utility.Util;
 import ygodb.commonlibrary.utility.YGOLogger;
 import ygodb.windows.utility.WindowsUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -73,7 +74,8 @@ public class CreateCSVFromYugipedia {
 		p.flush();
 		p.close();
 
-		YGOLogger.info("CSV written: " + filename);
+		File f = new File(resourcePath);
+		YGOLogger.info("CSV written: file:///" + f.getAbsolutePath().replace("\\", "/"));
 	}
 
 	private List<Map<String, String>> getMapsFromWikiAPI(SQLiteConnection db, String pageId, String searchSetName) {

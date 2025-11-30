@@ -14,13 +14,12 @@ public class RunImportPricesFromYGOPROAPI {
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
-		boolean successful = mainObj.run(db, "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadJSON",
+		String[] setNames = mainObj.run(db, "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadJSON",
 										 true,"C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastPriceLoadMissingCardSets.csv");
-		if (!successful) {
-			YGOLogger.info("Import Failed");
-		} else {
-			YGOLogger.info("Import Finished");
+		if (setNames.length > 0) {
+			new CreateCSVFromYugipedia().run(db, setNames, "importPricesCSV");
 		}
+		YGOLogger.info("Import Finished");
 		db.closeInstance();
 	}
 }

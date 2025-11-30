@@ -464,12 +464,12 @@ public class CsvConnection {
 		db.replaceIntoGamePlayCard(gamePlayCard);
 	}
 
-	public void insertCardSetFromCSV(CSVRecord current, String defaultSetName, SQLiteConnection db) throws SQLException {
+	public void insertCardSetFromCSV(CSVRecord current, SQLiteConnection db) throws SQLException {
 
 		String name = getStringOrNull(current, Const.CARD_NAME_CSV);
 		String cardNumber = getCardNumberFromCSVRecord(current);
 		String rawRarityInput = getStringOrNull(current, Const.RARITY_CSV);
-		String setName = getSetNameFromCSVRecord(current, defaultSetName);
+		String setName = getSetNameFromCSVRecord(current);
 
 		name = Util.removeSurroundingQuotes(name);
 		name = Util.checkForTranslatedCardName(name);
@@ -521,18 +521,8 @@ public class CsvConnection {
 		return cardNumber;
 	}
 
-	public String getSetNameFromCSVRecord(CSVRecord current, String defaultSetName) {
-		String setName = null;
-
-		try {
-			setName = getStringOrNull(current, Const.SET_NAME_CSV);
-
-			if (setName == null) {
-				setName = defaultSetName;
-			}
-		} catch (Exception e) {
-			setName = defaultSetName;
-		}
+	public String getSetNameFromCSVRecord(CSVRecord current) {
+		String setName = getStringOrNull(current, Const.SET_NAME_CSV);
 		setName = Util.checkForTranslatedSetName(setName);
 		return setName;
 	}
