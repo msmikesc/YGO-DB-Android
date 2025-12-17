@@ -1016,4 +1016,20 @@ public class Util {
 			return null;
 		}
 	}
+
+	public static String sanitizeFilename(String filename) {
+		// Regex matches any character NOT in the allowed set:
+		// a-z, A-Z, 0-9, dot (.), hyphen (-), and underscore (_)
+		String safeFilename = filename.replaceAll("[^a-zA-Z0-9.\\-_]", "_");
+
+		// Optional: Also remove leading/trailing spaces or dots that might cause issues
+		safeFilename = safeFilename.replaceAll("^[\\s.]+|[\\s.]+$", "");
+
+		// Ensure the filename is not empty after sanitization
+		if (safeFilename.isEmpty()) {
+			return "default_name";
+		}
+
+		return safeFilename;
+	}
 }

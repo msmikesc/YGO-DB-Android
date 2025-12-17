@@ -139,7 +139,8 @@ public class DatabaseHashMap {
 
 	public static String getOwnedCardHashMapKey(OwnedCard input) {
 		return input.getSetNumber() + ":" + Util.normalizePrice(input.getPriceBought()) + ":" + input.getDateBought() + ":" +
-				input.getFolderName() + ":" + input.getCondition() + ":" + input.getEditionPrinting();
+				input.getFolderName() + ":" + input.getCondition() + ":" + input.getEditionPrinting() + ":" +
+				input.getSetRarity() + ":" + input.getColorVariant();
 	}
 
 	public static List<OwnedCard> getExistingOwnedRaritiesForCardFromHashMap(OwnedCard comparison, SQLiteConnection db)

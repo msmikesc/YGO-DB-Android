@@ -34,7 +34,7 @@ public class CreateCSVFromYugipedia {
 	DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	public static void main(String[] args) throws IOException {
-		String[] page = {"Phantom Revenge"};
+		String[] page = {"The Lost Art Promotion (series)"};
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
@@ -81,9 +81,16 @@ public class CreateCSVFromYugipedia {
 	private List<Map<String, String>> getMapsFromWikiAPI(SQLiteConnection db, String pageId, String searchSetName) {
 		List<Map<String,String>> rowValues = new ArrayList<>();
 
+		if(pageId == null){
+			YGOLogger.error("pageId is null:" + searchSetName);
+			return rowValues;
+		}
+
 		String apiUrl = "https://yugipedia.com/api.php?action=parse&pageid="
 				+ pageId + "&prop=text&format=json";
-		String lastWikiLoadFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiLoadJSON-"+ searchSetName;
+
+		String cleanedSetName = Util.sanitizeFilename(searchSetName);
+		String lastWikiLoadFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiLoadJSON-"+ cleanedSetName;
 
 		YGOLogger.info("Requesting page: " + apiUrl);
 		JsonNode page = Util.getHTMLNodeFromApiOrCachedFile(lastWikiLoadFilename, apiUrl);
@@ -123,7 +130,8 @@ public class CreateCSVFromYugipedia {
 			String apiUrl = "https://yugipedia.com/api.php?action=query&list=search&srsearch="
 					+ encoded + "&format=json";
 
-			String lastWikiSearchFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiSearchJSON-"+ setName;
+			String cleanedSetName = Util.sanitizeFilename(setName);
+			String lastWikiSearchFilename = "C:\\Users\\Mike\\AndroidStudioProjects\\YGODB\\log\\lastWikiSearchJSON-"+ cleanedSetName;
 
 			JsonNode root = Util.getHTMLNodeFromApiOrCachedFile(lastWikiSearchFilename, apiUrl);
 

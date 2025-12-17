@@ -8,13 +8,13 @@ import ygodb.windows.utility.WindowsUtil;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class ImportCardSetFromPriceApiCsv {
+public class ImportCardSetFromYugipediaAutoCsv {
 	public static void main(String[] args) throws SQLException, IOException {
 		ImportCardSetFromCSV mainObj = new ImportCardSetFromCSV();
 
 		SQLiteConnection db = WindowsUtil.getDBInstance();
 
-		String filename = "importPricesCSV.csv";
+		String filename = "yugipedia.csv";
 		String resourcePath = Const.CSV_EXPORT_FOLDER + filename;
 
 		mainObj.run(db, resourcePath);
